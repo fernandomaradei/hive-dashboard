@@ -175,7 +175,7 @@ z-index:0}
     <div class="mgr-head"><div><h2>📊 <span>GESTÃO DA GUILD</span> • RADAR OPERACIONAL</h2><p>Rankings de atenção e uma visão geral filtrável para a staff tomar decisões rápidas antes da Guild League.</p></div><div class="mgr-live">● DADOS AO VIVO</div></div>
     <div class="mgr-ranks">
       <article class="mgr-card"><div class="hd"><b>📉 Menor Power</b><span>BOTTOM 8</span></div><div class="mgr-list" id="mgrLowPower"></div></article>
-      <article class="mgr-card"><div class="hd"><b>🛡️ Menor Defesa</b><span>HP + PDEF + MDEF + RED</span></div><div class="mgr-list" id="mgrLowDefense"></div></article>
+      <article class="mgr-card"><div class="hd"><b>🛡️ Menor Defesa</b><span>somente suportes • HP + PDEF + MDEF + RED</span></div><div class="mgr-list" id="mgrLowDefense"></div></article>
       <article class="mgr-card"><div class="hd"><b>🎯 Menor Poder Ofensivo</b><span>somente classes DPS</span></div><div class="mgr-list" id="mgrLowOffense"></div></article>
     </div>
     <article class="member-explorer">
@@ -296,9 +296,9 @@ function pctRank(value, arr){const a=arr.filter(v=>Number.isFinite(v)).sort((x,y
 
 function classRole(job){
   const j=norm(job||'');
-  if(/priest|high priest|music|minstrel|bard|dancer|support/.test(j)) return 'SUPORTE';
+  if(/priest|high priest|music|minstrel|bard|dancer|support|creator|bio|biochem|genetic/.test(j)) return 'SUPORTE';
   if(/paladin|lord knight|knight|crusader/.test(j)) return 'TANK';
-  if(/sniper|hunter|gunslinger|high wizard|\bhw\b|wizard|stalker|assassin|creator|bio|biochem|genetic|champion|monk/.test(j)) return 'DPS';
+  if(/sniper|hunter|gunslinger|high wizard|\bhw\b|wizard|stalker|assassin|champion|monk/.test(j)) return 'DPS';
   if(/doram/.test(j)) return 'HÍBRIDO';
   return 'HÍBRIDO';
 }
@@ -314,7 +314,7 @@ function managerRows(arr,valueFn,formatFn){return arr.slice(0,8).map((m,i)=>`<di
 function renderManagerRanks(){
  if(!members.length)return;const scored=managerScores();
  $('#mgrLowPower').innerHTML=managerRows([...members].sort((a,b)=>intNum(a['Power Atual'])-intNum(b['Power Atual'])),m=>m['Power Atual'],m=>fmtInt(m['Power Atual'],'Power Atual'));
- $('#mgrLowDefense').innerHTML=managerRows([...scored].sort((a,b)=>a._mgr.survival-b._mgr.survival),m=>m._mgr.survival,m=>Math.round(m._mgr.survival)+' / 100');
+ const supports=scored.filter(m=>m._mgr.role==='SUPORTE'); $('#mgrLowDefense').innerHTML=supports.length?managerRows([...supports].sort((a,b)=>a._mgr.survival-b._mgr.survival),m=>m._mgr.survival,m=>Math.round(m._mgr.survival)+' / 100'):'<div class="mgr-empty">Nenhum suporte identificado.</div>';
  const dps=scored.filter(isDPS); $('#mgrLowOffense').innerHTML=dps.length?managerRows([...dps].sort((a,b)=>a._mgr.offense-b._mgr.offense),m=>m._mgr.offense,m=>Math.round(m._mgr.offense)+' / 100'):'<div class="mgr-empty">Nenhuma classe DPS identificada.</div>';
 }
 function setupMemberExplorer(){
