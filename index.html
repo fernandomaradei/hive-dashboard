@@ -262,6 +262,16 @@ const intNum=(v,field='')=>{
   if(typeof v==='number') return Number.isFinite(v)?Math.round(v):0;
   let s=String(v).trim().replace(/\u00a0/g,'').replace(/\s+/g,'');
   const neg=s.startsWith('-');
+  s=s.replace(/^-/,'');
+  // Valores compactos do Google: 280k, 77,3k, 1,5k etc.
+  // Ex.: 1,5k = 1500 (e não 15).
+  const compact=s.match(/^([0-9]+(?:[.,][0-9]+)?)\s*([kKmM])$/);
+  if(compact){
+    const base=Number(compact[1].replace(',','.'));
+    const mult=compact[2].toLowerCase()==='m'?1000000:1000;
+    const n=base*mult;
+    return Number.isFinite(n)?Math.round((neg?-1:1)*n):0;
+  }
   const digits=s.replace(/[^0-9]/g,'');
   if(!digits) return 0;
   const n=Number(digits);
@@ -290,6 +300,14 @@ const fmt=n=>{
   if(n===null||n===undefined||n===''||n==='-') return '—';
   return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(num(n));
 };
+const DECIMAL_METRICS=new Set(['PDMG','MDGMG','PDMG.R','MDMG.R','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN']);
+const metricValue=(v,field='')=>DECIMAL_METRICS.has(field)?num(v):intNum(v,field);
+const metricFormat=(v,field='')=>{
+  if(v===null||v===undefined||v==='') return '—';
+  const n=Number(v);
+  if(!Number.isFinite(n)) return '—';
+  return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:DECIMAL_METRICS.has(field)?2:0}).format(n);
+};
 const delta=m=>intNum(m['Power Atual'],'Power Atual')-intNum(m['Power Anterior'],'Power Anterior')||intNum(m['Evolução'],'Evolução');
 async function loadLiveData(){
   // Frontend hospedado no GitHub Pages; os dados continuam vindo da função já publicada no Netlify.
@@ -315,12 +333,12 @@ function damageProfile(job){
 function offensiveRaw(m){
   const profile=damageProfile(m?.Job);
   const atk=intNum(m?.ATK,'ATK'), matk=intNum(m?.MATK,'MATK');
-  if(profile==='MAGIC') return {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:intNum(m?.MDGMG,'MDGMG'),profile};
-  if(profile==='PHYSICAL') return {attack:atk,penetration:intNum(m?.['IGNORE PDEF'],'IGNORE PDEF'),damage:intNum(m?.PDMG,'PDMG'),profile};
+  if(profile==='MAGIC') return {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue(m?.MDGMG,'MDGMG'),profile};
+  if(profile==='PHYSICAL') return {attack:atk,penetration:intNum(m?.['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m?.PDMG,'PDMG'),profile};
   const magic=matk>atk;
   return magic
-    ? {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:intNum(m?.MDGMG,'MDGMG'),profile:'MAGIC'}
-    : {attack:atk,penetration:intNum(m?.['IGNORE PDEF'],'IGNORE PDEF'),damage:intNum(m?.PDMG,'PDMG'),profile:'PHYSICAL'};
+    ? {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue(m?.MDGMG,'MDGMG'),profile:'MAGIC'}
+    : {attack:atk,penetration:intNum(m?.['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m?.PDMG,'PDMG'),profile:'PHYSICAL'};
 }
 function buildOffenseContext(pool){
   const rows=(pool||[]).map(m=>({m,...offensiveRaw(m)}));
@@ -348,7 +366,7 @@ function supportDefenseContext(pool){
     PDEF:pool.map(m=>intNum(m.PDEF,'PDEF')),
     MDEF:pool.map(m=>intNum(m.MDEF,'MDEF')),
     PVPRED:pool.map(m=>intNum(m['PVP DMG RED'],'PVP DMG RED')),
-    RED:pool.map(m=>intNum(m['DMG RED MED'],'DMG RED MED'))
+    RED:pool.map(m=>metricValue(m['DMG RED MED'],'DMG RED MED'))
   };
 }
 function supportDefenseScore(m,ctx,pctFn=pctRank){
@@ -357,7 +375,7 @@ function supportDefenseScore(m,ctx,pctFn=pctRank){
        + .22*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
        + .18*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
        + .18*pctFn(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
-       + .12*pctFn(intNum(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
+       + .12*pctFn(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
 }
 function glScores(m,cache){
   const hp=glPct(glMetric(m,'HP'),cache.HP),pd=glPct(glMetric(m,'PDEF'),cache.PDEF),md=glPct(glMetric(m,'MDEF'),cache.MDEF),pvpred=glPct(glMetric(m,'PVP DMG RED'),cache.PVPRED),red=glPct(num(m['DMG RED MED']),cache.RED);
@@ -385,11 +403,11 @@ function classRole(job){
 function isDPS(m){return classRole(m?.Job)==='DPS'}
 
 function managerScores(){
- const hp=members.map(m=>intNum(m.HP,'HP')), pd=members.map(m=>intNum(m.PDEF,'PDEF')), md=members.map(m=>intNum(m.MDEF,'MDEF')), pvp=members.map(m=>intNum(m['PVP DMG RED'],'PVP DMG RED')), red=members.map(m=>intNum(m['DMG RED MED'],'DMG RED MED'));
+ const hp=members.map(m=>intNum(m.HP,'HP')), pd=members.map(m=>intNum(m.PDEF,'PDEF')), md=members.map(m=>intNum(m.MDEF,'MDEF')), pvp=members.map(m=>intNum(m['PVP DMG RED'],'PVP DMG RED')), red=members.map(m=>metricValue(m['DMG RED MED'],'DMG RED MED'));
  const dpsBase=members.filter(isDPS), offCtx=buildOffenseContext(dpsBase);
  const supportBase=members.filter(m=>classRole(m.Job)==='SUPORTE'), supportCtx=supportDefenseContext(supportBase);
  return members.map(m=>{
-   const survival=.30*pctRank(intNum(m.HP,'HP'),hp)+.22*pctRank(intNum(m.PDEF,'PDEF'),pd)+.18*pctRank(intNum(m.MDEF,'MDEF'),md)+.18*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),pvp)+.12*pctRank(intNum(m['DMG RED MED'],'DMG RED MED'),red);
+   const survival=.30*pctRank(intNum(m.HP,'HP'),hp)+.22*pctRank(intNum(m.PDEF,'PDEF'),pd)+.18*pctRank(intNum(m.MDEF,'MDEF'),md)+.18*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),pvp)+.12*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),red);
    const offense=offenseScore(m,offCtx,pctRank);
    const supportDefense=supportDefenseScore(m,supportCtx,pctRank);
    return {...m,_mgr:{survival,supportDefense,offense,role:classRole(m.Job),profile:damageProfile(m.Job)}}
@@ -532,14 +550,14 @@ function improvementAdvice(m,context){
     const specs=profile==='magic'?
       [['MATK','MATK','✦'],['IGNORE MDEF','IGNORE MDEF','🔮'],['MDMG','MDMG','✨'],['PVP DMG INC','PVP DMG INC','⚡'],['Power Atual','Power Atual','⚔️']]:
       [['ATK','ATK','🗡️'],['IGNORE PDEF','IGNORE PDEF','🏹'],['PDMG','PDMG','💥'],['PVP DMG INC','PVP DMG INC','⚡'],['Power Atual','Power Atual','⚔️']];
-    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>intNum(x[field],field)).filter(v=>v>0),cur=intNum(m[field],field),target=medianPositive(vals),pct=pctForAdvice(cur,vals);return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur)}}).sort((a,b)=>a.pct-b.pct);
+    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),target=medianPositive(vals),pct=pctForAdvice(cur,vals);return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur)}}).sort((a,b)=>a.pct-b.pct);
     const ctx=buildOffenseContext(pool),score=offenseScore(m,ctx,pctRank)??0;
     return {title:'⚔️ Plano de evolução ofensiva',sub:`Comparado somente com DPS ${profile==='magic'?'mágicos':'físicos'} da HIVE. Prioriza os atributos com menor posição relativa.`,score,items:rows.slice(0,3)};
   }
   if(context==='defense' && classRole(m.Job)==='SUPORTE'){
     const pool=members.filter(x=>classRole(x.Job)==='SUPORTE');
     const specs=[['HP','HP','❤️'],['PDEF','PDEF','🛡️'],['MDEF','MDEF','💎'],['PVP DMG RED','PVP DMG RED','🧱'],['DMG RED MED','DMG RED MED','🔰']];
-    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>intNum(x[field],field)).filter(v=>v>0),cur=intNum(m[field],field),target=medianPositive(vals),pct=cur>0?pctForAdvice(cur,vals):0;return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur),missing:cur<=0}}).sort((a,b)=>a.pct-b.pct);
+    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),target=medianPositive(vals),pct=cur>0?pctForAdvice(cur,vals):0;return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur),missing:cur<=0}}).sort((a,b)=>a.pct-b.pct);
     const ctx=supportDefenseContext(pool),score=supportDefenseScore(m,ctx,pctRank)??0;
     return {title:'🛡️ Plano de evolução defensiva',sub:'Comparado somente com suportes da HIVE. A referência sugerida é a mediana atual dos suportes.',score,items:rows.slice(0,3)};
   }
@@ -548,8 +566,8 @@ function improvementAdvice(m,context){
 function renderImprovementAdvice(m,context){
   const box=$('#mAdvice'); if(!box)return; const a=improvementAdvice(m,context);
   if(!a){box.className='evoAdvice';box.innerHTML='';return}
-  const itemHtml=a.items.map(x=>{const cur=x.missing?'Sem dado':fmtInt(x.cur,x.field),target=x.target?fmtInt(Math.round(x.target),x.field):'—';let action=x.missing?'Preencher/validar este atributo na planilha':(x.gap>0?`Meta sugerida: ${target} • atual ${cur}`:`Já está acima da mediana (${cur})`);let gap=x.missing?'VALIDAR':(x.gap>0?`+${fmtInt(Math.round(x.gap),x.field)}`:'OK');return `<div class="evoItem"><div class="evoIcon">${x.icon}</div><div><b>${esc(x.label)}</b><small>${action} • posição ${Math.round(x.pct)}/100 entre pares</small></div><div class="evoGap">${gap}</div></div>`}).join('');
-  box.className='evoAdvice show';box.innerHTML=`<div class="evoHead"><div><div class="title">${a.title}</div><div class="sub">${a.sub}</div></div><div class="evoScore">Índice ${Math.round(a.score)}/100</div></div><div class="evoItems">${itemHtml}</div><div class="evoNote">A meta é uma referência gerencial baseada na mediana da função dentro da HIVE; não é um requisito fixo do jogo.</div>`;
+  const itemHtml=a.items.map(x=>{const cur=x.missing?'Sem dado':metricFormat(x.cur,x.field),target=x.target?metricFormat(x.target,x.field):'—';let action=x.missing?'Preencher/validar este atributo na planilha':(x.gap>0?`Atual: ${cur} • meta sugerida: ${target}`:`Já está acima da mediana (${cur})`);let gap=x.missing?'VALIDAR':(x.gap>0?`+${metricFormat(x.gap,x.field)}`:'OK');return `<div class="evoItem"><div class="evoIcon">${x.icon}</div><div><b>${esc(x.label)}</b><small>${action} • posição ${Math.round(x.pct)}/100 entre pares</small></div><div class="evoGap">${gap}</div></div>`}).join('');
+  box.className='evoAdvice show';box.innerHTML=`<div class="evoHead"><div><div class="title">${a.title}</div><div class="sub">${a.sub}</div></div><div class="evoScore">Índice ${Math.round(a.score)}/100</div></div><div class="evoItems">${itemHtml}</div><div class="evoNote">Os valores são exibidos em unidades reais da planilha. A meta é uma referência gerencial baseada na mediana da função dentro da HIVE; não é um requisito fixo do jogo.</div>`;
 }
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
