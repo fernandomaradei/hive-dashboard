@@ -546,13 +546,15 @@ function medianPositive(arr){const a=arr.filter(v=>Number.isFinite(v)&&v>0).sort
 function pctForAdvice(v,arr){return pctRank(v,arr)}
 function improvementAdvice(m,context){
   if(context==='offense' && isDPS(m)){
-    const pool=members.filter(isDPS), profile=damageProfile(m.Job);
-    const specs=profile==='magic'?
+    const profile=damageProfile(m.Job);
+    const sameProfile=members.filter(x=>isDPS(x) && damageProfile(x.Job)===profile);
+    const pool=sameProfile.length?sameProfile:members.filter(isDPS);
+    const specs=profile==='MAGIC'?
       [['MATK','MATK','✦'],['IGNORE MDEF','IGNORE MDEF','🔮'],['MDMG','MDMG','✨'],['PVP DMG INC','PVP DMG INC','⚡'],['Power Atual','Power Atual','⚔️']]:
       [['ATK','ATK','🗡️'],['IGNORE PDEF','IGNORE PDEF','🏹'],['PDMG','PDMG','💥'],['PVP DMG INC','PVP DMG INC','⚡'],['Power Atual','Power Atual','⚔️']];
     const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),target=medianPositive(vals),pct=pctForAdvice(cur,vals);return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur)}}).sort((a,b)=>a.pct-b.pct);
     const ctx=buildOffenseContext(pool),score=offenseScore(m,ctx,pctRank)??0;
-    return {title:'⚔️ Plano de evolução ofensiva',sub:`Comparado somente com DPS ${profile==='magic'?'mágicos':'físicos'} da HIVE. Prioriza os atributos com menor posição relativa.`,score,items:rows.slice(0,3)};
+    return {title:'⚔️ Plano de evolução ofensiva',sub:`Comparado somente com DPS ${profile==='MAGIC'?'mágicos':'físicos'} da HIVE. Prioriza os atributos com menor posição relativa.`,score,items:rows.slice(0,3)};
   }
   if(context==='defense' && classRole(m.Job)==='SUPORTE'){
     const pool=members.filter(x=>classRole(x.Job)==='SUPORTE');
