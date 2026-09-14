@@ -190,219 +190,150 @@ z-index:0}
 .feature .avatarRing.doram-clean .feat-extra-crown{display:none!important}
 
 
-/* V39 — Destaque HIVE reconstruído do zero, sem overlay de imagem */
+/* V40 — Moldura HIVE forte e estável, sem sobrepor o conteúdo */
 .feature{
-  position:relative;
-  overflow:visible!important;
-  border:1px solid #8c5b08!important;
+  position:relative!important;
+  overflow:hidden!important;
+  border:2px solid #d99b18!important;
   border-radius:22px!important;
   background:
-    linear-gradient(180deg,rgba(255,190,45,.035),transparent 12%),
-    #0d0d0c!important;
+    linear-gradient(180deg,rgba(255,190,44,.035),transparent 15%),
+    #0c0c0b!important;
   box-shadow:
-    0 0 0 1px rgba(255,203,76,.08),
-    0 12px 32px rgba(0,0,0,.30),
-    inset 0 0 28px rgba(255,176,28,.025);
+    0 0 0 1px rgba(255,224,133,.16),
+    0 0 0 5px #070706,
+    0 0 0 6px rgba(205,139,18,.58),
+    0 0 22px rgba(235,163,24,.16),
+    inset 0 0 26px rgba(255,183,28,.025)!important;
 }
+
+/* segunda linha interna da moldura */
 .feature::before{
   content:"";
   position:absolute;
-  inset:5px;
+  inset:8px;
+  border:1px solid rgba(239,178,48,.42);
+  border-radius:15px;
   pointer-events:none;
-  border-radius:17px;
-  border:1px solid rgba(226,160,30,.34);
-  clip-path:polygon(
-    0 10%,2.5% 10%,2.5% 4%,7% 4%,7% 0,
-    42% 0,44% 2%,56% 2%,58% 0,
-    93% 0,93% 4%,97.5% 4%,97.5% 10%,100% 10%,
-    100% 90%,97.5% 90%,97.5% 96%,93% 96%,93% 100%,
-    7% 100%,7% 96%,2.5% 96%,2.5% 90%,0 90%
-  );
   z-index:1;
+  background:
+    linear-gradient(135deg,#d99b18 0 15px,transparent 16px) top left/46px 46px no-repeat,
+    linear-gradient(225deg,#d99b18 0 15px,transparent 16px) top right/46px 46px no-repeat,
+    linear-gradient(45deg,#d99b18 0 15px,transparent 16px) bottom left/46px 46px no-repeat,
+    linear-gradient(315deg,#d99b18 0 15px,transparent 16px) bottom right/46px 46px no-repeat;
+  opacity:.78;
 }
-.feature::after{
-  content:"🐝";
-  position:absolute;
-  top:-18px;
-  left:50%;
-  transform:translateX(-50%);
-  width:68px;
-  height:58px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:30px;
-  line-height:1;
-  color:#ffd661;
-  background:linear-gradient(180deg,#2b1d08,#0b0906);
-  border:2px solid #c98b18;
-  clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);
-  filter:drop-shadow(0 4px 7px rgba(0,0,0,.7)) drop-shadow(0 0 8px rgba(255,180,24,.25));
-  z-index:6;
-}
-.feature > *{position:relative;z-index:2}
+.feature>*{position:relative;z-index:2}
 
+/* faixa superior mais premium, sem cortar título */
 .feature .panelHead{
-  min-height:74px;
-  padding:18px 26px 12px!important;
-  display:flex!important;
-  align-items:flex-start!important;
-  justify-content:space-between!important;
-  gap:16px!important;
-  overflow:visible!important;
-}
-.feature .panelHead > div:first-child{
-  min-width:0;
-  padding-right:82px;
+  min-height:72px;
+  padding:18px 22px 12px!important;
+  background:
+    linear-gradient(90deg,rgba(240,174,36,.07),transparent 22%,transparent 78%,rgba(240,174,36,.05)),
+    #0d0d0c!important;
+  border-bottom:1px solid rgba(218,154,25,.34)!important;
 }
 .feature .panelTitle{
   white-space:nowrap!important;
   overflow:visible!important;
   text-overflow:clip!important;
-  font-size:18px!important;
-  line-height:1.15!important;
 }
-.feature .panelSub{
-  white-space:nowrap!important;
-  font-size:11px!important;
-  margin-top:5px!important;
-}
+.feature .panelSub{white-space:nowrap!important}
 .feature .deltaBadge{
-  position:absolute!important;
-  top:15px!important;
-  right:20px!important;
-  float:none!important;
-  z-index:7!important;
+  margin-left:auto!important;
+  white-space:nowrap!important;
 }
 
+/* área central com cantos de escudo/colmeia */
 .feature .featureBody{
-  margin:0 14px 14px!important;
-  border:1px solid rgba(214,149,21,.44)!important;
-  border-radius:16px!important;
+  margin:8px 14px 14px!important;
+  border:1px solid rgba(217,155,24,.52)!important;
+  border-radius:15px!important;
   background:
-    radial-gradient(circle at 14% 22%,rgba(236,166,28,.08),transparent 28%),
+    radial-gradient(circle at 9% 18%,rgba(239,170,28,.075),transparent 30%),
     linear-gradient(180deg,#1a1a17,#11110f)!important;
-  overflow:hidden!important;
-  box-shadow:inset 0 0 0 1px rgba(255,220,120,.025);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,224,139,.025),
+    inset 0 0 28px rgba(237,167,28,.025)!important;
 }
 .feature .featureBody::before{
   content:"";
   position:absolute;
-  left:14px;top:96px;
-  width:108px;height:125px;
-  opacity:.09;
-  background:
-    radial-gradient(circle at 25% 25%,transparent 12px,#d5961d 13px 14px,transparent 15px),
-    radial-gradient(circle at 75% 25%,transparent 12px,#d5961d 13px 14px,transparent 15px),
-    radial-gradient(circle at 50% 56%,transparent 12px,#d5961d 13px 14px,transparent 15px),
-    radial-gradient(circle at 25% 87%,transparent 12px,#d5961d 13px 14px,transparent 15px),
-    radial-gradient(circle at 75% 87%,transparent 12px,#d5961d 13px 14px,transparent 15px);
+  left:13px;bottom:100px;
+  width:96px;height:76px;
   pointer-events:none;
-}
-.feature .featureTop{
-  position:relative;
-  padding:22px 24px 18px!important;
-  gap:24px!important;
-}
-.feature .featureTop::after{
-  content:"";
-  position:absolute;
-  right:18px;
-  top:18px;
-  width:125px;
-  height:110px;
-  opacity:.08;
+  opacity:.12;
   background:
-    radial-gradient(circle at 22% 24%,transparent 16px,#c78b1c 17px 18px,transparent 19px),
-    radial-gradient(circle at 62% 24%,transparent 16px,#c78b1c 17px 18px,transparent 19px),
-    radial-gradient(circle at 42% 60%,transparent 16px,#c78b1c 17px 18px,transparent 19px),
-    radial-gradient(circle at 82% 60%,transparent 16px,#c78b1c 17px 18px,transparent 19px);
-  pointer-events:none;
+    radial-gradient(circle at 18px 18px,transparent 11px,#d3951b 12px 13px,transparent 14px),
+    radial-gradient(circle at 50px 18px,transparent 11px,#d3951b 12px 13px,transparent 14px),
+    radial-gradient(circle at 34px 46px,transparent 11px,#d3951b 12px 13px,transparent 14px),
+    radial-gradient(circle at 66px 46px,transparent 11px,#d3951b 12px 13px,transparent 14px);
 }
 
+/* retrato hexagonal, sem duplicar o nome da classe */
 .feature .avatarRing{
-  width:190px!important;
-  height:190px!important;
-  padding:6px!important;
   border-radius:0!important;
   clip-path:polygon(25% 2%,75% 2%,98% 25%,98% 75%,75% 98%,25% 98%,2% 75%,2% 25%)!important;
-  background:linear-gradient(135deg,#fff0a0,#d18b15 26%,#ffcf49 50%,#875008 76%,#ffe587)!important;
-  box-shadow:0 0 24px rgba(243,174,30,.26),inset 0 0 10px rgba(255,222,115,.22)!important;
+  background:linear-gradient(135deg,#fff0a0,#c9800d 28%,#ffcf48 52%,#824b06 78%,#ffe789)!important;
+  box-shadow:0 0 24px rgba(239,168,26,.28),inset 0 0 10px rgba(255,221,112,.20)!important;
 }
 .feature .avatarRing img{
   border-radius:0!important;
   clip-path:polygon(25% 2%,75% 2%,98% 25%,98% 75%,75% 98%,25% 98%,2% 75%,2% 25%)!important;
-  border:3px solid #17130d!important;
-}
-.feature .avatarRing::before{
-  content:"♛"!important;
-  position:absolute!important;
-  top:-22px!important;
-  left:50%!important;
-  transform:translateX(-50%)!important;
-  display:block!important;
-  font-size:37px!important;
-  color:#ffd661!important;
-  filter:drop-shadow(0 3px 3px rgba(0,0,0,.8)) drop-shadow(0 0 5px rgba(255,181,35,.35))!important;
-  z-index:5!important;
-}
-.feature .featClassBadge{
-  bottom:-8px!important;
-  min-width:112px!important;
-  border-radius:7px!important;
-  background:linear-gradient(180deg,#17120b,#080706)!important;
-  border:1px solid #d7991d!important;
-  color:#ffe081!important;
-  box-shadow:0 4px 12px rgba(0,0,0,.65)!important;
+  border:3px solid #17130c!important;
 }
 
-.feature .statsRow{
-  margin:0!important;
-  border-top:1px solid rgba(215,151,28,.38)!important;
-  background:linear-gradient(180deg,#11110f,#0a0a09)!important;
-}
-.feature .statsRow>div{
-  border-color:rgba(213,149,28,.18)!important;
-  min-height:82px!important;
-}
+/* As artes já possuem o nome da classe. Remove o segundo selo HTML duplicado. */
+.feature .featClassBadge{display:none!important}
 
+/* somente uma coroa visual; Doram já traz a coroa na própria arte */
+.feature .avatarRing.doram-clean::before{display:none!important}
+
+/* stats e botão integrados à moldura */
+.feature .stats{
+  border-top:1px solid rgba(217,155,24,.42)!important;
+  background:linear-gradient(180deg,#10100e,#090908)!important;
+}
+.feature .stat{border-color:rgba(217,155,24,.18)!important}
 .feature .featureBtn{
-  position:relative!important;
-  margin:12px 12px 14px!important;
-  border:1px solid #d99a1c!important;
+  margin:10px 14px 14px!important;
+  padding:0!important;
+  border:1px solid #d99b18!important;
   border-radius:10px!important;
   background:
-    linear-gradient(90deg,rgba(226,158,24,.05),transparent 13%,transparent 87%,rgba(226,158,24,.05)),
+    linear-gradient(90deg,rgba(218,155,24,.06),transparent 14%,transparent 86%,rgba(218,155,24,.06)),
     #080807!important;
-  color:#ffd66c!important;
-  box-shadow:inset 0 0 0 1px rgba(255,219,108,.025)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,222,116,.025),
+    0 0 10px rgba(226,159,25,.05)!important;
+}
+.feature .featureBtn .btn{
+  width:100%!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
 }
 .feature .featureBtn::before,
 .feature .featureBtn::after{
-  content:"⬡ ⬡ ⬡";
+  content:"⬡ ⬡";
   position:absolute;
   top:50%;
   transform:translateY(-52%);
-  color:#ad7410;
-  opacity:.25;
+  color:#a66d09;
+  opacity:.30;
   font-size:10px;
   letter-spacing:-2px;
 }
 .feature .featureBtn::before{left:14px}
 .feature .featureBtn::after{right:14px}
 
-@media(max-width:900px){
-  .feature::after{top:-14px;width:58px;height:50px;font-size:25px}
-  .feature .panelHead{padding:16px 18px 10px!important}
-  .feature .panelHead > div:first-child{padding-right:78px}
-}
 @media(max-width:720px){
-  .feature .panelTitle{font-size:16px!important}
-  .feature .panelSub{font-size:10px!important}
-  .feature .featureBody{margin:0 8px 10px!important}
-  .feature .featureTop{padding:18px 14px 16px!important}
-  .feature .avatarRing{width:164px!important;height:164px!important}
-  .feature .deltaBadge{top:12px!important;right:14px!important}
+  .feature{border-width:1px!important;box-shadow:0 0 0 1px rgba(255,224,133,.12),0 0 0 3px #070706,0 0 0 4px rgba(205,139,18,.44)!important}
+  .feature::before{inset:5px}
+  .feature .panelHead{padding:15px 16px 10px!important}
+  .feature .featureBody{margin:6px 9px 10px!important}
+  .feature .featureBtn{margin:8px 9px 10px!important}
 }
 
 </style>
