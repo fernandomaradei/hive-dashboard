@@ -380,6 +380,18 @@ z-index:0}
 @media(max-width:900px){.jobs .jobrow{grid-template-columns:92px 1fr 30px 44px;font-size:11px;margin:8px 0}}
 @media(max-width:520px){.jobs .jobrow{grid-template-columns:82px 1fr 28px 42px;gap:6px;font-size:10px;margin:7px 0}}
 </style>
+
+<style id="v41-evolution-full-table">
+.evoItems{display:block!important;padding:10px 12px 8px!important;overflow-x:auto}
+.evoTable{width:100%;border-collapse:separate;border-spacing:0 6px;min-width:620px}
+.evoTable th{padding:0 10px 4px;color:#8f877b;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right;white-space:nowrap}
+.evoTable th:first-child{text-align:left}.evoTable td{padding:9px 10px;background:#11100e;border-top:1px solid #29251e;border-bottom:1px solid #29251e;font-size:10px;text-align:right;vertical-align:middle;white-space:nowrap}
+.evoTable td:first-child{border-left:1px solid #29251e;border-radius:10px 0 0 10px;text-align:left}.evoTable td:last-child{border-right:1px solid #29251e;border-radius:0 10px 10px 0}
+.evoAttr{display:flex;align-items:center;gap:8px;font-weight:900;color:#f3eee6}.evoAttr .evoIcon{flex:0 0 28px;width:28px;height:28px}
+.evoCurrent{color:#f3eee6;font-weight:800}.evoAverage{color:#d0c6b8}.evoNeed{font-weight:900;color:#ffb29a}.evoNeed.ok{color:#63e891}.evoPosition{color:#9b9183;font-size:9px}.evoPriority{display:inline-block;padding:4px 7px;border-radius:999px;font-size:8.5px;font-weight:900;border:1px solid rgba(255,178,154,.35);color:#ffb29a;background:#211410}.evoPriority.ok{border-color:rgba(99,232,145,.35);color:#63e891;background:#102016}
+.evoLegend{padding:0 12px 9px;color:#8a8175;font-size:9px;line-height:1.4}
+@media(max-width:700px){.evoTable{min-width:560px}.evoTable td{padding:8px 8px}.evoItems{padding:8px!important}.evoHead{position:sticky;left:0}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -768,27 +780,36 @@ function improvementAdvice(m,context){
     const profile=damageProfile(m.Job);
     const sameProfile=members.filter(x=>isDPS(x) && damageProfile(x.Job)===profile);
     const pool=sameProfile.length?sameProfile:members.filter(isDPS);
+    // Atributos ofensivos coerentes com o tipo de dano da classe.
     const specs=profile==='MAGIC'?
       [['MATK','MATK','✦'],['IGNORE MDEF','IGNORE MDEF','🔮'],['MDMG','MDMG','✨'],['PVP DMG INC','PVP DMG INC','⚡'],['Power Atual','Power Atual','⚔️']]:
       [['ATK','ATK','🗡️'],['IGNORE PDEF','IGNORE PDEF','🏹'],['PDMG','PDMG','💥'],['PVP DMG INC','PVP DMG INC','⚡'],['Power Atual','Power Atual','⚔️']];
-    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),target=medianPositive(vals),pct=pctForAdvice(cur,vals);return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur)}}).sort((a,b)=>a.pct-b.pct);
+    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0,pct=pctForAdvice(cur,vals);return {label,field,icon,cur,avg,pct,gap:Math.max(0,avg-cur),missing:cur<=0}}).sort((a,b)=>a.pct-b.pct);
     const ctx=buildOffenseContext(pool),score=offenseScore(m,ctx,pctRank)??0;
-    return {title:'⚔️ Plano de evolução ofensiva',sub:`Comparado somente com DPS ${profile==='MAGIC'?'mágicos':'físicos'} da HIVE. Prioriza os atributos com menor posição relativa.`,score,items:rows.slice(0,3)};
+    return {title:'⚔️ Plano de evolução ofensiva',sub:`Comparado somente com DPS ${profile==='MAGIC'?'mágicos':'físicos'} da HIVE. Exibe todos os atributos ofensivos relevantes da função.`,score,items:rows};
   }
   if(context==='defense' && classRole(m.Job)==='SUPORTE'){
     const pool=members.filter(x=>classRole(x.Job)==='SUPORTE');
-    const specs=[['HP','HP','❤️'],['PDEF','PDEF','🛡️'],['MDEF','MDEF','💎'],['PVP DMG RED','PVP DMG RED','🧱'],['DMG RED MED','DMG RED MED','🔰']];
-    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),target=medianPositive(vals),pct=cur>0?pctForAdvice(cur,vals):0;return {label,field,icon,cur,target,pct,gap:Math.max(0,target-cur),missing:cur<=0}}).sort((a,b)=>a.pct-b.pct);
+    const specs=[['HP','HP','❤️'],['PDEF','PDEF','🛡️'],['MDEF','MDEF','💎'],['CRIT RES','CRIT RES','💠'],['PDMG.R','PDMG.R','🛡️'],['MDMG.R','MDMG.R','🔰'],['PVP DMG RED','PVP DMG RED','🧱'],['DMG RED MED','DMG RED MED','🔰']];
+    const rows=specs.map(([label,field,icon])=>{const vals=pool.map(x=>metricValue(x[field],field)).filter(v=>v>0),cur=metricValue(m[field],field),avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0,pct=cur>0?pctForAdvice(cur,vals):0;return {label,field,icon,cur,avg,pct,gap:Math.max(0,avg-cur),missing:cur<=0}}).sort((a,b)=>a.pct-b.pct);
     const ctx=supportDefenseContext(pool),score=supportDefenseScore(m,ctx,pctRank)??0;
-    return {title:'🛡️ Plano de evolução defensiva',sub:'Comparado somente com suportes da HIVE. A referência sugerida é a mediana atual dos suportes.',score,items:rows.slice(0,3)};
+    return {title:'🛡️ Plano de evolução defensiva',sub:'Comparado somente com suportes da HIVE. Exibe todos os atributos defensivos e a média atual dos pares.',score,items:rows};
   }
   return null;
 }
 function renderImprovementAdvice(m,context){
   const box=$('#mAdvice'); if(!box)return; const a=improvementAdvice(m,context);
   if(!a){box.className='evoAdvice';box.innerHTML='';return}
-  const itemHtml=a.items.map(x=>{const cur=x.missing?'Sem dado':metricFormat(x.cur,x.field),target=x.target?metricFormat(x.target,x.field):'—';let action=x.missing?'Preencher/validar este atributo na planilha':(x.gap>0?`Atual: ${cur} • meta sugerida: ${target}`:`Já está acima da mediana (${cur})`);let gap=x.missing?'VALIDAR':(x.gap>0?`+${metricFormat(x.gap,x.field)}`:'OK');return `<div class="evoItem"><div class="evoIcon">${x.icon}</div><div><b>${esc(x.label)}</b><small>${action} • posição ${Math.round(x.pct)}/100 entre pares</small></div><div class="evoGap">${gap}</div></div>`}).join('');
-  box.className='evoAdvice show';box.innerHTML=`<div class="evoHead"><div><div class="title">${a.title}</div><div class="sub">${a.sub}</div></div><div class="evoScore">Índice ${Math.round(a.score)}/100</div></div><div class="evoItems">${itemHtml}</div><div class="evoNote">Os valores são exibidos em unidades reais da planilha. A meta é uma referência gerencial baseada na mediana da função dentro da HIVE; não é um requisito fixo do jogo.</div>`;
+  const rows=a.items.map(x=>{
+    const cur=x.missing?'Sem dado':metricFormat(x.cur,x.field);
+    const avg=x.avg?metricFormat(x.avg,x.field):'—';
+    const need=x.missing?'VALIDAR':(x.gap>0?`+${metricFormat(x.gap,x.field)}`:'OK');
+    const ok=!x.missing&&x.gap<=0;
+    const priority=x.missing?'Validar':(x.pct<35?'Prioridade alta':x.pct<60?'Prioridade média':ok?'Acima da média':'Prioridade baixa');
+    return `<tr><td><div class="evoAttr"><span class="evoIcon">${x.icon}</span>${esc(x.label)}</div></td><td class="evoCurrent">${cur}</td><td class="evoAverage">${avg}</td><td class="evoNeed ${ok?'ok':''}">${need}</td><td class="evoPosition">${Math.round(x.pct)}/100</td><td><span class="evoPriority ${ok?'ok':''}">${priority}</span></td></tr>`;
+  }).join('');
+  box.className='evoAdvice show';
+  box.innerHTML=`<div class="evoHead"><div><div class="title">${a.title}</div><div class="sub">${a.sub}</div></div><div class="evoScore">Índice ${Math.round(a.score)}/100</div></div><div class="evoItems"><table class="evoTable"><thead><tr><th>Atributo</th><th>Atual</th><th>Média dos pares</th><th>Precisa melhorar</th><th>Posição</th><th>Situação</th></tr></thead><tbody>${rows}</tbody></table></div><div class="evoLegend">“Precisa melhorar” mostra exatamente quanto falta para alcançar a média atual dos jogadores da mesma função/perfil. Se aparecer <b style="color:#63e891">OK</b>, o jogador já está na média ou acima dela.</div><div class="evoNote">Os valores são exibidos em unidades reais da planilha. A média é uma referência gerencial dinâmica da HIVE; não é um requisito fixo do jogo.</div>`;
 }
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
