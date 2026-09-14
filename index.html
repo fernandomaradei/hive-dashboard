@@ -189,6 +189,116 @@ z-index:0}
 .feature .avatarRing.doram-clean::before{display:none!important}
 .feature .avatarRing.doram-clean .feat-extra-crown{display:none!important}
 
+
+/* V36 — Moldura HIVE / Abelha para o Destaque da Guild */
+.feature{
+  position:relative;
+  isolation:isolate;
+  border:1px solid #d99b16!important;
+  border-radius:22px!important;
+  overflow:hidden;
+  background:
+    linear-gradient(135deg,rgba(255,190,45,.07),transparent 18%),
+    linear-gradient(315deg,rgba(255,190,45,.05),transparent 20%),
+    #0d0d0c!important;
+  box-shadow:
+    0 0 0 1px rgba(255,199,63,.12),
+    inset 0 0 32px rgba(255,176,24,.035),
+    0 12px 34px rgba(0,0,0,.28);
+}
+.feature:before{
+  content:"";
+  position:absolute;inset:7px;
+  pointer-events:none;z-index:0;
+  border-radius:17px;
+  border:1px solid rgba(255,198,54,.26);
+  clip-path:polygon(0 12%,3% 12%,3% 5%,8% 5%,8% 0,92% 0,92% 5%,97% 5%,97% 12%,100% 12%,100% 88%,97% 88%,97% 95%,92% 95%,92% 100%,8% 100%,8% 95%,3% 95%,3% 88%,0 88%);
+}
+.feature:after{
+  content:"⬡";
+  position:absolute;
+  top:-22px;left:50%;transform:translateX(-50%);
+  width:72px;height:66px;
+  display:flex;align-items:center;justify-content:center;
+  color:#ffd565;font-size:44px;font-weight:900;
+  background:linear-gradient(180deg,#33230a,#0d0b07);
+  border:2px solid #d89b22;
+  clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.7)) drop-shadow(0 0 8px rgba(255,184,34,.35));
+  z-index:4;
+}
+.feature>*{position:relative;z-index:2}
+.feature .featureTop{
+  position:relative;
+  margin:8px;
+  border:1px solid rgba(217,155,22,.42);
+  border-radius:17px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 12% 25%,rgba(255,183,35,.08) 0 2px,transparent 3px),
+    linear-gradient(90deg,rgba(255,188,36,.035),transparent 35%),
+    #171715;
+}
+.feature .featureTop:before,
+.feature .featureTop:after{
+  content:"";
+  position:absolute;pointer-events:none;z-index:0;
+  width:118px;height:118px;opacity:.16;
+  background-image:
+    linear-gradient(30deg,#d99b16 12%,transparent 12.5%,transparent 87%,#d99b16 87.5%,#d99b16),
+    linear-gradient(150deg,#d99b16 12%,transparent 12.5%,transparent 87%,#d99b16 87.5%,#d99b16),
+    linear-gradient(30deg,#d99b16 12%,transparent 12.5%,transparent 87%,#d99b16 87.5%,#d99b16);
+  background-size:28px 49px;
+}
+.feature .featureTop:before{left:-15px;bottom:-15px}
+.feature .featureTop:after{right:-20px;top:-10px;transform:rotate(180deg)}
+.feature .statsRow{
+  margin:0 8px;
+  border-left:1px solid rgba(217,155,22,.36);
+  border-right:1px solid rgba(217,155,22,.36);
+  border-top:1px solid rgba(217,155,22,.36);
+  background:linear-gradient(180deg,#121210,#0b0b0a);
+}
+.feature .statsRow>div{
+  border-color:rgba(217,155,22,.20)!important;
+}
+.feature .featureBtn{
+  margin:0 8px 9px!important;
+  border:1px solid #e4a91e!important;
+  box-shadow:inset 0 0 14px rgba(255,183,28,.04),0 0 12px rgba(255,180,20,.05);
+  background:
+    linear-gradient(90deg,rgba(255,181,25,.08),transparent 13%,transparent 87%,rgba(255,181,25,.08)),
+    #090908!important;
+}
+.feature .featureBtn:before,.feature .featureBtn:after{
+  content:"⬡ ⬡ ⬡";position:absolute;top:50%;transform:translateY(-52%);
+  color:#a76f0a;opacity:.28;font-size:12px;letter-spacing:-2px;
+}
+.feature .featureBtn:before{left:15px}
+.feature .featureBtn:after{right:15px}
+.feature .avatarRing{
+  clip-path:polygon(25% 3%,75% 3%,98% 25%,98% 75%,75% 97%,25% 97%,2% 75%,2% 25%)!important;
+  border-radius:0!important;
+  padding:6px!important;
+  background:linear-gradient(135deg,#fff0a0,#d58b12 30%,#ffcf47 55%,#8f5608 80%,#ffe47d)!important;
+  box-shadow:0 0 28px rgba(245,177,30,.30)!important;
+}
+.feature .avatarRing img{
+  clip-path:polygon(25% 3%,75% 3%,98% 25%,98% 75%,75% 97%,25% 97%,2% 75%,2% 25%)!important;
+  border-radius:0!important;
+}
+.feature .featClassBadge{
+  bottom:-8px!important;
+  border-radius:7px!important;
+  border:1px solid #d99b16!important;
+}
+@media(max-width:720px){
+  .feature:after{width:58px;height:52px;font-size:34px;top:-18px}
+  .feature .featureTop{margin:6px}
+  .feature .statsRow{margin:0 6px}
+  .feature .featureBtn{margin:0 6px 7px!important}
+}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
