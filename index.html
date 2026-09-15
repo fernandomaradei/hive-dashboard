@@ -443,7 +443,7 @@ z-index:0}
 <div class="app">
   <section class="hero" id="inicio"></section>
   <nav class="nav">
-    <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking</a><a href="#members">👥 Membros</a><a href="#guildleague">⚔️ Guild League</a><a href="#destaque">📈 Evolução</a><a href="#destaque">📖 Codex</a><a href="#sobre">ⓘ Sobre</a>
+    <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking</a><a href="#members">👥 Membros</a><a href="#destaque">📈 Evolução</a><a href="#destaque">📖 Codex</a><a href="#sobre">ⓘ Sobre</a>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
   <section class="kpis" id="kpis"></section>
@@ -476,24 +476,6 @@ z-index:0}
       <div class="mx-summary" id="mxSummary"></div>
       <div class="mx-table"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th id="mxMetricHead">Status</th><th>HP</th><th>PDEF</th><th>MDEF</th><th>Discord</th></tr></thead><tbody id="mxRows"></tbody></table></div><div class="mx-mobile-cards" id="mxMobileCards"></div>
     </article>
-  </section>
-
-  <section class="gl-section" id="guildleague">
-    <div class="gl-head"><div><h2>⚔️ <span>GUILD LEAGUE</span> • COMMAND CENTER</h2><p>Leitura gerencial automática da guild para decidir onde treinar, quem proteger e como montar o núcleo de guerra.</p></div><div class="gl-badge">ANÁLISE AO VIVO • MEMBROS</div></div>
-    <div class="gl-kpis" id="glKpis"></div>
-    <div class="gl-grid">
-      <article class="gl-card"><div class="gl-card-head"><div><div class="gl-card-title">🚨 Radar de atenção</div><div class="gl-card-sub">Os menores indicadores da guild — clique em qualquer player para abrir a ficha.</div></div></div><div class="gl-alerts" id="glAlerts"></div></article>
-      <article class="gl-card"><div class="gl-card-head"><div><div class="gl-card-title">🛡️ Menor resistência geral</div><div class="gl-card-sub">Índice interno de sobrevivência: HP + PDEF + MDEF + reduções PvP.</div></div><span class="gl-badge">BOTTOM 8</span></div><div class="gl-list" id="glDefense"></div></article>
-    </div>
-    <div class="gl-lineups">
-      <article class="gl-lineup"><h3>🛡️ Linha de frente</h3><p>Players com melhor combinação de sobrevivência e Power.</p><div id="glTanks"></div></article>
-      <article class="gl-lineup"><h3>⚔️ DPS / Damage</h3><p>Índice ofensivo por perfil físico/mágico, usando os atributos corretos de cada classe.</p><div id="glDamage"></div></article>
-      <article class="gl-lineup"><h3>✨ Sustentação</h3><p>Priests e Music com melhor prontidão para compor o núcleo.</p><div id="glSupport"></div></article>
-    </div>
-    <div class="gl-actions">
-      <article class="gl-card"><div class="gl-card-head"><div><div class="gl-card-title">🎯 Prioridade de evolução</div><div class="gl-card-sub">Quem mais ganha valor para a Guild League se receber atenção primeiro.</div></div><span class="gl-badge">TOP 12</span></div><div class="gl-priority" id="glPriority"></div></article>
-      <article class="gl-card"><div class="gl-card-head"><div><div class="gl-card-title">🧠 Como ler este painel</div><div class="gl-card-sub">Indicador gerencial, não substitui decisão da staff.</div></div></div><div class="gl-note"><b>Prontidão Guild League</b> é um índice comparativo entre os próprios membros da HIVE. Ele não inventa status e não altera a planilha.<div class="formula">O índice é interpretado conforme a função da classe. <b>DPS</b> são comparados também por ofensiva; <b>Suportes/Tanks</b> não são penalizados por terem dano menor.<br><br>Sobrevivência considera HP, PDEF, MDEF, PVP DMG RED e DMG RED MED. Ofensiva considera ATK/MATK, penetrações, PDMG/MDMG e PVP DMG INC.</div><br>Use o painel para encontrar gargalos rapidamente: <b>vermelho</b> = prioridade alta, <b>amarelo</b> = atenção, <b>verde</b> = faixa saudável dentro da guild.</div></article>
-    </div>
   </section>
 
   <section class="panel" id="fullRanking"><div class="panelHead"><div><div class="panelTitle">🏆 RANKING COMPLETO</div><div class="panelSub" id="countLabel"></div></div></div><div class="fulltable"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th>Evolução</th><th>HP</th><th>ATK</th><th>MATK</th></tr></thead><tbody id="allRows"></tbody></table></div></section>
@@ -697,6 +679,7 @@ function renderMemberExplorer(){
 }
 
 function renderGuildLeague(){
+  if(!$('#glKpis')) return;
   if(!members.length)return;
   const dpsPool=members.filter(isDPS); const cache={POWER:glValues('Power Atual'),HP:glValues('HP'),PDEF:glValues('PDEF'),MDEF:glValues('MDEF'),PVPRED:glValues('PVP DMG RED'),RED:members.map(m=>num(m['DMG RED MED'])).filter(v=>v>0),OFF:buildOffenseContext(dpsPool)};
   const scored=members.map(m=>({...m,_gl:glScores(m,cache)}));
