@@ -768,8 +768,8 @@ function updateInfo(m){
 }
 function ucDate(d){return d?new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(d):'—'}
 function ucClass(st){return st==='attention'?'att':st}
-let ucVisibleLimit=20;
-const UC_PAGE_SIZE=20;
+let ucVisibleLimit=15;
+const UC_PAGE_SIZE=15;
 function renderUpdateControl(){
   const rows=$('#ucRows'); if(!rows)return;
   const data=members.map(m=>({m,info:updateInfo(m)}));
