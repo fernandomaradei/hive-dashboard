@@ -665,6 +665,84 @@ z-index:0}
 @media(max-width:1100px){.myCharHeroRow{grid-template-columns:1fr 1fr}.myCharIdentityCard{grid-column:1/-1}.myQuickRow{grid-template-columns:1fr 1fr}.myCharMetrics{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:650px){.myCharSectionHead{align-items:flex-start;gap:10px;flex-direction:column}.myCharOpen{width:100%}.myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}.myCharIdentityCard{grid-column:auto}.myCharPortrait{width:110px!important;flex-basis:110px!important}.myMetricsHead{align-items:flex-start;gap:10px;flex-direction:column}.profileTabs{width:100%}.profileTabs span{flex:1;text-align:center;padding:6px 4px}}
 
+
+/* ===== Meu Personagem: arte da mesma coleção do Destaque da Guild ===== */
+.myCharIdentityCard{
+  position:relative!important;
+  min-height:128px!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+  background:#0e100e!important;
+}
+.myCharPortrait{
+  position:absolute!important;
+  inset:0 auto 0 0!important;
+  width:48%!important;
+  height:100%!important;
+  border:0!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  background:#12130f!important;
+  box-shadow:none!important;
+  z-index:0!important;
+}
+.myCharPortrait:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    linear-gradient(90deg,rgba(10,12,10,.02) 0%,rgba(10,12,10,.12) 42%,rgba(14,16,14,.92) 91%,#0e100e 100%),
+    linear-gradient(0deg,rgba(8,9,8,.40),transparent 55%)!important;
+  pointer-events:none!important;
+}
+.myCharPortrait img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center 24%!important;
+  display:block!important;
+  filter:saturate(.94) contrast(1.04)!important;
+}
+.myCharIdentityText{
+  position:relative!important;
+  z-index:2!important;
+  width:58%!important;
+  margin-left:auto!important;
+  min-height:128px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:15px 16px 15px 8px!important;
+  background:linear-gradient(90deg,transparent,#0e100e 20%,#0e100e 100%)!important;
+}
+.myCharNameLine strong{font-size:25px!important}
+.myCharIdentityText>b{font-size:13px!important}
+.myCharRolePills span{font-size:9px!important;padding:5px 10px!important}
+
+/* pequeno selo visual da classe sobre a própria arte */
+.myCharPortrait:before{
+  content:""!important;
+  position:absolute!important;
+  left:10px!important;bottom:9px!important;
+  width:3px!important;height:24px!important;
+  border-radius:4px!important;
+  background:#e7b62d!important;
+  box-shadow:0 0 12px #e7b62d66!important;
+  z-index:3!important;
+}
+
+@media(max-width:1100px){
+  .myCharIdentityCard{min-height:120px!important}
+  .myCharIdentityText{min-height:120px!important}
+}
+@media(max-width:650px){
+  .myCharIdentityCard{min-height:112px!important}
+  .myCharPortrait{width:52%!important}
+  .myCharIdentityText{width:60%!important;min-height:112px!important;padding-right:10px!important}
+  .myCharNameLine strong{font-size:20px!important}
+}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -1558,7 +1636,7 @@ function renderMyCharacter(){
   const weak=[...metrics].sort((a,b)=>a.pct-b.pct).slice(0,2);
 
   const portrait=$('#myCharPortrait');
-  if(portrait){ portrait.src=classImage(m.Job); portrait.alt=m.Job||'Classe'; }
+  if(portrait){ portrait.src=classImage(m.Job); portrait.alt=`Arte ${m.Job||'Classe'} • mesma coleção do Destaque da Guild`; }
   $('#myCharName').textContent=m.Personagem||'—';
   $('#myCharClass').textContent=group||m.Job||'—';
   const rolePill=$('#myCharRolePill'), profileTab=$('#myProfileTab');
