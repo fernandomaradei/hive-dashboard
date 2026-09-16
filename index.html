@@ -754,10 +754,15 @@ function featuredClassImage(job){
 function updateInfo(m){
   const raw=m?.['Última Atualização'];
   if(raw===null||raw===undefined||String(raw).trim()==='') return {days:Infinity,status:'none',label:'Sem atualização',date:null};
-  let text=String(raw).trim(), d=new Date(text);
-  if(Number.isNaN(d.getTime())){
-    const br=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2}))?/);
-    if(br)d=new Date(+br[3],+br[2]-1,+br[1],+(br[4]||0),+(br[5]||0));
+  const text=String(raw).trim();
+  // A planilha usa data brasileira DD/MM/AAAA. Precisamos interpretar esse
+  // formato ANTES do new Date(), pois o navegador pode assumir MM/DD/AAAA.
+  const br=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s*[,\-]?\s*(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  let d;
+  if(br){
+    d=new Date(+br[3],+br[2]-1,+br[1],+(br[4]||0),+(br[5]||0),+(br[6]||0));
+  }else{
+    d=new Date(text);
   }
   if(Number.isNaN(d.getTime())) return {days:Infinity,status:'none',label:'Sem atualização',date:null};
   const now=new Date(), today=new Date(now.getFullYear(),now.getMonth(),now.getDate()), then=new Date(d.getFullYear(),d.getMonth(),d.getDate());
