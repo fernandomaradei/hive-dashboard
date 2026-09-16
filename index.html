@@ -1123,7 +1123,10 @@ function rankMetric(label,value,pct,weight){
 }
 function renderRankExplanation(m){
  const box=$('#mRankExplain'); if(!box)return;
- const job=String(m.Job||'').trim(), pool=members.filter(x=>String(x.Job||'').trim()===job), role=classRole(job);
+ const job=String(m.Job||'').trim(),
+       rankGroup=classRankingGroup(m),
+       pool=members.filter(x=>classRankingGroup(x)===rankGroup),
+       role=classRole(job);
  const final=classTop3Score(m,pool);
  if(!final){box.innerHTML='';return}
  let items=[], formula='';
@@ -1160,7 +1163,7 @@ function renderRankExplanation(m){
      items=off; formula='OFENSIVA: Ataque 28% + Penetração 24% + Dano 22% + PVP DMG INC 16% + Power 10%.';
    }
  }
- box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores da classe ${esc(job)}</div><div class="rankExplainGrid">${items.map(x=>`<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine" style="margin-top:4px"><span>Desempenho na classe: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div></div>`).join('')}</div><div class="rankExplainFormula">${esc(formula)} Quanto maior a barra, melhor o atributo do jogador em relação aos demais da mesma classe.</div></div>`;
+ box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores do grupo ${esc(rankGroup)}</div><div class="rankExplainGrid">${items.map(x=>`<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine" style="margin-top:4px"><span>Desempenho na classe: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div></div>`).join('')}</div><div class="rankExplainFormula">${esc(formula)} Quanto maior a barra, melhor o atributo do jogador em relação aos demais da mesma classe.</div></div>`;
 }
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
@@ -1223,6 +1226,15 @@ function classRankingDefenseScore(m,pool){
        + .18*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
        + .12*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
 }
+
+function classRankingGroup(m){
+  const job=String(m.Job||'').trim();
+  if(/\bdoram\b/i.test(job)){
+    return rankingOffensiveRaw(m).profile==='MAGIC' ? 'Doram Mágico' : 'Doram Físico';
+  }
+  return job;
+}
+
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
 
@@ -1257,17 +1269,46 @@ function toggleClassRank(key,btn){
 }
 function renderClassTop3(){
  const box=$('#classTop3Grid'); if(!box||!members.length)return;
- const jobs=[...new Set(members.map(m=>String(m.Job||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
+ // Cada Doram entra em um grupo próprio conforme o perfil detectado.
+ // As outras classes continuam agrupadas normalmente pelo Job.
+ const groups=[...new Set(members.map(classRankingGroup).filter(Boolean))]
+   .sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
  const cards=[];
- jobs.forEach(job=>{
-  const pool=members.filter(m=>String(m.Job||'').trim()===job);
-  const ranked=pool.map(m=>{const r=classTop3Score(m,pool);return r?{...m,_classRank:r}:null}).filter(Boolean).sort((a,b)=>b._classRank.score-a._classRank.score);
+ groups.forEach(group=>{
+  const pool=members.filter(m=>classRankingGroup(m)===group);
+  const ranked=pool.map(m=>{
+    const r=classTop3Score(m,pool);
+    return r?{...m,_classRank:r}:null;
+  }).filter(Boolean).sort((a,b)=>b._classRank.score-a._classRank.score);
+
   if(!ranked.length)return;
-  const kind=ranked[0]._classRank.kind, context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
-  const top=ranked.slice(0,5), rest=ranked.slice(5), key=encodeURIComponent(job).replace(/%/g,'_');
-  const row=(m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')"><span class="classMedal">${i<3?['🥇','🥈','🥉'][i]:(i+1)+'º'}</span><div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power${/\bdoram\b/i.test(String(m.Job||''))?' • '+(rankingOffensiveRaw(m).profile==='MAGIC'?'MÁGICO':'FÍSICO'):''}</small></div><div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div></div>`;
-  cards.push(`<div class="classRankCard"><div class="classRankTitle"><b>${esc(job)}</b><span>${esc(kind)}</span></div><div class="classPodium">${top.map((m,i)=>row(m,i)).join('')}</div>${rest.length?`<div class="classPodiumExtra" id="classExtra_${key}">${rest.map((m,i)=>row(m,i+5)).join('')}</div><button class="classRankMore" data-remaining="${rest.length}" onclick="toggleClassRank('${key}',this)">Ver restante dos membros (${rest.length}) &#8595;</button>`:''}</div>`);
+
+  const isDoramGroup=/^Doram (Mágico|Físico)$/i.test(group);
+  const profileLabel=/Mágico/i.test(group)?'MÁGICO':(/Físico/i.test(group)?'FÍSICO':'');
+  const kind=isDoramGroup
+    ? `HÍBRIDO ${profileLabel} • ATQ + DEF`
+    : ranked[0]._classRank.kind;
+
+  const context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
+  const top=ranked.slice(0,5), rest=ranked.slice(5);
+  const key=encodeURIComponent(group).replace(/%/g,'_');
+
+  const row=(m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')">
+    <span class="classMedal">${i<3?['🥇','🥈','🥉'][i]:(i+1)+'º'}</span>
+    <div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power${isDoramGroup?' • '+profileLabel:''}</small></div>
+    <div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div>
+  </div>`;
+
+  cards.push(`<div class="classRankCard">
+    <div class="classRankTitle"><b>${esc(group)}</b><span>${esc(kind)}</span></div>
+    <div class="classPodium">${top.map((m,i)=>row(m,i)).join('')}</div>
+    ${rest.length?`<div class="classPodiumExtra" id="classExtra_${key}">${rest.map((m,i)=>row(m,i+5)).join('')}</div>
+    <button class="classRankMore" data-remaining="${rest.length}" onclick="toggleClassRank('${key}',this)">Ver restante dos membros (${rest.length}) &#8595;</button>`:''}
+  </div>`);
  });
+
  box.innerHTML=cards.length?cards.join(''):'<div style="padding:18px;color:#8f897e">Nenhuma classe DPS/Suporte identificada.</div>';
 }
 
