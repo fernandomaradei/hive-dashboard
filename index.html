@@ -371,6 +371,138 @@ z-index:0}
 .rankExplainBar{height:7px;background:#302c23;border:1px solid rgba(255,255,255,.035);border-radius:99px;overflow:hidden;margin-top:9px}.rankExplainFill{height:100%;background:linear-gradient(90deg,#a87b19,#f2c23e,#ffd968);border-radius:99px}
 .rankExplainFormula{margin-top:15px;padding:13px 2px 0;border-top:1px solid #3a352b;font-size:10.5px;line-height:1.7;color:#bbb3a5}
 @media(max-width:600px){.rankExplain{padding:15px}.rankExplainGrid{grid-template-columns:1fr}.rankExplainHead b{font-size:14px}.rankExplainSub{font-size:10.5px}.rankExplainLine{font-size:10.5px}}
+
+/* ===== HIVE V: PADRÃO VISUAL DOS PLANOS / RANKING ===== */
+.rankExplain{
+  grid-column:1/-1;
+  margin:18px 0 0 !important;
+  padding:0 !important;
+  border:1px solid rgba(201,151,27,.62) !important;
+  border-radius:14px !important;
+  background:#11110f !important;
+  overflow:hidden;
+  color:#d8d3ca;
+}
+.rankExplainHead{
+  min-height:62px;
+  padding:14px 18px !important;
+  margin:0 !important;
+  border-bottom:1px solid #29261f;
+  background:#12110f;
+}
+.rankExplainHead b{
+  font-size:14px !important;
+  font-weight:900 !important;
+  color:#f4c542 !important;
+}
+.rankExplainTotal{
+  padding:7px 10px;
+  border:1px solid rgba(216,133,91,.58);
+  border-radius:18px;
+  background:#241712;
+  font-size:14px !important;
+  color:#ffd0b4 !important;
+}
+.rankExplainSub{
+  padding:0 18px 13px;
+  margin:0 !important;
+  border-bottom:1px solid #29261f;
+  color:#aaa49b !important;
+  font-size:11px !important;
+  line-height:1.5;
+}
+.rankExplainGrid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:8px !important;
+  padding:12px !important;
+}
+.rankExplainItem{
+  display:grid;
+  grid-template-columns:minmax(170px,1.6fr) minmax(110px,.75fr) minmax(160px,1fr);
+  align-items:center;
+  gap:14px;
+  min-height:48px;
+  padding:10px 12px !important;
+  border:1px solid #302c24 !important;
+  border-radius:10px !important;
+  background:#121210 !important;
+}
+.rankExplainItem:nth-child(odd){
+  background:linear-gradient(90deg,rgba(73,52,17,.34),#121210 42%) !important;
+}
+.rankExplainLine{
+  font-size:11px !important;
+  color:#c5c0b7 !important;
+}
+.rankExplainLine strong{
+  color:#f2eee7 !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+}
+.rankExplainLine:nth-child(2){
+  justify-content:flex-end !important;
+  gap:18px !important;
+  margin:0 !important;
+  color:#aaa49b !important;
+}
+.rankExplainBar{
+  height:8px !important;
+  margin:0 !important;
+  background:#292720 !important;
+}
+.rankExplainFill{
+  background:linear-gradient(90deg,#b88612,#f3c739) !important;
+}
+.rankExplainFormula{
+  margin:0 !important;
+  padding:12px 18px 15px !important;
+  border-top:1px solid #29261f !important;
+  color:#aaa49b !important;
+  font-size:10.5px !important;
+  line-height:1.65 !important;
+}
+
+/* Planos de evolução: mesma tipografia/contraste do defensivo */
+.evoPlan,.evoAdvice,.offensePlan,.defensePlan{
+  color:#d8d3ca;
+}
+.evoPlan h3,.evoAdvice h3,.offensePlan h3,.defensePlan h3{
+  color:#f4c542 !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+}
+.evoPlan table,.offensePlan table,.defensePlan table{
+  font-size:11px !important;
+}
+.evoPlan th,.offensePlan th,.defensePlan th{
+  color:#aaa49b !important;
+  font-size:10px !important;
+  font-weight:800 !important;
+}
+.evoPlan td,.offensePlan td,.defensePlan td{
+  color:#d7d2c9 !important;
+}
+.evoPlan td strong,.offensePlan td strong,.defensePlan td strong{
+  color:#f3efe7 !important;
+}
+.evoPlan small,.evoAdvice small,.offensePlan small,.defensePlan small{
+  color:#a8a198 !important;
+  font-size:10px !important;
+  line-height:1.55 !important;
+}
+
+@media(max-width:760px){
+  .rankExplainItem{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+  .rankExplainLine:nth-child(2){
+    justify-content:space-between !important;
+  }
+  .rankExplainBar{margin-top:2px !important}
+}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
