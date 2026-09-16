@@ -510,6 +510,21 @@ z-index:0}
   margin-bottom:20px;
 }
 
+
+/* Diagnóstico objetivo da pontuação */
+.rankWhySummary{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 18px 4px}
+.rankWhySummary>div{display:flex;flex-direction:column;gap:5px;padding:11px 13px;border:1px solid #302c24;border-radius:9px;background:#151410}
+.rankWhySummary b{font-size:11px;font-weight:900}.rankWhySummary span{font-size:11px;line-height:1.45;color:#e1ddd5}
+.rankWhyGood b{color:#66e69b}.rankWhyBad b{color:#ffad70}
+.rankDiag{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:5px;padding:7px 9px;border-radius:7px;font-size:10.5px;line-height:1.4}
+.rankDiag b{flex:0 0 auto;font-size:9.5px;letter-spacing:.04em}.rankDiag span{color:#ddd8cf}
+.rankDiag.great{background:rgba(35,145,80,.12);border:1px solid rgba(70,210,125,.25)}.rankDiag.great b{color:#67e99e}
+.rankDiag.good{background:rgba(60,125,80,.10);border:1px solid rgba(90,170,110,.20)}.rankDiag.good b{color:#9adbad}
+.rankDiag.mid{background:rgba(194,151,38,.09);border:1px solid rgba(194,151,38,.22)}.rankDiag.mid b{color:#e7c75e}
+.rankDiag.warn{background:rgba(206,126,35,.10);border:1px solid rgba(224,151,62,.25)}.rankDiag.warn b{color:#f1b660}
+.rankDiag.bad{background:rgba(187,65,50,.12);border:1px solid rgba(221,91,72,.28)}.rankDiag.bad b{color:#ff927e}
+@media(max-width:760px){.rankWhySummary{grid-template-columns:1fr;padding:10px 12px 3px}.rankDiag{align-items:flex-start;flex-direction:column;gap:4px}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -1121,6 +1136,16 @@ function rankMetric(label,value,pct,weight){
  const p=Math.max(0,Math.min(100,Math.round(pct||0)));
  return {label,value,p,weight};
 }
+
+function rankMetricDiagnosis(x){
+ const p=x.p;
+ if(p>=85) return {cls:'great',tag:'PONTO FORTE',txt:`Está entre os melhores do grupo (${p}/100) e ajuda bastante a elevar a nota.`};
+ if(p>=65) return {cls:'good',tag:'ACIMA DA MÉDIA',txt:`Está acima de boa parte do grupo (${p}/100) e contribui positivamente para a nota.`};
+ if(p>=45) return {cls:'mid',tag:'NA MÉDIA',txt:`Está na faixa intermediária do grupo (${p}/100). Não prejudica muito, mas ainda existe espaço para evolução.`};
+ if(p>=25) return {cls:'warn',tag:'ABAIXO DA MÉDIA',txt:`Está abaixo da maioria do grupo (${p}/100) e está limitando a pontuação.`};
+ return {cls:'bad',tag:'PRIORIDADE',txt:`Está entre os menores valores do grupo (${p}/100) e é um dos pontos que mais puxam a nota para baixo.`};
+}
+
 function renderRankExplanation(m){
  const box=$('#mRankExplain'); if(!box)return;
  const job=String(m.Job||'').trim(),
@@ -1163,7 +1188,13 @@ function renderRankExplanation(m){
      items=off; formula='OFENSIVA: Ataque 28% + Penetração 24% + Dano 22% + PVP DMG INC 16% + Power 10%.';
    }
  }
- box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores do grupo ${esc(rankGroup)}</div><div class="rankExplainGrid">${items.map(x=>`<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine" style="margin-top:4px"><span>Desempenho na classe: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div></div>`).join('')}</div><div class="rankExplainFormula">${esc(formula)} Quanto maior a barra, melhor o atributo do jogador em relação aos demais da mesma classe.</div></div>`;
+ const strengths=[...items].sort((a,b)=>b.p-a.p).slice(0,2);
+ const weaknesses=[...items].sort((a,b)=>a.p-b.p).slice(0,2);
+ const summary=`<div class="rankWhySummary">
+   <div class="rankWhyGood"><b>✓ O que sustenta sua nota</b><span>${strengths.map(x=>`${esc(x.label)} (${x.p}/100)`).join(' • ')}</span></div>
+   <div class="rankWhyBad"><b>↑ O que mais limita sua nota</b><span>${weaknesses.map(x=>`${esc(x.label)} (${x.p}/100)`).join(' • ')}</span></div>
+ </div>`;
+ box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores do grupo ${esc(rankGroup)}</div>${summary}<div class="rankExplainGrid">${items.map(x=>{const d=rankMetricDiagnosis(x);return `<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine" style="margin-top:4px"><span>Desempenho no grupo: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div><div class="rankDiag ${d.cls}"><b>${d.tag}</b><span>${d.txt} Peso deste atributo na nota: ${(x.weight*100).toFixed(0)}%.</span></div></div>`}).join('')}</div><div class="rankExplainFormula">${esc(formula)} Agora cada linha mostra também se o atributo é um ponto forte, está na média ou está limitando a pontuação.</div></div>`;
 }
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
