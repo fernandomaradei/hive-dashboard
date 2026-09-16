@@ -503,6 +503,13 @@ z-index:0}
   .rankExplainBar{margin-top:2px !important}
 }
 
+
+/* Ranking por Classe integrado ao Radar Operacional */
+.mgr-section > .classRankPanel{
+  margin-top:18px;
+  margin-bottom:20px;
+}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -641,6 +648,10 @@ z-index:0}
       <article class="mgr-card"><div class="hd"><b>🛡️ Menor Defesa</b><span>somente suportes • HP + PDEF + MDEF + RED</span></div><div class="mgr-list" id="mgrLowDefense"></div></article>
       <article class="mgr-card"><div class="hd"><b>⚔️ DPS • Prioridade de Evolução</b><span>atributos ofensivos da classe + Power</span></div><div class="mgr-list" id="mgrLowOffense"></div></article>
     </div>
+    <section class="classRankPanel">
+<div class="classRankHead"><div><h3>🏆 Ranking por Classe</h3><p>Ranking técnico por função. DPS usa ataque, Suporte usa defesa e Híbrido combina ataque + defesa. Top 5 visível por classe.</p></div><div class="classRankLegend">TOP 5 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
+<div class="classRankGrid" id="classTop3Grid"></div>
+</section>
     <article class="member-explorer">
       <div class="mx-head"><div><div class="mx-title">👥 Central de Membros</div><div class="mx-sub">Filtre qualquer status da planilha, classe e faixa de valor. Clique no player para abrir a ficha completa.</div></div><span class="gl-badge" id="mxCount">0 MEMBROS</span></div>
       <div class="mx-filters">
@@ -661,10 +672,7 @@ z-index:0}
       <div class="uc-table"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th>Última Atualização</th><th>Tempo sem atualizar</th><th>Status</th></tr></thead><tbody id="ucRows"></tbody></table></div><div class="uc-more-wrap"><button class="uc-more" id="ucMore" hidden>Mostrar mais membros ↓</button></div>
     </article>
   </section>
-<section class="classRankPanel">
-<div class="classRankHead"><div><h3>🏆 Ranking por Classe</h3><p>Ranking técnico por função. DPS usa ataque, Suporte usa defesa e Híbrido combina ataque + defesa. Top 5 visível por classe.</p></div><div class="classRankLegend">TOP 5 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
-<div class="classRankGrid" id="classTop3Grid"></div>
-</section>
+
 
 
   <section class="panel" id="fullRanking"><div class="panelHead"><div><div class="panelTitle">🏆 RANKING COMPLETO</div><div class="panelSub" id="countLabel"></div></div></div><div class="fulltable"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th>Evolução</th><th>HP</th><th>ATK</th><th>MATK</th></tr></thead><tbody id="allRows"></tbody></table></div></section>
