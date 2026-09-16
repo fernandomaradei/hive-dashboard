@@ -634,22 +634,137 @@ z-index:0}
 @media(max-width:600px){.myCharPortrait{width:48px;height:48px;border-radius:12px}.myCharIdentityWrap{gap:10px}}
 
 
-/* ===== MEU PERSONAGEM V3 — ficha alinhada e compacta ===== */
-.myCharShell{max-width:1500px;margin:18px auto 16px;padding:0 22px}
-.myCharCard{border:1px solid #80651c;background:linear-gradient(145deg,#14150f 0%,#10110e 60%,#15130d 100%);border-radius:18px;overflow:hidden;box-shadow:0 18px 50px #0007}
-.myCharTop{padding:18px 20px;gap:20px;background:linear-gradient(90deg,#17160f 0%,#11120f 55%,#17140c 100%)}
-.myCharTop>div:first-child{min-width:0}
-.myCharIdentityWrap{gap:15px}.myCharPortrait{width:78px;height:78px;border-radius:16px;border:1px solid #96751e;box-shadow:0 0 0 4px #0b0b09,0 0 26px #d8aa2925}
-.myCharIdentity{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:11px;row-gap:3px}.myCharIdentity strong{font-size:25px;line-height:1.05}.myCharIdentity>span:not(.myCharDiscord){font-size:11px}.myCharDiscord{grid-column:1/-1;font-size:9px}
-.myCharOpen{min-width:190px;padding:11px 16px;box-shadow:0 8px 22px #d9aa2520}
-.myCharOverview{grid-template-columns:repeat(4,1fr);background:#10110e}.myCharScoreBox,.myCharKpi{min-height:86px;padding:15px 18px;display:flex;flex-direction:column;justify-content:center}.myCharOverview b{font-size:19px}.myCharScoreBox b{font-size:26px}
-.myCharAnalysis{grid-template-columns:1.35fr .95fr;gap:12px;padding:14px 18px 10px}.myCharSummary,.myCharHighlight{min-height:76px}.myCharHighlights{grid-template-columns:1fr 1fr}
-.myCharMetrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:8px 18px 18px}.myCharMetric{min-height:128px;padding:12px 13px;border-radius:12px;background:linear-gradient(180deg,#13140f,#0f100e)}
-.myCharMetricHead b{font-size:9px}.myCharMetricHead span{font-size:9px}.myCharMetricVals{margin-top:8px}.myCharMetricVals strong{font-size:16px}.myCharMetricVals small{font-size:8px}
-.myCharCompare{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:9px}.myCharCompare div{background:#0b0c0a;border:1px solid #29271f;border-radius:7px;padding:6px 7px;min-width:0}.myCharCompare small{display:block;color:#777268;font-size:6.5px;font-weight:900;letter-spacing:.05em;white-space:nowrap}.myCharCompare b{display:block;color:#ddd8ce;font-size:9px;margin-top:3px;overflow:hidden;text-overflow:ellipsis}.myCharCompare .target b{color:#f0c64b}.myCharCompare .target.reached b{color:#66dc98}
-.myCharMetricBar{margin:9px 0 6px}.myCharMetricStatus{font-size:8px;line-height:1.3}
-@media(max-width:1050px){.myCharMetrics{grid-template-columns:repeat(2,1fr)}.myCharAnalysis{grid-template-columns:1fr}.myCharOverview{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.myCharTop{padding:14px}.myCharPortrait{width:62px;height:62px}.myCharIdentity strong{font-size:21px}.myCharOverview{grid-template-columns:1fr 1fr}.myCharMetrics{grid-template-columns:1fr;padding:8px 10px 14px}.myCharHighlights{grid-template-columns:1fr}.myCharCompare small{font-size:6px}}
+/* ===== HIVE • MEU PERSONAGEM • NOVO LAYOUT ===== */
+.myCharShell{max-width:1500px!important;margin:18px auto 14px!important;padding:0 22px!important}
+.myCharCard{
+ border:1px solid #8d6d17!important;
+ background:linear-gradient(145deg,#0d0f0e 0%,#11120f 54%,#0b0d0c 100%)!important;
+ border-radius:18px!important;overflow:hidden!important;
+ box-shadow:0 20px 60px rgba(0,0,0,.45)!important
+}
+.myCharTop{
+ min-height:82px!important;padding:14px 18px!important;
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ border-bottom:1px solid #302a19!important;background:linear-gradient(90deg,#11130f,#0d0f0e)!important
+}
+.myCharTop>div{display:flex!important;align-items:center!important}
+.myCharEyebrow{font-size:11px!important;color:#f3c23a!important;letter-spacing:.08em!important;margin-bottom:2px!important}
+.myCharIntro{font-size:10px!important;color:#8f8b82!important;margin:2px 0 5px!important}
+.myCharIdentityWrap{display:flex!important;align-items:center!important;gap:14px!important}
+.myCharPortrait{
+ width:86px!important;height:86px!important;border-radius:15px!important;overflow:hidden!important;
+ border:1px solid #9b7620!important;background:#17150e!important;
+ box-shadow:0 0 0 3px rgba(0,0,0,.5),0 0 24px rgba(220,169,37,.12)!important
+}
+.myCharPortrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 20%!important}
+.myCharIdentity{display:grid!important;grid-template-columns:auto auto!important;align-items:center!important;column-gap:10px!important;row-gap:3px!important}
+.myCharIdentity strong{font-size:25px!important;line-height:1!important;color:#fff9ee!important}
+.myCharIdentity>span:not(.myCharDiscord){
+ font-size:11px!important;color:#f3c23a!important;font-weight:900!important;
+ border-left:1px solid #5c4916!important;padding-left:10px!important
+}
+.myCharDiscord{grid-column:1/-1!important;font-size:9px!important;color:#8d887f!important}
+.myCharOpen{
+ min-width:195px!important;padding:12px 16px!important;border-radius:10px!important;
+ background:linear-gradient(135deg,#ffd45a,#e8ad20)!important;border:1px solid #e9b82f!important;
+ color:#111!important;font-size:12px!important;font-weight:950!important
+}
+
+/* KPIs viram cards independentes em uma única linha */
+.myCharOverview{
+ display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:9px!important;
+ padding:11px 18px!important;border-bottom:1px solid #2b271a!important;background:#0b0d0c!important
+}
+.myCharScoreBox,.myCharKpi{
+ min-height:74px!important;padding:11px 13px!important;border:1px solid #2d2d28!important;
+ border-radius:10px!important;background:#111310!important
+}
+.myCharOverview small{font-size:7.5px!important;color:#89857c!important;letter-spacing:.08em!important}
+.myCharOverview b{font-size:20px!important;color:#f7f2e9!important}
+.myCharScoreBox b{font-size:27px!important;color:#ffd044!important}
+.myCharOverview span{font-size:8.5px!important;color:#918d84!important}
+
+/* Diagnóstico: 3 cards alinhados */
+.myCharAnalysis{
+ display:grid!important;grid-template-columns:1.55fr .75fr .75fr!important;gap:9px!important;
+ padding:11px 18px!important;background:#0d0f0e!important
+}
+.myCharSummary,.myCharHighlight{
+ min-height:74px!important;border:1px solid #32312b!important;border-radius:10px!important;
+ background:#121410!important;padding:12px 14px!important
+}
+.myCharSummaryTitle{font-size:8px!important;letter-spacing:.07em!important;color:#f1c43d!important}
+.myCharSummaryText{font-size:11px!important;line-height:1.5!important;color:#d9d5cc!important}
+.myCharHighlights{display:contents!important}
+.myCharHighlight small{font-size:8px!important}.myCharHighlight div{font-size:9px!important;line-height:1.55!important}
+
+/* Título de atributos */
+.myCharMetricsTitle{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ padding:12px 18px 4px!important;border-top:1px solid #27251c!important;background:#0d0f0e!important
+}
+.myCharMetricsTitle b{display:block!important;color:#f2c23d!important;font-size:12px!important;letter-spacing:.025em!important}
+.myCharMetricsTitle span{display:block!important;color:#8e8a81!important;font-size:9px!important;margin-top:3px!important}
+
+/* Quatro cards perfeitamente distribuídos */
+.myCharMetrics{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:9px!important;padding:9px 18px 17px!important;background:#0d0f0e!important
+}
+.myCharMetric{
+ min-width:0!important;min-height:150px!important;padding:12px!important;
+ border:1px solid #3a3527!important;border-radius:11px!important;background:#111310!important;
+ display:flex!important;flex-direction:column!important
+}
+.myCharMetricHead{padding-bottom:8px!important;border-bottom:1px solid #292923!important}
+.myCharMetricHead b{font-size:10px!important;color:#f5f0e7!important}
+.myCharMetricHead span{font-size:11px!important;color:#f0c136!important;font-weight:950!important}
+.myCharMetricVals{
+ display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;
+ align-items:end!important;margin:9px 0 0!important
+}
+.myCharMetricVals strong{font-size:18px!important;color:#fff!important}
+.myCharMetricVals small{
+ text-align:right!important;font-size:8px!important;color:#98938a!important;line-height:1.3!important
+}
+.myCharTarget{
+ margin-top:9px!important;padding:8px 0!important;border-top:1px solid #292923!important;
+ border-bottom:1px solid #292923!important
+}
+.myCharTarget span{font-size:7px!important;color:#8e897f!important}
+.myCharTarget b{font-size:11px!important;color:#f0c43d!important}
+.myCharTarget.reached b{color:#57d88d!important}
+.myCharMetricBar{height:6px!important;margin:10px 0 7px!important;background:#292b25!important}
+.myCharMetricStatus{font-size:8.5px!important;line-height:1.35!important;margin-top:auto!important}
+
+/* Diferencia visualmente os cards por situação */
+.myCharMetric.good{border-color:#385c42!important}
+.myCharMetric.good .myCharMetricBar i{background:#43d17c!important}
+.myCharMetric.mid{border-color:#66551e!important}
+.myCharMetric.mid .myCharMetricBar i{background:#e4b932!important}
+.myCharMetric.bad{border-color:#67382e!important}
+.myCharMetric.bad .myCharMetricBar i{background:#e4745b!important}
+
+@media(max-width:1050px){
+ .myCharMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .myCharAnalysis{grid-template-columns:1fr 1fr!important}
+ .myCharSummary{grid-column:1/-1!important}
+ .myCharOverview{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:620px){
+ .myCharShell{padding:0 10px!important}
+ .myCharTop{align-items:flex-start!important;flex-direction:column!important}
+ .myCharTop>div{width:100%!important}
+ .myCharPortrait{width:66px!important;height:66px!important}
+ .myCharIdentity strong{font-size:20px!important}
+ .myCharOpen{width:100%!important;min-width:0!important;margin-top:10px!important}
+ .myCharOverview{grid-template-columns:1fr 1fr!important;padding:9px!important}
+ .myCharAnalysis{grid-template-columns:1fr!important;padding:9px!important}
+ .myCharSummary{grid-column:auto!important}
+ .myCharHighlights{display:grid!important;grid-template-columns:1fr!important}
+ .myCharMetrics{grid-template-columns:1fr!important;padding:8px 9px 13px!important}
+ .myCharMetricsTitle{padding:11px 10px 3px!important}
+}
 
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
@@ -778,7 +893,7 @@ z-index:0}
     <div class="myCharCard" id="myCharCard" hidden>
       <div class="myCharTop">
         <div>
-          <div class="myCharEyebrow">🐝 MEU PERSONAGEM</div>
+          <div class="myCharEyebrow">👑 MEU PERSONAGEM</div><div class="myCharIntro">Seus principais status e comparação com a sua classe.</div>
           <div class="myCharIdentityWrap">
             <div class="myCharPortrait"><img id="myCharPortrait" alt="Classe"></div>
             <div class="myCharIdentity">
@@ -804,16 +919,19 @@ z-index:0}
 
       <div class="myCharAnalysis">
         <div class="myCharSummary">
-          <div class="myCharSummaryTitle">Resumo da sua evolução</div>
+          <div class="myCharSummaryTitle">DIAGNÓSTICO RÁPIDO</div>
           <div class="myCharSummaryText" id="myCharSummaryText">—</div>
         </div>
         <div class="myCharHighlights">
           <div class="myCharHighlight good"><small>✓ PONTOS FORTES</small><div id="myCharStrengths">—</div></div>
-          <div class="myCharHighlight warn"><small>↑ FOCO DE EVOLUÇÃO</small><div id="myCharWeaknesses">—</div></div>
+          <div class="myCharHighlight warn"><small>🎯 PRIORIDADE</small><div id="myCharWeaknesses">—</div></div>
         </div>
       </div>
 
-      <div class="myCharMetrics" id="myCharMetrics"></div>
+      <div class="myCharMetricsTitle">
+         <div><b>🏆 PRINCIPAIS ATRIBUTOS DA SUA CLASSE</b><span>Seu valor, média da classe e meta para alcançar 100/100.</span></div>
+       </div>
+       <div class="myCharMetrics" id="myCharMetrics"></div>
     </div>
     <div class="myCharNotFound" id="myCharNotFound" hidden>
       <div><b>🐝 Conta Discord autenticada, mas não encontrei seu personagem.</b>
@@ -1563,11 +1681,9 @@ function renderMyCharacter(){
     const reached=Number(x.value||0)>=target;
     return `<div class="myCharMetric ${s.cls}">
       <div class="myCharMetricHead"><b>${esc(x.label)}</b><span>${Math.round(x.pct)}/100</span></div>
-      <div class="myCharMetricVals"><strong>${x.display}</strong><small>desempenho atual</small></div>
-      <div class="myCharCompare">
-        <div><small>SEU VALOR</small><b>${x.display}</b></div>
-        <div><small>MÉDIA DA CLASSE</small><b>${personalAvgDisplay(x)}</b></div>
-        <div class="target ${reached?'reached':''}"><small>ALVO 100/100</small><b>${targetText}</b></div>
+      <div class="myCharMetricVals"><strong>${x.display}</strong><small>Média ${personalAvgDisplay(x)}</small></div>
+      <div class="myCharTarget ${reached?'reached':''}">
+        <span>ALVO 100/100</span><b>${targetText}</b>
       </div>
       <div class="myCharMetricBar"><i style="width:${Math.max(3,Math.min(100,x.pct))}%"></i></div>
       <div class="myCharMetricStatus">${reached?'✓ Você já está no topo deste atributo':s.txt}</div>
