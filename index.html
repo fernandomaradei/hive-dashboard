@@ -447,8 +447,7 @@ z-index:0}
 .uc-tools{display:flex;gap:9px;align-items:center;padding:0 16px 14px}.uc-filter,.uc-copy{border:1px solid rgba(214,160,24,.42);background:#15130f;color:#d9cfbd;border-radius:10px;padding:9px 12px;font:inherit;font-size:11px}.uc-copy{margin-left:auto;color:#ffd66b;font-weight:800;cursor:pointer}.uc-copy:hover{border-color:#e2b22d;background:#1b170d}.uc-table{overflow:auto;padding:0 16px 16px}.uc-table table{width:100%;border-collapse:collapse;min-width:760px}.uc-table th{font-size:9px;color:#8f887d;text-transform:uppercase;letter-spacing:.07em;text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,.08)}.uc-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.055);font-size:11px;color:#d7d0c4}.uc-table tbody tr{cursor:pointer}.uc-table tbody tr:hover{background:rgba(255,198,55,.035)}.uc-days{font-weight:900;color:#fff}.uc-status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:900;white-space:nowrap}.uc-status.ok{color:#71e99a;background:rgba(50,190,100,.10);border:1px solid rgba(50,190,100,.25)}.uc-status.att{color:#ffd66b;background:rgba(220,165,30,.10);border:1px solid rgba(220,165,30,.25)}.uc-status.late{color:#ff8a76;background:rgba(235,80,60,.10);border:1px solid rgba(235,80,60,.25)}.uc-status.none{color:#bbb3a8;background:rgba(160,160,160,.08);border:1px solid rgba(160,160,160,.18)}
 @media(max-width:760px){.uc-head{align-items:flex-start;flex-direction:column}.uc-kpis{grid-template-columns:repeat(2,1fr)}.uc-tools{flex-wrap:wrap}.uc-copy{margin-left:0;width:100%}.uc-filter{flex:1}.uc-table{padding-left:10px;padding-right:10px}}
 </style>
-<style id="hiveAuthGuard">html.hive-auth-pending body{visibility:hidden}</style>
-<script>document.documentElement.classList.add('hive-auth-pending');</script>
+
 </head>
 <body>
 <div class="app">
@@ -503,22 +502,19 @@ z-index:0}
 // V45: controle de atualizações + correções preservadas da V43.
 
 const AUTH_WORKER='https://hive-dashboard-auth.fernandomaradei1406.workers.dev';
-const AUTH_KEY='hive_session_token';
 
-// O token chega somente após o Discord validar servidor + cargo no Worker.
-// Ele fica apenas nesta aba (sessionStorage) e é removido da URL imediatamente.
-const hashParams=new URLSearchParams(location.hash.replace(/^#/,''));
-const incomingToken=hashParams.get('hive_session');
-if(incomingToken){
-  sessionStorage.setItem(AUTH_KEY,incomingToken);
-  history.replaceState(null,'',location.pathname+location.search);
+// GitHub Pages fica apenas como origem do arquivo estático.
+// O dashboard real é servido pelo Worker, que valida o cookie HttpOnly antes de entregar o HTML.
+if(location.origin !== AUTH_WORKER){
+  location.replace(AUTH_WORKER + '/dashboard');
+  throw new Error('HIVE_REDIRECT_TO_SECURE_DASHBOARD');
 }
-const HIVE_SESSION_TOKEN=sessionStorage.getItem(AUTH_KEY)||'';
-if(!HIVE_SESSION_TOKEN){
-  location.replace(AUTH_WORKER+'/auth/login');
-  throw new Error('HIVE_AUTH_REQUIRED');
+
+function releaseAuthGuard(){
+  // Mantida por compatibilidade com o restante do código.
+  document.documentElement.classList.remove('hive-auth-pending');
+  document.documentElement.classList.add('hive-auth-ok');
 }
-document.documentElement.classList.remove('hive-auth-pending');
 
 const FALLBACK={members:[],history:[]};
 const REFRESH_MS=60000;
@@ -589,11 +585,9 @@ async function loadLiveData(){
   const endpoint=`${AUTH_WORKER}/api/data?_=${Date.now()}`;
   const r=await fetch(endpoint,{
     cache:'no-store',
-    mode:'cors',
-    headers:{Authorization:`Bearer ${HIVE_SESSION_TOKEN}`}
+    credentials:'same-origin'
   });
   if(r.status===401||r.status===403){
-    sessionStorage.removeItem(AUTH_KEY);
     location.replace(AUTH_WORKER+'/auth/login');
     throw new Error('Sessão HIVE expirada ou sem permissão.');
   }
@@ -925,7 +919,7 @@ function renderImprovementAdvice(m,context){
 }
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
-async function refresh(){try{const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render()}catch(e){console.error('Falha ao atualizar dados:',e);const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
+async function refresh(){try{const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
 </script>
 </body></html>
