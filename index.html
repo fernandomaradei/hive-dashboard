@@ -359,6 +359,17 @@ z-index:0}
 .classRankMore:hover{background:#17140d;border-color:#8a681e;color:#ffd05a}
 .classPodiumExtra{display:none;gap:7px;margin-top:7px}
 .classPodiumExtra.open{display:grid}
+
+.rankExplain{grid-column:1/-1;margin-top:14px;padding:14px;border:1px solid rgba(216,170,52,.32);border-radius:12px;background:linear-gradient(180deg,rgba(33,28,16,.72),rgba(15,14,11,.88))}
+.rankExplainHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.rankExplainHead b{font-size:13px;color:#f3ead8}.rankExplainTotal{font-size:20px;font-weight:900;color:#f2c33e}
+.rankExplainSub{font-size:9px;color:#928b80;margin-bottom:11px}
+.rankExplainGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.rankExplainItem{padding:8px 9px;border:1px solid #29261f;border-radius:8px;background:#11110f}
+.rankExplainLine{display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#aaa296}.rankExplainLine strong{color:#eee5d3}
+.rankExplainBar{height:4px;background:#25231d;border-radius:99px;overflow:hidden;margin-top:6px}.rankExplainFill{height:100%;background:linear-gradient(90deg,#806017,#f1bf37);border-radius:99px}
+.rankExplainFormula{margin-top:10px;padding-top:9px;border-top:1px solid #29261f;font-size:9px;line-height:1.55;color:#8c8478}
+@media(max-width:600px){.rankExplainGrid{grid-template-columns:1fr}}
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -526,7 +537,7 @@ z-index:0}
   <section class="panel" id="fullRanking"><div class="panelHead"><div><div class="panelTitle">🏆 RANKING COMPLETO</div><div class="panelSub" id="countLabel"></div></div></div><div class="fulltable"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th>Evolução</th><th>HP</th><th>ATK</th><th>MATK</th></tr></thead><tbody id="allRows"></tbody></table></div></section>
   <footer class="footer" id="sobre">✦ HIVE ✦ <span style="font-size:10px;color:#d1b36a;letter-spacing:.28em">JUNTOS SEMPRE MAIS LONGE</span> ✦</footer>
 </div>
-<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div></div><div class="evoAdvice" id="mAdvice"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
+<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div></div><div class="evoAdvice" id="mAdvice"></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
 <script>
 // V45: controle de atualizações + correções preservadas da V43.
 
@@ -964,14 +975,99 @@ function renderImprovementAdvice(m,context){
   box.className='evoAdvice show';
   box.innerHTML=`<div class="evoHead"><div><div class="title">${a.title}</div><div class="sub">${a.sub}</div></div><div class="evoScore">Índice ${Math.round(a.score)}/100</div></div><div class="evoItems"><table class="evoTable"><thead><tr><th>Atributo</th><th>Atual</th><th>Média dos pares</th><th>Precisa melhorar</th><th>Posição</th><th>Situação</th></tr></thead><tbody>${rows}</tbody></table></div><div class="evoLegend">“Precisa melhorar” mostra exatamente quanto falta para alcançar a média atual dos jogadores da mesma função/perfil. Se aparecer <b style="color:#63e891">OK</b>, o jogador já está na média ou acima dela.</div><div class="evoNote">Os valores são exibidos em unidades reais da planilha. A média é uma referência gerencial dinâmica da HIVE; não é um requisito fixo do jogo.</div>`;
 }
-function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
+
+function rankMetric(label,value,pct,weight){
+ const p=Math.max(0,Math.min(100,Math.round(pct||0)));
+ return {label,value,p,weight};
+}
+function renderRankExplanation(m){
+ const box=$('#mRankExplain'); if(!box)return;
+ const job=String(m.Job||'').trim(), pool=members.filter(x=>String(x.Job||'').trim()===job), role=classRole(job);
+ const final=classTop3Score(m,pool);
+ if(!final){box.innerHTML='';return}
+ let items=[], formula='';
+ if(role==='SUPORTE'){
+   const c=supportDefenseContext(pool);
+   items=[
+    rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.30),
+    rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.22),
+    rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.18),
+    rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.18),
+    rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12)
+   ]; formula='DEFESA: HP 30% + PDEF 22% + MDEF 18% + PVP DMG RED 18% + DMG RED MED 12%.';
+ } else {
+   const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
+   const off=[
+    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.28),
+    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.24),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.22),
+    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.16),
+    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.10)
+   ];
+   if(role==='HÍBRIDO'){
+     const d=supportDefenseContext(pool);
+     const def=[
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.30),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.22),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.18),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.18),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.12)
+     ];
+     items=[...off.map(x=>({...x,weight:x.weight*.5})),...def.map(x=>({...x,weight:x.weight*.5}))];
+     formula='HÍBRIDO '+(r.profile==='MAGIC'?'MÁGICO':'FÍSICO')+': 50% OFENSIVA + 50% DEFESA. A parte ofensiva usa '+(r.profile==='MAGIC'?'MATK + IGNORE MDEF + MDMG':'ATK + IGNORE PDEF + PDMG')+'. Os pesos exibidos abaixo já mostram a participação real de cada atributo na nota final.';
+   }else{
+     items=off; formula='OFENSIVA: Ataque 28% + Penetração 24% + Dano 22% + PVP DMG INC 16% + Power 10%.';
+   }
+ }
+ box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores da classe ${esc(job)}</div><div class="rankExplainGrid">${items.map(x=>`<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine" style="margin-top:4px"><span>Desempenho na classe: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div></div>`).join('')}</div><div class="rankExplainFormula">${esc(formula)} Quanto maior a barra, melhor o atributo do jogador em relação aos demais da mesma classe.</div></div>`;
+}
+
+function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
 
+
+function doramCombatProfile(m){
+  if(!/\bdoram\b/i.test(String(m.Job||''))) return damageProfile(m.Job);
+
+  const atk=intNum(m.ATK,'ATK'), matk=intNum(m.MATK,'MATK');
+  const ppen=intNum(m['IGNORE PDEF'],'IGNORE PDEF'), mpen=intNum(m['IGNORE MDEF'],'IGNORE MDEF');
+  const pdmg=metricValue(m.PDMG,'PDMG'), mdmg=metricValue(m.MDGMG,'MDGMG');
+
+  // Compara os três pares físico x mágico. Cada vitória vale 1 ponto.
+  let physical=0, magic=0;
+  if(atk>matk) physical++; else if(matk>atk) magic++;
+  if(ppen>mpen) physical++; else if(mpen>ppen) magic++;
+  if(pdmg>mdmg) physical++; else if(mdmg>pdmg) magic++;
+
+  if(magic>physical) return 'MAGIC';
+  if(physical>magic) return 'PHYSICAL';
+
+  // Desempate pelo ataque principal.
+  return matk>atk ? 'MAGIC' : 'PHYSICAL';
+}
+function rankingOffensiveRaw(m){
+  const profile=/\bdoram\b/i.test(String(m.Job||'')) ? doramCombatProfile(m) : damageProfile(m.Job);
+  return profile==='MAGIC'
+    ? {profile,attack:intNum(m.MATK,'MATK'),penetration:intNum(m['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue(m.MDGMG,'MDGMG')}
+    : {profile,attack:intNum(m.ATK,'ATK'),penetration:intNum(m['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m.PDMG,'PDMG')};
+}
+function rankingOffenseContext(pool,profile){
+  const peers=pool.filter(x=>rankingOffensiveRaw(x).profile===profile);
+  const base=peers.length?peers:pool;
+  return {
+    attack:base.map(x=>rankingOffensiveRaw(x).attack),
+    penetration:base.map(x=>rankingOffensiveRaw(x).penetration),
+    damage:base.map(x=>rankingOffensiveRaw(x).damage),
+    pvpinc:base.map(x=>intNum(x['PVP DMG INC'],'PVP DMG INC')),
+    power:base.map(x=>intNum(x['Power Atual'],'Power Atual'))
+  };
+}
+
 function classRankingOffenseScore(m,pool){
-  const ctx=buildOffenseContext(pool);
-  const r=offensiveRaw(m);
+  const r=rankingOffensiveRaw(m);
+  const ctx=rankingOffenseContext(pool,r.profile);
   return .28*pctRank(r.attack,ctx.attack)
        + .24*pctRank(r.penetration,ctx.penetration)
        + .22*pctRank(r.damage,ctx.damage)
@@ -1002,13 +1098,12 @@ function classTop3Score(member, pool){
   }
 
   if(role==='HÍBRIDO'){
-    // Híbrido: 50% capacidade ofensiva + 50% capacidade defensiva,
-    // sempre comparado apenas com jogadores da mesma classe.
+    const profile=rankingOffensiveRaw(member).profile;
     const offense=classRankingOffenseScore(member,pool);
     const defense=classRankingDefenseScore(member,pool);
     return {
       score:(offense*.50)+(defense*.50),
-      kind:'HÍBRIDO • ATQ + DEF'
+      kind:'HÍBRIDO '+(profile==='MAGIC'?'MÁGICO':'FÍSICO')+' • ATQ + DEF'
     };
   }
 
@@ -1029,7 +1124,7 @@ function renderClassTop3(){
   if(!ranked.length)return;
   const kind=ranked[0]._classRank.kind, context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
   const top=ranked.slice(0,5), rest=ranked.slice(5), key=encodeURIComponent(job).replace(/%/g,'_');
-  const row=(m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')"><span class="classMedal">${i<3?['🥇','🥈','🥉'][i]:(i+1)+'º'}</span><div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power</small></div><div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div></div>`;
+  const row=(m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')"><span class="classMedal">${i<3?['🥇','🥈','🥉'][i]:(i+1)+'º'}</span><div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power${/\bdoram\b/i.test(String(m.Job||''))?' • '+(rankingOffensiveRaw(m).profile==='MAGIC'?'MÁGICO':'FÍSICO'):''}</small></div><div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div></div>`;
   cards.push(`<div class="classRankCard"><div class="classRankTitle"><b>${esc(job)}</b><span>${esc(kind)}</span></div><div class="classPodium">${top.map((m,i)=>row(m,i)).join('')}</div>${rest.length?`<div class="classPodiumExtra" id="classExtra_${key}">${rest.map((m,i)=>row(m,i+5)).join('')}</div><button class="classRankMore" data-remaining="${rest.length}" onclick="toggleClassRank('${key}',this)">Ver restante dos membros (${rest.length}) &#8595;</button>`:''}</div>`);
  });
  box.innerHTML=cards.length?cards.join(''):'<div style="padding:18px;color:#8f897e">Nenhuma classe DPS/Suporte identificada.</div>';
