@@ -525,6 +525,11 @@ z-index:0}
 .rankDiag.bad{background:rgba(187,65,50,.12);border:1px solid rgba(221,91,72,.28)}.rankDiag.bad b{color:#ff927e}
 @media(max-width:760px){.rankWhySummary{grid-template-columns:1fr;padding:10px 12px 3px}.rankDiag{align-items:flex-start;flex-direction:column;gap:4px}}
 
+
+.rankOriginLine{display:grid!important;grid-template-columns:1.25fr 1fr .65fr;gap:14px!important;justify-content:initial!important}
+.rankOriginLine b,.rankDiag span b{color:#f2eee7;font-weight:900}
+@media(max-width:760px){.rankOriginLine{grid-template-columns:1fr!important;gap:4px!important}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -1132,9 +1137,17 @@ function renderImprovementAdvice(m,context){
   box.innerHTML=`<div class="evoHead"><div><div class="title">${a.title}</div><div class="sub">${a.sub}</div></div><div class="evoScore">Índice ${Math.round(a.score)}/100</div></div><div class="evoItems"><table class="evoTable"><thead><tr><th>Atributo</th><th>Atual</th><th>Média dos pares</th><th>Precisa melhorar</th><th>Posição</th><th>Situação</th></tr></thead><tbody>${rows}</tbody></table></div><div class="evoLegend">“Precisa melhorar” mostra exatamente quanto falta para alcançar a média atual dos jogadores da mesma função/perfil. Se aparecer <b style="color:#63e891">OK</b>, o jogador já está na média ou acima dela.</div><div class="evoNote">Os valores são exibidos em unidades reais da planilha. A média é uma referência gerencial dinâmica da HIVE; não é um requisito fixo do jogo.</div>`;
 }
 
-function rankMetric(label,value,pct,weight){
+function avgMetric(arr){
+ const vals=(arr||[]).map(Number).filter(Number.isFinite);
+ return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+}
+function rankAvgFormat(label,v){
+ if(['PDMG','MDMG','DMG RED MED'].includes(label)) return metricFormat(v,label==='MDMG'?'MDGMG':label);
+ return fmtInt(v,label==='Power'?'Power Atual':label);
+}
+function rankMetric(label,value,pct,weight,avgValue){
  const p=Math.max(0,Math.min(100,Math.round(pct||0)));
- return {label,value,p,weight};
+ return {label,value,p,weight,avgValue:rankAvgFormat(label,avgValue)};
 }
 
 function rankMetricDiagnosis(x){
@@ -1158,29 +1171,29 @@ function renderRankExplanation(m){
  if(role==='SUPORTE'){
    const c=supportDefenseContext(pool);
    items=[
-    rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.30),
-    rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.22),
-    rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.18),
-    rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.18),
-    rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12)
+    rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.30,avgMetric(c.HP)),
+    rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.22,avgMetric(c.PDEF)),
+    rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.18,avgMetric(c.MDEF)),
+    rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.18,avgMetric(c.PVPRED)),
+    rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12,avgMetric(c.RED))
    ]; formula='DEFESA: HP 30% + PDEF 22% + MDEF 18% + PVP DMG RED 18% + DMG RED MED 12%.';
  } else {
    const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
    const off=[
-    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.28),
-    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.24),
-    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.22),
-    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.16),
-    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.10)
+    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.28,avgMetric(c.attack)),
+    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.24,avgMetric(c.penetration)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.22,avgMetric(c.damage)),
+    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.16,avgMetric(c.pvpinc)),
+    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.10,avgMetric(c.power))
    ];
    if(role==='HÍBRIDO'){
      const d=supportDefenseContext(pool);
      const def=[
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.30),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.22),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.18),
-      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.18),
-      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.12)
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.30,avgMetric(d.HP)),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.22,avgMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.18,avgMetric(d.MDEF)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.18,avgMetric(d.PVPRED)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.12,avgMetric(d.RED))
      ];
      items=[...off.map(x=>({...x,weight:x.weight*.5})),...def.map(x=>({...x,weight:x.weight*.5}))];
      formula='HÍBRIDO '+(r.profile==='MAGIC'?'MÁGICO':'FÍSICO')+': 50% OFENSIVA + 50% DEFESA. A parte ofensiva usa '+(r.profile==='MAGIC'?'MATK + IGNORE MDEF + MDMG':'ATK + IGNORE PDEF + PDMG')+'. Os pesos exibidos abaixo já mostram a participação real de cada atributo na nota final.';
@@ -1194,7 +1207,7 @@ function renderRankExplanation(m){
    <div class="rankWhyGood"><b>✓ O que sustenta sua nota</b><span>${strengths.map(x=>`${esc(x.label)} (${x.p}/100)`).join(' • ')}</span></div>
    <div class="rankWhyBad"><b>↑ O que mais limita sua nota</b><span>${weaknesses.map(x=>`${esc(x.label)} (${x.p}/100)`).join(' • ')}</span></div>
  </div>`;
- box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores do grupo ${esc(rankGroup)}</div>${summary}<div class="rankExplainGrid">${items.map(x=>{const d=rankMetricDiagnosis(x);return `<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine" style="margin-top:4px"><span>Desempenho no grupo: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div><div class="rankDiag ${d.cls}"><b>${d.tag}</b><span>${d.txt} Peso deste atributo na nota: ${(x.weight*100).toFixed(0)}%.</span></div></div>`}).join('')}</div><div class="rankExplainFormula">${esc(formula)} Agora cada linha mostra também se o atributo é um ponto forte, está na média ou está limitando a pontuação.</div></div>`;
+ box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores do grupo ${esc(rankGroup)}</div>${summary}<div class="rankExplainGrid">${items.map(x=>{const d=rankMetricDiagnosis(x);return `<div class="rankExplainItem"><div class="rankExplainLine"><strong>${esc(x.label)}</strong><span>${x.value}</span></div><div class="rankExplainLine rankOriginLine" style="margin-top:4px"><span>Média do grupo: <b>${x.avgValue}</b></span><span>Desempenho: ${x.p}/100</span><span>Peso ${(x.weight*100).toFixed(0)}%</span></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div><div class="rankDiag ${d.cls}"><b>${d.tag}</b><span>${d.txt} Seu valor: <b>${x.value}</b> • Média do grupo: <b>${x.avgValue}</b> • Peso deste atributo na nota: ${(x.weight*100).toFixed(0)}%.</span></div></div>`}).join('')}</div><div class="rankExplainFormula">${esc(formula)} Agora cada linha mostra também se o atributo é um ponto forte, está na média ou está limitando a pontuação.</div></div>`;
 }
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
