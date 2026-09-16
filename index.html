@@ -354,6 +354,11 @@ z-index:0}
 .classScore{font-size:11px;font-weight:900;color:#f4c94e}.classScore small{font-size:8px;color:#817b70;font-weight:600}
 @media(max-width:1000px){.classRankGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.classRankGrid{grid-template-columns:1fr}.classRankHead{align-items:flex-start;flex-direction:column}.classRankLegend{text-align:left}}
+
+.classRankMore{width:100%;margin-top:9px;padding:9px;border:1px solid #4a3a18;border-radius:9px;background:#0d0d0b;color:#d9ad3d;font-size:9px;font-weight:800;cursor:pointer}
+.classRankMore:hover{background:#17140d;border-color:#8a681e;color:#ffd05a}
+.classPodiumExtra{display:none;gap:7px;margin-top:7px}
+.classPodiumExtra.open{display:grid}
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -513,7 +518,7 @@ z-index:0}
     </article>
   </section>
 <section class="classRankPanel">
-<div class="classRankHead"><div><h3>🏆 Top 3 por Classe</h3><p>Ranking técnico por função. DPS usa atributos ofensivos; Suporte usa atributos defensivos.</p></div><div class="classRankLegend">TOP 3 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
+<div class="classRankHead"><div><h3>🏆 Ranking por Classe</h3><p>Ranking técnico por função. Top 5 de cada classe, com opção para visualizar o restante.</p></div><div class="classRankLegend">TOP 5 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
 <div class="classRankGrid" id="classTop3Grid"></div>
 </section>
 
@@ -980,25 +985,25 @@ function classTop3Score(member, pool){
   }
   return null;
 }
+function toggleClassRank(key,btn){
+ const extra=document.getElementById('classExtra_'+key); if(!extra)return;
+ const open=!extra.classList.contains('open'); extra.classList.toggle('open',open);
+ btn.innerHTML=open?'Recolher membros &#8593;':`Ver restante dos membros (${btn.dataset.remaining}) &#8595;`;
+}
 function renderClassTop3(){
-  const box=$('#classTop3Grid'); if(!box||!members.length)return;
-  const jobs=[...new Set(members.map(m=>String(m.Job||'').trim()).filter(Boolean))]
-    .sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  const cards=[];
-  jobs.forEach(job=>{
-    const pool=members.filter(m=>String(m.Job||'').trim()===job);
-    if(!pool.length)return;
-    const ranked=pool.map(m=>{
-      const r=classTop3Score(m,pool); return r?{...m,_classRank:r}:null;
-    }).filter(Boolean).sort((a,b)=>b._classRank.score-a._classRank.score).slice(0,3);
-    if(!ranked.length)return;
-    const kind=ranked[0]._classRank.kind;
-    const context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
-    cards.push(`<div class="classRankCard"><div class="classRankTitle"><b>${esc(job)}</b><span>${esc(kind)}</span></div><div class="classPodium">${
-      ranked.map((m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')"><span class="classMedal">${['🥇','🥈','🥉'][i]}</span><div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power</small></div><div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div></div>`).join('')
-    }</div></div>`);
-  });
-  box.innerHTML=cards.length?cards.join(''):'<div style="padding:18px;color:#8f897e">Nenhuma classe DPS/Suporte identificada.</div>';
+ const box=$('#classTop3Grid'); if(!box||!members.length)return;
+ const jobs=[...new Set(members.map(m=>String(m.Job||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ const cards=[];
+ jobs.forEach(job=>{
+  const pool=members.filter(m=>String(m.Job||'').trim()===job);
+  const ranked=pool.map(m=>{const r=classTop3Score(m,pool);return r?{...m,_classRank:r}:null}).filter(Boolean).sort((a,b)=>b._classRank.score-a._classRank.score);
+  if(!ranked.length)return;
+  const kind=ranked[0]._classRank.kind, context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
+  const top=ranked.slice(0,5), rest=ranked.slice(5), key=encodeURIComponent(job).replace(/%/g,'_');
+  const row=(m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')"><span class="classMedal">${i<3?['🥇','🥈','🥉'][i]:(i+1)+'º'}</span><div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power</small></div><div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div></div>`;
+  cards.push(`<div class="classRankCard"><div class="classRankTitle"><b>${esc(job)}</b><span>${esc(kind)}</span></div><div class="classPodium">${top.map((m,i)=>row(m,i)).join('')}</div>${rest.length?`<div class="classPodiumExtra" id="classExtra_${key}">${rest.map((m,i)=>row(m,i+5)).join('')}</div><button class="classRankMore" data-remaining="${rest.length}" onclick="toggleClassRank('${key}',this)">Ver restante dos membros (${rest.length}) &#8595;</button>`:''}</div>`);
+ });
+ box.innerHTML=cards.length?cards.join(''):'<div style="padding:18px;color:#8f897e">Nenhuma classe DPS/Suporte identificada.</div>';
 }
 
 </script>
