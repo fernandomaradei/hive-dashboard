@@ -336,6 +336,24 @@ z-index:0}
   .feature .featureBtn{margin:8px 9px 10px!important}
 }
 
+
+/* TOP 3 POR CLASSE */
+.classRankPanel{margin:18px 0 22px;border:1px solid rgba(215,165,42,.42);border-radius:18px;background:linear-gradient(180deg,rgba(18,17,13,.96),rgba(10,10,9,.98));overflow:hidden}
+.classRankHead{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:18px 20px;border-bottom:1px solid rgba(215,165,42,.18)}
+.classRankHead h3{margin:0;color:#f4ead4;font-size:18px}.classRankHead p{margin:4px 0 0;color:#8f897e;font-size:11px}
+.classRankLegend{font-size:10px;color:#c9a94e;text-align:right}
+.classRankGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px}
+.classRankCard{border:1px solid #28251e;border-radius:14px;background:#11110f;padding:14px}
+.classRankTitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.classRankTitle b{color:#f0e8d8}.classRankTitle span{font-size:9px;font-weight:800;letter-spacing:.12em;color:#d8aa35}
+.classPodium{display:grid;gap:7px}
+.classPodiumRow{display:grid;grid-template-columns:25px 1fr auto;gap:8px;align-items:center;padding:8px 9px;border-radius:9px;background:#151512;border:1px solid #24221c;cursor:pointer}
+.classPodiumRow:hover{border-color:#74591c;background:#19170f}
+.classPodiumRow:first-child{background:linear-gradient(90deg,rgba(173,125,22,.18),#151512)}
+.classMedal{font-weight:900;color:#d8aa35}.classWho b{display:block;font-size:11px;color:#eee6d7}.classWho small{display:block;margin-top:2px;font-size:8px;color:#777168}
+.classScore{font-size:11px;font-weight:900;color:#f4c94e}.classScore small{font-size:8px;color:#817b70;font-weight:600}
+@media(max-width:1000px){.classRankGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.classRankGrid{grid-template-columns:1fr}.classRankHead{align-items:flex-start;flex-direction:column}.classRankLegend{text-align:left}}
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -794,7 +812,7 @@ function renderUpdateControl(){
       const allVisible=ucVisibleLimit>=view.length;
       const remaining=Math.max(0,view.length-ucVisibleLimit);
       more.textContent=allVisible?'Recolher ↑':`Mostrar mais membros ↓ (${remaining} restantes)`;
-      more.onclick=()=>{ucVisibleLimit=allVisible?UC_PAGE_SIZE:Math.min(ucVisibleLimit+UC_PAGE_SIZE,view.length);renderUpdateControl();if(allVisible)document.querySelector('#updateControl')?.scrollIntoView({behavior:'smooth',block:'start'});};
+      more.onclick=()=>{ucVisibleLimit=allVisible?UC_PAGE_SIZE:Math.min(ucVisibleLimit+UC_PAGE_SIZE,view.length);renderUpdateControl();renderClassTop3();if(allVisible)document.querySelector('#updateControl')?.scrollIntoView({behavior:'smooth',block:'start'});};
     }
   }
   const sel=$('#ucFilter');if(sel&&!sel.dataset.ready){sel.dataset.ready='1';sel.addEventListener('change',()=>{ucVisibleLimit=UC_PAGE_SIZE;renderUpdateControl()})}
@@ -819,7 +837,7 @@ function render(){
  const featRing=featAvatar?.closest('.avatarRing'); if(featRing) featRing.classList.toggle('doram-clean',/doram|invocador/.test(norm(lip.Job||'')));
  const featClassBadge=$('#featClassBadge'); if(featClassBadge) featClassBadge.textContent=String(lip.Job||'CLASSE').toUpperCase();
 
- renderManagerRanks(); setupMemberExplorer(); renderMemberExplorer(); renderUpdateControl(); renderGuildLeague();
+ renderManagerRanks(); setupMemberExplorer(); renderMemberExplorer(); renderUpdateControl();renderClassTop3(); renderGuildLeague();
  const ss=[['❤️','HP',lip.HP],['🗡️','ATK',lip.ATK],['✦','MATK',lip.MATK],['🛡️','PDEF',lip.PDEF],['🛡️','MDEF',lip.MDEF]];$('#featStats').innerHTML=ss.map(s=>`<div class="stat"><div>${s[0]}</div><div class="slabel">${s[1]}</div><div class="svalue">${fmtInt(s[2])}</div></div>`).join('');
 }
 const CLASS_IMAGES={
@@ -940,5 +958,47 @@ function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members
 function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
+
+function classTop3Score(member, pool){
+  const role=classRole(member.Job);
+  if(role==='SUPORTE'){
+    const ctx=supportDefenseContext(pool);
+    return {score:supportDefenseScore(member,ctx,pctRank)??0,kind:'DEFESA'};
+  }
+  // Tanks/híbridos permanecem fora do ranking até existir uma regra específica;
+  // DPS é comparado somente com membros da mesma classe e mesmo perfil ofensivo.
+  if(isDPS(member)){
+    const profile=damageProfile(member.Job);
+    const peers=pool.filter(x=>damageProfile(x.Job)===profile);
+    const ctx=buildOffenseContext(peers);
+    return {score:offenseScore(member,ctx,pctRank)??0,kind:profile==='MAGIC'?'DPS MÁGICO':'DPS FÍSICO'};
+  }
+  return null;
+}
+function renderClassTop3(){
+  const box=$('#classTop3Grid'); if(!box||!members.length)return;
+  const jobs=[...new Set(members.map(m=>String(m.Job||'').trim()).filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const cards=[];
+  jobs.forEach(job=>{
+    const pool=members.filter(m=>String(m.Job||'').trim()===job);
+    if(!pool.length)return;
+    const ranked=pool.map(m=>{
+      const r=classTop3Score(m,pool); return r?{...m,_classRank:r}:null;
+    }).filter(Boolean).sort((a,b)=>b._classRank.score-a._classRank.score).slice(0,3);
+    if(!ranked.length)return;
+    const kind=ranked[0]._classRank.kind;
+    const context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
+    cards.push(`<div class="classRankCard"><div class="classRankTitle"><b>${esc(job)}</b><span>${esc(kind)}</span></div><div class="classPodium">${
+      ranked.map((m,i)=>`<div class="classPodiumRow" onclick="openPlayer('${encodeURIComponent(m.Personagem)}','${context}')"><span class="classMedal">${['🥇','🥈','🥉'][i]}</span><div class="classWho"><b>${esc(m.Personagem)}</b><small>${fmtInt(m['Power Atual'],'Power Atual')} Power</small></div><div class="classScore">${Math.round(m._classRank.score)}<small>/100</small></div></div>`).join('')
+    }</div></div>`);
+  });
+  box.innerHTML=cards.length?cards.join(''):'<div style="padding:18px;color:#8f897e">Nenhuma classe DPS/Suporte identificada.</div>';
+}
+
 </script>
-</body></html>
+</body></html<section class="classRankPanel">
+<div class="classRankHead"><div><h3>🏆 Top 3 por Classe</h3><p>Ranking técnico por função. DPS usa atributos ofensivos; Suporte usa atributos defensivos.</p></div><div class="classRankLegend">TOP 3 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
+<div class="classRankGrid" id="classTop3Grid"></div>
+</section>
+>
