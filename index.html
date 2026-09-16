@@ -596,6 +596,33 @@ z-index:0}
  .rankNumbers b{font-size:13px}
 }
 
+
+/* HIVE • Meu Personagem */
+.myCharShell{max-width:1500px;margin:18px auto 14px;padding:0 22px}
+.myCharLoading,.myCharNotFound{border:1px solid #5b4b18;background:#11120f;border-radius:16px;padding:18px;color:#c9c2b7;font-size:13px}
+.myCharNotFound b{display:block;color:#ffd45d;margin-bottom:5px}.myCharNotFound span{color:#a8a196}
+.myCharCard{border:1px solid #826719;background:linear-gradient(135deg,#15150f 0%,#10110f 52%,#15120b 100%);border-radius:18px;overflow:hidden;box-shadow:0 18px 55px #0008}
+.myCharTop{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:17px 20px;border-bottom:1px solid #302b1d}
+.myCharEyebrow{color:#f0bd35;font-size:10px;font-weight:950;letter-spacing:.13em;margin-bottom:5px}
+.myCharIdentity{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.myCharIdentity strong{font-size:23px;color:#fff8e8}.myCharIdentity>span:not(.myCharDiscord){color:#f0c64b;font-size:12px;font-weight:900;border-left:1px solid #51431b;padding-left:10px}.myCharDiscord{font-size:10px;color:#8f897e}
+.myCharOpen{border:1px solid #806316;background:#eab82f;color:#111;border-radius:10px;padding:10px 14px;font-weight:950;cursor:pointer}
+.myCharOverview{display:grid;grid-template-columns:1.15fr repeat(3,1fr);border-bottom:1px solid #2d291d}
+.myCharScoreBox,.myCharKpi{padding:15px 18px;border-right:1px solid #2d291d}.myCharOverview>:last-child{border-right:0}
+.myCharOverview small{display:block;color:#89847b;font-size:8px;font-weight:950;letter-spacing:.09em;margin-bottom:5px}
+.myCharOverview b{display:block;color:#f4efe6;font-size:20px;font-weight:950}.myCharScoreBox b{color:#ffd04a;font-size:27px}.myCharScoreBox b small{display:inline;color:#837d73;font-size:9px;margin-left:2px}
+.myCharOverview span{display:block;color:#a8a197;font-size:9px;margin-top:4px}
+.myCharAnalysis{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;padding:14px 18px 8px}
+.myCharSummary,.myCharHighlight{background:#121310;border:1px solid #302e27;border-radius:11px;padding:13px 14px}
+.myCharSummaryTitle{font-size:10px;color:#f0c64b;font-weight:950;margin-bottom:6px}.myCharSummaryText{font-size:12px;line-height:1.55;color:#d9d4cb}.myCharSummaryText b{color:#fff}
+.myCharHighlights{display:grid;grid-template-columns:1fr 1fr;gap:10px}.myCharHighlight small{display:block;font-size:8px;font-weight:950;letter-spacing:.08em;margin-bottom:7px}.myCharHighlight.good small{color:#65e69a}.myCharHighlight.warn small{color:#ffbf66}
+.myCharHighlight div{display:flex;flex-direction:column;gap:5px;color:#d8d2c8;font-size:10px}.myCharHighlight b{color:#fff}
+.myCharMetrics{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:8px 18px 17px}
+.myCharMetric{background:#10110f;border:1px solid #2d2b25;border-radius:10px;padding:10px}.myCharMetricHead,.myCharMetricVals{display:flex;justify-content:space-between;align-items:center;gap:7px}.myCharMetricHead b{font-size:9px;color:#ddd7ce}.myCharMetricHead span{font-size:9px;color:#f0c64b;font-weight:900}.myCharMetricVals{margin-top:7px}.myCharMetricVals strong{font-size:13px;color:#fff}.myCharMetricVals small{font-size:8px;color:#8f897f}
+.myCharMetricBar{height:5px;background:#292820;border-radius:999px;overflow:hidden;margin:8px 0 6px}.myCharMetricBar i{display:block;height:100%;background:#d9aa25;border-radius:999px}
+.myCharMetric.good .myCharMetricBar i{background:#46c978}.myCharMetric.bad .myCharMetricBar i{background:#e2785d}.myCharMetricStatus{font-size:8px;color:#969087}.myCharMetric.good .myCharMetricStatus{color:#70d998}.myCharMetric.bad .myCharMetricStatus{color:#f09b85}
+@media(max-width:900px){.myCharOverview{grid-template-columns:1fr 1fr}.myCharOverview>*{border-bottom:1px solid #2d291d}.myCharMetrics{grid-template-columns:repeat(3,1fr)}.myCharAnalysis{grid-template-columns:1fr}}
+@media(max-width:600px){.myCharShell{padding:0 10px;margin-top:10px}.myCharTop{align-items:flex-start;flex-direction:column}.myCharOpen{width:100%}.myCharOverview{grid-template-columns:1fr 1fr}.myCharScoreBox,.myCharKpi{padding:12px}.myCharOverview b{font-size:16px}.myCharScoreBox b{font-size:23px}.myCharHighlights{grid-template-columns:1fr}.myCharMetrics{grid-template-columns:1fr 1fr;padding:8px 10px 13px}.myCharAnalysis{padding:11px 10px 5px}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -717,6 +744,51 @@ z-index:0}
     <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking</a><a href="#members">👥 Membros</a><a href="#destaque">📈 Evolução</a><a href="#destaque">📖 Codex</a><a href="#sobre">ⓘ Sobre</a>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
+
+  <section class="myCharShell" id="myCharShell">
+    <div class="myCharLoading" id="myCharLoading">🐝 Identificando seu personagem pela conta Discord...</div>
+    <div class="myCharCard" id="myCharCard" hidden>
+      <div class="myCharTop">
+        <div>
+          <div class="myCharEyebrow">🐝 MEU PERSONAGEM</div>
+          <div class="myCharIdentity">
+            <strong id="myCharName">—</strong>
+            <span id="myCharClass">—</span>
+            <span class="myCharDiscord" id="myCharDiscord">Discord: —</span>
+          </div>
+        </div>
+        <button class="myCharOpen" id="myCharOpen">Ver análise completa →</button>
+      </div>
+
+      <div class="myCharOverview">
+        <div class="myCharScoreBox">
+          <small>ÍNDICE NA CLASSE</small>
+          <b id="myCharScore">—</b>
+          <span id="myCharGroup">—</span>
+        </div>
+        <div class="myCharKpi"><small>POWER</small><b id="myCharPower">—</b><span id="myCharPowerHint">—</span></div>
+        <div class="myCharKpi"><small>POSIÇÃO NA CLASSE</small><b id="myCharPosition">—</b><span id="myCharPositionHint">—</span></div>
+        <div class="myCharKpi"><small>ÚLTIMA ATUALIZAÇÃO</small><b id="myCharUpdated">—</b><span id="myCharUpdatedHint">Dados da planilha</span></div>
+      </div>
+
+      <div class="myCharAnalysis">
+        <div class="myCharSummary">
+          <div class="myCharSummaryTitle">Resumo da sua evolução</div>
+          <div class="myCharSummaryText" id="myCharSummaryText">—</div>
+        </div>
+        <div class="myCharHighlights">
+          <div class="myCharHighlight good"><small>✓ PONTOS FORTES</small><div id="myCharStrengths">—</div></div>
+          <div class="myCharHighlight warn"><small>↑ FOCO DE EVOLUÇÃO</small><div id="myCharWeaknesses">—</div></div>
+        </div>
+      </div>
+
+      <div class="myCharMetrics" id="myCharMetrics"></div>
+    </div>
+    <div class="myCharNotFound" id="myCharNotFound" hidden>
+      <div><b>🐝 Conta Discord autenticada, mas não encontrei seu personagem.</b>
+      <span id="myCharNotFoundText">Confira se a coluna Discord da planilha corresponde ao seu usuário do Discord.</span></div>
+    </div>
+  </section>
   <section class="kpis" id="kpis"></section>
   <section class="main">
     <article class="panel" id="ranking"><div class="panelHead"><div><div class="panelTitle">👑 RANKING DE POWER</div><div class="panelSub">Top 10 da guild</div></div></div><div class="rankwrap"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th style="text-align:right">Power</th></tr></thead><tbody id="top10"></tbody></table><button class="btn" id="toggleRank">Ver ranking completo →</button></div></article>
@@ -785,7 +857,7 @@ function releaseAuthGuard(){
 
 const FALLBACK={members:[],history:[]};
 const REFRESH_MS=60000;
-let members=[],history=[];
+let members=[],history=[],authUser=null;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const norm=s=>String(s??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
@@ -848,6 +920,20 @@ const metricFormat=(v,field='')=>{
   return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:DECIMAL_METRICS.has(field)?2:0}).format(n);
 };
 const delta=m=>intNum(m['Power Atual'],'Power Atual')-intNum(m['Power Anterior'],'Power Anterior')||intNum(m['Evolução'],'Evolução');
+
+async function loadAuthUser(){
+  try{
+    const r=await fetch(`${AUTH_WORKER}/auth/me?_=${Date.now()}`,{cache:'no-store',credentials:'same-origin'});
+    const d=await r.json().catch(()=>null);
+    if(r.ok && d?.authenticated && d.user){
+      authUser=d.user;
+      return authUser;
+    }
+  }catch(e){console.warn('Não foi possível identificar a conta Discord:',e)}
+  authUser=null;
+  return null;
+}
+
 async function loadLiveData(){
   const endpoint=`${AUTH_WORKER}/api/data?_=${Date.now()}`;
   const r=await fetch(endpoint,{
@@ -1085,6 +1171,7 @@ function render(){
  const featRing=featAvatar?.closest('.avatarRing'); if(featRing) featRing.classList.toggle('doram-clean',/doram|invocador/.test(norm(lip.Job||'')));
  const featClassBadge=$('#featClassBadge'); if(featClassBadge) featClassBadge.textContent=String(lip.Job||'CLASSE').toUpperCase();
 
+ renderMyCharacter();
  renderManagerRanks(); setupMemberExplorer(); renderMemberExplorer(); renderUpdateControl();renderClassTop3(); renderGuildLeague();
  const ss=[['❤️','HP',lip.HP],['🗡️','ATK',lip.ATK],['✦','MATK',lip.MATK],['🛡️','PDEF',lip.PDEF],['🛡️','MDEF',lip.MDEF]];$('#featStats').innerHTML=ss.map(s=>`<div class="stat"><div>${s[0]}</div><div class="slabel">${s[1]}</div><div class="svalue">${fmtInt(s[2])}</div></div>`).join('');
 }
@@ -1300,9 +1387,140 @@ function renderRankExplanation(m){
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
-async function refresh(){try{const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
+async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
 
+
+
+function discordKey(v){
+  return norm(String(v||''))
+    .replace(/^[@!#\s]+/g,'')
+    .replace(/\s+/g,'')
+    .replace(/[^a-z0-9._-]/g,'');
+}
+function findAuthenticatedMember(){
+  if(!authUser||!members.length)return null;
+  const candidates=[authUser.name,authUser.username].map(discordKey).filter(Boolean);
+  if(!candidates.length)return null;
+
+  // Primeiro procura igualdade exata da coluna Discord.
+  let found=members.find(m=>candidates.includes(discordKey(m.Discord)));
+  if(found)return found;
+
+  // Compatibilidade com apelidos que tenham apenas prefixos decorativos no Discord.
+  found=members.find(m=>{
+    const d=discordKey(m.Discord);
+    return d && candidates.some(c=>d===c || (d.length>=4 && c.length>=4 && (d.endsWith(c)||c.endsWith(d))));
+  });
+  return found||null;
+}
+function personalMetricRows(m,pool){
+  const role=classRole(m.Job);
+  if(role==='SUPORTE'){
+    const c=supportDefenseContext(pool);
+    return [
+      {label:'HP',value:intNum(m.HP,'HP'),display:fmtInt(m.HP,'HP'),avg:avgMetric(c.HP),pct:pctRank(intNum(m.HP,'HP'),c.HP)},
+      {label:'PDEF',value:intNum(m.PDEF,'PDEF'),display:fmtInt(m.PDEF,'PDEF'),avg:avgMetric(c.PDEF),pct:pctRank(intNum(m.PDEF,'PDEF'),c.PDEF)},
+      {label:'MDEF',value:intNum(m.MDEF,'MDEF'),display:fmtInt(m.MDEF,'MDEF'),avg:avgMetric(c.MDEF),pct:pctRank(intNum(m.MDEF,'MDEF'),c.MDEF)},
+      {label:'PVP DMG RED',value:intNum(m['PVP DMG RED'],'PVP DMG RED'),display:fmtInt(m['PVP DMG RED'],'PVP DMG RED'),avg:avgMetric(c.PVPRED),pct:pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED)},
+      {label:'DMG RED MED',value:metricValue(m['DMG RED MED'],'DMG RED MED'),display:fmt(m['DMG RED MED']),avg:avgMetric(c.RED),pct:pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED)}
+    ];
+  }
+
+  const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
+  let rows=[
+    {label:r.profile==='MAGIC'?'MATK':'ATK',value:r.attack,display:fmtInt(r.attack),avg:avgMetric(c.attack),pct:pctRank(r.attack,c.attack)},
+    {label:r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',value:r.penetration,display:fmtInt(r.penetration),avg:avgMetric(c.penetration),pct:pctRank(r.penetration,c.penetration)},
+    {label:r.profile==='MAGIC'?'MDMG':'PDMG',value:r.damage,display:metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),avg:avgMetric(c.damage),pct:pctRank(r.damage,c.damage)},
+    {label:'PVP DMG INC',value:intNum(m['PVP DMG INC'],'PVP DMG INC'),display:fmtInt(m['PVP DMG INC'],'PVP DMG INC'),avg:avgMetric(c.pvpinc),pct:pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)}
+  ];
+
+  if(role==='HÍBRIDO'){
+    const d=supportDefenseContext(pool);
+    rows=rows.concat([
+      {label:'HP',value:intNum(m.HP,'HP'),display:fmtInt(m.HP,'HP'),avg:avgMetric(d.HP),pct:pctRank(intNum(m.HP,'HP'),d.HP)},
+      {label:'PDEF',value:intNum(m.PDEF,'PDEF'),display:fmtInt(m.PDEF,'PDEF'),avg:avgMetric(d.PDEF),pct:pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)},
+      {label:'MDEF',value:intNum(m.MDEF,'MDEF'),display:fmtInt(m.MDEF,'MDEF'),avg:avgMetric(d.MDEF),pct:pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)},
+      {label:'PVP DMG RED',value:intNum(m['PVP DMG RED'],'PVP DMG RED'),display:fmtInt(m['PVP DMG RED'],'PVP DMG RED'),avg:avgMetric(d.PVPRED),pct:pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED)}
+    ]);
+  }
+  return rows;
+}
+function personalAvgDisplay(x){
+  const decimal=['PDMG','MDMG','DMG RED MED'].includes(x.label);
+  return decimal ? metricFormat(x.avg,x.label==='MDMG'?'MDGMG':x.label) : fmtInt(Math.round(x.avg),x.label);
+}
+function personalStatus(x){
+  const diff=x.avg ? ((x.value-x.avg)/x.avg)*100 : 0;
+  if(x.pct>=70)return {cls:'good',txt:`${Math.abs(diff).toFixed(0)}% ${diff>=0?'acima':'abaixo'} da média`};
+  if(x.pct>=45)return {cls:'mid',txt:'Próximo da média'};
+  return {cls:'bad',txt:`${Math.abs(diff).toFixed(0)}% abaixo da média`};
+}
+function personalUpdateValue(m){
+  const raw=m['Última Atualização']||m['Ultima Atualização']||m['Data/Hora']||'—';
+  return String(raw||'—');
+}
+function renderMyCharacter(){
+  const shell=$('#myCharShell'), loading=$('#myCharLoading'), card=$('#myCharCard'), nf=$('#myCharNotFound');
+  if(!shell)return;
+  if(!authUser){
+    loading.hidden=false;card.hidden=true;nf.hidden=true;return;
+  }
+
+  const m=findAuthenticatedMember();
+  loading.hidden=true;
+  if(!m){
+    card.hidden=true;nf.hidden=false;
+    $('#myCharNotFoundText').textContent=`Discord autenticado: ${authUser.name||authUser.username||'—'}. Confira a coluna Discord da planilha.`;
+    return;
+  }
+  nf.hidden=true;card.hidden=false;
+
+  const group=classRankingGroup(m);
+  const pool=members.filter(x=>classRankingGroup(x)===group);
+  const scored=pool.map(x=>({m:x,r:classTop3Score(x,pool)})).filter(x=>x.r).sort((a,b)=>b.r.score-a.r.score);
+  const own=scored.find(x=>x.m===m) || {r:classTop3Score(m,pool)};
+  const pos=Math.max(1,scored.findIndex(x=>x.m===m)+1);
+  const score=Math.round(own.r?.score||0);
+  const metrics=personalMetricRows(m,pool);
+  const ordered=[...metrics].sort((a,b)=>b.pct-a.pct);
+  const strengths=ordered.slice(0,2);
+  const weak=[...metrics].sort((a,b)=>a.pct-b.pct).slice(0,2);
+
+  $('#myCharName').textContent=m.Personagem||'—';
+  $('#myCharClass').textContent=group||m.Job||'—';
+  $('#myCharDiscord').textContent='Discord: '+(authUser.name||authUser.username||m.Discord||'—');
+  $('#myCharScore').innerHTML=`${score}<small>/100</small>`;
+  $('#myCharGroup').textContent=(own.r?.kind||classRole(m.Job))+' • comparação no grupo';
+  $('#myCharPower').textContent=fmtInt(m['Power Atual'],'Power Atual');
+  $('#myCharPowerHint').textContent=delta(m)?`${delta(m)>0?'+':''}${fmtInt(delta(m))} de evolução`:'Power atual';
+  $('#myCharPosition').textContent=`#${pos}`;
+  $('#myCharPositionHint').textContent=`de ${pool.length} em ${group}`;
+  $('#myCharUpdated').textContent=personalUpdateValue(m);
+
+  $('#myCharStrengths').innerHTML=strengths.map(x=>`<span><b>${esc(x.label)}</b> ${Math.round(x.pct)}/100</span>`).join('');
+  $('#myCharWeaknesses').innerHTML=weak.map(x=>`<span><b>${esc(x.label)}</b> ${Math.round(x.pct)}/100</span>`).join('');
+
+  const mainWeak=weak[0], mainStrong=strengths[0];
+  const gap=mainWeak?.avg ? ((mainWeak.avg-mainWeak.value)/mainWeak.avg)*100 : 0;
+  $('#myCharSummaryText').innerHTML=
+    `Seu melhor destaque hoje é <b>${esc(mainStrong?.label||'—')}</b> (${Math.round(mainStrong?.pct||0)}/100). `+
+    (gap>0
+      ? `O principal foco é <b>${esc(mainWeak.label)}</b>, atualmente <b>${Math.abs(gap).toFixed(0)}% abaixo</b> da média de ${esc(group)}.`
+      : `Você está bem posicionado nos principais atributos avaliados do seu grupo.`);
+
+  $('#myCharMetrics').innerHTML=metrics.slice(0,6).map(x=>{
+    const s=personalStatus(x);
+    return `<div class="myCharMetric ${s.cls}">
+      <div class="myCharMetricHead"><b>${esc(x.label)}</b><span>${Math.round(x.pct)}/100</span></div>
+      <div class="myCharMetricVals"><strong>${x.display}</strong><small>Média ${personalAvgDisplay(x)}</small></div>
+      <div class="myCharMetricBar"><i style="width:${Math.max(3,Math.min(100,x.pct))}%"></i></div>
+      <div class="myCharMetricStatus">${s.txt}</div>
+    </div>`;
+  }).join('');
+
+  $('#myCharOpen').onclick=()=>openPlayer(encodeURIComponent(m.Personagem));
+}
 
 function doramCombatProfile(m){
   if(!/\bdoram\b/i.test(String(m.Job||''))) return damageProfile(m.Job);
