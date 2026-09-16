@@ -518,7 +518,7 @@ z-index:0}
     </article>
   </section>
 <section class="classRankPanel">
-<div class="classRankHead"><div><h3>🏆 Ranking por Classe</h3><p>Ranking técnico por função. Top 5 de cada classe, com opção para visualizar o restante.</p></div><div class="classRankLegend">TOP 5 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
+<div class="classRankHead"><div><h3>🏆 Ranking por Classe</h3><p>Ranking técnico por função. DPS usa ataque, Suporte usa defesa e Híbrido combina ataque + defesa. Top 5 visível por classe.</p></div><div class="classRankLegend">TOP 5 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
 <div class="classRankGrid" id="classTop3Grid"></div>
 </section>
 
@@ -969,20 +969,49 @@ function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
 
+function classRankingOffenseScore(m,pool){
+  const ctx=buildOffenseContext(pool);
+  const r=offensiveRaw(m);
+  return .28*pctRank(r.attack,ctx.attack)
+       + .24*pctRank(r.penetration,ctx.penetration)
+       + .22*pctRank(r.damage,ctx.damage)
+       + .16*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),ctx.pvpinc)
+       + .10*pctRank(intNum(m['Power Atual'],'Power Atual'),ctx.power);
+}
+function classRankingDefenseScore(m,pool){
+  const ctx=supportDefenseContext(pool);
+  return .30*pctRank(intNum(m.HP,'HP'),ctx.HP)
+       + .22*pctRank(intNum(m.PDEF,'PDEF'),ctx.PDEF)
+       + .18*pctRank(intNum(m.MDEF,'MDEF'),ctx.MDEF)
+       + .18*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
+       + .12*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
+}
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
+
   if(role==='SUPORTE'){
-    const ctx=supportDefenseContext(pool);
-    return {score:supportDefenseScore(member,ctx,pctRank)??0,kind:'DEFESA'};
+    return {score:classRankingDefenseScore(member,pool),kind:'DEFESA'};
   }
-  // Tanks/híbridos permanecem fora do ranking até existir uma regra específica;
-  // DPS é comparado somente com membros da mesma classe e mesmo perfil ofensivo.
-  if(isDPS(member)){
-    const profile=damageProfile(member.Job);
-    const peers=pool.filter(x=>damageProfile(x.Job)===profile);
-    const ctx=buildOffenseContext(peers);
-    return {score:offenseScore(member,ctx,pctRank)??0,kind:profile==='MAGIC'?'DPS MÁGICO':'DPS FÍSICO'};
+
+  if(role==='DPS'){
+    const profile=offensiveRaw(member).profile;
+    return {
+      score:classRankingOffenseScore(member,pool),
+      kind:profile==='MAGIC'?'DPS MÁGICO':'DPS FÍSICO'
+    };
   }
+
+  if(role==='HÍBRIDO'){
+    // Híbrido: 50% capacidade ofensiva + 50% capacidade defensiva,
+    // sempre comparado apenas com jogadores da mesma classe.
+    const offense=classRankingOffenseScore(member,pool);
+    const defense=classRankingDefenseScore(member,pool);
+    return {
+      score:(offense*.50)+(defense*.50),
+      kind:'HÍBRIDO • ATQ + DEF'
+    };
+  }
+
   return null;
 }
 function toggleClassRank(key,btn){
