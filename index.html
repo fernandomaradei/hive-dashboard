@@ -623,6 +623,16 @@ z-index:0}
 @media(max-width:900px){.myCharOverview{grid-template-columns:1fr 1fr}.myCharOverview>*{border-bottom:1px solid #2d291d}.myCharMetrics{grid-template-columns:repeat(3,1fr)}.myCharAnalysis{grid-template-columns:1fr}}
 @media(max-width:600px){.myCharShell{padding:0 10px;margin-top:10px}.myCharTop{align-items:flex-start;flex-direction:column}.myCharOpen{width:100%}.myCharOverview{grid-template-columns:1fr 1fr}.myCharScoreBox,.myCharKpi{padding:12px}.myCharOverview b{font-size:16px}.myCharScoreBox b{font-size:23px}.myCharHighlights{grid-template-columns:1fr}.myCharMetrics{grid-template-columns:1fr 1fr;padding:8px 10px 13px}.myCharAnalysis{padding:11px 10px 5px}}
 
+
+.myCharIdentityWrap{display:flex;align-items:center;gap:13px}
+.myCharPortrait{width:58px;height:58px;border-radius:14px;overflow:hidden;border:1px solid #6f581b;background:#17150e;box-shadow:0 0 0 3px #0005,0 0 22px #d9aa2520;flex:0 0 auto}
+.myCharPortrait img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+.myCharTarget{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px;padding-top:7px;border-top:1px solid #2c2a23}
+.myCharTarget span{font-size:7px;color:#777269;font-weight:950;letter-spacing:.07em}
+.myCharTarget b{font-size:9px;color:#f1c64b}
+.myCharTarget.reached b{color:#62d991}
+@media(max-width:600px){.myCharPortrait{width:48px;height:48px;border-radius:12px}.myCharIdentityWrap{gap:10px}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -751,10 +761,13 @@ z-index:0}
       <div class="myCharTop">
         <div>
           <div class="myCharEyebrow">🐝 MEU PERSONAGEM</div>
-          <div class="myCharIdentity">
+          <div class="myCharIdentityWrap">
+            <div class="myCharPortrait"><img id="myCharPortrait" alt="Classe"></div>
+            <div class="myCharIdentity">
             <strong id="myCharName">—</strong>
             <span id="myCharClass">—</span>
             <span class="myCharDiscord" id="myCharDiscord">Discord: —</span>
+            </div>
           </div>
         </div>
         <button class="myCharOpen" id="myCharOpen">Ver análise completa →</button>
@@ -1450,6 +1463,20 @@ function personalAvgDisplay(x){
   const decimal=['PDMG','MDMG','DMG RED MED'].includes(x.label);
   return decimal ? metricFormat(x.avg,x.label==='MDMG'?'MDGMG':x.label) : fmtInt(Math.round(x.avg),x.label);
 }
+function personalTarget100(x,pool){
+  // A nota 100/100 é percentile/rank relativo ao próprio grupo.
+  // Portanto, o alvo real é o maior valor atual daquele atributo no grupo.
+  const vals=(pool||[]).map(p=>{
+    const rows=personalMetricRows(p,pool);
+    const row=rows.find(r=>r.label===x.label);
+    return row ? Number(row.value||0) : 0;
+  }).filter(v=>Number.isFinite(v));
+  return vals.length ? Math.max(...vals) : Number(x.value||0);
+}
+function personalTargetDisplay(x,target){
+  const decimal=['PDMG','MDMG','DMG RED MED'].includes(x.label);
+  return decimal ? metricFormat(target,x.label==='MDMG'?'MDGMG':x.label) : fmtInt(Math.round(target),x.label);
+}
 function personalStatus(x){
   const diff=x.avg ? ((x.value-x.avg)/x.avg)*100 : 0;
   if(x.pct>=70)return {cls:'good',txt:`${Math.abs(diff).toFixed(0)}% ${diff>=0?'acima':'abaixo'} da média`};
@@ -1487,6 +1514,8 @@ function renderMyCharacter(){
   const strengths=ordered.slice(0,2);
   const weak=[...metrics].sort((a,b)=>a.pct-b.pct).slice(0,2);
 
+  const portrait=$('#myCharPortrait');
+  if(portrait){ portrait.src=classImage(m.Job); portrait.alt=m.Job||'Classe'; }
   $('#myCharName').textContent=m.Personagem||'—';
   $('#myCharClass').textContent=group||m.Job||'—';
   $('#myCharDiscord').textContent='Discord: '+(authUser.name||authUser.username||m.Discord||'—');
@@ -1511,11 +1540,17 @@ function renderMyCharacter(){
 
   $('#myCharMetrics').innerHTML=metrics.slice(0,6).map(x=>{
     const s=personalStatus(x);
+    const target=personalTarget100(x,pool);
+    const targetText=personalTargetDisplay(x,target);
+    const reached=Number(x.value||0)>=target;
     return `<div class="myCharMetric ${s.cls}">
       <div class="myCharMetricHead"><b>${esc(x.label)}</b><span>${Math.round(x.pct)}/100</span></div>
       <div class="myCharMetricVals"><strong>${x.display}</strong><small>Média ${personalAvgDisplay(x)}</small></div>
+      <div class="myCharTarget ${reached?'reached':''}">
+        <span>ALVO 100/100</span><b>${targetText}</b>
+      </div>
       <div class="myCharMetricBar"><i style="width:${Math.max(3,Math.min(100,x.pct))}%"></i></div>
-      <div class="myCharMetricStatus">${s.txt}</div>
+      <div class="myCharMetricStatus">${reached?'✓ Você já está no topo deste atributo':s.txt}</div>
     </div>`;
   }).join('');
 
