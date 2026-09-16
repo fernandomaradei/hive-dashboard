@@ -633,6 +633,24 @@ z-index:0}
 .myCharTarget.reached b{color:#62d991}
 @media(max-width:600px){.myCharPortrait{width:48px;height:48px;border-radius:12px}.myCharIdentityWrap{gap:10px}}
 
+
+/* ===== MEU PERSONAGEM V3 — ficha alinhada e compacta ===== */
+.myCharShell{max-width:1500px;margin:18px auto 16px;padding:0 22px}
+.myCharCard{border:1px solid #80651c;background:linear-gradient(145deg,#14150f 0%,#10110e 60%,#15130d 100%);border-radius:18px;overflow:hidden;box-shadow:0 18px 50px #0007}
+.myCharTop{padding:18px 20px;gap:20px;background:linear-gradient(90deg,#17160f 0%,#11120f 55%,#17140c 100%)}
+.myCharTop>div:first-child{min-width:0}
+.myCharIdentityWrap{gap:15px}.myCharPortrait{width:78px;height:78px;border-radius:16px;border:1px solid #96751e;box-shadow:0 0 0 4px #0b0b09,0 0 26px #d8aa2925}
+.myCharIdentity{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:11px;row-gap:3px}.myCharIdentity strong{font-size:25px;line-height:1.05}.myCharIdentity>span:not(.myCharDiscord){font-size:11px}.myCharDiscord{grid-column:1/-1;font-size:9px}
+.myCharOpen{min-width:190px;padding:11px 16px;box-shadow:0 8px 22px #d9aa2520}
+.myCharOverview{grid-template-columns:repeat(4,1fr);background:#10110e}.myCharScoreBox,.myCharKpi{min-height:86px;padding:15px 18px;display:flex;flex-direction:column;justify-content:center}.myCharOverview b{font-size:19px}.myCharScoreBox b{font-size:26px}
+.myCharAnalysis{grid-template-columns:1.35fr .95fr;gap:12px;padding:14px 18px 10px}.myCharSummary,.myCharHighlight{min-height:76px}.myCharHighlights{grid-template-columns:1fr 1fr}
+.myCharMetrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:8px 18px 18px}.myCharMetric{min-height:128px;padding:12px 13px;border-radius:12px;background:linear-gradient(180deg,#13140f,#0f100e)}
+.myCharMetricHead b{font-size:9px}.myCharMetricHead span{font-size:9px}.myCharMetricVals{margin-top:8px}.myCharMetricVals strong{font-size:16px}.myCharMetricVals small{font-size:8px}
+.myCharCompare{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:9px}.myCharCompare div{background:#0b0c0a;border:1px solid #29271f;border-radius:7px;padding:6px 7px;min-width:0}.myCharCompare small{display:block;color:#777268;font-size:6.5px;font-weight:900;letter-spacing:.05em;white-space:nowrap}.myCharCompare b{display:block;color:#ddd8ce;font-size:9px;margin-top:3px;overflow:hidden;text-overflow:ellipsis}.myCharCompare .target b{color:#f0c64b}.myCharCompare .target.reached b{color:#66dc98}
+.myCharMetricBar{margin:9px 0 6px}.myCharMetricStatus{font-size:8px;line-height:1.3}
+@media(max-width:1050px){.myCharMetrics{grid-template-columns:repeat(2,1fr)}.myCharAnalysis{grid-template-columns:1fr}.myCharOverview{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.myCharTop{padding:14px}.myCharPortrait{width:62px;height:62px}.myCharIdentity strong{font-size:21px}.myCharOverview{grid-template-columns:1fr 1fr}.myCharMetrics{grid-template-columns:1fr;padding:8px 10px 14px}.myCharHighlights{grid-template-columns:1fr}.myCharCompare small{font-size:6px}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -1545,9 +1563,11 @@ function renderMyCharacter(){
     const reached=Number(x.value||0)>=target;
     return `<div class="myCharMetric ${s.cls}">
       <div class="myCharMetricHead"><b>${esc(x.label)}</b><span>${Math.round(x.pct)}/100</span></div>
-      <div class="myCharMetricVals"><strong>${x.display}</strong><small>Média ${personalAvgDisplay(x)}</small></div>
-      <div class="myCharTarget ${reached?'reached':''}">
-        <span>ALVO 100/100</span><b>${targetText}</b>
+      <div class="myCharMetricVals"><strong>${x.display}</strong><small>desempenho atual</small></div>
+      <div class="myCharCompare">
+        <div><small>SEU VALOR</small><b>${x.display}</b></div>
+        <div><small>MÉDIA DA CLASSE</small><b>${personalAvgDisplay(x)}</b></div>
+        <div class="target ${reached?'reached':''}"><small>ALVO 100/100</small><b>${targetText}</b></div>
       </div>
       <div class="myCharMetricBar"><i style="width:${Math.max(3,Math.min(100,x.pct))}%"></i></div>
       <div class="myCharMetricStatus">${reached?'✓ Você já está no topo deste atributo':s.txt}</div>
