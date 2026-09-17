@@ -743,6 +743,180 @@ z-index:0}
   .myCharNameLine strong{font-size:20px!important}
 }
 
+
+/* ===== HIVE • correção final de esquadro/alinhamento ===== */
+.myCharShell{
+  max-width:1500px!important;
+  margin:18px auto 14px!important;
+  padding:0 22px!important;
+  box-sizing:border-box!important;
+}
+.myCharCard{
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+
+/* Cabeçalho usa exatamente as mesmas margens internas do restante */
+.myCharSectionHead{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 220px!important;
+  align-items:center!important;
+  gap:16px!important;
+  padding:14px 18px 10px!important;
+}
+.myCharOpen{
+  width:220px!important;
+  min-width:220px!important;
+  justify-self:end!important;
+  box-sizing:border-box!important;
+}
+
+/* Primeira linha: todas as caixas com mesma altura e gaps */
+.myCharHeroRow{
+  display:grid!important;
+  grid-template-columns:minmax(360px,1.55fr) repeat(3,minmax(145px,.62fr)) minmax(240px,1.05fr)!important;
+  gap:10px!important;
+  padding:0 18px 10px!important;
+  align-items:stretch!important;
+}
+.myCharIdentityCard,.myHeroKpi{
+  height:128px!important;
+  min-height:128px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+}
+.myCharIdentityCard{
+  display:block!important;
+  position:relative!important;
+}
+.myCharPortrait{
+  height:128px!important;
+  width:47%!important;
+}
+.myCharIdentityText{
+  height:128px!important;
+  min-height:128px!important;
+  width:60%!important;
+  box-sizing:border-box!important;
+}
+.myHeroKpi{
+  padding:14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.myHeroKpi.updated b{
+  font-size:17px!important;
+  line-height:1.12!important;
+  white-space:nowrap!important;
+}
+
+/* Segunda linha: 3 análises + frase, todas idênticas */
+.myQuickRow{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) minmax(210px,.62fr)!important;
+  gap:10px!important;
+  padding:0 18px 12px!important;
+  align-items:stretch!important;
+}
+.myQuick,.myQuote{
+  height:72px!important;
+  min-height:72px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+.myQuick{
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:11px!important;
+}
+.myQuickIcon{
+  width:48px!important;height:48px!important;
+  margin:0!important;
+}
+.myQuick>div:last-child{min-width:0!important}
+.myQuick div div{
+  white-space:normal!important;
+  overflow:hidden!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+}
+.myQuote{padding:10px 14px!important}
+
+/* Separador/título perfeitamente alinhado com os cards */
+.myMetricsHead{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:end!important;
+  gap:16px!important;
+  padding:13px 18px 8px!important;
+  box-sizing:border-box!important;
+}
+.profileTabs{justify-self:end!important}
+
+/* Cards: 4 colunas rigorosamente iguais */
+.myCharMetrics{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  padding:6px 18px 16px!important;
+  align-items:stretch!important;
+}
+.myCharMetric{
+  width:auto!important;
+  min-width:0!important;
+  height:174px!important;
+  min-height:174px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:12px!important;
+}
+.metricTriplet{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.metricTriplet>div:nth-child(2){text-align:center!important}
+.metricTriplet>div:nth-child(3){text-align:right!important}
+.metricTriplet strong,.metricTriplet small{white-space:nowrap!important}
+
+/* Evita pequenas diferenças causadas por textos maiores */
+.metricCompare,.metricGoal{
+  min-height:13px!important;
+  line-height:13px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.metricGoal{margin-top:7px!important}
+
+/* Responsivo sem quebrar o esquadro */
+@media(max-width:1250px){
+  .myCharHeroRow{
+    grid-template-columns:minmax(330px,1.4fr) repeat(3,minmax(135px,.62fr)) minmax(215px,1fr)!important;
+  }
+}
+@media(max-width:1050px){
+  .myCharHeroRow{grid-template-columns:1fr 1fr!important}
+  .myCharIdentityCard{grid-column:1/-1!important}
+  .myQuickRow{grid-template-columns:1fr 1fr!important}
+  .myCharMetrics{grid-template-columns:1fr 1fr!important}
+  .myCharIdentityCard,.myHeroKpi{height:120px!important;min-height:120px!important}
+  .myCharPortrait,.myCharIdentityText{height:120px!important;min-height:120px!important}
+}
+@media(max-width:650px){
+  .myCharSectionHead{grid-template-columns:1fr!important}
+  .myCharOpen{width:100%!important;min-width:0!important;justify-self:stretch!important}
+  .myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}
+  .myCharIdentityCard{grid-column:auto!important}
+  .myMetricsHead{grid-template-columns:1fr!important;align-items:start!important}
+  .profileTabs{justify-self:stretch!important;width:100%!important}
+  .myQuick,.myQuote,.myCharMetric{height:auto!important;min-height:0!important}
+  .metricCompare,.metricGoal{white-space:normal!important;overflow:visible!important}
+}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
