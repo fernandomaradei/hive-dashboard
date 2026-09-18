@@ -1171,6 +1171,170 @@ z-index:0}
 .uc-more-wrap{display:flex;justify-content:center;padding:0 16px 18px}.uc-more{min-width:230px;border:1px solid rgba(214,160,24,.55);background:linear-gradient(180deg,#1b170f,#12100c);color:#ffd66b;border-radius:11px;padding:10px 16px;font:inherit;font-size:11px;font-weight:900;cursor:pointer;transition:.18s}.uc-more:hover{border-color:#f0bd38;background:#211b0d;transform:translateY(-1px)}.uc-more[hidden]{display:none!important}
 </style>
 
+<style>
+/* =========================================================
+   HIVE • OPÇÃO 4 — PREMIUM MINIMALISTA (mockup aprovado)
+   Override final da área MEU PERSONAGEM
+   ========================================================= */
+.myCharShell{max-width:1480px!important;margin:18px auto!important;padding:0 20px!important}
+.myCharCard{
+  padding:18px!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(circle at 73% 25%,rgba(27,111,104,.10),transparent 28%),
+    linear-gradient(180deg,#0b100f 0%,#080b0a 100%)!important;
+  border:1px solid rgba(222,166,42,.62)!important;
+  box-shadow:0 16px 44px rgba(0,0,0,.32)!important;
+}
+.myCharSectionHead{min-height:38px!important;margin:0 0 12px!important}
+.myCharEyebrow{font-size:16px!important;color:#f2bd34!important;font-weight:950!important}
+.myCharIntro{display:none!important}
+.myCharOpen{
+  padding:11px 18px!important;border-radius:9px!important;
+  background:linear-gradient(135deg,#ffd95b,#efb329)!important;
+  color:#15120a!important;font-size:12px!important
+}
+
+/* Topo igual ao mockup 4:
+   personagem circular | índice circular | informações compactas */
+.myCharHeroRow{
+  display:grid!important;
+  grid-template-columns:1.35fr .72fr .78fr .78fr 1.15fr!important;
+  gap:10px!important;align-items:stretch!important
+}
+.myCharIdentityCard{
+  min-height:128px!important;padding:13px 15px!important;
+  grid-template-columns:108px 1fr!important;gap:15px!important;
+  border:0!important;background:transparent!important
+}
+.myCharPortrait{
+  width:106px!important;height:106px!important;border-radius:50%!important;
+  border:2px solid #d6a82c!important;
+  box-shadow:0 0 0 6px rgba(221,169,44,.07),0 8px 24px rgba(0,0,0,.35)!important;
+  background:#111715!important
+}
+.myCharPortrait img{
+  width:100%!important;height:100%!important;border-radius:50%!important;
+  object-fit:cover!important;object-position:center 18%!important;
+  transform:scale(1.04)!important
+}
+.myCharIdentityText{justify-content:center!important}
+.myCharNameLine strong{font-size:25px!important;color:#f7f5ef!important}
+.myCharDiscord{font-size:9px!important;color:#7f8782!important}
+#myCharClass{font-size:12px!important;color:#f2c034!important;margin-top:7px!important}
+.myCharRolePills{margin-top:8px!important}
+.myCharRolePills span{padding:4px 9px!important;font-size:8px!important}
+
+/* Índice em formato donut */
+.myHeroKpi{
+  min-height:128px!important;border:0!important;background:transparent!important;
+  padding:12px!important;justify-content:center!important
+}
+.myHeroKpi.score{
+  position:relative!important;display:flex!important;align-items:center!important;
+  justify-content:center!important;text-align:center!important;padding:0!important
+}
+.myHeroKpi.score:before{
+  content:""!important;position:absolute!important;width:98px!important;height:98px!important;
+  border-radius:50%!important;
+  background:conic-gradient(#e8b82f calc(var(--score,0)*1%),#43d9c0 calc(var(--score,0)*1% + 8%),#27302d 0)!important;
+  -webkit-mask:radial-gradient(circle,transparent 55%,#000 57%)!important;
+  mask:radial-gradient(circle,transparent 55%,#000 57%)!important;
+  filter:drop-shadow(0 0 8px rgba(67,217,192,.10))!important
+}
+.myHeroKpi.score small{
+  position:absolute!important;top:30px!important;font-size:7px!important;
+  color:#8c938e!important;z-index:2!important
+}
+.myHeroKpi.score>b{
+  position:relative!important;z-index:2!important;font-size:31px!important;
+  color:#f2c438!important;margin:0!important
+}
+.myHeroKpi.score>b small{
+  position:static!important;font-size:8px!important;margin-left:2px!important;color:#7e8580!important
+}
+.myHeroKpi.score>span{
+  position:absolute!important;bottom:10px!important;font-size:7px!important;color:#777f79!important
+}
+
+/* Power, posição e atualização viram linhas limpas, como no lado direito do mockup */
+.myHeroKpi:not(.score){
+  border-left:1px solid #252b28!important;border-radius:0!important;
+  min-height:104px!important
+}
+.myHeroKpi:not(.score) small{font-size:7px!important;color:#717974!important}
+.myHeroKpi:not(.score)>b{font-size:23px!important;margin:6px 0 5px!important}
+.myHeroKpi.updated>b{font-size:15px!important}
+.myHeroKpi:not(.score)>span{font-size:8px!important}
+
+/* Síntese minimalista */
+.myQuickRow{
+  grid-template-columns:repeat(3,1fr)!important;gap:9px!important;
+  margin:8px 0 15px!important
+}
+.myQuick{
+  min-height:62px!important;padding:9px 12px!important;
+  background:#0e1311!important;border:1px solid #252c28!important;border-radius:11px!important
+}
+.myQuickIcon{width:38px!important;height:38px!important;border-radius:10px!important;font-size:22px!important}
+.myQuick small{font-size:8px!important}
+.myQuick>div:last-child>div{font-size:9px!important;color:#b7bdb9!important}
+.myQuote{display:none!important}
+
+/* Cabeçalho dos atributos */
+.myMetricsHead{
+  margin-top:2px!important;padding:13px 0 10px!important;
+  border-top:1px solid #202724!important
+}
+.myMetricsHead>div:first-child b{font-size:13px!important;color:#eab92e!important}
+.myMetricsHead>div:first-child span{font-size:8px!important;color:#737b76!important}
+.profileTabs{transform:scale(.92);transform-origin:right center}
+
+/* Quatro cards da opção 4: sem barra, informação objetiva */
+.myCharMetrics{grid-template-columns:repeat(4,1fr)!important;gap:9px!important}
+.myCharMetric{
+  min-height:124px!important;padding:12px!important;border-radius:11px!important;
+  background:linear-gradient(180deg,#101513,#0d110f)!important;
+  border:1px solid #2a312d!important
+}
+.myCharMetricHead{margin-bottom:10px!important}
+.myCharMetricHead>div{gap:7px!important}
+.myCharMetricHead i{
+  width:28px!important;height:28px!important;border-radius:8px!important;
+  background:#171d1a!important;font-size:16px!important
+}
+.myCharMetricHead b{font-size:10px!important}
+.myCharMetricHead span{font-size:12px!important;color:#f3c333!important}
+.metricTriplet{grid-template-columns:1fr!important;gap:0!important}
+.metricTriplet>div{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:4px 0!important;border:0!important;border-bottom:1px solid #202622!important;
+  border-radius:0!important;background:transparent!important
+}
+.metricTriplet>div:last-child{border-bottom:0!important}
+.metricTriplet small{font-size:7px!important}
+.metricTriplet strong{font-size:13px!important}
+.myCharMetricBar{display:none!important}
+.metricCompare{font-size:8px!important;margin-top:8px!important}
+.metricGoal,.myCharMetricStatus{font-size:8px!important;margin-top:4px!important}
+.myCharMetric.good{border-bottom:3px solid #37d67a!important}
+.myCharMetric.mid{border-bottom:3px solid #e2b32e!important}
+.myCharMetric.bad{border-bottom:3px solid #e25e52!important}
+
+/* impede o "fora do esquadro" em resoluções comuns */
+.myCharCard *{box-sizing:border-box!important;min-width:0}
+@media(max-width:1200px){
+ .myCharHeroRow{grid-template-columns:1.4fr .75fr 1fr 1fr!important}
+ .myHeroKpi.updated{grid-column:3/5!important}
+ .myCharMetrics{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:760px){
+ .myCharHeroRow{grid-template-columns:1fr 1fr!important}
+ .myCharIdentityCard{grid-column:1/-1!important}
+ .myHeroKpi.updated{grid-column:auto!important}
+ .myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1951,7 +2115,7 @@ function renderMyCharacter(){
   const weak=[...metrics].sort((a,b)=>a.pct-b.pct).slice(0,2);
 
   const portrait=$('#myCharPortrait');
-  if(portrait){ portrait.src=classImage(m.Job); portrait.alt=`Arte ${m.Job||'Classe'} • mesma coleção do Destaque da Guild`; }
+  if(portrait){ portrait.src=featuredClassImage(m.Job); portrait.alt=`Arte ${m.Job||'Classe'} • coleção Destaque da Guild`; }
   $('#myCharName').textContent=m.Personagem||'—';
   $('#myCharClass').textContent=group||m.Job||'—';
   const rolePill=$('#myCharRolePill'), profileTab=$('#myProfileTab');
@@ -1965,6 +2129,8 @@ function renderMyCharacter(){
   }
   $('#myCharDiscord').textContent='Discord: '+(authUser.name||authUser.username||m.Discord||'—');
   $('#myCharScore').innerHTML=`${score}<small>/100</small>`;
+  const scoreBox=document.querySelector('.myHeroKpi.score');
+  if(scoreBox) scoreBox.style.setProperty('--score', Math.max(0,Math.min(100,score)));
   $('#myCharGroup').textContent=(own.r?.kind||classRole(m.Job))+' • comparação no grupo';
   $('#myCharPower').textContent=fmtInt(m['Power Atual'],'Power Atual');
   $('#myCharPowerHint').textContent=delta(m)?`${delta(m)>0?'+':''}${fmtInt(delta(m))} de evolução`:'Power atual';
