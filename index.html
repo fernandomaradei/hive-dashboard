@@ -4117,5 +4117,82 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_SCORE_ALIGNMENT_V17">
+/* Ajuste fino exclusivo do bloco ÍNDICE NA CLASSE */
+
+/* Cria uma área vertical previsível para o donut e os dois textos */
+.myHeroKpi.score{
+  position:relative!important;
+  height:158px!important;
+  min-height:158px!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+
+/* círculo centralizado */
+.myHeroKpi.score:before{
+  top:0!important;
+  left:50%!important;
+  width:124px!important;
+  height:124px!important;
+  transform:translateX(-50%)!important;
+}
+
+/* 88/100 */
+.myHeroKpi.score>b{
+  top:37px!important;
+  left:0!important;
+  right:0!important;
+  width:100%!important;
+  text-align:center!important;
+}
+
+/* ÍNDICE NA CLASSE — linha própria, perfeitamente centralizada */
+.myHeroKpi.score>small{
+  position:absolute!important;
+  top:127px!important;
+  left:50%!important;
+  right:auto!important;
+  width:180px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  line-height:12px!important;
+  font-size:10px!important;
+  white-space:nowrap!important;
+  color:#9ca29f!important;
+}
+
+/* Top 1 — segunda linha, sem invadir o donut */
+#myCharGroup{
+  position:absolute!important;
+  top:143px!important;
+  left:50%!important;
+  right:auto!important;
+  width:210px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  line-height:14px!important;
+  font-size:11px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  color:#f4f4ef!important;
+}
+
+/* Remove emojis/decorações herdadas duplicadas */
+#myCharGroup:before{
+  content:"♛"!important;
+  display:inline-block!important;
+  margin-right:5px!important;
+  color:#ffd33f!important;
+  font-size:12px!important;
+}
+#myCharGroup:after{content:none!important}
+</style>
+
 </body></html
 >
