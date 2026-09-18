@@ -1554,6 +1554,164 @@ z-index:0}
 }
 </style>
 
+
+<style id="HIVE_MEUPERSONAGEM_EXEMPLO_EXATO_V3">
+/* ===== HIVE • MEU PERSONAGEM — reconstruído conforme a referência aprovada ===== */
+.myCharShell{max-width:1540px!important;margin:18px auto 16px!important;padding:0 20px!important;box-sizing:border-box!important}
+.myCharCard.myCharExample{
+  overflow:hidden!important;padding:0!important;border:1px solid #a97b12!important;border-radius:18px!important;
+  background:radial-gradient(circle at 54% 25%,rgba(5,55,66,.14),transparent 35%),linear-gradient(180deg,#071012 0%,#07100f 100%)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.42)!important;color:#f7f6f0!important
+}
+.myCharSectionHead{
+  display:grid!important;grid-template-columns:1fr 230px!important;align-items:center!important;gap:20px!important;
+  padding:16px 24px 13px!important;margin:0!important;border-bottom:1px solid #27302e!important;background:transparent!important
+}
+.myCharSectionHead:after{display:none!important}
+.myCharEyebrow{font-size:22px!important;line-height:1!important;font-weight:950!important;color:#ffd24a!important;letter-spacing:.015em!important}
+.myCharIntro{font-size:14px!important;line-height:1.35!important;color:#e4e1d8!important;margin-top:5px!important}
+.myCharOpen{width:230px!important;min-width:230px!important;min-height:48px!important;justify-self:end!important;border:0!important;border-radius:10px!important;background:linear-gradient(135deg,#ffd85b,#f2b51f)!important;color:#111!important;font-size:14px!important;font-weight:950!important;box-shadow:0 8px 22px rgba(238,176,29,.18)!important}
+
+/* Linha superior: retrato | índice | power | posição | atualização */
+.myCharHeroRow{
+  display:grid!important;grid-template-columns:430px 240px 1fr 1fr 1.45fr!important;gap:0!important;
+  align-items:stretch!important;min-height:245px!important;padding:12px 24px 0!important
+}
+.myCharIdentityCard{
+  display:grid!important;grid-template-columns:220px minmax(180px,1fr)!important;gap:22px!important;align-items:center!important;
+  min-width:0!important;min-height:225px!important;padding:0 18px 0 0!important;border:0!important;background:transparent!important
+}
+.myCharPortrait{
+  position:relative!important;inset:auto!important;width:215px!important;height:215px!important;margin:0!important;
+  border:3px solid #f0c440!important;border-radius:50%!important;overflow:hidden!important;background:#101814!important;
+  box-shadow:0 0 0 5px rgba(111,80,9,.34),0 0 28px rgba(239,187,49,.42)!important
+}
+.myCharPortrait:after{
+  content:""!important;position:absolute!important;inset:0!important;border-radius:50%!important;
+  box-shadow:inset 0 0 28px rgba(0,0,0,.26)!important;pointer-events:none!important
+}
+.myCharPortrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;transform:none!important}
+.myCharIdentityText,.myCharIdentity{position:relative!important;inset:auto!important;transform:none!important;align-self:center!important;padding:0!important;min-width:0!important}
+.myCharNameLine{position:relative!important;inset:auto!important;display:block!important;margin:0 0 10px!important;white-space:normal!important}
+.myCharNameLine strong{display:block!important;font-size:34px!important;line-height:1.05!important;color:#fff!important;font-weight:950!important;margin:0 0 8px!important}
+.discordMini{display:inline-block!important;color:#7777ff!important;font-size:14px!important;margin-right:7px!important}
+.myCharDiscord{position:relative!important;inset:auto!important;display:inline!important;font-size:14px!important;color:#d7d5d0!important;margin:0!important}
+#myCharClass{position:relative!important;inset:auto!important;display:block!important;margin:13px 0 10px!important;color:#ffd13f!important;font-size:18px!important}
+.myCharRolePills{position:relative!important;inset:auto!important;display:flex!important;margin:0!important}
+.myCharRolePills span{font-size:13px!important;padding:7px 16px!important;border-radius:999px!important;background:#2c2407!important;border:1px solid #987314!important;color:#ffd24b!important}
+.myCharIdentityText:after{
+  content:"“A good adventurer always finds the target.”"!important;display:block!important;margin-top:18px!important;
+  max-width:205px!important;color:#ffd65a!important;font-size:15px!important;line-height:1.4!important;font-style:italic!important
+}
+
+/* KPIs */
+.myHeroKpi{
+  position:relative!important;min-width:0!important;min-height:225px!important;padding:34px 24px!important;
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;
+  border-left:1px solid #28302e!important;background:transparent!important
+}
+.myHeroKpi small{font-size:13px!important;letter-spacing:.08em!important;color:#aaa9a3!important;margin-bottom:8px!important}
+.myHeroKpi>b{font-size:31px!important;line-height:1.05!important;color:#fff!important;font-weight:950!important}
+.myHeroKpi>span{font-size:13px!important;color:#a8aaa5!important;margin-top:7px!important}
+.myHeroKpi .positive,.myHeroKpi>span.positive{color:#2ce58d!important;font-weight:900!important}
+
+/* Índice circular igual à referência */
+.myHeroKpi.score{align-items:center!important;text-align:center!important;padding:20px 14px!important;border-left:0!important}
+.myHeroKpi.score:before{
+  content:""!important;position:absolute!important;width:174px!important;height:174px!important;border-radius:50%!important;
+  background:conic-gradient(#ffd34b 0 34%,#42d8c5 34% 68%,#2ce38e 68% calc(var(--score,88)*1%),#27312e calc(var(--score,88)*1%) 100%)!important;
+  -webkit-mask:radial-gradient(circle,transparent 0 58px,#000 59px)!important;mask:radial-gradient(circle,transparent 0 58px,#000 59px)!important;
+  filter:drop-shadow(0 0 10px rgba(37,219,171,.18))!important
+}
+.myHeroKpi.score small{position:absolute!important;bottom:23px!important;left:0!important;right:0!important;margin:0!important;font-size:13px!important;color:#b7b7b2!important;letter-spacing:.05em!important}
+.myHeroKpi.score>b{position:relative!important;z-index:2!important;font-size:52px!important;color:#ffd34b!important;line-height:1!important}
+.myHeroKpi.score>b small{position:static!important;font-size:17px!important;color:#a7aaa7!important;letter-spacing:0!important}
+.myHeroKpi.score>span{position:absolute!important;bottom:4px!important;left:-35px!important;right:-35px!important;font-size:14px!important;color:#e9e8e2!important;font-weight:800!important}
+.myHeroKpi.score>span:before{content:"👑 "!important}
+
+/* Ícones nos KPIs */
+.myHeroKpi:not(.score):before{display:block!important;font-size:30px!important;margin-bottom:10px!important;line-height:1!important}
+.myHeroKpi:nth-child(3):before{content:"▥"!important;color:#ffe26b!important}
+.myHeroKpi:nth-child(4):before{content:"👥"!important}
+.myHeroKpi.updated:before{content:"🗓️"!important}
+.myHeroKpi.updated>b{font-size:23px!important;white-space:normal!important;line-height:1.18!important}
+.myHeroKpi.updated>span:after{content:"   ● Em dia"!important;color:#2ce58d!important;font-weight:900!important}
+
+/* Ações: começam depois do retrato, como na referência */
+.myQuickRow{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;
+  margin:0!important;padding:0 24px 14px 670px!important
+}
+.myQuick{min-width:0!important;min-height:92px!important;padding:14px!important;border-radius:10px!important;display:grid!important;grid-template-columns:64px 1fr!important;align-items:center!important;gap:13px!important}
+.myQuickIcon{width:58px!important;height:58px!important;border-radius:10px!important;font-size:38px!important}
+.myQuick small{font-size:12px!important;font-weight:950!important}
+.myQuick>div:last-child>div{font-size:14px!important;line-height:1.45!important;color:#f2f1ec!important}
+.myQuote{display:none!important}
+
+/* Cabeçalho dos atributos */
+.myMetricsHead{
+  display:grid!important;grid-template-columns:1fr auto!important;align-items:end!important;gap:20px!important;
+  padding:13px 24px 10px!important;margin:0!important;border-top:1px solid #28302e!important
+}
+.myMetricsHead>div:first-child>b{display:block!important;color:#ffd24a!important;font-size:20px!important;line-height:1.1!important}
+.myMetricsHead>div:first-child>span{display:block!important;color:#aaa9a3!important;font-size:13px!important;margin-top:5px!important}
+.profileTabs{display:flex!important;align-items:center!important;min-width:350px!important;border:1px solid #45423a!important;border-radius:9px!important;overflow:hidden!important}
+.profileTabs span{flex:1!important;padding:9px 15px!important;text-align:center!important;font-size:12px!important;color:#ddd!important;border-right:1px solid #3c3b35!important}
+.profileTabs span:last-child{border-right:0!important}
+.profileTabs span.active{background:linear-gradient(135deg,#ffd852,#eeb321)!important;color:#111!important;font-weight:950!important}
+
+/* Cards dos atributos */
+.myCharMetrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;padding:0 24px 18px!important}
+.myCharMetric{
+  display:flex!important;flex-direction:column!important;min-height:176px!important;padding:15px 18px!important;border-radius:10px!important;
+  background:linear-gradient(180deg,#071416,#071112)!important;border:1px solid #344641!important;box-shadow:none!important
+}
+.myCharMetric.good{border-color:#276b59!important}
+.myCharMetric.mid{border-color:#756019!important}
+.myCharMetric.bad{border-color:#6e2d2a!important}
+.myCharMetricHead{display:flex!important;justify-content:space-between!important;align-items:center!important;margin:0 0 10px!important}
+.myCharMetricHead>div{display:flex!important;align-items:center!important;gap:10px!important}
+.myCharMetricHead i{font-style:normal!important;font-size:24px!important}
+.myCharMetricHead b{font-size:15px!important;color:#f5f4ef!important}
+.myCharMetricHead span{font-size:22px!important;font-weight:950!important;color:#ffd13e!important}
+.metricTriplet{display:grid!important;grid-template-columns:1fr!important;gap:0!important;margin:0!important}
+.metricTriplet>div{display:flex!important;justify-content:space-between!important;align-items:center!important;padding:6px 0!important;border-bottom:1px solid #26302e!important}
+.metricTriplet small{font-size:13px!important;color:#9da19d!important}
+.metricTriplet strong{font-size:17px!important;color:#f4f4ef!important}
+.metricTriplet .targetVal{color:#39e49a!important}
+.myCharMetricStatus{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;align-self:flex-end!important;
+  order:-1!important;margin:-3px 0 -28px!important;transform:translateY(31px)!important;
+  padding:5px 10px!important;border-radius:999px!important;font-size:12px!important;font-weight:900!important;line-height:1!important
+}
+.myCharMetric.good .myCharMetricStatus{color:#dfffee!important;background:#087947!important;border:1px solid #18a764!important}
+.myCharMetric.mid .myCharMetricStatus{color:#fff4c8!important;background:#775500!important;border:1px solid #b98a0d!important}
+.myCharMetric.bad .myCharMetricStatus{color:#ffe4e1!important;background:#9b211e!important;border:1px solid #d4463e!important}
+.myCharMetricBar,.metricCompare,.metricGoal{display:none!important}
+
+/* Responsividade preservando o esquadro */
+@media(max-width:1450px){
+ .myCharHeroRow{grid-template-columns:390px 220px 1fr 1fr!important}
+ .myHeroKpi.updated{grid-column:3/5!important;min-height:130px!important}
+ .myQuickRow{padding-left:24px!important}
+}
+@media(max-width:1100px){
+ .myCharHeroRow{grid-template-columns:1fr 1fr!important}
+ .myCharIdentityCard{grid-column:1/-1!important}
+ .myQuickRow,.myCharMetrics{grid-template-columns:1fr 1fr!important;padding-left:24px!important}
+}
+@media(max-width:720px){
+ .myCharSectionHead,.myMetricsHead{grid-template-columns:1fr!important}
+ .myCharOpen{width:100%!important;min-width:0!important}
+ .myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}
+ .myCharIdentityCard{grid-template-columns:150px 1fr!important}
+ .myCharPortrait{width:145px!important;height:145px!important}
+ .myCharNameLine strong{font-size:27px!important}
+ .myHeroKpi.updated{grid-column:auto!important}
+ .profileTabs{min-width:0!important;width:100%!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -1580,7 +1738,7 @@ z-index:0}
           <div class="myCharIdentityText">
             <div class="myCharNameLine"><strong id="myCharName">—</strong><span class="discordMini">▣</span><span class="myCharDiscord" id="myCharDiscord">Discord: —</span></div>
             <b id="myCharClass">—</b>
-            <div class="myCharRolePills"><span id="myCharRolePill">DPS</span><span>Lv. 120</span></div>
+            <div class="myCharRolePills"><span id="myCharRolePill">DPS</span></div>
           </div>
         </div>
 
@@ -2390,6 +2548,7 @@ function renderMyCharacter(){
       </div>
       <div class="myCharMetricBar"><i style="width:${Math.max(3,Math.min(100,x.pct))}%"></i></div>
       <div class="metricCompare">${s.txt}</div>
+      <div class="myCharMetricStatus">${s.cls==='good'?'Excelente':s.cls==='mid'?'Próximo da média':'Precisa evoluir'}</div>
       <div class="metricGoal">${reached?'✓ Você já está no topo!':`ⓘ Falta +${missText} para alcançar 100/100`}</div>
     </div>`;
   }).join('');
