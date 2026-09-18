@@ -3281,607 +3281,194 @@ window.hivePremiumClassImage = function(job){
 </style>
 
 
-<style id="HIVE_COMPACT_VERTICAL_V6">
-/* Compactação vertical final do Meu Personagem */
-#myCharCard .myCharHead{
-  padding:9px 18px!important;
-  min-height:52px!important;
-}
-#myCharCard .myCharHead:after{
-  display:none!important;
-}
-.myCharHero{
-  padding:5px 18px 4px!important;
-  gap:9px!important;
-  align-items:center!important;
-}
-.myCharIdentity,
-.myHeroKpi,
-.myHeroKpi.score{
-  min-height:165px!important;
-  height:165px!important;
-}
-.myCharPortraitWrap{
-  transform:scale(.82)!important;
-  transform-origin:center!important;
-}
-.myCharName{
-  font-size:27px!important;
-  margin-bottom:5px!important;
-}
-#myCharDiscord{margin-bottom:5px!important}
-.myCharRolePill{margin-top:4px!important}
-.myCharQuote{
-  margin-top:8px!important;
-  line-height:1.25!important;
-}
-
-/* Donut mais compacto */
-.myHeroKpi.score{
-  padding:5px 8px 2px!important;
-}
-.myHeroKpi.score:before{
-  top:3px!important;
-  width:136px!important;
-  height:136px!important;
-}
-.myHeroKpi.score>b{
-  margin-top:39px!important;
-  font-size:40px!important;
-}
-.myHeroKpi.score>small{
-  margin-top:5px!important;
-}
-#myCharGroup{
-  margin-top:4px!important;
-  font-size:12px!important;
-}
-
-/* KPIs */
-.myHeroKpi:not(.score){
-  min-height:165px!important;
-  height:165px!important;
-  padding:9px 13px 3px!important;
-}
-.myHeroKpi:not(.score)>small{
-  min-height:25px!important;
-}
-.myHeroKpi:not(.score)>b{
-  margin-top:5px!important;
-}
-
-/* Cards de pontos fortes/prioridade sobem */
-.myCharInsights{
-  margin-top:-19px!important;
-  margin-bottom:3px!important;
-  gap:9px!important;
-}
-.myCharInsight{
-  min-height:69px!important;
-  padding:8px 11px!important;
-}
-.myCharInsight p{
-  margin-top:2px!important;
-  line-height:1.32!important;
-}
-
-/* Área dos atributos */
-.myCharAttributes{
-  padding:7px 18px 9px!important;
-}
-.myCharAttributesHeader{
-  margin-bottom:6px!important;
-}
-.myCharAttributes h3{
-  margin:0!important;
-  line-height:1.1!important;
-}
-.myCharMetric{
-  min-height:174px!important;
-  padding:9px 12px 8px!important;
-}
-.myCharMetricHead{
-  min-height:26px!important;
-  margin-bottom:1px!important;
-}
-.myCharMetricStatus{
-  height:21px!important;
-  margin:-1px 0 3px!important;
-  padding:0 9px!important;
-  font-size:9px!important;
-}
-.myCharMetric .metricTriplet>div{
-  min-height:27px!important;
-  padding:2px 0!important;
-}
-.myCharMetric .myCharMetricBar{
-  margin-top:5px!important;
-  height:6px!important;
-  flex-basis:6px!important;
-}
-</style>
-
-
-<style id="HIVE_TOP_REDESIGN_V7">
+<style id="HIVE_LAYOUT_CORRETO_V9">
 /* =========================================================
-   HIVE — MEU PERSONAGEM: topo redesenhado + ultra compacto
-   Somente visual. Mantém toda a lógica existente.
+   CORREÇÃO ESTRUTURAL — usa as classes REAIS do HTML:
+   .myCharHeroRow e .myQuickRow
    ========================================================= */
 
-#myCharCard{
-  background:
-    radial-gradient(circle at 12% 22%,rgba(255,190,35,.055),transparent 25%),
-    linear-gradient(120deg,#07100f 0%,#07110f 58%,#090d0c 100%)!important;
-}
-
-/* Cabeçalho */
-#myCharCard .myCharHead{
-  min-height:44px!important;
-  padding:7px 18px!important;
-}
-#myCharCard .myCharHead h2{
-  font-size:20px!important;
-  line-height:1!important;
-}
-#myCharCard .myCharHead:after{display:none!important}
-#myCharCard .myCharHead button,
-#myCharCard .myCharHead .btn{
-  min-height:34px!important;
-  padding:8px 18px!important;
-}
-
-/* HERO: reduz drasticamente altura */
-.myCharHero{
-  display:grid!important;
-  grid-template-columns:minmax(350px,1.55fr) minmax(145px,.72fr) minmax(145px,.72fr) minmax(215px,1fr)!important;
-  grid-template-rows:128px 66px!important;
-  column-gap:0!important;
-  row-gap:5px!important;
-  padding:7px 18px 7px!important;
-  align-items:stretch!important;
-}
-
-/* Identidade: avatar + nome lado a lado e menor */
-.myCharIdentity{
-  grid-column:1!important;
-  grid-row:1 / span 2!important;
-  min-height:0!important;
-  height:auto!important;
-  display:grid!important;
-  grid-template-columns:150px 1fr!important;
-  align-items:center!important;
-  gap:12px!important;
-  padding:0 14px 0 0!important;
-  border-right:1px solid rgba(255,255,255,.10)!important;
-}
-.myCharPortraitWrap{
-  width:145px!important;
-  height:145px!important;
-  transform:none!important;
-  margin:0!important;
-}
-.myCharIdentityInfo{
-  align-self:center!important;
-}
-.myCharName{
-  font-size:27px!important;
-  line-height:1!important;
-  margin:0 0 6px!important;
-}
-#myCharDiscord{
-  margin:0 0 7px!important;
-  font-size:12px!important;
-}
-.myCharJob,.myCharRolePill{
-  margin:0!important;
-  font-size:14px!important;
-}
-.myCharQuote{
-  margin:9px 0 0!important;
-  font-size:12px!important;
-  line-height:1.25!important;
-}
-
-/* Índice */
-.myHeroKpi.score{
-  grid-column:2!important;
-  grid-row:1!important;
-  min-height:0!important;
-  height:128px!important;
-  padding:0!important;
-  border-right:1px solid rgba(255,255,255,.10)!important;
-  overflow:visible!important;
-}
-.myHeroKpi.score:before{
-  top:2px!important;
-  width:112px!important;
-  height:112px!important;
-}
-.myHeroKpi.score>b{
-  margin-top:33px!important;
-  font-size:34px!important;
-}
-.myHeroKpi.score>b small{font-size:13px!important}
-.myHeroKpi.score>small{
-  order:3!important;
-  margin:17px 0 0!important;
-  font-size:10px!important;
-  line-height:1!important;
-}
-#myCharGroup{
-  order:4!important;
-  margin:4px auto 0!important;
-  font-size:11px!important;
-  line-height:1!important;
-  white-space:nowrap!important;
-}
-
-/* Power e posição */
-.myHeroKpi:not(.score){
-  min-height:0!important;
-  height:128px!important;
-  padding:9px 14px 4px!important;
-  border-right:1px solid rgba(255,255,255,.10)!important;
-}
-.myHeroKpi:not(.score)>small{
-  min-height:20px!important;
-  font-size:11px!important;
-  letter-spacing:.06em!important;
-}
-.myHeroKpi:not(.score)>b{
-  margin-top:4px!important;
-  font-size:27px!important;
-  line-height:1!important;
-}
-.myHeroKpi:not(.score) .sub,
-.myHeroKpi:not(.score)>span{
-  margin-top:5px!important;
-  font-size:11px!important;
-}
-
-/* Insights viram faixa compacta embaixo dos KPIs */
-.myCharInsights{
-  grid-column:2 / 5!important;
-  grid-row:2!important;
-  display:grid!important;
-  grid-template-columns:repeat(3,1fr)!important;
-  gap:8px!important;
-  margin:0!important;
-  padding:0 0 0 10px!important;
-  align-items:stretch!important;
-}
-.myCharInsight{
-  min-height:0!important;
-  height:62px!important;
-  padding:7px 9px!important;
-  border-radius:9px!important;
-}
-.myCharInsight .icon,
-.myCharInsightIcon{
-  width:39px!important;
-  height:39px!important;
-  min-width:39px!important;
-}
-.myCharInsight b{
-  font-size:9px!important;
-  line-height:1!important;
-}
-.myCharInsight p{
-  margin-top:3px!important;
-  font-size:10px!important;
-  line-height:1.2!important;
-}
-
-/* Última atualização: deixa mais equilibrado */
-.myHeroKpi:last-of-type{
-  border-right:0!important;
-}
-
-/* Atributos sobem e ficam mais compactos */
-.myCharAttributes{
-  padding:6px 18px 8px!important;
-}
-.myCharAttributesHeader{
-  min-height:33px!important;
-  margin:0 0 4px!important;
-}
-.myCharAttributes h3{
-  font-size:17px!important;
-}
-.myCharAttributesHeader p,
-.myCharAttributes>p{
-  font-size:11px!important;
-  margin-top:2px!important;
-}
-.myCharTabs button{
-  min-height:30px!important;
-  padding:7px 14px!important;
-}
-
-/* Cards menores */
-.myCharMetric{
-  min-height:155px!important;
-  padding:8px 11px 7px!important;
-}
-.myCharMetricHead{
-  min-height:24px!important;
-}
-.myCharMetricHead b,.myCharMetricTitle{
-  font-size:13px!important;
-}
-.myCharMetricHead span,.myCharMetricScore{
-  font-size:19px!important;
-}
-.myCharMetricStatus{
-  height:19px!important;
-  margin:-1px 0 2px!important;
-  padding:0 8px!important;
-  font-size:8px!important;
-}
-.myCharMetric .metricTriplet>div{
-  min-height:24px!important;
-  padding:1px 0!important;
-}
-.myCharMetric .metricTriplet small{font-size:11px!important}
-.myCharMetric .metricTriplet strong{font-size:14px!important}
-.myCharMetric .myCharMetricBar{
-  height:5px!important;
-  flex-basis:5px!important;
-  margin-top:4px!important;
-}
-
-/* Responsivo */
-@media(max-width:1200px){
-  .myCharHero{
-    grid-template-columns:minmax(330px,1.35fr) repeat(3,minmax(135px,.72fr))!important;
-  }
-}
-</style>
-
-
-<style id="HIVE_TOP_MATCH_CERTO_V8">
-/* ===== TOPO MEU PERSONAGEM — referência "CERTO" ===== */
-
-#myCharCard .myCharHead{
+/* Cabeçalho igual à referência */
+.myCharSectionHead{
+  position:relative!important;
   min-height:58px!important;
-  padding:9px 20px 8px!important;
-  align-items:center!important;
+  padding:10px 20px!important;
+  display:flex!important;
+  align-items:flex-start!important;
 }
-#myCharCard .myCharHead h2{
-  font-size:20px!important;
-  line-height:1.05!important;
-  margin:0!important;
-}
-#myCharCard .myCharHead:after{
-  display:block!important;
-  content:"Acompanhe seu progresso e evolua ainda mais!"!important;
-  position:absolute!important;
-  left:55px!important;
-  top:34px!important;
-  margin:0!important;
-  color:#f1f1ed!important;
-  font-size:12px!important;
-  font-weight:500!important;
-}
-#myCharCard .myCharHead button,
-#myCharCard .myCharHead .btn{
-  min-height:38px!important;
-  padding:8px 22px!important;
-  border-radius:9px!important;
-}
+.myCharSectionHead h2{font-size:20px!important;margin:0!important;line-height:1.05!important}
+.myCharSectionHead p{font-size:12px!important;margin:3px 0 0!important;color:#e6e6e2!important}
+.myCharOpen{margin-left:auto!important;min-height:39px!important;padding:8px 22px!important;border-radius:9px!important}
 
-/* Layout geral: identidade + índice + área direita */
-.myCharHero{
+/* LINHA 1: Perfil | Índice | Power | Posição | Atualização */
+.myCharHeroRow{
   display:grid!important;
-  grid-template-columns:390px 220px minmax(0,1fr)!important;
-  grid-template-rows:118px 84px!important;
+  grid-template-columns:minmax(385px,1.45fr) 210px minmax(165px,.72fr) minmax(185px,.78fr) minmax(285px,1.08fr)!important;
   gap:0!important;
-  min-height:210px!important;
-  padding:8px 20px 8px!important;
-  align-items:stretch!important;
-}
-
-/* Perfil */
-.myCharIdentity{
-  grid-column:1!important;
-  grid-row:1 / 3!important;
-  display:grid!important;
-  grid-template-columns:190px 1fr!important;
-  gap:16px!important;
+  padding:8px 20px 0!important;
   align-items:center!important;
-  min-height:0!important;
-  height:202px!important;
-  padding:0 14px 0 0!important;
-  border-right:1px solid rgba(255,255,255,.08)!important;
 }
-.myCharPortraitWrap{
-  width:180px!important;
-  height:180px!important;
-  margin:0!important;
-  transform:none!important;
-}
-.myCharIdentityInfo{
-  align-self:center!important;
-  padding:0!important;
-}
-.myCharName{
-  margin:0 0 7px!important;
-  font-size:29px!important;
-  line-height:1!important;
-}
-#myCharDiscord{
-  display:flex!important;
-  align-items:center!important;
-  gap:7px!important;
-  margin:0 0 8px!important;
-  font-size:12px!important;
-}
-.myCharJob,.myCharRolePill{
-  display:inline-flex!important;
-  width:max-content!important;
-  margin:0!important;
-  padding:5px 13px!important;
-  border:1px solid #c99a00!important;
-  border-radius:999px!important;
-  background:rgba(154,111,0,.13)!important;
-  color:#ffd13d!important;
-  font-size:13px!important;
-  font-weight:850!important;
-}
-.myCharQuote{
-  margin:11px 0 0!important;
-  font-size:12px!important;
-  line-height:1.3!important;
-}
-
-/* Índice */
-.myHeroKpi.score{
-  grid-column:2!important;
-  grid-row:1 / 3!important;
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-  min-height:0!important;
-  height:202px!important;
-  padding:0 12px!important;
-  border-right:1px solid rgba(255,255,255,.08)!important;
-  overflow:visible!important;
-}
-.myHeroKpi.score:before{
-  top:17px!important;
-  left:50%!important;
-  width:150px!important;
-  height:150px!important;
-  transform:translateX(-50%) rotate(-90deg)!important;
-}
-.myHeroKpi.score>b{
-  order:1!important;
-  z-index:3!important;
-  width:100%!important;
-  margin:0!important;
-  transform:translateY(-9px)!important;
-  justify-content:center!important;
-  text-align:center!important;
-  font-size:43px!important;
-}
-.myHeroKpi.score>b small{font-size:14px!important}
-.myHeroKpi.score>small{
-  order:2!important;
-  z-index:3!important;
-  width:100%!important;
-  margin:37px 0 0!important;
-  text-align:center!important;
-  font-size:11px!important;
-  line-height:1!important;
-  color:#b5b8b5!important;
-}
-#myCharGroup{
-  order:3!important;
-  z-index:4!important;
-  display:block!important;
-  width:100%!important;
-  min-width:0!important;
-  max-width:none!important;
-  height:auto!important;
-  margin:7px 0 0!important;
-  padding:0!important;
+.myCharIdentityCard,.myHeroKpi{
+  height:164px!important;
+  min-height:164px!important;
   border:0!important;
   border-radius:0!important;
   background:transparent!important;
   box-shadow:none!important;
-  color:#f5f5ef!important;
-  font-size:13px!important;
-  font-weight:900!important;
-  line-height:1.1!important;
-  text-align:center!important;
-  text-transform:none!important;
-  letter-spacing:0!important;
-  white-space:nowrap!important;
+  box-sizing:border-box!important;
+  border-right:1px solid rgba(255,255,255,.14)!important;
+}
+.myHeroKpi:last-child{border-right:0!important}
+
+/* Perfil */
+.myCharIdentityCard{
+  display:grid!important;
+  grid-template-columns:185px 1fr!important;
+  align-items:center!important;
+  overflow:visible!important;
+  padding-right:15px!important;
+}
+.myCharPortrait{
+  position:relative!important;
+  inset:auto!important;
+  width:174px!important;
+  height:174px!important;
+  min-width:174px!important;
+  border-radius:50%!important;
+  margin:0!important;
   transform:none!important;
+}
+.myCharPortrait img{width:100%!important;height:100%!important;object-fit:cover!important}
+.myCharIdentityText{
+  position:relative!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0 8px!important;
+  background:none!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.myCharNameLine{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important}
+.myCharNameLine strong{font-size:28px!important;line-height:1!important}
+.discordMini{font-size:15px!important;color:#6d67ff!important}
+.myCharDiscord{font-size:12px!important;color:#deded9!important}
+.myCharIdentityText>b{font-size:15px!important;margin-top:9px!important}
+.myCharRolePills{margin-top:7px!important}
+.myCharRolePills span{
+  padding:5px 13px!important;border-radius:999px!important;
+  border:1px solid #b88a00!important;background:rgba(129,92,0,.13)!important;
+  color:#ffd33f!important;font-size:11px!important
+}
+.myQuote{margin-top:10px!important;font-size:12px!important;line-height:1.28!important}
+
+/* Índice: donut limpo, sem sobreposição */
+.myHeroKpi.score{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 14px!important;
+  overflow:visible!important;
+}
+.myHeroKpi.score:before{
+  content:""!important;
+  position:absolute!important;
+  width:132px!important;height:132px!important;
+  left:50%!important;top:4px!important;
+  transform:translateX(-50%) rotate(-90deg)!important;
+}
+.myHeroKpi.score>small{
+  order:3!important;
+  margin-top:89px!important;
+  font-size:10px!important;
+  color:#aaa!important;
+  text-align:center!important;
+}
+.myHeroKpi.score>b{
+  position:absolute!important;
+  z-index:2!important;
+  top:43px!important;left:0!important;right:0!important;
+  margin:0!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font-size:38px!important;
+  color:#ffd13f!important;
+}
+.myHeroKpi.score>b small{font-size:13px!important;color:#aaa!important}
+#myCharGroup{
+  order:4!important;
+  width:100%!important;
+  margin:7px 0 0!important;
+  padding:0!important;
+  border:0!important;background:none!important;box-shadow:none!important;
+  color:#f5f5ef!important;
+  font-size:12px!important;font-weight:900!important;
+  text-align:center!important;white-space:nowrap!important;
 }
 #myCharGroup:after{content:none!important}
 
-/* Os KPIs ficam na linha superior da área direita */
+/* KPIs */
 .myHeroKpi:not(.score){
-  grid-row:1!important;
-  min-height:0!important;
-  height:118px!important;
-  padding:12px 18px 6px!important;
-  border-right:1px solid rgba(255,255,255,.15)!important;
+  padding:18px 18px 10px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
 }
-.myHeroKpi:not(.score)>small{
-  min-height:20px!important;
-  margin:0!important;
-  font-size:11px!important;
-}
-.myHeroKpi:not(.score)>b{
-  margin-top:6px!important;
-  font-size:27px!important;
-}
-.myHeroKpi:not(.score)>span,
-.myHeroKpi:not(.score) .sub{
-  margin-top:6px!important;
-  font-size:11px!important;
-}
+.myHeroKpi:not(.score)>small{font-size:11px!important;letter-spacing:.05em!important;color:#aaa!important}
+.myHeroKpi:not(.score)>b{font-size:27px!important;margin:8px 0 5px!important;line-height:1!important}
+.myHeroKpi.updated>b{font-size:21px!important}
+.myHeroKpi:not(.score)>span{font-size:11px!important}
 
-/* Power, posição e atualização ocupam a região direita */
-.myHeroKpi:nth-of-type(2){grid-column:3!important}
-.myHeroKpi:nth-of-type(3){grid-column:4!important}
-.myHeroKpi:nth-of-type(4){grid-column:5!important}
-
-/* A grade original possui mais colunas internamente; reposicionamos a área direita
-   com subgrid visual via larguras explícitas. */
-.myCharHero{
-  grid-template-columns:390px 220px minmax(170px,.8fr) minmax(190px,.9fr) minmax(290px,1.25fr)!important;
-}
-
-/* Insights: exatamente embaixo dos três KPIs */
-.myCharInsights{
-  grid-column:3 / 6!important;
-  grid-row:2!important;
+/* LINHA 2: deixa vazio sob Perfil + Índice e coloca os 3 insights sob os KPIs */
+.myQuickRow{
   display:grid!important;
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:9px!important;
-  align-items:stretch!important;
+  gap:10px!important;
+  width:auto!important;
   margin:0!important;
-  padding:5px 0 0 12px!important;
+  padding:4px 20px 10px!important;
+  padding-left:615px!important; /* 385 + 210 + 20 de margem */
+  box-sizing:border-box!important;
 }
-.myCharInsight{
-  height:74px!important;
-  min-height:74px!important;
-  padding:8px 11px!important;
+.myQuick{
+  height:78px!important;
+  min-height:78px!important;
+  padding:9px 12px!important;
   border-radius:9px!important;
 }
-.myCharInsight .icon,.myCharInsightIcon{
-  width:43px!important;
-  height:43px!important;
-  min-width:43px!important;
-}
-.myCharInsight b{
-  font-size:9px!important;
-}
-.myCharInsight p{
-  margin-top:3px!important;
-  font-size:10px!important;
-  line-height:1.25!important;
-}
+.myQuickIcon{width:44px!important;height:44px!important;min-width:44px!important}
+.myQuick small{font-size:9px!important}
+.myQuick div div{font-size:10px!important;line-height:1.25!important}
 
-/* Remove qualquer resíduo visual que estava sobrepondo o donut */
-.myHeroKpi.score .hiveClassIndexBadge{display:none!important}
+/* Atributos: mantém o que já estava bom e aproxima do topo */
+.myMetricsHead{padding-top:8px!important;padding-bottom:6px!important}
+.myCharMetrics{padding-top:0!important}
+.myCharMetric{min-height:178px!important}
 
-/* Mantém os atributos já acertados */
-.myCharAttributes{
-  padding-top:7px!important;
-}
-
-/* Para telas menores, sem quebrar o desktop */
+/* Desktop intermediário */
 @media(max-width:1350px){
-  .myCharHero{
-    grid-template-columns:350px 190px minmax(150px,.8fr) minmax(170px,.9fr) minmax(250px,1.2fr)!important;
+  .myCharHeroRow{
+    grid-template-columns:350px 185px minmax(145px,.7fr) minmax(165px,.76fr) minmax(245px,1fr)!important;
   }
-  .myCharIdentity{grid-template-columns:165px 1fr!important}
-  .myCharPortraitWrap{width:158px!important;height:158px!important}
+  .myCharIdentityCard{grid-template-columns:160px 1fr!important}
+  .myCharPortrait{width:150px!important;height:150px!important;min-width:150px!important}
+  .myQuickRow{padding-left:555px!important}
+}
+
+/* Mobile/tablet: volta para fluxo simples */
+@media(max-width:1080px){
+  .myCharHeroRow{grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .myCharIdentityCard{grid-column:1/-1!important}
+  .myCharIdentityCard,.myHeroKpi{border:1px solid #34352f!important;border-radius:10px!important}
+  .myQuickRow{grid-template-columns:1fr 1fr!important;padding:8px 20px!important}
+}
+@media(max-width:680px){
+  .myCharHeroRow,.myQuickRow{grid-template-columns:1fr!important}
+  .myCharIdentityCard{grid-template-columns:125px 1fr!important}
+  .myCharPortrait{width:116px!important;height:116px!important;min-width:116px!important}
 }
 </style>
 
