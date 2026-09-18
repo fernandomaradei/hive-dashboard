@@ -4419,5 +4419,101 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_COMPACT_ALIGNMENT_V20">
+/* V20 — mantém a altura aprovada da V19 e reorganiza o conteúdo dentro dela */
+
+/* Dá alguns pixels extras internos sem aumentar a seção */
+.myCharIdentityCard,
+.myHeroKpi,
+.myHeroKpi.score{
+  height:142px!important;
+  min-height:142px!important;
+}
+
+/* Perfil: sobe frase e reduz pequenas folgas */
+.myCharIdentityText{
+  justify-content:center!important;
+}
+#myCharDiscord{margin:1px 0!important}
+.myCharRolePills{margin:2px 0!important}
+.myQuote{
+  margin-top:2px!important;
+  line-height:1.25!important;
+  font-size:11px!important;
+}
+
+/* Donut + legendas: tudo sobe e ganha linhas próprias */
+.myHeroKpi.score:before{
+  width:108px!important;
+  height:108px!important;
+  top:-2px!important;
+}
+.myHeroKpi.score>b{
+  top:29px!important;
+  line-height:1!important;
+}
+.myHeroKpi.score>small{
+  top:105px!important;
+  line-height:11px!important;
+  font-size:9px!important;
+}
+#myCharGroup{
+  top:118px!important;
+  line-height:12px!important;
+  font-size:10px!important;
+}
+
+/* KPIs centralizados verticalmente dentro da altura aprovada */
+.myHeroKpi:not(.score){
+  padding-top:0!important;
+  padding-bottom:8px!important;
+  justify-content:center!important;
+}
+.myHeroKpi:not(.score):before{
+  margin-bottom:1px!important;
+}
+.myHeroKpi:not(.score)>small{
+  line-height:1.15!important;
+}
+.myHeroKpi:not(.score)>b{
+  line-height:1.05!important;
+}
+
+/* Cards inferiores: menores e sem invadir os textos acima */
+.myQuickRow{
+  margin-top:-13px!important;
+  padding:0 8px 3px 0!important;
+  gap:9px!important;
+  align-items:end!important;
+}
+.myQuick{
+  height:52px!important;
+  min-height:52px!important;
+  padding:4px 9px!important;
+  align-items:center!important;
+}
+.myQuickIcon{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+}
+.myQuick strong{
+  font-size:9px!important;
+  line-height:1.05!important;
+  margin-bottom:2px!important;
+}
+.myQuick p{
+  font-size:10px!important;
+  line-height:1.22!important;
+  margin:0!important;
+}
+
+/* Evita qualquer texto dos KPIs encostar nos cards */
+.myHeroKpi{
+  overflow:visible!important;
+}
+</style>
+
 </body></html
 >
