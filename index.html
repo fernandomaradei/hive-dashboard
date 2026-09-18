@@ -2997,5 +2997,131 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_ALIGNMENT_POLISH_V4">
+/* ===== Ajuste fino de alinhamento: Meu Personagem ===== */
+
+/* Top profile grid: equal vertical rhythm */
+.myCharHero{
+  align-items:stretch!important;
+}
+.myCharIdentity,
+.myHeroKpi{
+  min-height:225px!important;
+}
+.myCharIdentity{
+  display:flex!important;
+  align-items:center!important;
+}
+
+/* Index card: keep title, donut, score and badge perfectly centered */
+.myHeroKpi.score{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  min-height:225px!important;
+  padding:23px 14px 14px!important;
+}
+.myHeroKpi.score>small{
+  width:100%!important;
+  margin:0 0 8px!important;
+  text-align:center!important;
+}
+.myHeroKpi.score:before{
+  top:45px!important;
+  left:50%!important;
+  transform:translateX(-50%) rotate(-90deg)!important;
+}
+.myHeroKpi.score>b{
+  margin-top:43px!important;
+  width:100%!important;
+  text-align:center!important;
+  justify-content:center!important;
+}
+#myCharGroup{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  margin:30px auto 0!important;
+  min-width:132px!important;
+}
+
+/* Main KPIs aligned on same baseline */
+.myHeroKpi:not(.score){
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  padding-top:18px!important;
+}
+.myHeroKpi:not(.score)>small{
+  min-height:31px!important;
+  display:flex!important;
+  align-items:flex-end!important;
+}
+.myHeroKpi:not(.score)>b{
+  margin-top:9px!important;
+}
+
+/* Insight cards line up as one clean row */
+.myCharInsights{
+  align-items:stretch!important;
+  gap:12px!important;
+}
+.myCharInsight{
+  min-height:92px!important;
+  display:flex!important;
+  align-items:center!important;
+}
+
+/* Attribute cards */
+.myCharMetric{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:222px!important;
+}
+.myCharMetricHead{
+  flex:0 0 auto!important;
+}
+.myCharMetric .metricTriplet{
+  flex:1 1 auto!important;
+}
+
+/* Put status directly below title/score, not below the progress bar */
+.myCharMetricStatus{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:flex-start!important;
+  order:2!important;
+  height:23px!important;
+  margin:2px 0 8px 40px!important;
+  padding:0 9px!important;
+  position:static!important;
+  transform:none!important;
+}
+.myCharMetric .metricTriplet{
+  order:3!important;
+}
+.myCharMetric .myCharMetricBar{
+  order:4!important;
+  margin-top:11px!important;
+}
+
+/* Keep all bars on the exact same bottom line */
+.myCharMetric .myCharMetricBar{
+  flex:0 0 9px!important;
+}
+
+/* Cleaner responsive behavior */
+@media(max-width:1150px){
+  .myCharMetricStatus{margin-left:0!important}
+}
+</style>
+
 </body></html
 >
