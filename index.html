@@ -2743,7 +2743,13 @@ function renderClassTop3(){
  // Cada Doram entra em um grupo próprio conforme o perfil detectado.
  // As outras classes continuam agrupadas normalmente pelo Job.
  const groups=[...new Set(members.map(classRankingGroup).filter(Boolean))]
-   .sort((a,b)=>a.localeCompare(b,'pt-BR'));
+   .sort((a,b)=>{
+     const qtdA=members.filter(m=>classRankingGroup(m)===a).length;
+     const qtdB=members.filter(m=>classRankingGroup(m)===b).length;
+     // Primeiro as classes com mais membros.
+     // Em caso de empate, mantém ordem alfabética.
+     return (qtdB-qtdA) || a.localeCompare(b,'pt-BR');
+   });
 
  const cards=[];
  groups.forEach(group=>{
