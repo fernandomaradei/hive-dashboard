@@ -4316,5 +4316,108 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_HEIGHT_COMPACT_V19">
+/* V19 — reduz ALTURA e espaços vazios, sem encolher a tipografia */
+
+/* Cabeçalho mais baixo */
+.myCharSectionHead{
+  min-height:42px!important;
+  height:42px!important;
+  padding:3px 16px!important;
+}
+.myCharOpen{
+  min-height:31px!important;
+  height:31px!important;
+  padding:4px 18px!important;
+}
+
+/* Bloco superior: menos altura total */
+.myCharHeroRow{
+  padding-top:0!important;
+  padding-bottom:0!important;
+  min-height:0!important;
+}
+
+/* Perfil e KPIs com altura menor, mantendo conteúdo */
+.myCharIdentityCard,
+.myHeroKpi,
+.myHeroKpi.score{
+  height:142px!important;
+  min-height:142px!important;
+}
+
+/* Avatar sobe e ocupa a área útil */
+.myCharIdentityCard{
+  padding-top:1px!important;
+  padding-bottom:1px!important;
+}
+
+/* Compacta somente os espaços do texto do perfil */
+#myCharDiscord{margin-top:1px!important;margin-bottom:1px!important}
+.myCharIdentityText>b{margin-top:1px!important;margin-bottom:1px!important}
+.myCharRolePills{margin-top:2px!important;margin-bottom:2px!important}
+.myQuote{margin-top:3px!important;margin-bottom:0!important}
+
+/* Donut levemente menor para caber com legenda sem colisão */
+.myHeroKpi.score:before{
+  width:112px!important;
+  height:112px!important;
+  top:0!important;
+}
+.myHeroKpi.score>b{
+  top:32px!important;
+}
+.myHeroKpi.score>small{
+  top:113px!important;
+}
+#myCharGroup{
+  top:128px!important;
+}
+
+/* KPIs sem "respiro" vertical desnecessário */
+.myHeroKpi:not(.score){
+  padding-top:3px!important;
+  padding-bottom:0!important;
+  justify-content:center!important;
+}
+.myHeroKpi:not(.score):before{
+  margin-bottom:2px!important;
+}
+.myHeroKpi:not(.score)>b{
+  margin-top:2px!important;
+  margin-bottom:1px!important;
+}
+
+/* Os 3 cards sobem para aproveitar a área vazia */
+.myQuickRow{
+  margin-top:-25px!important;
+  padding-top:0!important;
+  padding-bottom:2px!important;
+  gap:10px!important;
+}
+.myQuick{
+  height:58px!important;
+  min-height:58px!important;
+  padding-top:4px!important;
+  padding-bottom:4px!important;
+}
+
+/* A seção de atributos encosta mais no bloco superior */
+.myMetricsHead{
+  margin-top:0!important;
+  padding-top:1px!important;
+  padding-bottom:2px!important;
+}
+
+/* Segurança contra margens herdadas que criam altura */
+.myCharSection p,
+.myCharSection h2,
+.myCharSection h3{
+  margin-block-start:0;
+  margin-block-end:0;
+}
+</style>
+
 </body></html
 >
