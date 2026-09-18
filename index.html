@@ -4515,5 +4515,77 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_QUICKCARDS_RIGHT_V21">
+/* V21 — mantém a altura atual e transforma os 3 indicativos
+   em cards menores, sofisticados e alinhados à direita. */
+
+/* Reserva a faixa inferior e posiciona o conjunto à direita */
+.myQuickRow{
+  width:58%!important;
+  margin:-12px 14px 3px auto!important;
+  padding:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+
+/* Cards compactos */
+.myQuick{
+  height:48px!important;
+  min-height:48px!important;
+  padding:5px 9px!important;
+  gap:8px!important;
+  border-radius:9px!important;
+  background:
+    linear-gradient(145deg,rgba(10,24,23,.96),rgba(5,15,15,.99))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 4px 10px rgba(0,0,0,.14)!important;
+  overflow:hidden!important;
+}
+
+/* Ícone menor e mais elegante */
+.myQuickIcon{
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  border-radius:9px!important;
+  font-size:20px!important;
+}
+
+/* Texto mais compacto, sem perder leitura */
+.myQuick > div:not(.myQuickIcon){
+  min-width:0!important;
+}
+.myQuick small,
+.myQuick strong{
+  display:block!important;
+  margin:0 0 2px!important;
+  font-size:8px!important;
+  line-height:1!important;
+  letter-spacing:.15px!important;
+  white-space:nowrap!important;
+}
+.myQuick div div,
+.myQuick p{
+  margin:0!important;
+  font-size:9px!important;
+  line-height:1.18!important;
+}
+
+/* Bordas um pouco mais finas */
+.myQuick.good{border-color:rgba(31,207,133,.38)!important}
+.myQuick.warn{border-color:rgba(231,181,16,.38)!important}
+.myQuick.bad{border-color:rgba(231,79,70,.38)!important}
+
+/* Não deixa os cards encostarem no bloco de atributos */
+.myMetricsHead{
+  clear:both!important;
+  margin-top:0!important;
+}
+</style>
+
 </body></html
 >
