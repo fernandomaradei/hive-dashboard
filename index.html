@@ -1712,6 +1712,76 @@ z-index:0}
 }
 </style>
 
+
+<style id="HIVE_FIX_ESQUADRO_FINAL">
+/* Correção estrutural para desktop: evita sobreposição/corte */
+@media(min-width:1101px){
+  .myCharHeroRow{
+    grid-template-columns:minmax(390px,1.35fr) 220px minmax(180px,.75fr) minmax(190px,.8fr) minmax(260px,1.15fr)!important;
+    min-height:230px!important;padding:12px 24px 0!important;overflow:visible!important
+  }
+  .myCharIdentityCard{
+    grid-template-columns:190px minmax(155px,1fr)!important;gap:20px!important;
+    min-width:0!important;width:auto!important;overflow:visible!important;padding-right:18px!important
+  }
+  .myCharPortrait{width:188px!important;height:188px!important;min-width:188px!important}
+  .myCharIdentityText,.myCharIdentity{
+    width:auto!important;max-width:none!important;min-width:0!important;height:auto!important;
+    overflow:visible!important;clip:auto!important;background:transparent!important
+  }
+  .myCharNameLine{width:100%!important;max-width:none!important;overflow:visible!important}
+  .myCharNameLine strong{
+    width:100%!important;max-width:none!important;overflow:visible!important;text-overflow:clip!important;
+    white-space:nowrap!important;font-size:30px!important
+  }
+  .myCharDiscord{white-space:normal!important}
+  .myCharIdentityText:after{
+    font-size:13px!important;line-height:1.35!important;max-width:180px!important;margin-top:14px!important
+  }
+  .myHeroKpi{min-height:215px!important;padding:28px 20px!important;overflow:visible!important}
+  .myHeroKpi.score:before{width:158px!important;height:158px!important;-webkit-mask:radial-gradient(circle,transparent 0 53px,#000 54px)!important;mask:radial-gradient(circle,transparent 0 53px,#000 54px)!important}
+  .myHeroKpi.score>b{font-size:46px!important}
+  .myHeroKpi.score>span{bottom:8px!important;white-space:nowrap!important;font-size:12px!important}
+  .myHeroKpi.updated>b{font-size:20px!important}
+  .myQuickRow{
+    padding:0 24px 14px max(635px,43%)!important;gap:12px!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important
+  }
+  .myQuick{min-width:0!important;grid-template-columns:54px minmax(0,1fr)!important;padding:12px!important;gap:11px!important}
+  .myQuickIcon{width:50px!important;height:50px!important;font-size:31px!important}
+  .myQuick>div:last-child{min-width:0!important}
+  .myQuick>div:last-child>div{font-size:12px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+}
+
+/* Atributos: selo correto e sem colisão com valor */
+.myCharMetricHead{position:relative!important;padding-right:0!important}
+.myCharMetricStatus{
+  order:0!important;transform:none!important;margin:0!important;align-self:auto!important;
+  position:absolute!important;right:0!important;top:34px!important;z-index:2!important
+}
+.myCharMetric .metricTriplet{margin-top:14px!important}
+.myCharMetric.good .myCharMetricStatus{background:#087947!important;color:#fff!important}
+.myCharMetric.mid .myCharMetricStatus{background:#806000!important;color:#fff!important}
+.myCharMetric.bad .myCharMetricStatus{background:#9b211e!important;color:#fff!important}
+
+/* O selo não pode dizer Excelente apenas porque o card é verde:
+   usa a classe calculada pelo JS (good/mid/bad). */
+</style>
+<script id="HIVE_FIX_STATUS_LABELS">
+document.addEventListener('DOMContentLoaded',()=>{
+  const sync=()=>{
+    document.querySelectorAll('.myCharMetric').forEach(card=>{
+      const badge=card.querySelector('.myCharMetricStatus');
+      if(!badge)return;
+      badge.textContent=card.classList.contains('bad')?'Precisa evoluir':
+                        card.classList.contains('mid')?'Próximo da média':'Excelente';
+    });
+  };
+  sync();
+  new MutationObserver(sync).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+});
+</script>
+
 </head>
 <body>
 <div class="app">
