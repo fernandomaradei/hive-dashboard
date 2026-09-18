@@ -1364,6 +1364,196 @@ z-index:0}
 @media(max-width:1500px){.myCharHeroRow{grid-template-columns:430px 210px 1fr 1fr!important}.myHeroKpi.updated{grid-column:3/5!important}.myCharMetrics{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:900px){.myCharHeroRow{grid-template-columns:1fr 1fr!important}.myCharIdentityCard{grid-column:1/-1!important}.myQuickRow{grid-template-columns:1fr!important}}
 </style>
+
+<style id="HIVE_PERSONAGEM_ORGANIZADO_V2">
+/* Correção visual do painel Meu Personagem */
+.myCharSectionHead{
+  position:relative!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  padding:20px 28px 18px!important;
+}
+.myCharSectionHead:after{
+  position:absolute!important;
+  left:28px!important;
+  top:45px!important;
+  margin:0!important;
+}
+.myCharOpen{min-width:220px!important;text-align:center!important}
+
+/* Primeira linha: personagem + índice + indicadores */
+.myCharHeroRow{
+  display:grid!important;
+  grid-template-columns:minmax(390px,1.35fr) 240px minmax(190px,.75fr) minmax(190px,.75fr) minmax(285px,1.1fr)!important;
+  min-height:250px!important;
+  padding:16px 26px!important;
+  gap:0!important;
+  align-items:stretch!important;
+}
+.myCharIdentityCard{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:210px minmax(170px,1fr)!important;
+  gap:24px!important;
+  min-width:0!important;
+  min-height:218px!important;
+  align-items:center!important;
+}
+.myCharPortrait{
+  position:relative!important;
+  inset:auto!important;
+  width:200px!important;
+  height:200px!important;
+  margin:0!important;
+  flex:none!important;
+}
+.myCharIdentity{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  min-width:0!important;
+  padding:0!important;
+  align-self:center!important;
+}
+.myCharNameLine{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  margin:0 0 10px!important;
+  white-space:normal!important;
+}
+.myCharNameLine strong{
+  display:block!important;
+  font-size:34px!important;
+  line-height:1.08!important;
+  margin:0!important;
+}
+.myCharDiscord{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  margin:0 0 12px!important;
+  font-size:14px!important;
+}
+#myCharClass{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  margin:0 0 10px!important;
+  font-size:18px!important;
+}
+.myCharRolePills{
+  position:relative!important;
+  inset:auto!important;
+  display:flex!important;
+  margin:0!important;
+}
+
+.myHeroKpi{
+  position:relative!important;
+  min-width:0!important;
+  min-height:218px!important;
+  padding:26px 22px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+}
+.myHeroKpi.score{
+  align-items:center!important;
+}
+.myHeroKpi.updated>b{
+  white-space:normal!important;
+  font-size:23px!important;
+  line-height:1.15!important;
+}
+
+/* Cards de orientação */
+.myQuickRow{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;
+  padding:0 26px 18px!important;
+}
+.myQuick{min-width:0!important}
+
+/* Atributos */
+.myMetricsHead{
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+}
+.myCharMetrics{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.myCharMetric{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:218px!important;
+}
+.metricTriplet{margin-bottom:10px!important}
+
+/* RESTAURA SITUAÇÃO: Excelente / Próximo da média / Precisa evoluir */
+.myCharMetricStatus{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  width:max-content!important;
+  max-width:100%!important;
+  margin-top:auto!important;
+  padding:6px 11px!important;
+  border-radius:999px!important;
+  font-size:12px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+  border:1px solid currentColor!important;
+}
+.myCharMetric.good .myCharMetricStatus{
+  color:#42e49a!important;
+  background:rgba(24,190,116,.12)!important;
+}
+.myCharMetric.mid .myCharMetricStatus{
+  color:#ffd34d!important;
+  background:rgba(218,169,21,.13)!important;
+}
+.myCharMetric.bad .myCharMetricStatus{
+  color:#ff746c!important;
+  background:rgba(215,61,52,.14)!important;
+}
+
+/* Caso o texto de situação venha vazio, cria rótulo visual pelo estado calculado */
+.myCharMetric.good .myCharMetricStatus:empty:after{content:"Excelente";}
+.myCharMetric.mid .myCharMetricStatus:empty:after{content:"Próximo da média";}
+.myCharMetric.bad .myCharMetricStatus:empty:after{content:"Precisa evoluir";}
+
+/* Mantém barras antigas escondidas, como no modelo aprovado */
+.myCharMetricBar,.metricCompare,.metricGoal{display:none!important}
+
+@media(max-width:1450px){
+ .myCharHeroRow{grid-template-columns:minmax(360px,1.2fr) 220px 1fr 1fr!important}
+ .myHeroKpi.updated{grid-column:auto!important}
+ .myCharIdentityCard{grid-template-columns:180px 1fr!important}
+ .myCharPortrait{width:170px!important;height:170px!important}
+ .myCharNameLine strong{font-size:30px!important}
+}
+@media(max-width:1150px){
+ .myCharHeroRow{grid-template-columns:1fr 1fr!important}
+ .myCharIdentityCard{grid-column:1/-1!important}
+ .myCharMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+ .myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}
+ .myCharIdentityCard{grid-template-columns:145px 1fr!important}
+ .myCharPortrait{width:140px!important;height:140px!important}
+ .myMetricsHead{align-items:flex-start!important;flex-direction:column!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
