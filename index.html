@@ -1795,119 +1795,124 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 
 
-<style id="HIVE_MYCHAR_PREMIUM_V2">
-/* Premium polish — Meu Personagem only */
-#myCharacterPanel, .myCharacterPanel{
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif !important;
-  letter-spacing: -.01em;
+<style id="HIVE_MY_CHARACTER_FINAL_DESIGN">
+/* ===== HIVE • MEU PERSONAGEM • DESIGN FINAL ===== */
+#myCharacterPanel,.myCharacterPanel{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  border:1px solid rgba(255,196,30,.72)!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(circle at 20% 18%,rgba(255,183,0,.055),transparent 27%),
+    linear-gradient(135deg,#071111 0%,#07100f 55%,#0b0e0d 100%)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.025)!important;
+  overflow:hidden!important;
 }
-#myCharacterPanel h2, .myCharacterPanel h2,
-#myCharacterPanel .myCharName, .myCharacterPanel .myCharName{
-  font-weight: 850 !important;
-  letter-spacing: -.025em !important;
+#myCharacterPanel .myCharHeader,.myCharacterPanel .myCharHeader{
+  padding:17px 22px!important;
+  border-bottom:1px solid rgba(255,255,255,.11)!important;
 }
-#myCharacterPanel .myCharMetric, .myCharacterPanel .myCharMetric{
-  position:relative;
-  overflow:hidden;
-  border-radius:12px !important;
-  background:linear-gradient(180deg,rgba(15,22,22,.96),rgba(8,15,15,.98)) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.025), 0 8px 22px rgba(0,0,0,.18);
+#myCharacterPanel h2,.myCharacterPanel h2{
+  font-size:22px!important;font-weight:900!important;letter-spacing:-.025em!important;color:#ffd447!important
 }
-#myCharacterPanel .myCharMetricTop, .myCharacterPanel .myCharMetricTop{
-  align-items:flex-start !important;
-  gap:10px !important;
+#myCharacterPanel .myCharBody,.myCharacterPanel .myCharBody{padding:16px 22px 14px!important}
+#myCharacterPanel .myCharName,.myCharacterPanel .myCharName{
+  font-size:31px!important;line-height:1!important;font-weight:900!important;letter-spacing:-.035em!important;color:#f7f8f5!important
 }
-#myCharacterPanel .myCharMetricTitle, .myCharacterPanel .myCharMetricTitle{
-  font-size:15px !important;
-  font-weight:850 !important;
-  color:#f4f5f2 !important;
-  letter-spacing:.01em !important;
+#myCharacterPanel .myCharJob,.myCharacterPanel .myCharJob{
+  display:inline-flex!important;align-items:center!important;padding:7px 13px!important;margin-top:12px!important;
+  border:1px solid #dca900!important;border-radius:8px!important;background:rgba(212,157,0,.08)!important;
+  color:#ffd342!important;font-weight:900!important;font-size:15px!important
 }
-#myCharacterPanel .myCharMetricScore, .myCharacterPanel .myCharMetricScore{
-  font-size:22px !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:-.04em !important;
+#myCharacterPanel .myCharAvatar,.myCharacterPanel .myCharAvatar{
+  filter:drop-shadow(0 0 15px rgba(255,190,28,.25))!important
 }
-#myCharacterPanel .myCharMetricRows, .myCharacterPanel .myCharMetricRows{
-  margin-top:14px !important;
+#myCharacterPanel .myCharIndex,.myCharacterPanel .myCharIndex{
+  filter:drop-shadow(0 0 13px rgba(255,195,32,.13))!important
 }
-#myCharacterPanel .myCharMetricRow, .myCharacterPanel .myCharMetricRow{
-  min-height:35px !important;
-  font-size:13px !important;
-  border-bottom:1px solid rgba(255,255,255,.08) !important;
+#myCharacterPanel .myCharValue,.myCharacterPanel .myCharValue{
+  font-size:34px!important;line-height:1.05!important;font-weight:950!important;letter-spacing:-.045em!important;color:#f6f7f4!important
 }
-#myCharacterPanel .myCharMetricRow span:first-child, .myCharacterPanel .myCharMetricRow span:first-child{
-  color:#929b98 !important;
-  font-weight:500 !important;
+#myCharacterPanel .myCharLabel,.myCharacterPanel .myCharLabel{
+  font-size:12px!important;text-transform:uppercase!important;letter-spacing:.07em!important;color:#89918e!important
 }
-#myCharacterPanel .myCharMetricRow strong, .myCharacterPanel .myCharMetricRow strong{
-  font-size:15px !important;
-  color:#f2f4f2 !important;
-  font-weight:800 !important;
+#myCharacterPanel .myCharInsight,.myCharacterPanel .myCharInsight{
+  min-height:88px!important;padding:14px 16px!important;border-radius:12px!important;
+  background:linear-gradient(135deg,rgba(11,23,21,.98),rgba(9,15,14,.98))!important
 }
-#myCharacterPanel .myCharMetricStatus, .myCharacterPanel .myCharMetricStatus{
-  display:inline-flex !important;
-  align-items:center !important;
-  width:max-content !important;
-  min-height:23px !important;
-  margin-top:8px !important;
-  padding:4px 9px !important;
-  border-radius:7px !important;
-  font-size:10px !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  text-transform:uppercase !important;
-  letter-spacing:.035em !important;
-  border:1px solid currentColor !important;
-  box-shadow:inset 0 0 12px rgba(255,255,255,.025) !important;
+#myCharacterPanel .myCharInsight b,.myCharacterPanel .myCharInsight b{
+  font-size:11px!important;font-weight:950!important;letter-spacing:.035em!important
 }
-#myCharacterPanel .myCharMetric.good .myCharMetricStatus,
-.myCharacterPanel .myCharMetric.good .myCharMetricStatus{
-  color:#27e892 !important;
-  background:rgba(16,130,82,.18) !important;
+#myCharacterPanel .myCharInsight p,.myCharacterPanel .myCharInsight p{
+  font-size:12px!important;line-height:1.5!important;font-weight:650!important;color:#eef1ee!important
 }
-#myCharacterPanel .myCharMetric.mid .myCharMetricStatus,
-.myCharacterPanel .myCharMetric.mid .myCharMetricStatus{
-  color:#ffd044 !important;
-  background:rgba(175,126,0,.18) !important;
+
+/* Attribute area */
+#myCharacterPanel .myCharAttributes,.myCharacterPanel .myCharAttributes{
+  padding:13px 22px 18px!important;border-top:1px solid rgba(255,255,255,.10)!important
 }
-#myCharacterPanel .myCharMetric.bad .myCharMetricStatus,
-.myCharacterPanel .myCharMetric.bad .myCharMetricStatus{
-  color:#ff6472 !important;
-  background:rgba(159,47,57,.18) !important;
+#myCharacterPanel .myCharAttributes h3,.myCharacterPanel .myCharAttributes h3{
+  font-size:20px!important;font-weight:950!important;letter-spacing:-.02em!important;color:#ffd342!important
 }
-#myCharacterPanel .myCharMetric.good, .myCharacterPanel .myCharMetric.good{
-  border-color:rgba(39,232,146,.48) !important;
+#myCharacterPanel .myCharTabs,.myCharacterPanel .myCharTabs{
+  border:1px solid rgba(255,255,255,.17)!important;border-radius:9px!important;overflow:hidden!important
 }
-#myCharacterPanel .myCharMetric.mid, .myCharacterPanel .myCharMetric.mid{
-  border-color:rgba(255,208,68,.48) !important;
+#myCharacterPanel .myCharTabs button,.myCharacterPanel .myCharTabs button{
+  min-width:116px!important;padding:10px 16px!important;font-size:11px!important;font-weight:850!important
 }
-#myCharacterPanel .myCharMetric.bad, .myCharacterPanel .myCharMetric.bad{
-  border-color:rgba(255,100,114,.48) !important;
+#myCharacterPanel .myCharMetric,.myCharacterPanel .myCharMetric{
+  position:relative!important;overflow:hidden!important;padding:15px 17px 13px!important;
+  border-radius:11px!important;background:linear-gradient(180deg,#091413,#07100f)!important;
+  box-shadow:0 10px 22px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.025)!important
 }
-#myCharacterPanel .myCharInsight, .myCharacterPanel .myCharInsight{
-  border-radius:12px !important;
-  padding:15px 17px !important;
+#myCharacterPanel .myCharMetric.good,.myCharacterPanel .myCharMetric.good{border:1px solid rgba(31,221,137,.70)!important}
+#myCharacterPanel .myCharMetric.mid,.myCharacterPanel .myCharMetric.mid{border:1px solid rgba(255,198,31,.72)!important}
+#myCharacterPanel .myCharMetric.bad,.myCharacterPanel .myCharMetric.bad{border:1px solid rgba(255,78,99,.76)!important}
+#myCharacterPanel .myCharMetricTitle,.myCharacterPanel .myCharMetricTitle{
+  font-size:15px!important;font-weight:900!important;letter-spacing:-.01em!important;color:#f5f6f3!important
 }
-#myCharacterPanel .myCharInsight b, .myCharacterPanel .myCharInsight b{
-  font-size:11px !important;
-  font-weight:900 !important;
-  letter-spacing:.035em !important;
+#myCharacterPanel .myCharMetricScore,.myCharacterPanel .myCharMetricScore{
+  font-size:22px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.035em!important
 }
-#myCharacterPanel .myCharInsight p, .myCharacterPanel .myCharInsight p{
-  font-size:12px !important;
-  line-height:1.5 !important;
+#myCharacterPanel .myCharMetricRows,.myCharacterPanel .myCharMetricRows{margin-top:12px!important}
+#myCharacterPanel .myCharMetricRow,.myCharacterPanel .myCharMetricRow{
+  min-height:34px!important;font-size:13px!important;border-bottom:1px solid rgba(255,255,255,.085)!important
 }
-#myCharacterPanel .myCharValue, .myCharacterPanel .myCharValue{
-  font-weight:900 !important;
-  letter-spacing:-.025em !important;
+#myCharacterPanel .myCharMetricRow span:first-child,.myCharacterPanel .myCharMetricRow span:first-child{
+  color:#969e9b!important;font-weight:500!important
 }
-#myCharacterPanel .myCharTabs button, .myCharacterPanel .myCharTabs button{
-  font-weight:800 !important;
+#myCharacterPanel .myCharMetricRow strong,.myCharacterPanel .myCharMetricRow strong{
+  color:#f1f4f1!important;font-size:15px!important;font-weight:850!important
 }
-@media (max-width:900px){
-  #myCharacterPanel .myCharMetricScore,.myCharacterPanel .myCharMetricScore{font-size:19px !important}
+#myCharacterPanel .myCharMetricStatus,.myCharacterPanel .myCharMetricStatus{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:max-content!important;margin-top:8px!important;padding:5px 9px!important;border-radius:6px!important;
+  font-size:10px!important;line-height:1!important;font-weight:950!important;text-transform:uppercase!important;
+  letter-spacing:.025em!important;border:1px solid currentColor!important
+}
+#myCharacterPanel .myCharMetric.good .myCharMetricStatus,.myCharacterPanel .myCharMetric.good .myCharMetricStatus{
+  color:#22e991!important;background:rgba(17,151,91,.17)!important;box-shadow:0 0 12px rgba(34,233,145,.08)!important
+}
+#myCharacterPanel .myCharMetric.mid .myCharMetricStatus,.myCharacterPanel .myCharMetric.mid .myCharMetricStatus{
+  color:#ffd139!important;background:rgba(181,133,0,.16)!important;box-shadow:0 0 12px rgba(255,209,57,.07)!important
+}
+#myCharacterPanel .myCharMetric.bad .myCharMetricStatus,.myCharacterPanel .myCharMetric.bad .myCharMetricStatus{
+  color:#ff6173!important;background:rgba(177,44,63,.17)!important;box-shadow:0 0 12px rgba(255,97,115,.07)!important
+}
+
+/* score bars generated by JS below */
+#myCharacterPanel .hiveMetricBar,.myCharacterPanel .hiveMetricBar{
+  height:8px!important;margin-top:12px!important;border-radius:999px!important;background:rgba(255,255,255,.12)!important;overflow:hidden!important
+}
+#myCharacterPanel .hiveMetricBar>i,.myCharacterPanel .hiveMetricBar>i{
+  display:block!important;height:100%!important;border-radius:inherit!important
+}
+#myCharacterPanel .myCharMetric.good .hiveMetricBar>i,.myCharacterPanel .myCharMetric.good .hiveMetricBar>i{background:#27e995!important}
+#myCharacterPanel .myCharMetric.mid .hiveMetricBar>i,.myCharacterPanel .myCharMetric.mid .hiveMetricBar>i{background:#ffd33f!important}
+#myCharacterPanel .myCharMetric.bad .hiveMetricBar>i,.myCharacterPanel .myCharMetric.bad .hiveMetricBar>i{background:#ff6174!important}
+
+@media(max-width:1050px){
+ #myCharacterPanel .myCharName,.myCharacterPanel .myCharName{font-size:26px!important}
+ #myCharacterPanel .myCharValue,.myCharacterPanel .myCharValue{font-size:29px!important}
 }
 </style>
 
@@ -2920,6 +2925,72 @@ window.hivePremiumClassImage = function(job){
   if(/stalker|rogue|arruaceiro/.test(j)) return HIVE_PREMIUM_CLASS_ART.stalker;
   return (typeof featuredClassImage === 'function' ? featuredClassImage(job) : HIVE_PREMIUM_CLASS_ART.sniper);
 };
+</script>
+
+
+<script id="HIVE_MY_CHARACTER_FINAL_ENHANCER">
+(()=>{
+  let queued=false;
+  function enhance(){
+    queued=false;
+    document.querySelectorAll('.myCharMetric').forEach(card=>{
+      const scoreEl=card.querySelector('.myCharMetricScore');
+      if(!scoreEl)return;
+
+      const m=(scoreEl.textContent||'').match(/(\d+(?:[.,]\d+)?)\s*\/\s*100/);
+      const score=m?Math.max(0,Math.min(100,parseFloat(m[1].replace(',','.')))):0;
+
+      let status=card.querySelector('.myCharMetricStatus');
+      if(!status){
+        status=document.createElement('div');
+        status.className='myCharMetricStatus';
+        const top=card.querySelector('.myCharMetricTop')||scoreEl.parentElement;
+        if(top) top.insertAdjacentElement('afterend',status);
+      }
+      const label=card.classList.contains('bad')?'Precisa evoluir':
+                  card.classList.contains('mid')?'Próximo da média':'Excelente';
+      if(status.textContent!==label)status.textContent=label;
+
+      let bar=card.querySelector('.hiveMetricBar');
+      if(!bar){
+        bar=document.createElement('div');
+        bar.className='hiveMetricBar';
+        bar.innerHTML='<i></i>';
+        card.appendChild(bar);
+      }
+      const fill=bar.querySelector('i');
+      if(fill)fill.style.width=score+'%';
+    });
+  }
+
+  function queueEnhance(){
+    if(queued)return;
+    queued=true;
+    requestAnimationFrame(enhance);
+  }
+
+  document.addEventListener('DOMContentLoaded',queueEnhance);
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.myCharTabs')) setTimeout(queueEnhance,0);
+  });
+
+  // Hook the existing render safely instead of observing every DOM mutation.
+  const hook=setInterval(()=>{
+    if(typeof window.render==='function' && !window.render.__hivePremiumHooked){
+      const original=window.render;
+      const wrapped=function(...args){
+        const result=original.apply(this,args);
+        queueEnhance();
+        return result;
+      };
+      wrapped.__hivePremiumHooked=true;
+      window.render=wrapped;
+      clearInterval(hook);
+      queueEnhance();
+    }
+  },100);
+  setTimeout(()=>clearInterval(hook),10000);
+})();
 </script>
 
 </body></html
