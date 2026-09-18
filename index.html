@@ -944,6 +944,113 @@ z-index:0}
 @media(max-width:1080px){.myCharHeroRow{grid-template-columns:1fr 1fr!important}.myCharIdentityCard{grid-column:1/-1!important}.myQuickRow,.myCharMetrics{grid-template-columns:1fr 1fr!important}}
 @media(max-width:680px){.myCharShell{padding:0 12px!important}.myCharSectionHead,.myMetricsHead{grid-template-columns:1fr!important}.myCharOpen{width:100%!important;min-width:0!important}.myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}.myCharIdentityCard{grid-column:auto!important}.profileTabs{width:100%!important}.myQuick,.myQuote,.myCharMetric{height:auto!important;min-height:0!important}}
 
+
+/* =========================================================
+   HIVE • OPÇÃO 3 — RAGNAROK / FICHA DE PERSONAGEM
+   Somente visual. Mantém toda a lógica e dados existentes.
+   ========================================================= */
+.myCharShell{
+  --hive-gold:#e8b93d; --hive-gold2:#8d6817; --hive-ink:#0b0c0a;
+  --hive-panel:#12130f; --hive-paper:#201b11; --hive-line:#59491d;
+  max-width:1500px!important; margin:20px auto 18px!important;
+  padding:0 22px!important; box-sizing:border-box!important;
+}
+.myCharCard.myCharExample{
+  position:relative!important; width:100%!important; overflow:hidden!important;
+  border:1px solid #8e6d18!important; border-radius:20px!important;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(190,137,34,.13),transparent 30%),
+    radial-gradient(circle at 92% 20%,rgba(103,71,17,.11),transparent 25%),
+    linear-gradient(145deg,#11130f 0%,#0b0d0b 58%,#111009 100%)!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,220,105,.035)!important;
+}
+.myCharCard.myCharExample:before{
+  content:""; position:absolute; inset:8px; pointer-events:none; border:1px solid rgba(216,170,49,.12);
+  border-radius:14px;
+}
+.myCharSectionHead{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 220px!important;
+  align-items:center!important;gap:18px!important;padding:20px 26px 15px!important;
+  border-bottom:1px solid rgba(169,128,31,.28)!important;
+}
+.myCharEyebrow{color:#f2c84d!important;font-size:19px!important;font-weight:950!important;letter-spacing:.03em!important}
+.myCharIntro{margin-top:5px!important;color:#bdb6a6!important;font-size:11px!important}
+.myCharOpen{
+  width:220px!important;min-height:46px!important;justify-self:end!important;border:1px solid #f2c94d!important;
+  border-radius:10px!important;background:linear-gradient(180deg,#f6cf55,#d99e20)!important;
+  color:#171207!important;font-weight:950!important;box-shadow:0 7px 20px rgba(218,163,34,.13)!important
+}
+.myCharHeroRow{
+  display:grid!important;grid-template-columns:minmax(420px,1.55fr) repeat(3,minmax(150px,.64fr)) minmax(250px,1fr)!important;
+  gap:12px!important;padding:15px 26px 12px!important;align-items:stretch!important
+}
+.myCharIdentityCard,.myHeroKpi{
+  height:142px!important;min-height:142px!important;margin:0!important;box-sizing:border-box!important;
+  border:1px solid #3f3927!important;border-radius:13px!important;
+  background:linear-gradient(145deg,rgba(31,28,19,.96),rgba(15,17,14,.98))!important;
+  box-shadow:inset 0 1px rgba(255,226,139,.035)!important
+}
+.myCharIdentityCard{position:relative!important;overflow:hidden!important;isolation:isolate!important}
+.myCharPortrait{
+  position:absolute!important;inset:0 auto 0 0!important;width:53%!important;height:142px!important;
+  border:0!important;border-radius:0!important;overflow:hidden!important;background:#17150e!important;z-index:0!important
+}
+.myCharPortrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 24%!important;filter:saturate(1.03) contrast(1.04)!important}
+.myCharPortrait:after{
+  content:""!important;position:absolute!important;inset:0!important;
+  background:linear-gradient(90deg,transparent 0%,rgba(10,11,9,.05) 38%,rgba(15,16,12,.83) 77%,#11130f 100%),
+             linear-gradient(0deg,rgba(8,8,6,.35),transparent 55%)!important
+}
+.myCharPortrait:before{display:none!important}
+.myCharIdentityText{
+  position:relative!important;z-index:2!important;width:58%!important;height:142px!important;margin-left:auto!important;
+  padding:18px 16px 16px 6px!important;box-sizing:border-box!important;display:flex!important;
+  flex-direction:column!important;justify-content:center!important;background:linear-gradient(90deg,transparent,#11130f 19%,#11130f)!important
+}
+.myCharNameLine{display:flex!important;align-items:center!important;gap:7px!important}
+.myCharNameLine strong{font-family:Georgia,"Times New Roman",serif!important;color:#fff8e7!important;font-size:28px!important;line-height:1!important}
+.myCharDiscord{color:#aaa393!important;font-size:9px!important}.myCharIdentityText>b{margin-top:8px!important;color:#f0c33e!important;font-size:13px!important}
+.myCharRolePills{display:flex!important;gap:7px!important;margin-top:10px!important}
+.myCharRolePills span{padding:5px 10px!important;border:1px solid #4a422b!important;border-radius:999px!important;background:#242218!important;color:#ded6c3!important;font-size:9px!important}
+.myCharRolePills span:first-child{border-color:#84671b!important;background:#403615!important;color:#ffdc5d!important}
+.myHeroKpi{padding:17px 16px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+.myHeroKpi small{color:#a9a294!important;font-size:9px!important;letter-spacing:.07em!important}
+.myHeroKpi>b{margin:9px 0 6px!important;color:#fff8e9!important;font-family:Georgia,"Times New Roman",serif!important;font-size:28px!important;line-height:1!important;white-space:nowrap!important}
+.myHeroKpi.score>b{color:#f2c442!important;font-size:34px!important}.myHeroKpi span{color:#aaa496!important;font-size:10px!important;line-height:1.35!important}
+.myHeroKpi .positive{color:#56dc88!important;font-weight:900!important}.myHeroKpi.updated>b{font-size:20px!important}
+.myQuickRow{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(225px,.72fr)!important;
+  gap:12px!important;padding:0 26px 15px!important;align-items:stretch!important
+}
+.myQuick,.myQuote{height:80px!important;min-height:80px!important;margin:0!important;box-sizing:border-box!important;border-radius:11px!important;background:linear-gradient(145deg,#171812,#11130f)!important}
+.myQuick{display:grid!important;grid-template-columns:50px minmax(0,1fr)!important;align-items:center!important;column-gap:12px!important;padding:12px!important;border:1px solid #4d4325!important}
+.myQuickIcon{width:50px!important;height:50px!important;margin:0!important;border-radius:10px!important;display:grid!important;place-items:center!important;font-size:32px!important}
+.myQuick small{margin-bottom:5px!important;font-size:10px!important}.myQuick div div{color:#ded7c7!important;font-size:10px!important;line-height:1.4!important}
+.myQuick.good{border-color:#315c3f!important}.myQuick.good .myQuickIcon{background:#123d29!important;color:#55df8b!important}.myQuick.good small{color:#58df8d!important}
+.myQuick.improve{border-color:#70591c!important}.myQuick.improve .myQuickIcon{background:#443912!important;color:#f2c63e!important}.myQuick.improve small{color:#f3c940!important}
+.myQuick.priority{border-color:#6c3e2f!important}.myQuick.priority .myQuickIcon{background:#4b2924!important;color:#ff7c6b!important}.myQuick.priority small{color:#ff8271!important}
+.myQuote{display:flex!important;align-items:center!important;justify-content:center!important;padding:12px 17px!important;border:1px solid #66501a!important;color:#efd98e!important;font-family:Georgia,"Times New Roman",serif!important;font-style:italic!important;font-size:12px!important;line-height:1.5!important;text-align:center!important}
+.myMetricsHead{
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:end!important;gap:18px!important;
+  padding:16px 26px 9px!important;border-top:1px solid rgba(169,128,31,.28)!important;
+  background:linear-gradient(90deg,rgba(105,75,15,.08),transparent 38%)!important
+}
+.myMetricsHead>div:first-child b{color:#f1c744!important;font-family:Georgia,"Times New Roman",serif!important;font-size:17px!important}
+.myMetricsHead>div:first-child span{margin-top:5px!important;color:#aaa394!important;font-size:10px!important}.profileTabs{justify-self:end!important}
+.myCharMetrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;padding:7px 26px 20px!important;align-items:stretch!important}
+.myCharMetric{
+  position:relative!important;width:100%!important;height:194px!important;min-height:194px!important;margin:0!important;padding:15px!important;
+  box-sizing:border-box!important;border:1px solid #6d561a!important;border-radius:12px!important;
+  background:linear-gradient(145deg,#1c1a12,#10130f 70%)!important;box-shadow:inset 0 1px rgba(255,224,124,.035)!important
+}
+.myCharMetric:before{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg,transparent,#d5a92e,transparent);opacity:.35}
+.myCharMetricHead{min-height:29px!important;margin:0 0 12px!important}.metricTriplet{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;min-height:54px!important}
+.metricTriplet>div:nth-child(2){text-align:center!important}.metricTriplet>div:nth-child(3){text-align:right!important}
+.metricTriplet small{font-size:8px!important;color:#a69e8e!important}.metricTriplet strong{font-family:Georgia,"Times New Roman",serif!important;font-size:18px!important;color:#fff9eb!important}
+.myCharMetricBar{height:8px!important;margin:12px 0 9px!important}.metricCompare,.metricGoal{font-size:10px!important;line-height:1.4!important}.myCharSummary{display:none!important}
+@media(max-width:1100px){.myCharHeroRow{grid-template-columns:1fr 1fr!important}.myCharIdentityCard{grid-column:1/-1!important}.myQuickRow,.myCharMetrics{grid-template-columns:1fr 1fr!important}}
+@media(max-width:680px){.myCharShell{padding:0 12px!important}.myCharSectionHead,.myMetricsHead{grid-template-columns:1fr!important}.myCharOpen{width:100%!important}.myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}.myCharIdentityCard{grid-column:auto!important}.profileTabs{width:100%!important}.myQuick,.myQuote,.myCharMetric{height:auto!important;min-height:0!important}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
