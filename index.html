@@ -945,111 +945,78 @@ z-index:0}
 @media(max-width:680px){.myCharShell{padding:0 12px!important}.myCharSectionHead,.myMetricsHead{grid-template-columns:1fr!important}.myCharOpen{width:100%!important;min-width:0!important}.myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}.myCharIdentityCard{grid-column:auto!important}.profileTabs{width:100%!important}.myQuick,.myQuote,.myCharMetric{height:auto!important;min-height:0!important}}
 
 
-/* =========================================================
-   HIVE • OPÇÃO 3 — RAGNAROK / FICHA DE PERSONAGEM
-   Somente visual. Mantém toda a lógica e dados existentes.
-   ========================================================= */
-.myCharShell{
-  --hive-gold:#e8b93d; --hive-gold2:#8d6817; --hive-ink:#0b0c0a;
-  --hive-panel:#12130f; --hive-paper:#201b11; --hive-line:#59491d;
-  max-width:1500px!important; margin:20px auto 18px!important;
-  padding:0 22px!important; box-sizing:border-box!important;
+/* ==========================================================
+   HIVE — MOCKUP 3 • CARD ESTILO RPG
+   Replica a opção 3 aprovada: pergaminho + ficha de personagem
+   ========================================================== */
+.rpgCharShell{max-width:1500px!important;margin:18px auto!important;padding:0 22px!important;box-sizing:border-box!important}
+.rpgCharCard{
+  border:1px solid #8d6515!important;border-radius:18px!important;overflow:hidden!important;
+  background:#171109!important;padding:10px!important;box-shadow:0 20px 55px rgba(0,0,0,.55)!important
 }
-.myCharCard.myCharExample{
-  position:relative!important; width:100%!important; overflow:hidden!important;
-  border:1px solid #8e6d18!important; border-radius:20px!important;
+.rpgPaper{
+  position:relative;overflow:hidden;border:1px solid #7a531a;border-radius:12px;
   background:
-    radial-gradient(circle at 18% 0%,rgba(190,137,34,.13),transparent 30%),
-    radial-gradient(circle at 92% 20%,rgba(103,71,17,.11),transparent 25%),
-    linear-gradient(145deg,#11130f 0%,#0b0d0b 58%,#111009 100%)!important;
-  box-shadow:0 22px 55px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,220,105,.035)!important;
+    radial-gradient(circle at 18% 20%,rgba(255,244,196,.24),transparent 26%),
+    radial-gradient(circle at 82% 74%,rgba(126,76,19,.10),transparent 28%),
+    repeating-linear-gradient(0deg,rgba(83,48,14,.025) 0 1px,transparent 1px 5px),
+    linear-gradient(135deg,#d9bb79 0%,#f0d99e 34%,#d6b36c 100%);
+  color:#2a1b0d;box-shadow:inset 0 0 55px rgba(76,39,9,.30)
 }
-.myCharCard.myCharExample:before{
-  content:""; position:absolute; inset:8px; pointer-events:none; border:1px solid rgba(216,170,49,.12);
-  border-radius:14px;
+.rpgPaper:before,.rpgPaper:after{content:"";position:absolute;z-index:0;pointer-events:none}
+.rpgPaper:before{inset:8px;border:1px solid rgba(88,48,12,.35);border-radius:8px}
+.rpgPaper:after{inset:0;background:linear-gradient(90deg,rgba(75,36,7,.16),transparent 5%,transparent 95%,rgba(75,36,7,.16));mix-blend-mode:multiply}
+.rpgPaper>*{position:relative;z-index:1}
+.rpgTop{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 24px 10px 295px}
+.rpgTop .myCharEyebrow{font-family:Georgia,"Times New Roman",serif!important;font-size:22px!important;letter-spacing:.015em!important;color:#251608!important;text-shadow:0 1px #f9e9bb;font-weight:950!important}
+.rpgTop .myCharIntro{color:#5e4324!important;font-size:11px!important;margin-top:4px!important}
+.rpgTop .myCharOpen{min-width:210px!important;padding:12px 18px!important;border:1px solid #8c5d0d!important;border-radius:7px!important;background:linear-gradient(#f8cf4e,#e6a921)!important;color:#251604!important;font-weight:950!important;box-shadow:0 2px 0 #9a6716,0 5px 12px rgba(74,41,6,.16)!important}
+.rpgMain{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;padding:0 22px 18px}
+.rpgProfile{
+  margin-top:-46px;align-self:start;padding:10px 10px 15px;border:1px solid #6c4313;border-radius:10px;
+  background:linear-gradient(145deg,#342414,#1b130c);box-shadow:0 8px 20px rgba(64,33,7,.32),inset 0 0 0 2px #b4822c;
+  color:#f8e6b0
 }
-.myCharSectionHead{
-  display:grid!important;grid-template-columns:minmax(0,1fr) 220px!important;
-  align-items:center!important;gap:18px!important;padding:20px 26px 15px!important;
-  border-bottom:1px solid rgba(169,128,31,.28)!important;
+.rpgPortraitFrame{position:relative;height:238px;border:1px solid #a77b30;background:#16100b;overflow:hidden;box-shadow:inset 0 0 0 4px #2b1c0e}
+.rpgPortraitFrame:before,.rpgPortraitFrame:after{content:"◆";position:absolute;z-index:4;color:#d6a43c;font-size:22px;text-shadow:0 1px #3a2109}
+.rpgPortraitFrame:before{left:5px;top:2px}.rpgPortraitFrame:after{right:5px;bottom:2px}
+.rpgProfile .myCharPortrait{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important;border-radius:0!important;background:#20160d!important;overflow:hidden!important}
+.rpgProfile .myCharPortrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 18%!important;filter:saturate(.94) contrast(1.05) sepia(.05)!important}
+.rpgProfile .myCharPortrait:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,10,3,.65),transparent 42%),radial-gradient(circle at center,transparent 55%,rgba(20,10,3,.34))}
+.rpgClassRibbon{position:absolute;z-index:5;left:18px;right:18px;bottom:8px;text-align:center;padding:6px 8px;border:1px solid #d2a447;background:linear-gradient(#704918,#38240e);color:#ffe18a;font-family:Georgia,"Times New Roman",serif;font-size:17px;font-weight:950;text-shadow:0 2px #1c0d03;clip-path:polygon(5% 0,95% 0,100% 50%,95% 100%,5% 100%,0 50%)}
+.rpgProfileInfo{text-align:center;padding:10px 7px 0}
+.rpgProfileInfo .myCharNameLine{justify-content:center!important}.rpgProfileInfo .myCharNameLine strong{font-family:Georgia,"Times New Roman",serif!important;font-size:25px!important;color:#fff1c4!important}
+.rpgProfileInfo .myCharDiscord{margin-top:7px!important;color:#cbb98f!important;font-size:9px!important}
+.rpgProfileInfo>b{display:none!important}
+.rpgProfileInfo .myCharRolePills{justify-content:center!important;margin-top:10px!important}
+.rpgProfileInfo .myCharRolePills span{border:1px solid #86651f!important;background:#261b0d!important;color:#ead39a!important;padding:5px 10px!important;border-radius:999px!important;font-size:9px!important}
+.rpgProfileInfo .myCharRolePills span:first-child{background:#4a370d!important;color:#ffd94e!important}
+.rpgContent{min-width:0}
+.rpgKpis{display:grid;grid-template-columns:.8fr .8fr .72fr 1.2fr;gap:10px}
+.rpgKpis .myHeroKpi{
+  min-height:105px!important;height:105px!important;padding:14px!important;border:1px solid #9a6c2a!important;border-radius:7px!important;
+  background:linear-gradient(145deg,rgba(248,222,160,.78),rgba(205,164,92,.66))!important;box-shadow:inset 0 0 12px rgba(92,48,8,.10),0 2px 5px rgba(83,47,9,.14)!important
 }
-.myCharEyebrow{color:#f2c84d!important;font-size:19px!important;font-weight:950!important;letter-spacing:.03em!important}
-.myCharIntro{margin-top:5px!important;color:#bdb6a6!important;font-size:11px!important}
-.myCharOpen{
-  width:220px!important;min-height:46px!important;justify-self:end!important;border:1px solid #f2c94d!important;
-  border-radius:10px!important;background:linear-gradient(180deg,#f6cf55,#d99e20)!important;
-  color:#171207!important;font-weight:950!important;box-shadow:0 7px 20px rgba(218,163,34,.13)!important
+.rpgKpis .myHeroKpi small{color:#61441f!important;font-size:8px!important;font-weight:900!important}.rpgKpis .myHeroKpi>b{font-family:Georgia,"Times New Roman",serif!important;color:#231507!important;font-size:27px!important;margin:7px 0 4px!important}.rpgKpis .myHeroKpi.score>b{font-size:31px!important;color:#2a1906!important}
+.rpgKpis .myHeroKpi span{color:#5c4222!important;font-size:9px!important}.rpgKpis .myHeroKpi .positive{color:#087d39!important;font-weight:950!important}.rpgKpis .myHeroKpi.updated>b{font-size:18px!important}
+.rpgQuote{text-align:center;padding:9px 10px 8px;color:#80580e;font-family:Georgia,"Times New Roman",serif;font-size:12px;font-style:italic;font-weight:700}.rpgQuote span{color:#c24b65;margin-left:7px}
+.rpgContent .myQuickRow{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;padding:0!important}
+.rpgContent .myQuick{min-height:64px!important;height:64px!important;padding:8px 10px!important;border:1px solid #5d4019!important;border-radius:6px!important;background:linear-gradient(145deg,#322719,#1e1810)!important;box-shadow:0 2px 5px rgba(66,37,8,.17)!important}
+.rpgContent .myQuickIcon{width:42px!important;height:42px!important;font-size:27px!important;border-radius:6px!important;margin-right:9px!important}.rpgContent .myQuick small{font-size:8px!important;margin-bottom:3px!important}.rpgContent .myQuick div div{font-size:8px!important;color:#eee0bd!important}
+.rpgContent .myMetricsHead{display:flex!important;justify-content:space-between!important;align-items:end!important;padding:13px 0 7px!important;border:0!important;background:transparent!important}
+.rpgContent .myMetricsHead>div:first-child b{font-family:Georgia,"Times New Roman",serif!important;font-size:15px!important;color:#2b1a0b!important}.rpgContent .myMetricsHead>div:first-child span{color:#6a4b29!important;font-size:9px!important;margin-top:3px!important}
+.rpgContent .profileTabs{border:1px solid #8d682d!important;background:#b99455!important}.rpgContent .profileTabs span{background:rgba(255,241,198,.42)!important;color:#513717!important;border-left:1px solid #8d682d!important}.rpgContent .profileTabs .active{background:#3e2a11!important;color:#ffd55a!important}
+.rpgContent .myCharMetrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;padding:0!important}
+.rpgContent .myCharMetric{
+  min-height:157px!important;height:157px!important;padding:11px!important;border:1px solid #9b6e2e!important;border-radius:7px!important;
+  background:linear-gradient(145deg,rgba(246,221,163,.88),rgba(207,169,99,.72))!important;color:#2b1b0b!important;box-shadow:inset 0 0 12px rgba(90,48,8,.10)!important
 }
-.myCharHeroRow{
-  display:grid!important;grid-template-columns:minmax(420px,1.55fr) repeat(3,minmax(150px,.64fr)) minmax(250px,1fr)!important;
-  gap:12px!important;padding:15px 26px 12px!important;align-items:stretch!important
-}
-.myCharIdentityCard,.myHeroKpi{
-  height:142px!important;min-height:142px!important;margin:0!important;box-sizing:border-box!important;
-  border:1px solid #3f3927!important;border-radius:13px!important;
-  background:linear-gradient(145deg,rgba(31,28,19,.96),rgba(15,17,14,.98))!important;
-  box-shadow:inset 0 1px rgba(255,226,139,.035)!important
-}
-.myCharIdentityCard{position:relative!important;overflow:hidden!important;isolation:isolate!important}
-.myCharPortrait{
-  position:absolute!important;inset:0 auto 0 0!important;width:53%!important;height:142px!important;
-  border:0!important;border-radius:0!important;overflow:hidden!important;background:#17150e!important;z-index:0!important
-}
-.myCharPortrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 24%!important;filter:saturate(1.03) contrast(1.04)!important}
-.myCharPortrait:after{
-  content:""!important;position:absolute!important;inset:0!important;
-  background:linear-gradient(90deg,transparent 0%,rgba(10,11,9,.05) 38%,rgba(15,16,12,.83) 77%,#11130f 100%),
-             linear-gradient(0deg,rgba(8,8,6,.35),transparent 55%)!important
-}
-.myCharPortrait:before{display:none!important}
-.myCharIdentityText{
-  position:relative!important;z-index:2!important;width:58%!important;height:142px!important;margin-left:auto!important;
-  padding:18px 16px 16px 6px!important;box-sizing:border-box!important;display:flex!important;
-  flex-direction:column!important;justify-content:center!important;background:linear-gradient(90deg,transparent,#11130f 19%,#11130f)!important
-}
-.myCharNameLine{display:flex!important;align-items:center!important;gap:7px!important}
-.myCharNameLine strong{font-family:Georgia,"Times New Roman",serif!important;color:#fff8e7!important;font-size:28px!important;line-height:1!important}
-.myCharDiscord{color:#aaa393!important;font-size:9px!important}.myCharIdentityText>b{margin-top:8px!important;color:#f0c33e!important;font-size:13px!important}
-.myCharRolePills{display:flex!important;gap:7px!important;margin-top:10px!important}
-.myCharRolePills span{padding:5px 10px!important;border:1px solid #4a422b!important;border-radius:999px!important;background:#242218!important;color:#ded6c3!important;font-size:9px!important}
-.myCharRolePills span:first-child{border-color:#84671b!important;background:#403615!important;color:#ffdc5d!important}
-.myHeroKpi{padding:17px 16px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
-.myHeroKpi small{color:#a9a294!important;font-size:9px!important;letter-spacing:.07em!important}
-.myHeroKpi>b{margin:9px 0 6px!important;color:#fff8e9!important;font-family:Georgia,"Times New Roman",serif!important;font-size:28px!important;line-height:1!important;white-space:nowrap!important}
-.myHeroKpi.score>b{color:#f2c442!important;font-size:34px!important}.myHeroKpi span{color:#aaa496!important;font-size:10px!important;line-height:1.35!important}
-.myHeroKpi .positive{color:#56dc88!important;font-weight:900!important}.myHeroKpi.updated>b{font-size:20px!important}
-.myQuickRow{
-  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(225px,.72fr)!important;
-  gap:12px!important;padding:0 26px 15px!important;align-items:stretch!important
-}
-.myQuick,.myQuote{height:80px!important;min-height:80px!important;margin:0!important;box-sizing:border-box!important;border-radius:11px!important;background:linear-gradient(145deg,#171812,#11130f)!important}
-.myQuick{display:grid!important;grid-template-columns:50px minmax(0,1fr)!important;align-items:center!important;column-gap:12px!important;padding:12px!important;border:1px solid #4d4325!important}
-.myQuickIcon{width:50px!important;height:50px!important;margin:0!important;border-radius:10px!important;display:grid!important;place-items:center!important;font-size:32px!important}
-.myQuick small{margin-bottom:5px!important;font-size:10px!important}.myQuick div div{color:#ded7c7!important;font-size:10px!important;line-height:1.4!important}
-.myQuick.good{border-color:#315c3f!important}.myQuick.good .myQuickIcon{background:#123d29!important;color:#55df8b!important}.myQuick.good small{color:#58df8d!important}
-.myQuick.improve{border-color:#70591c!important}.myQuick.improve .myQuickIcon{background:#443912!important;color:#f2c63e!important}.myQuick.improve small{color:#f3c940!important}
-.myQuick.priority{border-color:#6c3e2f!important}.myQuick.priority .myQuickIcon{background:#4b2924!important;color:#ff7c6b!important}.myQuick.priority small{color:#ff8271!important}
-.myQuote{display:flex!important;align-items:center!important;justify-content:center!important;padding:12px 17px!important;border:1px solid #66501a!important;color:#efd98e!important;font-family:Georgia,"Times New Roman",serif!important;font-style:italic!important;font-size:12px!important;line-height:1.5!important;text-align:center!important}
-.myMetricsHead{
-  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:end!important;gap:18px!important;
-  padding:16px 26px 9px!important;border-top:1px solid rgba(169,128,31,.28)!important;
-  background:linear-gradient(90deg,rgba(105,75,15,.08),transparent 38%)!important
-}
-.myMetricsHead>div:first-child b{color:#f1c744!important;font-family:Georgia,"Times New Roman",serif!important;font-size:17px!important}
-.myMetricsHead>div:first-child span{margin-top:5px!important;color:#aaa394!important;font-size:10px!important}.profileTabs{justify-self:end!important}
-.myCharMetrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;padding:7px 26px 20px!important;align-items:stretch!important}
-.myCharMetric{
-  position:relative!important;width:100%!important;height:194px!important;min-height:194px!important;margin:0!important;padding:15px!important;
-  box-sizing:border-box!important;border:1px solid #6d561a!important;border-radius:12px!important;
-  background:linear-gradient(145deg,#1c1a12,#10130f 70%)!important;box-shadow:inset 0 1px rgba(255,224,124,.035)!important
-}
-.myCharMetric:before{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg,transparent,#d5a92e,transparent);opacity:.35}
-.myCharMetricHead{min-height:29px!important;margin:0 0 12px!important}.metricTriplet{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;min-height:54px!important}
-.metricTriplet>div:nth-child(2){text-align:center!important}.metricTriplet>div:nth-child(3){text-align:right!important}
-.metricTriplet small{font-size:8px!important;color:#a69e8e!important}.metricTriplet strong{font-family:Georgia,"Times New Roman",serif!important;font-size:18px!important;color:#fff9eb!important}
-.myCharMetricBar{height:8px!important;margin:12px 0 9px!important}.metricCompare,.metricGoal{font-size:10px!important;line-height:1.4!important}.myCharSummary{display:none!important}
-@media(max-width:1100px){.myCharHeroRow{grid-template-columns:1fr 1fr!important}.myCharIdentityCard{grid-column:1/-1!important}.myQuickRow,.myCharMetrics{grid-template-columns:1fr 1fr!important}}
-@media(max-width:680px){.myCharShell{padding:0 12px!important}.myCharSectionHead,.myMetricsHead{grid-template-columns:1fr!important}.myCharOpen{width:100%!important}.myCharHeroRow,.myQuickRow,.myCharMetrics{grid-template-columns:1fr!important}.myCharIdentityCard{grid-column:auto!important}.profileTabs{width:100%!important}.myQuick,.myQuote,.myCharMetric{height:auto!important;min-height:0!important}}
+.rpgContent .myCharMetricHead{padding:0 0 7px!important}.rpgContent .myCharMetricHead b{color:#2b1a0b!important;font-size:10px!important}.rpgContent .myCharMetricHead span{color:#2b1a0b!important;font-size:10px!important}
+.rpgContent .metricTriplet small{color:#705333!important}.rpgContent .metricTriplet strong{color:#241506!important;font-size:16px!important}.rpgContent .metricTriplet>div:nth-child(3) strong{color:#116b3a!important}
+.rpgContent .myCharMetricBar{background:rgba(72,48,20,.22)!important;height:7px!important}.rpgContent .myCharMetric.good .myCharMetricBar i{background:#31b765!important}.rpgContent .myCharMetric.bad .myCharMetricBar i{background:#d19a1d!important}
+.rpgContent .metricCompare,.rpgContent .metricGoal,.rpgContent .myCharMetricStatus{color:#563b1e!important;font-size:8px!important}.rpgContent .myCharMetric.good .metricCompare,.rpgContent .myCharMetric.good .metricGoal,.rpgContent .myCharMetric.good .myCharMetricStatus{color:#087b3a!important}
+@media(max-width:1150px){.rpgTop{padding-left:24px}.rpgMain{grid-template-columns:220px minmax(0,1fr)}.rpgProfile{margin-top:0}.rpgKpis{grid-template-columns:1fr 1fr}.rpgContent .myCharMetrics{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.rpgTop{flex-direction:column;align-items:stretch}.rpgTop .myCharOpen{width:100%!important}.rpgMain{grid-template-columns:1fr}.rpgProfile{max-width:300px;margin:auto}.rpgKpis,.rpgContent .myQuickRow,.rpgContent .myCharMetrics{grid-template-columns:1fr!important}.rpgContent .myCharMetric{height:auto!important;min-height:145px!important}.rpgContent .myMetricsHead{align-items:flex-start!important;gap:8px;flex-direction:column}.rpgContent .profileTabs{width:100%!important}}
 
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
@@ -1173,59 +1140,74 @@ z-index:0}
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
 
-  <section class="myCharShell" id="myCharShell">
+  <section class="myCharShell rpgCharShell" id="myCharShell">
     <div class="myCharLoading" id="myCharLoading">🐝 Identificando seu personagem pela conta Discord...</div>
-    <div class="myCharCard myCharExample" id="myCharCard" hidden>
-      <div class="myCharSectionHead">
-        <div>
-          <div class="myCharEyebrow">👑 MEU PERSONAGEM</div>
-          <div class="myCharIntro">Seus principais status e comparação com a sua classe.</div>
-        </div>
-        <button class="myCharOpen" id="myCharOpen">Ver análise completa →</button>
-      </div>
 
-      <div class="myCharHeroRow">
-        <div class="myCharIdentityCard">
-          <div class="myCharPortrait"><img id="myCharPortrait" alt="Classe"></div>
-          <div class="myCharIdentityText">
-            <div class="myCharNameLine"><strong id="myCharName">—</strong><span class="discordMini">▣</span><span class="myCharDiscord" id="myCharDiscord">Discord: —</span></div>
-            <b id="myCharClass">—</b>
-            <div class="myCharRolePills"><span id="myCharRolePill">DPS</span><span>Lv. 120</span></div>
+    <div class="myCharCard myCharExample rpgCharCard" id="myCharCard" hidden>
+      <div class="rpgPaper">
+        <div class="rpgTop">
+          <div>
+            <div class="myCharEyebrow">MEU PERSONAGEM</div>
+            <div class="myCharIntro">Seus status e comparação com a sua classe.</div>
+          </div>
+          <button class="myCharOpen" id="myCharOpen">Ver análise completa →</button>
+        </div>
+
+        <div class="rpgMain">
+          <aside class="rpgProfile">
+            <div class="rpgPortraitFrame">
+              <div class="myCharPortrait"><img id="myCharPortrait" alt="Classe"></div>
+              <div class="rpgClassRibbon" id="rpgClassRibbon">SNIPER</div>
+            </div>
+            <div class="rpgProfileInfo">
+              <div class="myCharNameLine">
+                <strong id="myCharName">—</strong>
+              </div>
+              <div class="myCharDiscord" id="myCharDiscord">Discord: —</div>
+              <b id="myCharClass">—</b>
+              <div class="myCharRolePills"><span id="myCharRolePill">DPS</span><span>Lv. 120</span></div>
+            </div>
+          </aside>
+
+          <div class="rpgContent">
+            <div class="rpgKpis">
+              <div class="myHeroKpi score"><small>ÍNDICE NA CLASSE</small><b id="myCharScore">—</b><span id="myCharGroup">—</span></div>
+              <div class="myHeroKpi"><small>POWER</small><b id="myCharPower">—</b><span class="positive" id="myCharPowerHint">—</span></div>
+              <div class="myHeroKpi"><small>POSIÇÃO</small><b id="myCharPosition">—</b><span id="myCharPositionHint">—</span></div>
+              <div class="myHeroKpi updated"><small>ÚLTIMA ATUALIZAÇÃO</small><b id="myCharUpdated">—</b><span id="myCharUpdatedHint">via Google Planilhas</span></div>
+            </div>
+
+            <div class="rpgQuote">“Pequenas evoluções geram grandes resultados!” <span>●</span></div>
+
+            <div class="myQuickRow">
+              <div class="myQuick good">
+                <div class="myQuickIcon">↑</div>
+                <div><small>PONTOS FORTES</small><div id="myCharStrengths">—</div></div>
+              </div>
+              <div class="myQuick improve">
+                <div class="myQuickIcon">▥</div>
+                <div><small>PODE EVOLUIR</small><div id="myCharImprove">—</div></div>
+              </div>
+              <div class="myQuick priority">
+                <div class="myQuickIcon">◎</div>
+                <div><small>PRIORIDADE</small><div id="myCharWeaknesses">—</div></div>
+              </div>
+            </div>
+
+            <div class="myCharSummary" style="display:none">
+              <div class="myCharSummaryText" id="myCharSummaryText">—</div>
+            </div>
+
+            <div class="myMetricsHead">
+              <div><b>— PRINCIPAIS ATRIBUTOS —</b><span>Seu valor, média da classe e meta para 100/100.</span></div>
+              <div class="profileTabs"><span class="active" id="myProfileTab">DPS Físico</span><span>DPS Mágico</span><span>Defensivo</span></div>
+            </div>
+            <div class="myCharMetrics" id="myCharMetrics"></div>
           </div>
         </div>
-
-        <div class="myHeroKpi score"><small>ÍNDICE NA CLASSE</small><b id="myCharScore">—</b><span id="myCharGroup">—</span></div>
-        <div class="myHeroKpi"><small>POWER</small><b id="myCharPower">—</b><span class="positive" id="myCharPowerHint">—</span></div>
-        <div class="myHeroKpi"><small>POSIÇÃO NA CLASSE</small><b id="myCharPosition">—</b><span id="myCharPositionHint">—</span></div>
-        <div class="myHeroKpi updated"><small>ÚLTIMA ATUALIZAÇÃO</small><b id="myCharUpdated">—</b><span id="myCharUpdatedHint">via Google Planilhas</span></div>
       </div>
-
-      <div class="myQuickRow">
-        <div class="myQuick good">
-          <div class="myQuickIcon">↑</div>
-          <div><small>PONTOS FORTES</small><div id="myCharStrengths">—</div></div>
-        </div>
-        <div class="myQuick improve">
-          <div class="myQuickIcon">▥</div>
-          <div><small>PODE EVOLUIR</small><div id="myCharImprove">—</div></div>
-        </div>
-        <div class="myQuick priority">
-          <div class="myQuickIcon">◎</div>
-          <div><small>PRIORIDADE</small><div id="myCharWeaknesses">—</div></div>
-        </div>
-        <div class="myQuote">“Pequenas evoluções<br>geram grandes resultados!” <b>●</b></div>
-      </div>
-
-      <div class="myCharSummary" style="display:none">
-        <div class="myCharSummaryText" id="myCharSummaryText">—</div>
-      </div>
-
-      <div class="myMetricsHead">
-        <div><b>🏆 PRINCIPAIS ATRIBUTOS DA SUA CLASSE</b><span>Seu valor, média da classe e meta para 100/100.</span></div>
-        <div class="profileTabs"><span class="active" id="myProfileTab">DPS Físico</span><span>DPS Mágico</span><span>Defensivo</span></div>
-      </div>
-      <div class="myCharMetrics" id="myCharMetrics"></div>
     </div>
+
     <div class="myCharNotFound" id="myCharNotFound" hidden>
       <div><b>🐝 Conta Discord autenticada, mas não encontrei seu personagem.</b>
       <span id="myCharNotFoundText">Confira se a coluna Discord da planilha corresponde ao seu usuário do Discord.</span></div>
