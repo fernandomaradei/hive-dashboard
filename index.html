@@ -1794,73 +1794,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
-
-<style id="HIVE_MYCHAR_EXACT_V3">
-/* ===== Meu Personagem: selos, barras e índice ===== */
-.myCharMetricStatus{
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  width:max-content!important;
-  margin:8px 0 2px!important;
-  padding:5px 10px!important;
-  border-radius:6px!important;
-  font-size:10px!important;
-  line-height:1!important;
-  font-weight:900!important;
-  text-transform:uppercase!important;
-  letter-spacing:.025em!important;
-  border:1px solid currentColor!important;
-}
-.myCharMetric.good .myCharMetricStatus{
-  color:#27e995!important;background:rgba(20,145,89,.18)!important;
-}
-.myCharMetric.mid .myCharMetricStatus{
-  color:#ffd23f!important;background:rgba(172,126,0,.18)!important;
-}
-.myCharMetric.bad .myCharMetricStatus{
-  color:#ff6476!important;background:rgba(164,45,60,.18)!important;
-}
-.hiveMetricBar{
-  height:9px!important;
-  width:100%!important;
-  margin-top:12px!important;
-  border-radius:999px!important;
-  overflow:hidden!important;
-  background:rgba(255,255,255,.12)!important;
-}
-.hiveMetricBarFill{
-  display:block!important;height:100%!important;border-radius:inherit!important;
-}
-.myCharMetric.good .hiveMetricBarFill{background:#27e995!important}
-.myCharMetric.mid .hiveMetricBarFill{background:#ffd23f!important}
-.myCharMetric.bad .hiveMetricBarFill{background:#ff6476!important}
-
-/* selo do índice 88/100, abaixo do gráfico */
-.hiveClassIndexBadge{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:7px!important;
-  width:max-content!important;
-  min-width:150px!important;
-  margin:9px auto 0!important;
-  padding:6px 15px!important;
-  border:1px solid #27e995!important;
-  border-radius:7px!important;
-  background:rgba(15,128,79,.16)!important;
-  color:#27e995!important;
-  font-size:12px!important;
-  line-height:1!important;
-  font-weight:950!important;
-  text-transform:uppercase!important;
-  letter-spacing:.025em!important;
-  box-shadow:0 0 14px rgba(39,233,149,.08)!important;
-}
-/* remove o texto antigo abaixo do donut; o novo selo substitui */
-.hiveHideOldIndexText{display:none!important}
-</style>
-
 </head>
 <body>
 <div class="app">
@@ -2873,121 +2806,196 @@ window.hivePremiumClassImage = function(job){
 </script>
 
 
-<script id="HIVE_MYCHAR_EXACT_V3_JS">
-(()=>{
-  let busy=false;
+<style id="HIVE_FINAL_VISUAL_FIX_20260918">
+/* =========================================================
+   FINAL OVERRIDE — must stay LAST in the document.
+   ========================================================= */
 
-  function scoreFromCard(card){
-    const scoreEl=card.querySelector('.myCharMetricScore');
-    if(!scoreEl)return 0;
-    const m=(scoreEl.textContent||'').match(/(\d+(?:[.,]\d+)?)\s*\/\s*100/i);
-    return m?Math.max(0,Math.min(100,Number(m[1].replace(',','.'))||0)):0;
-  }
+/* ---------- ÍNDICE DA CLASSE ---------- */
+.myHeroKpi.score{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  padding:25px 14px 15px!important;
+  min-height:225px!important;
+  overflow:visible!important;
+}
+.myHeroKpi.score>small{
+  position:relative!important;
+  z-index:4!important;
+  margin:0 0 10px!important;
+  color:#b7bbb8!important;
+  font-size:13px!important;
+  line-height:1!important;
+  text-transform:uppercase!important;
+  letter-spacing:.02em!important;
+}
+.myHeroKpi.score:before{
+  position:absolute!important;
+  top:45px!important;
+  left:50%!important;
+  transform:translateX(-50%) rotate(-90deg)!important;
+  width:150px!important;
+  height:150px!important;
+}
+.myHeroKpi.score>b{
+  position:relative!important;
+  z-index:4!important;
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:center!important;
+  margin-top:42px!important;
+  font-size:46px!important;
+  line-height:1!important;
+  color:#ffd143!important;
+}
+.myHeroKpi.score>b small{
+  margin-left:3px!important;
+  font-size:16px!important;
+  color:#aeb2af!important;
+}
+#myCharGroup{
+  position:relative!important;
+  z-index:5!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  min-width:130px!important;
+  max-width:160px!important;
+  height:27px!important;
+  margin-top:30px!important;
+  padding:0 15px!important;
+  border:1px solid #19bf75!important;
+  border-radius:6px!important;
+  background:#063c2a!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  box-shadow:0 0 12px rgba(31,225,139,.10)!important;
+}
+#myCharGroup:after{
+  content:"EXCELENTE";
+  color:#31ed98!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  letter-spacing:.025em!important;
+}
 
-  function enhanceMetrics(root){
-    root.querySelectorAll('.myCharMetric').forEach(card=>{
-      const score=scoreFromCard(card);
-      const label=card.classList.contains('bad')?'Precisa evoluir':
-                  card.classList.contains('mid')?'Próximo da média':'Excelente';
+/* ---------- CARDS DE ATRIBUTOS ---------- */
+.myCharMetric{
+  min-height:215px!important;
+  padding:15px 18px 14px!important;
+  overflow:hidden!important;
+}
+.myCharMetricHead{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  min-height:34px!important;
+  margin:0 0 4px!important;
+}
+.myCharMetricHead span{
+  font-size:22px!important;
+  font-weight:950!important;
+}
 
-      let badge=card.querySelector('.myCharMetricStatus');
-      if(!badge){
-        badge=document.createElement('div');
-        badge.className='myCharMetricStatus';
-        const top=card.querySelector('.myCharMetricTop');
-        if(top) top.insertAdjacentElement('afterend',badge);
-        else card.prepend(badge);
-      }
-      if(badge.textContent!==label) badge.textContent=label;
+/* Status badges — force visible over all old display:none rules */
+.myCharMetricStatus{
+  display:inline-flex!important;
+  position:static!important;
+  order:0!important;
+  transform:none!important;
+  align-self:flex-start!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:max-content!important;
+  height:24px!important;
+  margin:0 0 8px 40px!important;
+  padding:0 9px!important;
+  border-radius:6px!important;
+  font-size:10px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  text-transform:uppercase!important;
+  letter-spacing:.02em!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.myCharMetric.good .myCharMetricStatus{
+  color:#28ed93!important;background:rgba(0,116,67,.24)!important;border:1px solid #19b970!important;
+}
+.myCharMetric.mid .myCharMetricStatus{
+  color:#ffd23f!important;background:rgba(133,96,0,.28)!important;border:1px solid #c49410!important;
+}
+.myCharMetric.bad .myCharMetricStatus{
+  color:#ff6678!important;background:rgba(143,30,47,.26)!important;border:1px solid #d8465d!important;
+}
 
-      let bar=card.querySelector('.hiveMetricBar');
-      if(!bar){
-        bar=document.createElement('div');
-        bar.className='hiveMetricBar';
-        const fill=document.createElement('i');
-        fill.className='hiveMetricBarFill';
-        bar.appendChild(fill);
-        card.appendChild(bar);
-      }
-      const fill=bar.querySelector('.hiveMetricBarFill');
-      const width=score+'%';
-      if(fill && fill.style.width!==width) fill.style.width=width;
-    });
-  }
+/* Three rows */
+.myCharMetric .metricTriplet{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  margin:0!important;
+}
+.myCharMetric .metricTriplet>div{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  min-height:34px!important;
+  padding:5px 0!important;
+  border-bottom:1px solid #26302e!important;
+}
+.myCharMetric .metricTriplet small{font-size:13px!important;color:#9da19d!important}
+.myCharMetric .metricTriplet strong{font-size:17px!important;color:#f4f4ef!important}
+.myCharMetric .metricTriplet .targetVal{color:#39e49a!important}
 
-  function enhanceIndex(root){
-    // Find the 88/100 donut block by its visible score text, not by fragile IDs.
-    const candidates=[...root.querySelectorAll('div,section')];
-    let scoreNode=null;
-    for(const el of candidates){
-      const t=(el.textContent||'').replace(/\s+/g,' ').trim();
-      if(/^88\s*\/\s*100$/.test(t) || (/^\d{1,3}\s*\/\s*100$/.test(t) && el.children.length<=3)){
-        scoreNode=el;
-        break;
-      }
-    }
-    // More reliable fallback: locate the element containing "ÍNDICE NA CLASSE".
-    const labels=[...root.querySelectorAll('*')].filter(el=>
-      (el.textContent||'').trim().toUpperCase()==='ÍNDICE NA CLASSE'
-    );
-    const indexArea=labels[0]?.parentElement;
-    if(!indexArea)return;
+/* Percentage bar — force visible. This is the rule that was being overridden. */
+.myCharMetric .myCharMetricBar{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  height:9px!important;
+  flex:0 0 9px!important;
+  margin:12px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:#28302e!important;
+  overflow:hidden!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.myCharMetric .myCharMetricBar>i{
+  display:block!important;
+  height:100%!important;
+  min-width:3%!important;
+  margin:0!important;
+  border-radius:999px!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.myCharMetric.good .myCharMetricBar>i{background:#2ce593!important}
+.myCharMetric.mid .myCharMetricBar>i{background:#ffd13e!important}
+.myCharMetric.bad .myCharMetricBar>i{background:#ff6375!important}
 
-    // Hide the old comparison text directly below the graph if present.
-    [...indexArea.querySelectorAll('*')].forEach(el=>{
-      const txt=(el.textContent||'').trim().toUpperCase();
-      if(txt.includes('COMPARAÇÃO NO GRUPO') && !el.classList.contains('hiveClassIndexBadge')){
-        el.classList.add('hiveHideOldIndexText');
-      }
-    });
+/* Keep the secondary texts hidden; the requested visual is badge + bar. */
+.metricCompare,.metricGoal{display:none!important}
 
-    let badge=indexArea.querySelector('.hiveClassIndexBadge');
-    if(!badge){
-      badge=document.createElement('div');
-      badge.className='hiveClassIndexBadge';
-      indexArea.appendChild(badge);
-    }
+/* Card border follows the status */
+.myCharMetric.good{border:1px solid #267d63!important}
+.myCharMetric.mid{border:1px solid #947315!important}
+.myCharMetric.bad{border:1px solid #9b3944!important}
 
-    // Use score/status logic from the donut value if possible.
-    const allText=indexArea.textContent||'';
-    const m=allText.match(/(\d{1,3})\s*\/\s*100/);
-    const score=m?Number(m[1]):0;
-    const label=score>=85?'Excelente':score>=70?'Próximo da média':'Precisa evoluir';
-    if(badge.textContent!==label) badge.textContent=label;
-  }
-
-  function run(){
-    if(busy)return;
-    busy=true;
-    requestAnimationFrame(()=>{
-      try{
-        // Narrow to the area that actually contains the Meu Personagem content.
-        const heading=[...document.querySelectorAll('h1,h2,h3,div')].find(el=>
-          (el.textContent||'').trim().toUpperCase()==='👑 MEU PERSONAGEM' ||
-          (el.textContent||'').trim().toUpperCase()==='MEU PERSONAGEM'
-        );
-        let root=heading;
-        for(let i=0;i<4 && root?.parentElement;i++) root=root.parentElement;
-        root=root||document.body;
-        enhanceMetrics(root);
-        enhanceIndex(root);
-      }finally{busy=false;}
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded',()=>{
-    run();
-    // Safe observer: additions only; writes are idempotent and debounced.
-    const observer=new MutationObserver(muts=>{
-      if(muts.some(m=>m.addedNodes && m.addedNodes.length)) run();
-    });
-    observer.observe(document.body,{subtree:true,childList:true});
-    document.addEventListener('click',e=>{
-      if(e.target.closest('button')) setTimeout(run,20);
-    });
-  });
-})();
-</script>
+@media(max-width:1100px){
+  .myHeroKpi.score{min-height:220px!important}
+  .myCharMetric{min-height:215px!important}
+}
+</style>
 
 </body></html
 >
