@@ -4028,5 +4028,94 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_COMPACT_V16">
+/* Compactação real: reduz espaços/paddings, preservando tipografia */
+
+/* cabeçalho */
+.myCharSectionHead{
+  min-height:48px!important;
+  padding:6px 18px!important;
+}
+.myCharOpen{
+  min-height:35px!important;
+  padding:6px 20px!important;
+}
+
+/* linha principal mais baixa */
+.myCharHeroRow{
+  padding-top:3px!important;
+  padding-bottom:0!important;
+}
+.myCharIdentityCard,
+.myHeroKpi{
+  height:158px!important;
+  min-height:158px!important;
+}
+
+/* perfil: elimina sobras verticais sem reduzir letras */
+.myCharIdentityText{
+  justify-content:center!important;
+}
+#myCharDiscord{margin-top:4px!important}
+.myCharIdentityText>b{margin-top:4px!important}
+.myCharRolePills{margin-top:5px!important}
+.myQuote{margin-top:6px!important;margin-bottom:0!important}
+
+/* donut ocupa menos altura, mantendo diâmetro e fontes */
+.myHeroKpi.score{
+  height:158px!important;
+  min-height:158px!important;
+}
+.myHeroKpi.score:before{
+  top:0!important;
+  width:128px!important;
+  height:128px!important;
+}
+.myHeroKpi.score>b{
+  top:38px!important;
+}
+.myHeroKpi.score>small{
+  top:128px!important;
+}
+#myCharGroup{
+  top:145px!important;
+}
+
+/* KPIs sem padding vertical desperdiçado */
+.myHeroKpi:not(.score){
+  height:158px!important;
+  min-height:158px!important;
+  padding-top:8px!important;
+  padding-bottom:3px!important;
+}
+.myHeroKpi:not(.score):before{
+  margin-bottom:5px!important;
+}
+.myHeroKpi:not(.score)>b{
+  margin-top:4px!important;
+  margin-bottom:3px!important;
+}
+
+/* cards sobem bastante; tamanho do texto é preservado */
+.myQuickRow{
+  margin-top:-16px!important;
+  padding-top:0!important;
+  padding-bottom:5px!important;
+}
+.myQuick{
+  height:66px!important;
+  min-height:66px!important;
+  padding-top:6px!important;
+  padding-bottom:6px!important;
+}
+
+/* aproxima imediatamente a próxima seção */
+.myMetricsHead{
+  padding-top:2px!important;
+  padding-bottom:4px!important;
+}
+</style>
+
 </body></html
 >
