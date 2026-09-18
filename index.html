@@ -1773,12 +1773,24 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.myCharMetric').forEach(card=>{
       const badge=card.querySelector('.myCharMetricStatus');
       if(!badge)return;
-      badge.textContent=card.classList.contains('bad')?'Precisa evoluir':
-                        card.classList.contains('mid')?'Próximo da média':'Excelente';
+      const label=card.classList.contains('bad')?'Precisa evoluir':
+                  card.classList.contains('mid')?'Próximo da média':'Excelente';
+      // Só altera o DOM quando o texto realmente mudou.
+      // Isso evita o loop infinito que congelava o navegador.
+      if(badge.textContent !== label) badge.textContent = label;
     });
   };
+
   sync();
-  new MutationObserver(sync).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+
+  // Observa somente mudanças de classe. Não observa childList,
+  // pois a troca do texto do selo gerava uma nova mutação e chamava
+  // sync() indefinidamente.
+  new MutationObserver(sync).observe(document.body,{
+    subtree:true,
+    attributes:true,
+    attributeFilter:['class']
+  });
 });
 </script>
 
@@ -2005,24 +2017,8 @@ async function loadLiveData(){
     throw new Error('Sessão HIVE expirada ou sem permissão.');
   }
   const payload=await r.json().catch(()=>null);
-
-  if(!r.ok){
-    throw new Error(payload?.error||('HTTP '+r.status));
-  }
-
-  // Compatibilidade com o novo Worker:
-  // Google Sheets direto retorna um ARRAY de membros.
-  if(Array.isArray(payload)){
-    return {ok:true,members:payload,history:[]};
-  }
-
-  // Compatibilidade com o formato antigo:
-  // { ok:true, members:[...], history:[...] }
-  if(payload?.ok && Array.isArray(payload.members)){
-    return payload;
-  }
-
-  throw new Error(payload?.error||'Formato inválido retornado por /api/data');
+  if(!r.ok||!payload?.ok) throw new Error(payload?.error||('HTTP '+r.status));
+  return payload;
 }
 function topPower(){return [...members].sort((a,b)=>intNum(b['Power Atual'],'Power Atual')-intNum(a['Power Atual'],'Power Atual'))}
 
