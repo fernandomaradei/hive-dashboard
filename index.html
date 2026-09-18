@@ -4194,5 +4194,127 @@ window.hivePremiumClassImage = function(job){
 #myCharGroup:after{content:none!important}
 </style>
 
+
+<style id="HIVE_DEPTH_EFFECTS_V18">
+/* Efeitos discretos: mais profundidade sem transformar o dashboard em neon */
+
+/* Fundo do Meu Personagem com leve profundidade */
+.myCharSection{
+  background:
+    radial-gradient(circle at 18% 30%,rgba(255,195,35,.035),transparent 30%),
+    radial-gradient(circle at 72% 25%,rgba(39,214,167,.025),transparent 28%),
+    linear-gradient(180deg,rgba(7,20,20,.98),rgba(5,15,15,.99))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 12px 32px rgba(0,0,0,.18)!important;
+}
+
+/* Título dourado menos "chapado" */
+.myCharSectionHead h2,
+.myMetricsHead h3{
+  text-shadow:0 1px 0 rgba(0,0,0,.7),0 0 10px rgba(255,199,35,.10)!important;
+}
+
+/* Avatar: glow controlado */
+.myCharPortrait{
+  box-shadow:
+    0 0 0 1px rgba(255,208,55,.22),
+    0 0 18px rgba(255,185,25,.14),
+    0 10px 24px rgba(0,0,0,.25)!important;
+}
+
+/* Donut: amarelo com gradiente visual mais rico */
+.myHeroKpi.score:before{
+  background:conic-gradient(
+    #ffe06b 0deg,
+    #ffc82e 150deg,
+    #f0a900 270deg,
+    #ffd84c 316.8deg,
+    #29302e 316.8deg 360deg
+  )!important;
+  filter:
+    drop-shadow(0 0 5px rgba(255,201,43,.18))
+    drop-shadow(0 5px 10px rgba(0,0,0,.18))!important;
+}
+.myHeroKpi.score>b{
+  text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 9px rgba(255,203,45,.12)!important;
+}
+
+/* KPIs: ícones com um pouco mais de presença */
+.myHeroKpi:not(.score):before{
+  filter:
+    drop-shadow(0 0 6px rgba(255,210,65,.13))
+    drop-shadow(0 3px 4px rgba(0,0,0,.22))!important;
+}
+.myHeroKpi:nth-child(4):before,
+.myHeroKpi.updated:before{
+  filter:
+    drop-shadow(0 0 7px rgba(155,123,255,.18))
+    drop-shadow(0 3px 4px rgba(0,0,0,.22))!important;
+}
+
+/* Cards de orientação: gradiente e brilho interno bem discretos */
+.myQuick{
+  background:
+    linear-gradient(145deg,rgba(11,26,24,.92),rgba(7,17,17,.97))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 5px 13px rgba(0,0,0,.12)!important;
+}
+.myQuick.good{
+  box-shadow:inset 0 1px 0 rgba(54,230,158,.06),0 5px 13px rgba(0,0,0,.12)!important;
+}
+.myQuick.warn{
+  box-shadow:inset 0 1px 0 rgba(255,205,45,.06),0 5px 13px rgba(0,0,0,.12)!important;
+}
+.myQuick.bad{
+  box-shadow:inset 0 1px 0 rgba(255,92,85,.055),0 5px 13px rgba(0,0,0,.12)!important;
+}
+.myQuickIcon{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 10px rgba(0,0,0,.16)!important;
+}
+
+/* Cards dos atributos: sai do preto chapado */
+.myCharMetric{
+  background:
+    radial-gradient(circle at 85% 0%,rgba(255,255,255,.018),transparent 38%),
+    linear-gradient(155deg,rgba(8,25,24,.98),rgba(6,18,18,.99))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 6px 15px rgba(0,0,0,.13)!important;
+}
+
+/* Selos com gradiente, sem exagerar */
+.metricStatus,
+.myCharMetric .statusBadge{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 3px 7px rgba(0,0,0,.16)!important;
+}
+
+/* Barras: leve luminosidade e relevo */
+.myCharMetric .metricBar,
+.myCharMetric [class*="bar"]{
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.35)!important;
+}
+.myCharMetric .metricBar > *,
+.myCharMetric [class*="bar"] > *{
+  box-shadow:0 0 7px currentColor!important;
+}
+
+/* Botão principal menos seco */
+.myCharOpen{
+  background:linear-gradient(135deg,#ffd95c,#f5b91e)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 5px 15px rgba(241,181,20,.14)!important;
+}
+
+/* Divisórias mais suaves */
+.myCharIdentityCard,.myHeroKpi{
+  border-right-color:rgba(255,255,255,.11)!important;
+}
+</style>
+
 </body></html
 >
