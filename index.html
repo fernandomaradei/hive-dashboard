@@ -4518,5 +4518,377 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_RANK_EXPLAIN_REFINED_V20">
+/* V20 — leitura mais leve, hierarquia visual e menos aparência de tabela */
+
+.rankExplain{
+  border-color:rgba(205,157,32,.34)!important;
+  background:linear-gradient(180deg,#10130f 0%,#0c0f0d 100%)!important;
+}
+
+/* Cabeçalho mais limpo */
+.rankExplainHead{
+  min-height:46px!important;
+  padding:9px 15px!important;
+}
+.rankExplainHead b{font-size:14px!important}
+.rankExplainTotal{
+  min-width:55px!important;
+  padding:6px 9px!important;
+  font-size:18px!important;
+  box-shadow:0 0 18px rgba(255,184,45,.06)!important;
+}
+.rankExplainSub{
+  padding:7px 15px!important;
+  font-size:9.5px!important;
+}
+
+/* Resumo superior com cara de insight */
+.rankWhySummary{
+  gap:8px!important;
+  padding:10px 15px 4px!important;
+}
+.rankWhySummary>div{
+  position:relative!important;
+  min-height:48px!important;
+  padding:8px 11px 8px 13px!important;
+  overflow:hidden!important;
+}
+.rankWhySummary>div:before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important; top:0!important; bottom:0!important;
+  width:3px!important;
+  border-radius:4px!important;
+}
+.rankWhyGood:before{background:#24df8b!important}
+.rankWhyBad:before{background:#ff9b54!important}
+.rankWhySummary b{font-size:9px!important}
+.rankWhySummary span{font-size:10px!important}
+
+/* Cards */
+.rankExplainGrid{
+  gap:8px!important;
+  padding:8px 15px 12px!important;
+}
+.rankExplainItem{
+  border-radius:9px!important;
+  overflow:hidden!important;
+  transition:transform .15s ease,border-color .15s ease!important;
+}
+.rankExplainItem:hover{
+  transform:translateY(-1px)!important;
+  border-color:rgba(255,205,55,.24)!important;
+}
+.rankMetricName{
+  min-height:36px!important;
+  padding:7px 10px!important;
+  background:rgba(255,255,255,.012)!important;
+}
+.rankMetricName strong{
+  font-size:11px!important;
+  letter-spacing:.01em!important;
+}
+.rankStatus{
+  padding:3px 7px!important;
+  font-size:7px!important;
+}
+
+/* Remove a sensação de grade/tabela pesada */
+.rankNumbers{
+  padding:7px 10px 3px!important;
+  gap:7px!important;
+}
+.rankNumbers>div{
+  padding:0!important;
+  border-right:0!important;
+}
+.rankNumbers small{
+  margin-bottom:2px!important;
+  font-size:6.5px!important;
+}
+.rankNumbers b{
+  font-size:12px!important;
+}
+.rankNumbers>div:nth-child(3) b{
+  font-size:13px!important;
+}
+
+/* Barra e percentil ganham protagonismo */
+.rankProgress{
+  padding:5px 10px 6px!important;
+  border-top:0!important;
+}
+.rankProgressTop{
+  margin-bottom:4px!important;
+  font-size:7.5px!important;
+}
+.rankExplainBar{
+  height:4px!important;
+  border-radius:999px!important;
+  overflow:hidden!important;
+}
+.rankExplainFill{
+  border-radius:999px!important;
+}
+
+/* Explicação curta como rodapé, não como caixa dentro da caixa */
+.rankDiag{
+  margin:2px 10px 8px!important;
+  padding:6px 8px!important;
+  border:0!important;
+  border-left:2px solid rgba(53,196,111,.40)!important;
+  border-radius:2px 6px 6px 2px!important;
+  background:rgba(29,77,44,.18)!important;
+  font-size:8.2px!important;
+  line-height:1.35!important;
+}
+.rankDiag span{color:#bfc5bf!important}
+
+/* Status dá cor discreta à borda do card */
+.rankExplainItem:has(.rankStatus.good),
+.rankExplainItem:has(.rankStatus.strong){
+  border-color:rgba(34,175,98,.24)!important;
+}
+.rankExplainItem:has(.rankStatus.warn){
+  border-color:rgba(211,166,24,.25)!important;
+}
+.rankExplainItem:has(.rankStatus.bad){
+  border-color:rgba(224,77,67,.27)!important;
+}
+
+/* Fórmula fica recolhida visualmente */
+.rankExplainFormula{
+  padding:7px 15px 9px!important;
+  font-size:8px!important;
+  opacity:.72!important;
+}
+
+/* Melhor densidade em telas grandes */
+@media(min-width:1450px){
+  .rankExplainGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+</style>
+
+
+<style id="HIVE_RANK_EXPLAIN_EVOLUTION_STYLE_V21">
+/* ==========================================================
+   Ranking por Classe > Por que recebeu esta pontuação?
+   V21 — linguagem visual do Plano de Evolução
+   ========================================================== */
+
+.rankExplain{
+  border:1px solid rgba(184,137,25,.42)!important;
+  border-radius:11px!important;
+  background:#0d0e0c!important;
+  box-shadow:none!important;
+}
+
+/* Título igual à lógica visual do Plano de Evolução */
+.rankExplainHead{
+  min-height:47px!important;
+  padding:10px 14px!important;
+  background:linear-gradient(180deg,rgba(255,198,43,.025),transparent)!important;
+  border-bottom:1px solid rgba(255,255,255,.065)!important;
+}
+.rankExplainHead b{
+  font-size:13px!important;
+  font-weight:900!important;
+  color:#f7ca45!important;
+}
+.rankExplainTotal{
+  min-width:auto!important;
+  padding:6px 9px!important;
+  border-radius:999px!important;
+  border:1px solid rgba(238,128,86,.48)!important;
+  background:rgba(75,35,24,.22)!important;
+  color:#ffc0a6!important;
+  font-size:13px!important;
+}
+.rankExplainSub{
+  padding:6px 14px 8px!important;
+  font-size:8.5px!important;
+  color:#807f78!important;
+  background:transparent!important;
+}
+
+/* Dois insights compactos */
+.rankWhySummary{
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+  padding:9px 14px!important;
+  border-bottom:1px solid rgba(255,255,255,.05)!important;
+}
+.rankWhySummary>div{
+  min-height:42px!important;
+  padding:7px 10px!important;
+  border-radius:7px!important;
+  background:#11130f!important;
+}
+.rankWhyGood{
+  border:1px solid rgba(43,178,102,.25)!important;
+}
+.rankWhyBad{
+  border:1px solid rgba(220,139,57,.25)!important;
+}
+.rankWhySummary>div:before{display:none!important}
+.rankWhySummary b{font-size:8px!important}
+.rankWhySummary span{font-size:9px!important}
+
+/* Atributos passam a se comportar como linhas da tabela de evolução */
+.rankExplainGrid{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  padding:9px 14px 6px!important;
+}
+.rankExplainItem,
+.rankExplainItem:nth-child(odd){
+  display:grid!important;
+  grid-template-columns:minmax(150px,1.25fr) minmax(100px,.75fr) minmax(100px,.75fr) minmax(95px,.65fr) minmax(110px,.75fr)!important;
+  grid-template-areas:
+    "name current average position status"
+    "progress progress progress progress progress"
+    "diag diag diag diag diag"!important;
+  align-items:stretch!important;
+  border:1px solid rgba(255,255,255,.105)!important;
+  border-radius:8px!important;
+  background:#11120f!important;
+  overflow:hidden!important;
+  box-shadow:none!important;
+}
+.rankExplainItem:hover{
+  transform:none!important;
+  border-color:rgba(207,164,43,.30)!important;
+}
+
+/* Nome do atributo */
+.rankMetricName{
+  grid-area:name!important;
+  min-height:48px!important;
+  padding:8px 11px!important;
+  border:0!important;
+  border-right:1px solid rgba(255,255,255,.055)!important;
+  display:flex!important;
+  align-items:center!important;
+}
+.rankMetricName strong{
+  font-size:10px!important;
+  color:#f2f0e9!important;
+}
+.rankMetricName .rankStatus{
+  display:none!important;
+}
+
+/* Os números viram colunas da mesma linha */
+.rankNumbers{
+  display:contents!important;
+}
+.rankNumbers>div{
+  min-width:0!important;
+  padding:8px 10px!important;
+  border:0!important;
+  border-right:1px solid rgba(255,255,255,.055)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.rankNumbers>div:nth-child(1){grid-area:current!important}
+.rankNumbers>div:nth-child(2){grid-area:average!important}
+.rankNumbers>div:nth-child(3){grid-area:position!important}
+.rankNumbers>div:nth-child(4){
+  grid-area:status!important;
+  border-right:0!important;
+}
+
+/* Troca visualmente "peso" por informação secundária, sem perder o dado */
+.rankNumbers small{
+  margin:0 0 3px!important;
+  font-size:6.5px!important;
+  line-height:1!important;
+  letter-spacing:.055em!important;
+  color:#777a74!important;
+}
+.rankNumbers b{
+  font-size:11px!important;
+  line-height:1.05!important;
+  color:#f1f0eb!important;
+}
+.rankNumbers>div:nth-child(2) b{
+  color:#d9c05c!important;
+}
+.rankNumbers>div:nth-child(3) b{
+  color:#e8e7e1!important;
+}
+
+/* Barra ocupa uma linha inteira bem fina */
+.rankProgress{
+  grid-area:progress!important;
+  padding:5px 10px 6px!important;
+  border-top:1px solid rgba(255,255,255,.045)!important;
+  background:rgba(255,255,255,.008)!important;
+}
+.rankProgressTop{
+  margin-bottom:4px!important;
+  font-size:7px!important;
+}
+.rankExplainBar{height:4px!important}
+
+/* Diagnóstico como observação curta */
+.rankDiag{
+  grid-area:diag!important;
+  margin:0 9px 7px!important;
+  padding:5px 8px!important;
+  border:1px solid rgba(46,155,84,.22)!important;
+  border-left:1px solid rgba(46,155,84,.22)!important;
+  border-radius:6px!important;
+  background:rgba(20,57,31,.25)!important;
+  font-size:7.7px!important;
+  line-height:1.3!important;
+}
+
+/* Fórmula/nota técnica discreta */
+.rankExplainFormula{
+  margin-top:3px!important;
+  padding:7px 14px 9px!important;
+  font-size:7.5px!important;
+  color:#666a64!important;
+}
+
+/* Cabeçalhos de coluna simulados no primeiro card */
+.rankExplainGrid:before{
+  content:"ATRIBUTO     •     SEU VALOR     •     MÉDIA DO GRUPO     •     POSIÇÃO     •     PESO NA NOTA"!important;
+  display:block!important;
+  padding:0 5px 1px!important;
+  color:#74766f!important;
+  font-size:6.5px!important;
+  font-weight:800!important;
+  letter-spacing:.06em!important;
+  word-spacing:7px!important;
+}
+
+/* Tablet / celular volta a cards simples */
+@media(max-width:900px){
+  .rankExplainItem,
+  .rankExplainItem:nth-child(odd){
+    grid-template-columns:1fr 1fr!important;
+    grid-template-areas:
+      "name name"
+      "current average"
+      "position status"
+      "progress progress"
+      "diag diag"!important;
+  }
+  .rankMetricName{border-right:0!important}
+  .rankExplainGrid:before{display:none!important}
+}
+@media(max-width:600px){
+  .rankWhySummary{grid-template-columns:1fr!important}
+}
+</style>
+
 </body></html
 >
