@@ -1908,7 +1908,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   <section class="panel" id="fullRanking"><div class="panelHead"><div><div class="panelTitle">🏆 RANKING COMPLETO</div><div class="panelSub" id="countLabel"></div></div></div><div class="fulltable"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th>Evolução</th><th>HP</th><th>ATK</th><th>MATK</th></tr></thead><tbody id="allRows"></tbody></table></div></section>
   <footer class="footer" id="sobre">✦ HIVE ✦ <span style="font-size:10px;color:#d1b36a;letter-spacing:.28em">JUNTOS SEMPRE MAIS LONGE</span> ✦</footer>
 </div>
-<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div></div><div class="evoAdvice" id="mAdvice"></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
+<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
 <script>
 // V45: controle de atualizações + correções preservadas da V43.
 
@@ -2404,6 +2404,7 @@ function renderRankExplanation(m){
        role=classRole(job);
  const final=classTop3Score(m,pool);
  if(!final){box.innerHTML='';return}
+
  let items=[], formula='';
  if(role==='SUPORTE'){
    const c=supportDefenseContext(pool);
@@ -2413,7 +2414,8 @@ function renderRankExplanation(m){
     rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.18,avgMetric(c.MDEF)),
     rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.18,avgMetric(c.PVPRED)),
     rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12,avgMetric(c.RED))
-   ]; formula='DEFESA: HP 30% + PDEF 22% + MDEF 18% + PVP DMG RED 18% + DMG RED MED 12%.';
+   ];
+   formula='DEFESA: HP 30% + PDEF 22% + MDEF 18% + PVP DMG RED 18% + DMG RED MED 12%.';
  } else {
    const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
    const off=[
@@ -2433,31 +2435,64 @@ function renderRankExplanation(m){
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.12,avgMetric(d.RED))
      ];
      items=[...off.map(x=>({...x,weight:x.weight*.5})),...def.map(x=>({...x,weight:x.weight*.5}))];
-     formula='HÍBRIDO '+(r.profile==='MAGIC'?'MÁGICO':'FÍSICO')+': 50% OFENSIVA + 50% DEFESA. A parte ofensiva usa '+(r.profile==='MAGIC'?'MATK + IGNORE MDEF + MDMG':'ATK + IGNORE PDEF + PDMG')+'. Os pesos exibidos abaixo já mostram a participação real de cada atributo na nota final.';
+     formula='HÍBRIDO '+(r.profile==='MAGIC'?'MÁGICO':'FÍSICO')+': 50% OFENSIVA + 50% DEFESA.';
    }else{
-     items=off; formula='OFENSIVA: Ataque 28% + Penetração 24% + Dano 22% + PVP DMG INC 16% + Power 10%.';
+     items=off;
+     formula='OFENSIVA: Ataque 28% + Penetração 24% + Dano 22% + PVP DMG INC 16% + Power 10%.';
    }
  }
+
  const strengths=[...items].sort((a,b)=>b.p-a.p).slice(0,2);
  const weaknesses=[...items].sort((a,b)=>a.p-b.p).slice(0,2);
- const summary=`<div class="rankWhySummary">
-   <div class="rankWhyGood"><b>✓ O que sustenta sua nota</b><span>${strengths.map(x=>`${esc(x.label)} (${x.p}/100)`).join(' • ')}</span></div>
-   <div class="rankWhyBad"><b>↑ O que mais limita sua nota</b><span>${weaknesses.map(x=>`${esc(x.label)} (${x.p}/100)`).join(' • ')}</span></div>
- </div>`;
- box.innerHTML=`<div class="rankExplain"><div class="rankExplainHead"><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainTotal">${Math.round(final.score)}<small style="font-size:9px;color:#817b70">/100</small></span></div><div class="rankExplainSub">${esc(final.kind)} • comparação apenas com outros jogadores do grupo ${esc(rankGroup)}</div>${summary}<div class="rankExplainGrid">${items.map(x=>{const d=rankMetricDiagnosis(x);return `<div class="rankExplainItem">
-<div class="rankMetricName"><strong>${esc(x.label)}</strong><span class="rankStatus ${d.cls}">${d.tag}</span></div>
-<div class="rankNumbers">
-  <div><small>SEU VALOR</small><b>${x.value}</b></div>
-  <div><small>MÉDIA DO GRUPO</small><b>${x.avgValue}</b></div>
-  <div><small>POSIÇÃO</small><b>${x.p}<em>/100</em></b></div>
-  <div><small>PESO NA NOTA</small><b>${(x.weight*100).toFixed(0)}<em>%</em></b></div>
-</div>
-<div class="rankProgress"><div class="rankProgressTop"><span>Desempenho dentro do grupo ${esc(rankGroup)}</span><strong>${x.p}/100</strong></div><div class="rankExplainBar"><div class="rankExplainFill" style="width:${x.p}%"></div></div></div>
-<div class="rankDiag ${d.cls}"><span>${d.txt}</span></div>
-</div>`}).join('')}</div><div class="rankExplainFormula">${esc(formula)} Agora cada linha mostra também se o atributo é um ponto forte, está na média ou está limitando a pontuação.</div></div>`;
-}
 
-function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderImprovementAdvice(m,context);renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
+ const rows=items.map(x=>{
+   const d=rankMetricDiagnosis(x);
+   const statusLabel=d.tag==='PONTO FORTE'?'Excelente':
+                     d.tag==='ACIMA DA MÉDIA'?'Acima da média':
+                     d.tag==='NA MÉDIA'?'Na média':
+                     d.tag==='ABAIXO DA MÉDIA'?'Precisa evoluir':'Prioridade';
+   const gap=x.avgNum>x.currentNum ? x.avgNum-x.currentNum : 0;
+   const gapText=gap>0 ? `+${rankAvgFormat(x.label,gap)}` : 'OK';
+   return `<tr class="rankTableRow ${d.cls}">
+     <td>
+       <div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span><strong>${esc(x.label)}</strong></div>
+     </td>
+     <td><b>${x.value}</b></td>
+     <td><b class="rankAvg">${x.avgValue}</b></td>
+     <td><b class="${gap>0?'rankNeed':'rankOk'}">${gapText}</b></td>
+     <td><div class="rankPos"><strong>${x.p}<small>/100</small></strong><span><i style="width:${x.p}%"></i></span></div></td>
+     <td><span class="rankTableStatus ${d.cls}">${statusLabel}</span></td>
+     <td class="rankWeight">${(x.weight*100).toFixed(0)}%</td>
+   </tr>`;
+ }).join('');
+
+ box.innerHTML=`<section class="rankExplain rankExplainTable">
+   <div class="rankExplainHead">
+     <div><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainContext">${esc(final.kind)} • comparado com ${esc(rankGroup)}</span></div>
+     <span class="rankExplainTotal">${Math.round(final.score)}<small>/100</small></span>
+   </div>
+
+   <div class="rankInsightStrip">
+     <div class="rankInsight good"><span>↑</span><div><small>PONTOS FORTES</small><b>${strengths.map(x=>esc(x.label)).join(' • ')}</b></div></div>
+     <div class="rankInsight warn"><span>◎</span><div><small>FOCO PARA EVOLUIR</small><b>${weaknesses.map(x=>esc(x.label)).join(' • ')}</b></div></div>
+   </div>
+
+   <div class="rankTableWrap">
+     <table class="rankScoreTable">
+       <thead><tr>
+         <th>ATRIBUTO</th><th>SEU VALOR</th><th>MÉDIA DA CLASSE</th><th>PARA A MÉDIA</th><th>POSIÇÃO</th><th>SITUAÇÃO</th><th>PESO</th>
+       </tr></thead>
+       <tbody>${rows}</tbody>
+     </table>
+   </div>
+
+   <div class="rankExplainFooter">
+     <span>${esc(formula)}</span>
+     <span>Quanto maior a posição, melhor o desempenho dentro da própria classe.</span>
+   </div>
+ </section>`;
+}
+function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${intKeys.has(k)?fmtInt(m[k],k):fmt(m[k])}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
@@ -4887,6 +4922,76 @@ window.hivePremiumClassImage = function(job){
 }
 @media(max-width:600px){
   .rankWhySummary{grid-template-columns:1fr!important}
+}
+</style>
+
+
+<style id="HIVE_RANK_SCORE_TABLE_V22">
+.rankExplainTable{
+  margin-top:14px!important;padding:0!important;overflow:hidden!important;
+  border:1px solid rgba(200,153,36,.38)!important;border-radius:12px!important;
+  background:linear-gradient(180deg,#10120f,#0b0d0c)!important;box-shadow:none!important
+}
+.rankExplainTable .rankExplainHead{
+  min-height:54px!important;padding:10px 14px!important;margin:0!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  border-bottom:1px solid rgba(255,255,255,.065)!important;background:rgba(255,205,55,.018)!important
+}
+.rankExplainTable .rankExplainHead>div{display:flex;flex-direction:column;gap:3px}
+.rankExplainTable .rankExplainHead b{font-size:13px!important;color:#ffd24a!important}
+.rankExplainContext{font-size:8.5px;color:#858981}
+.rankExplainTable .rankExplainTotal{
+  min-width:55px!important;padding:6px 9px!important;border-radius:999px!important;text-align:center!important;
+  font-size:17px!important;font-weight:950!important;color:#ffd8b0!important;
+  border:1px solid rgba(239,126,70,.43)!important;background:rgba(73,35,22,.24)!important
+}
+.rankExplainTable .rankExplainTotal small{font-size:8px!important;color:#a9a49a!important}
+
+.rankInsightStrip{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px 7px}
+.rankInsight{display:flex;align-items:center;gap:9px;min-height:45px;padding:7px 10px;border-radius:8px;background:#111510}
+.rankInsight>span{width:29px;height:29px;display:grid;place-items:center;border-radius:7px;font-size:17px;font-weight:900}
+.rankInsight>div{display:flex;flex-direction:column;gap:2px}
+.rankInsight small{font-size:7px;font-weight:900;letter-spacing:.06em}
+.rankInsight b{font-size:9.5px;color:#e9e9e4}
+.rankInsight.good{border:1px solid rgba(34,185,102,.28)} .rankInsight.good>span{color:#35e58f;background:rgba(16,105,59,.45)} .rankInsight.good small{color:#42e79a}
+.rankInsight.warn{border:1px solid rgba(215,166,32,.28)} .rankInsight.warn>span{color:#ffd23f;background:rgba(117,84,9,.45)} .rankInsight.warn small{color:#ffd23f}
+
+.rankTableWrap{padding:5px 14px 9px;overflow-x:auto}
+.rankScoreTable{width:100%;border-collapse:separate;border-spacing:0 6px;table-layout:fixed}
+.rankScoreTable th{
+  padding:0 9px 2px;text-align:left;font-size:6.5px;letter-spacing:.06em;color:#737870;font-weight:900
+}
+.rankScoreTable th:nth-child(1){width:21%}.rankScoreTable th:nth-child(2){width:13%}.rankScoreTable th:nth-child(3){width:15%}
+.rankScoreTable th:nth-child(4){width:13%}.rankScoreTable th:nth-child(5){width:16%}.rankScoreTable th:nth-child(6){width:15%}.rankScoreTable th:nth-child(7){width:7%;text-align:center}
+.rankScoreTable td{
+  height:47px;padding:7px 9px;background:#121410;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:9px;color:#d9dad5;vertical-align:middle
+}
+.rankScoreTable td:first-child{border-left:1px solid rgba(255,255,255,.07);border-radius:8px 0 0 8px}
+.rankScoreTable td:last-child{border-right:1px solid rgba(255,255,255,.07);border-radius:0 8px 8px 0;text-align:center}
+.rankTableRow.great td,.rankTableRow.good td{border-top-color:rgba(31,157,88,.20);border-bottom-color:rgba(31,157,88,.20)}
+.rankTableRow.warn td,.rankTableRow.bad td{border-top-color:rgba(213,91,67,.18);border-bottom-color:rgba(213,91,67,.18)}
+
+.rankTableAttr{display:flex;align-items:center;gap:8px}.rankTableIcon{width:28px;height:28px;display:grid;place-items:center;border-radius:7px;background:#1c211b;font-size:14px}.rankTableAttr strong{font-size:9.5px;color:#f0efe9}
+.rankAvg{color:#d8bd54}.rankNeed{color:#ffb052}.rankOk{color:#37e68f}
+.rankPos{display:flex;align-items:center;gap:7px}.rankPos strong{min-width:36px;font-size:10px;color:#f0efe9}.rankPos small{font-size:6.5px;color:#797d77}
+.rankPos>span{height:4px;flex:1;border-radius:99px;background:#282c28;overflow:hidden}.rankPos>span i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#b78917,#ffd23e)}
+.rankTableStatus{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:4px 7px;border-radius:999px;font-size:6.8px;font-weight:950}
+.rankTableStatus.great,.rankTableStatus.good{color:#50eda2;border:1px solid rgba(42,194,112,.45);background:rgba(16,91,53,.28)}
+.rankTableStatus.mid{color:#ffd44b;border:1px solid rgba(215,170,30,.42);background:rgba(95,71,8,.28)}
+.rankTableStatus.warn{color:#ffb35d;border:1px solid rgba(224,139,48,.42);background:rgba(105,56,11,.28)}
+.rankTableStatus.bad{color:#ff7468;border:1px solid rgba(225,72,63,.42);background:rgba(105,30,26,.28)}
+.rankWeight{font-weight:900;color:#9da099!important}
+
+.rankExplainFooter{
+  display:flex;justify-content:space-between;gap:20px;padding:8px 14px 10px;border-top:1px solid rgba(255,255,255,.055);
+  font-size:7.5px;line-height:1.35;color:#71766f
+}
+
+@media(max-width:900px){
+ .rankInsightStrip{grid-template-columns:1fr}
+ .rankScoreTable{min-width:760px}
+ .rankExplainFooter{flex-direction:column;gap:3px}
 }
 </style>
 
