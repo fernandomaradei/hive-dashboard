@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#0b0906"/>
 <title>HIVE • Ragnarok Origin Classic</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 3 55 11v18c0 15-9 25-23 32C18 54 9 44 9 29V11z' fill='%230b0d0c' stroke='%23ffc72f' stroke-width='4'/%3E%3Cellipse cx='32' cy='31' rx='13' ry='15' fill='%23ffc72f'/%3E%3Cpath d='M20 27h24M20 35h24' stroke='%230b0d0c' stroke-width='5'/%3E%3Cellipse cx='19' cy='24' rx='9' ry='6' fill='%23fff' opacity='.9' transform='rotate(-30 19 24)'/%3E%3Cellipse cx='45' cy='24' rx='9' ry='6' fill='%23fff' opacity='.9' transform='rotate(30 45 24)'/%3E%3Ccircle cx='28' cy='17' r='2' fill='%230b0d0c'/%3E%3Ccircle cx='36' cy='17' r='2' fill='%230b0d0c'/%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap');
 :root{--bg:#090805;--panel:rgba(17,17,16,.92);--panel2:rgba(24,23,20,.94);--gold:#f7b635;--gold2:#ffd777;--gold3:#d58a13;--text:#fffaf0;--muted:#c6bda9;--line:rgba(255,190,74,.5);--soft:rgba(255,255,255,.08);--green:#62df83;--pink:#ff7ea8;--blue:#5ab7ff;--shadow:0 18px 50px rgba(0,0,0,.48)}
@@ -4992,6 +4993,40 @@ window.hivePremiumClassImage = function(job){
  .rankInsightStrip{grid-template-columns:1fr}
  .rankScoreTable{min-width:760px}
  .rankExplainFooter{flex-direction:column;gap:3px}
+}
+</style>
+
+
+<style id="HIVE_CLEANUP_V23">
+/* Radar Operacional removido da interface sem interferir na lógica existente */
+.mgr-section{
+  display:none!important;
+}
+
+/* Meu Personagem passa a usar exatamente a largura útil da página (.app).
+   Remove o recuo lateral próprio que fazia a borda ficar menor que as demais seções. */
+.myCharShell{
+  width:100%!important;
+  max-width:none!important;
+  margin:18px 0 16px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+.myCharCard,
+.myCharCard.myCharExample{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Em telas menores preserva o mesmo alinhamento do restante do dashboard */
+@media(max-width:760px){
+  .myCharShell{
+    margin:10px 0 12px!important;
+    padding:0!important;
+  }
 }
 </style>
 
