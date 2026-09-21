@@ -2367,11 +2367,15 @@ function avgMetric(arr){
  const vals=(arr||[]).map(Number).filter(Number.isFinite);
  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
 }
+function maxMetric(arr){
+ const vals=(arr||[]).map(Number).filter(Number.isFinite);
+ return vals.length ? Math.max(...vals) : 0;
+}
 function rankAvgFormat(label,v){
  if(['PDMG','MDMG','DMG RED MED'].includes(label)) return metricFormat(v,label==='MDMG'?'MDGMG':label);
  return fmtInt(v,label==='Power'?'Power Atual':label);
 }
-function rankMetric(label,value,pct,weight,avgValue){
+function rankMetric(label,value,pct,weight,avgValue,targetValue){
  const p=Math.max(0,Math.min(100,Math.round(pct||0)));
  const currentNum=(()=>{
    const s=String(value??'').trim().toLowerCase().replace(/\./g,'').replace(',','.');
@@ -2380,7 +2384,8 @@ function rankMetric(label,value,pct,weight,avgValue){
    if(s.includes('m')) return n*1000000;
    return n;
  })();
- return {label,value,p,weight,avgValue:rankAvgFormat(label,avgValue),currentNum,avgNum:Number(avgValue)||0};
+ const targetNum=Number(targetValue)||0;
+ return {label,value,p,weight,avgValue:rankAvgFormat(label,avgValue),currentNum,avgNum:Number(avgValue)||0,targetNum,targetValue:rankAvgFormat(label,targetNum)};
 }
 
 function rankMetricDiagnosis(x){
@@ -2410,30 +2415,30 @@ function renderRankExplanation(m){
  if(role==='SUPORTE'){
    const c=supportDefenseContext(pool);
    items=[
-    rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.30,avgMetric(c.HP)),
-    rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.22,avgMetric(c.PDEF)),
-    rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.18,avgMetric(c.MDEF)),
-    rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.18,avgMetric(c.PVPRED)),
-    rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12,avgMetric(c.RED))
+    rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.30,avgMetric(c.HP),maxMetric(c.HP)),
+    rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.22,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+    rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.18,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+    rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.18,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
+    rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12,avgMetric(c.RED),maxMetric(c.RED))
    ];
    formula='DEFESA: HP 30% + PDEF 22% + MDEF 18% + PVP DMG RED 18% + DMG RED MED 12%.';
  } else {
    const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
    const off=[
-    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.28,avgMetric(c.attack)),
-    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.24,avgMetric(c.penetration)),
-    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.22,avgMetric(c.damage)),
-    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.16,avgMetric(c.pvpinc)),
-    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.10,avgMetric(c.power))
+    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.28,avgMetric(c.attack),maxMetric(c.attack)),
+    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.24,avgMetric(c.penetration),maxMetric(c.penetration)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.22,avgMetric(c.damage),maxMetric(c.damage)),
+    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.16,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.10,avgMetric(c.power),maxMetric(c.power))
    ];
    if(role==='HÍBRIDO'){
      const d=supportDefenseContext(pool);
      const def=[
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.30,avgMetric(d.HP)),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.22,avgMetric(d.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.18,avgMetric(d.MDEF)),
-      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.18,avgMetric(d.PVPRED)),
-      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.12,avgMetric(d.RED))
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.30,avgMetric(d.HP),maxMetric(d.HP)),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.22,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.18,avgMetric(d.MDEF),maxMetric(d.MDEF)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.18,avgMetric(d.PVPRED),maxMetric(d.PVPRED)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.12,avgMetric(d.RED),maxMetric(d.RED))
      ];
      items=[...off.map(x=>({...x,weight:x.weight*.5})),...def.map(x=>({...x,weight:x.weight*.5}))];
      formula='HÍBRIDO '+(r.profile==='MAGIC'?'MÁGICO':'FÍSICO')+': 50% OFENSIVA + 50% DEFESA.';
@@ -2452,14 +2457,16 @@ function renderRankExplanation(m){
                      d.tag==='ACIMA DA MÉDIA'?'Acima da média':
                      d.tag==='NA MÉDIA'?'Na média':
                      d.tag==='ABAIXO DA MÉDIA'?'Precisa evoluir':'Prioridade';
-   const gap=x.avgNum>x.currentNum ? x.avgNum-x.currentNum : 0;
-   const gapText=gap>0 ? `+${rankAvgFormat(x.label,gap)}` : 'OK';
+   const target=x.targetNum||x.currentNum;
+   const gap=target>x.currentNum ? target-x.currentNum : 0;
+   const gapText=gap>0 ? `+${rankAvgFormat(x.label,gap)}` : '✓ META';
    return `<tr class="rankTableRow ${d.cls}">
      <td>
        <div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span><strong>${esc(x.label)}</strong></div>
      </td>
      <td><b>${x.value}</b></td>
      <td><b class="rankAvg">${x.avgValue}</b></td>
+     <td><b class="rankTarget">${x.targetValue}</b></td>
      <td><b class="${gap>0?'rankNeed':'rankOk'}">${gapText}</b></td>
      <td><div class="rankPos"><strong>${x.p}<small>/100</small></strong><span><i style="width:${x.p}%"></i></span></div></td>
      <td><span class="rankTableStatus ${d.cls}">${statusLabel}</span></td>
@@ -2481,7 +2488,7 @@ function renderRankExplanation(m){
    <div class="rankTableWrap">
      <table class="rankScoreTable">
        <thead><tr>
-         <th>ATRIBUTO</th><th>SEU VALOR</th><th>MÉDIA DA CLASSE</th><th>PARA A MÉDIA</th><th>POSIÇÃO</th><th>SITUAÇÃO</th><th>PESO</th>
+         <th>ATRIBUTO</th><th>SEU VALOR</th><th>MÉDIA DA CLASSE</th><th>META 100/100</th><th>PARA A META</th><th>POSIÇÃO</th><th>SITUAÇÃO</th><th>PESO</th>
        </tr></thead>
        <tbody>${rows}</tbody>
      </table>
@@ -5030,6 +5037,39 @@ window.hivePremiumClassImage = function(job){
   margin-right:0!important;
   box-sizing:border-box!important;
 }
+</style>
+
+
+<style id="HIVE_META100_SELOS_V24">
+/* Meta 100/100 + selos maiores e mais legíveis */
+.rankScoreTable th:nth-child(1){width:19%!important}
+.rankScoreTable th:nth-child(2){width:11%!important}
+.rankScoreTable th:nth-child(3){width:12%!important}
+.rankScoreTable th:nth-child(4){width:12%!important}
+.rankScoreTable th:nth-child(5){width:11%!important}
+.rankScoreTable th:nth-child(6){width:15%!important}
+.rankScoreTable th:nth-child(7){width:14%!important}
+.rankScoreTable th:nth-child(8){width:6%!important;text-align:center!important}
+.rankTarget{color:#38e5a0!important;font-weight:950!important;text-shadow:0 0 10px rgba(56,229,160,.10)}
+.rankNeed{color:#ffc94a!important;font-weight:950!important}
+.rankOk{color:#43e69b!important;font-weight:950!important}
+.rankTableStatus{
+  min-height:24px!important;
+  padding:5px 10px!important;
+  border-radius:999px!important;
+  font-size:8.2px!important;
+  line-height:1!important;
+  letter-spacing:.025em!important;
+  font-weight:950!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 8px rgba(0,0,0,.18)!important;
+  transform:none!important;
+}
+.rankTableStatus.great{color:#73ffc0!important;border-color:rgba(46,218,132,.58)!important;background:linear-gradient(180deg,rgba(18,120,72,.52),rgba(10,73,45,.38))!important}
+.rankTableStatus.good{color:#8ff2b9!important;border-color:rgba(67,190,116,.48)!important;background:linear-gradient(180deg,rgba(25,91,54,.50),rgba(15,61,38,.36))!important}
+.rankTableStatus.mid{color:#ffe071!important;border-color:rgba(225,180,34,.55)!important;background:linear-gradient(180deg,rgba(112,83,9,.52),rgba(73,55,7,.36))!important}
+.rankTableStatus.warn{color:#ffc06d!important;border-color:rgba(235,144,48,.55)!important;background:linear-gradient(180deg,rgba(119,65,12,.52),rgba(76,42,9,.36))!important}
+.rankTableStatus.bad{color:#ff8d82!important;border-color:rgba(238,82,70,.58)!important;background:linear-gradient(180deg,rgba(123,38,31,.55),rgba(78,24,21,.38))!important}
+@media(max-width:1100px){.rankScoreTable{min-width:1040px!important}}
 </style>
 
 </body></html
