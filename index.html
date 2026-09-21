@@ -1898,6 +1898,23 @@ document.addEventListener('DOMContentLoaded',()=>{
 html{scroll-behavior:smooth}
 #ranking,#rankingClasse,#centralMembros,#updateControl,#sobre{scroll-margin-top:18px}
 </style>
+
+<style id="v29-stat-rank-modal">
+.rankStatClickable{cursor:pointer!important;transition:transform .16s ease,filter .16s ease!important}
+.rankStatClickable:hover{transform:translateY(-1px);filter:brightness(1.09)}
+.rankStatClickable:hover .rankTableAttr strong{text-decoration:underline;text-decoration-color:rgba(255,210,86,.55);text-underline-offset:4px}
+.statRankModal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(3,4,4,.82);backdrop-filter:blur(8px)}
+.statRankModal.open{display:flex}
+.statRankCard{width:min(760px,96vw);max-height:88vh;overflow:hidden;border:1px solid rgba(221,166,35,.58);border-radius:20px;background:linear-gradient(180deg,#151711,#0b0d0b 72%);box-shadow:0 28px 80px rgba(0,0,0,.65),inset 0 1px rgba(255,255,255,.04);color:#f4f0e6}
+.statRankHead{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:24px 26px 18px;border-bottom:1px solid rgba(214,164,39,.20);background:radial-gradient(circle at 15% 0,rgba(218,162,35,.12),transparent 42%)}
+.statRankHead small{font-size:10px;letter-spacing:2px;color:#b69b5c;font-weight:900}.statRankHead h2{margin:5px 0 4px;color:#ffd66f;font-size:24px}.statRankHead p{margin:0;color:#a9a69c;font-size:12px}
+.statRankClose{width:38px;height:38px;border-radius:11px;border:1px solid rgba(215,166,43,.30);background:#181a16;color:#d9c994;cursor:pointer;font-weight:900}.statRankClose:hover{border-color:#e1b542;color:#fff}
+.statRankCurrent{margin:16px 22px 8px;padding:13px 16px;border:1px solid rgba(41,202,137,.28);border-radius:12px;background:rgba(15,75,52,.16);color:#d9e7df;font-size:12px}.statRankCurrent b{color:#57efb6}.statRankCurrent strong{color:#fff}
+.statRankList{padding:8px 22px 20px;max-height:58vh;overflow:auto}.statRankRow{display:grid;grid-template-columns:64px 1fr 150px;align-items:center;min-height:58px;margin:7px 0;padding:0 16px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(20,23,19,.88)}
+.statRankRow.me{border-color:rgba(224,172,42,.68);background:linear-gradient(90deg,rgba(111,79,10,.28),rgba(22,24,19,.92));box-shadow:inset 3px 0 #e0ac2a}.statRankPos{font-weight:950;color:#9c9b91}.statRankRow:nth-child(1) .statRankPos{color:#ffd95b}.statRankRow:nth-child(2) .statRankPos{color:#d7dde4}.statRankRow:nth-child(3) .statRankPos{color:#d79a61}.statRankName{font-size:14px;font-weight:900;color:#f4f1e9}.statRankJob{display:block;margin-top:3px;font-size:10px;color:#7e817a}.statRankValue{text-align:right;font-size:18px;font-weight:950;color:#52eab4}.statRankFoot{padding:12px 22px 17px;border-top:1px solid rgba(255,255,255,.05);font-size:10px;color:#74776f;text-align:center}
+@media(max-width:620px){.statRankModal{padding:10px}.statRankHead{padding:18px}.statRankRow{grid-template-columns:48px 1fr 105px;padding:0 11px}.statRankValue{font-size:15px}.statRankList{padding:7px 12px 16px}.statRankCurrent{margin:12px}}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -2636,7 +2653,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
                      d.tag==='ABAIXO DA MÉDIA'?'Precisa evoluir':'Prioridade';
    const ref=rankReferencePeer(pool,x.label);
    const pctRef=x.targetNum>0 ? Math.max(0,Math.min(100,Math.round((x.currentNum/x.targetNum)*100))) : x.p;
-   return `<tr class="rankTableRow ${d.cls}">
+   return `<tr class="rankTableRow ${d.cls} rankStatClickable" onclick="openStatRank('${encodeURIComponent(m.Personagem)}','${encodeURIComponent(x.label)}')" title="Ver ranking de ${esc(x.label)} da classe">
      <td>
        <div class="rankTableAttr">
          <span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span>
@@ -2692,10 +2709,44 @@ function renderRankExplanation(m,target='#mRankExplain'){
    </div>
  </section>`;
 }
+function statRankDisplay(label,value){
+  if(label==='PDMG.R'||label==='MDMG.R') return rankAvgFormat(label,value);
+  if(label==='MDMG') return metricFormat(value,'MDGMG');
+  if(label==='PDMG'||label==='DMG RED MED') return metricFormat(value,label);
+  return fmtInt(value,label==='Power'?'Power Atual':label);
+}
+function openStatRank(playerEnc,labelEnc){
+  const playerName=decodeURIComponent(playerEnc), label=decodeURIComponent(labelEnc);
+  const current=members.find(x=>x.Personagem===playerName); if(!current)return;
+  const group=classRankingGroup(current);
+  const pool=members.filter(x=>classRankingGroup(x)===group);
+  const ranked=pool.map(member=>({member,value:rankReferenceValue(member,label)}))
+    .filter(x=>Number.isFinite(x.value))
+    .sort((a,b)=>b.value-a.value || String(a.member.Personagem||'').localeCompare(String(b.member.Personagem||''),'pt-BR'));
+  const ownIndex=ranked.findIndex(x=>x.member===current || x.member.Personagem===current.Personagem);
+  const own=ownIndex>=0?ranked[ownIndex]:null;
+  $('#statRankTitle').textContent=`${label} • ${group}`;
+  $('#statRankSubtitle').textContent=`Ranking de ${label} comparado somente entre jogadores da classe ${group}.`;
+  $('#statRankCurrent').innerHTML=own
+    ? `<strong>${esc(current.Personagem)}</strong> está em <b>#${ownIndex+1}</b> de ${ranked.length} • ${esc(statRankDisplay(label,own.value))}`
+    : `<strong>${esc(current.Personagem)}</strong> • sem valor válido para ${esc(label)}`;
+  $('#statRankList').innerHTML=ranked.length?ranked.map((x,i)=>{
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+    const me=x.member.Personagem===current.Personagem?' me':'';
+    return `<div class="statRankRow${me}"><div class="statRankPos">${medal}</div><div><span class="statRankName">${esc(x.member.Personagem||'—')}</span><span class="statRankJob">${esc(x.member.Job||group)}</span></div><div class="statRankValue">${esc(statRankDisplay(label,x.value))}</div></div>`;
+  }).join(''):'<div class="statRankCurrent">Nenhum valor disponível para este atributo.</div>';
+  $('#statRankModal').classList.add('open');
+  $('#statRankModal').setAttribute('aria-hidden','false');
+}
+function closeStatRank(){
+  const modal=$('#statRankModal'); if(!modal)return;
+  modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+}
+
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
-$('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});refresh();setInterval(refresh,REFRESH_MS);
+$('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal').addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});refresh();setInterval(refresh,REFRESH_MS);
 
 
 
@@ -5447,6 +5498,23 @@ window.hivePremiumClassImage = function(job){
   .rankScoreTable{min-width:900px!important}
 }
 </style>
+
+
+<div class="statRankModal" id="statRankModal" aria-hidden="true">
+  <div class="statRankCard">
+    <div class="statRankHead">
+      <div>
+        <small id="statRankEyebrow">RANKING POR ATRIBUTO</small>
+        <h2 id="statRankTitle">—</h2>
+        <p id="statRankSubtitle">—</p>
+      </div>
+      <button class="statRankClose" type="button" onclick="closeStatRank()">✕</button>
+    </div>
+    <div class="statRankCurrent" id="statRankCurrent"></div>
+    <div class="statRankList" id="statRankList"></div>
+    <div class="statRankFoot">Comparação exclusiva entre jogadores da mesma classe.</div>
+  </div>
+</div>
 
 </body></html
 >
