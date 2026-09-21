@@ -2388,6 +2388,29 @@ function rankMetric(label,value,pct,weight,avgValue,targetValue){
  return {label,value,p,weight,avgValue:rankAvgFormat(label,avgValue),currentNum,avgNum:Number(avgValue)||0,targetNum,targetValue:rankAvgFormat(label,targetNum)};
 }
 
+
+function rankReferenceValue(member,label){
+  if(label==='Power') return intNum(member['Power Atual'],'Power Atual');
+  if(label==='MDMG') return metricValue(member['MDGMG'],'MDGMG');
+  if(label==='PDMG') return metricValue(member['PDMG'],'PDMG');
+  if(label==='DMG RED MED') return metricValue(member['DMG RED MED'],'DMG RED MED');
+  return intNum(member[label],label);
+}
+function rankReferencePeer(pool,label){
+  let best=null, bestValue=-Infinity;
+  (pool||[]).forEach(member=>{
+    const value=rankReferenceValue(member,label);
+    if(Number.isFinite(value) && value>bestValue){
+      bestValue=value;
+      best=member;
+    }
+  });
+  return {
+    name: best?.Personagem || '—',
+    value: Number.isFinite(bestValue) ? rankAvgFormat(label,bestValue) : '—'
+  };
+}
+
 function rankMetricDiagnosis(x){
  const p=x.p, avg=x.avgNum||0, cur=x.currentNum||0;
  const diff=avg ? ((cur-avg)/avg)*100 : 0;
@@ -2457,18 +2480,33 @@ function renderRankExplanation(m){
                      d.tag==='ACIMA DA MÉDIA'?'Acima da média':
                      d.tag==='NA MÉDIA'?'Na média':
                      d.tag==='ABAIXO DA MÉDIA'?'Precisa evoluir':'Prioridade';
-   const target=x.targetNum||x.currentNum;
-   const gap=target>x.currentNum ? target-x.currentNum : 0;
-   const gapText=gap>0 ? `+${rankAvgFormat(x.label,gap)}` : '✓ META';
+   const ref=rankReferencePeer(pool,x.label);
+   const pctRef=x.targetNum>0 ? Math.max(0,Math.min(100,Math.round((x.currentNum/x.targetNum)*100))) : x.p;
    return `<tr class="rankTableRow ${d.cls}">
      <td>
-       <div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span><strong>${esc(x.label)}</strong></div>
+       <div class="rankTableAttr">
+         <span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span>
+         <strong>${esc(x.label)}</strong>
+       </div>
      </td>
-     <td><b>${x.value}</b></td>
-     <td><b class="rankAvg">${x.avgValue}</b></td>
-     <td><b class="rankTarget">${x.targetValue}</b></td>
-     <td><b class="${gap>0?'rankNeed':'rankOk'}">${gapText}</b></td>
-     <td><div class="rankPos"><strong>${x.p}<small>/100</small></strong><span><i style="width:${x.p}%"></i></span></div></td>
+     <td>
+       <div class="rankValueReference">
+         <strong>${x.value} <em>/ ${x.targetValue}</em></strong>
+         <small>${pctRef}% da referência</small>
+       </div>
+     </td>
+     <td>
+       <div class="rankGuildReference">
+         <strong>${x.targetValue}</strong>
+         <small>${esc(ref.name)} • maior valor do grupo</small>
+       </div>
+     </td>
+     <td>
+       <div class="rankPerformance">
+         <span><i style="width:${x.p}%"></i></span>
+         <strong>${x.p}<small>/100</small></strong>
+       </div>
+     </td>
      <td><span class="rankTableStatus ${d.cls}">${statusLabel}</span></td>
      <td class="rankWeight">${(x.weight*100).toFixed(0)}%</td>
    </tr>`;
@@ -2488,7 +2526,7 @@ function renderRankExplanation(m){
    <div class="rankTableWrap">
      <table class="rankScoreTable">
        <thead><tr>
-         <th>ATRIBUTO</th><th>SEU VALOR</th><th>MÉDIA DA CLASSE</th><th>META 100/100</th><th>PARA A META</th><th>POSIÇÃO</th><th>SITUAÇÃO</th><th>PESO</th>
+         <th>ATRIBUTO</th><th>SEU VALOR / REFERÊNCIA</th><th>REFERÊNCIA HIVE</th><th>DESEMPENHO NA CLASSE</th><th>SITUAÇÃO</th><th>PESO</th>
        </tr></thead>
        <tbody>${rows}</tbody>
      </table>
@@ -5040,36 +5078,179 @@ window.hivePremiumClassImage = function(job){
 </style>
 
 
-<style id="HIVE_META100_SELOS_V24">
-/* Meta 100/100 + selos maiores e mais legíveis */
-.rankScoreTable th:nth-child(1){width:19%!important}
-.rankScoreTable th:nth-child(2){width:11%!important}
-.rankScoreTable th:nth-child(3){width:12%!important}
-.rankScoreTable th:nth-child(4){width:12%!important}
-.rankScoreTable th:nth-child(5){width:11%!important}
-.rankScoreTable th:nth-child(6){width:15%!important}
-.rankScoreTable th:nth-child(7){width:14%!important}
-.rankScoreTable th:nth-child(8){width:6%!important;text-align:center!important}
-.rankTarget{color:#38e5a0!important;font-weight:950!important;text-shadow:0 0 10px rgba(56,229,160,.10)}
-.rankNeed{color:#ffc94a!important;font-weight:950!important}
-.rankOk{color:#43e69b!important;font-weight:950!important}
-.rankTableStatus{
-  min-height:24px!important;
-  padding:5px 10px!important;
-  border-radius:999px!important;
-  font-size:8.2px!important;
-  line-height:1!important;
-  letter-spacing:.025em!important;
-  font-weight:950!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 8px rgba(0,0,0,.18)!important;
-  transform:none!important;
+<style id="HIVE_OPCAO2_REFERENCIA_V25">
+/* Opção 2 — cards horizontais: leitura rápida, referência HIVE e selos maiores */
+.rankTableWrap{
+  overflow:visible!important;
+  padding:0 10px 12px!important;
 }
-.rankTableStatus.great{color:#73ffc0!important;border-color:rgba(46,218,132,.58)!important;background:linear-gradient(180deg,rgba(18,120,72,.52),rgba(10,73,45,.38))!important}
-.rankTableStatus.good{color:#8ff2b9!important;border-color:rgba(67,190,116,.48)!important;background:linear-gradient(180deg,rgba(25,91,54,.50),rgba(15,61,38,.36))!important}
-.rankTableStatus.mid{color:#ffe071!important;border-color:rgba(225,180,34,.55)!important;background:linear-gradient(180deg,rgba(112,83,9,.52),rgba(73,55,7,.36))!important}
-.rankTableStatus.warn{color:#ffc06d!important;border-color:rgba(235,144,48,.55)!important;background:linear-gradient(180deg,rgba(119,65,12,.52),rgba(76,42,9,.36))!important}
-.rankTableStatus.bad{color:#ff8d82!important;border-color:rgba(238,82,70,.58)!important;background:linear-gradient(180deg,rgba(123,38,31,.55),rgba(78,24,21,.38))!important}
-@media(max-width:1100px){.rankScoreTable{min-width:1040px!important}}
+.rankScoreTable{
+  width:100%!important;
+  min-width:0!important;
+  border-collapse:separate!important;
+  border-spacing:0 8px!important;
+  table-layout:fixed!important;
+}
+.rankScoreTable thead th{
+  border:0!important;
+  background:transparent!important;
+  color:#8e8b80!important;
+  font-size:7.4px!important;
+  letter-spacing:.10em!important;
+  padding:0 12px 2px!important;
+}
+.rankScoreTable th:nth-child(1){width:18%!important}
+.rankScoreTable th:nth-child(2){width:19%!important}
+.rankScoreTable th:nth-child(3){width:20%!important}
+.rankScoreTable th:nth-child(4){width:22%!important}
+.rankScoreTable th:nth-child(5){width:15%!important}
+.rankScoreTable th:nth-child(6){width:6%!important;text-align:center!important}
+
+.rankScoreTable tbody tr{
+  position:relative!important;
+  background:
+    linear-gradient(90deg,rgba(255,197,44,.045),rgba(255,255,255,.012) 30%,rgba(255,255,255,.006))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 4px 14px rgba(0,0,0,.14)!important;
+}
+.rankScoreTable tbody td{
+  height:48px!important;
+  padding:7px 12px!important;
+  border-top:1px solid rgba(255,255,255,.065)!important;
+  border-bottom:1px solid rgba(255,255,255,.065)!important;
+  background:transparent!important;
+  vertical-align:middle!important;
+}
+.rankScoreTable tbody td:first-child{
+  border-left:1px solid rgba(255,255,255,.065)!important;
+  border-radius:10px 0 0 10px!important;
+}
+.rankScoreTable tbody td:last-child{
+  border-right:1px solid rgba(255,255,255,.065)!important;
+  border-radius:0 10px 10px 0!important;
+}
+.rankScoreTable tbody tr.great td{border-color:rgba(36,218,137,.16)!important}
+.rankScoreTable tbody tr.good td{border-color:rgba(46,181,111,.13)!important}
+.rankScoreTable tbody tr.mid td{border-color:rgba(255,198,34,.18)!important}
+.rankScoreTable tbody tr.warn td{border-color:rgba(238,145,45,.18)!important}
+.rankScoreTable tbody tr.bad td{border-color:rgba(238,76,65,.18)!important}
+
+.rankTableAttr{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+}
+.rankTableIcon{
+  width:30px!important;height:30px!important;
+  display:grid!important;place-items:center!important;
+  border-radius:8px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+.rankTableAttr strong{font-size:10px!important;color:#f3f1ea!important}
+
+.rankValueReference,.rankGuildReference{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:2px!important;
+}
+.rankValueReference strong,.rankGuildReference strong{
+  color:#f7f5ef!important;
+  font-size:10.8px!important;
+  line-height:1.1!important;
+}
+.rankValueReference strong em{
+  color:#39dfbd!important;
+  font-style:normal!important;
+  font-weight:950!important;
+}
+.rankValueReference small,.rankGuildReference small{
+  color:#777970!important;
+  font-size:7.5px!important;
+  line-height:1.2!important;
+}
+.rankGuildReference strong{
+  color:#39dfbd!important;
+}
+.rankGuildReference small{
+  color:#a29d8f!important;
+}
+
+.rankPerformance{
+  display:grid!important;
+  grid-template-columns:minmax(80px,1fr) 42px!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+.rankPerformance>span{
+  height:7px!important;
+  overflow:hidden!important;
+  border-radius:999px!important;
+  background:#242a27!important;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.55)!important;
+}
+.rankPerformance>span i{
+  display:block!important;height:100%!important;border-radius:inherit!important;
+  background:linear-gradient(90deg,#e4ae18,#ffd84d)!important;
+  box-shadow:0 0 9px rgba(255,199,39,.20)!important;
+}
+.rankScoreTable tr.great .rankPerformance>span i{
+  background:linear-gradient(90deg,#1fd48b,#55efbd)!important;
+  box-shadow:0 0 9px rgba(43,224,153,.20)!important;
+}
+.rankScoreTable tr.bad .rankPerformance>span i,
+.rankScoreTable tr.warn .rankPerformance>span i{
+  background:linear-gradient(90deg,#d94848,#ff766a)!important;
+}
+.rankPerformance strong{
+  color:#f4f2ec!important;font-size:10px!important;text-align:right!important;
+}
+.rankPerformance strong small{font-size:6.8px!important;color:#777970!important;margin-left:1px!important}
+
+.rankTableStatus{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:27px!important;
+  min-width:82px!important;
+  padding:6px 11px!important;
+  border-radius:999px!important;
+  font-size:8px!important;
+  line-height:1!important;
+  letter-spacing:.015em!important;
+  font-weight:950!important;
+  white-space:nowrap!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 3px 10px rgba(0,0,0,.20)!important;
+}
+.rankTableStatus.great{color:#76ffd0!important;border-color:rgba(37,222,142,.62)!important;background:linear-gradient(180deg,rgba(12,132,78,.62),rgba(7,78,48,.46))!important}
+.rankTableStatus.good{color:#9cf4bd!important;border-color:rgba(63,192,115,.50)!important;background:linear-gradient(180deg,rgba(27,102,57,.58),rgba(13,63,37,.42))!important}
+.rankTableStatus.mid{color:#ffe17b!important;border-color:rgba(230,181,26,.66)!important;background:linear-gradient(180deg,rgba(125,91,7,.64),rgba(73,53,4,.45))!important}
+.rankTableStatus.warn{color:#ffc078!important;border-color:rgba(239,142,42,.60)!important;background:linear-gradient(180deg,rgba(128,67,10,.62),rgba(76,39,7,.44))!important}
+.rankTableStatus.bad{color:#ff958b!important;border-color:rgba(240,76,66,.62)!important;background:linear-gradient(180deg,rgba(130,37,31,.64),rgba(77,21,18,.45))!important}
+
+.rankWeight{
+  text-align:center!important;
+  color:#d8d4c8!important;
+  font-weight:900!important;
+  font-size:9px!important;
+}
+
+/* Insight superior fica mais compacto para combinar com os cards horizontais. */
+.rankInsightStrip{gap:8px!important}
+.rankInsight{min-height:44px!important;padding:8px 11px!important}
+.rankInsight>span{width:29px!important;height:29px!important;border-radius:8px!important}
+.rankInsight small{font-size:7.3px!important}
+.rankInsight b{font-size:9px!important}
+
+/* Esconde elementos antigos que não pertencem ao novo desenho. */
+.rankPos,.rankTarget,.rankNeed,.rankOk,.rankAvg{}
+
+/* Responsivo: mantém o layout utilizável sem distorcer os selos. */
+@media(max-width:1050px){
+  .rankTableWrap{overflow-x:auto!important}
+  .rankScoreTable{min-width:900px!important}
+}
 </style>
 
 </body></html
