@@ -1893,12 +1893,17 @@ document.addEventListener('DOMContentLoaded',()=>{
 .rankExplainFooter{padding:8px 18px 12px!important;font-size:9px!important;color:#85867f!important}
 @media(max-width:900px){.myCharRankExplain{margin:9px 8px 12px}.rankExplainHead b{font-size:14px!important}.rankInsightStrip{grid-template-columns:1fr!important}.rankScoreTable{min-width:900px!important}}
 </style>
+
+<style id="v28-nav-sequencial">
+html{scroll-behavior:smooth}
+#ranking,#rankingClasse,#centralMembros,#updateControl,#sobre{scroll-margin-top:18px}
+</style>
 </head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
   <nav class="nav">
-    <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking</a><a href="#members">👥 Membros</a><a href="#destaque">📈 Evolução</a><a href="#destaque">📖 Codex</a><a href="#sobre">ⓘ Sobre</a>
+    <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#sobre">ⓘ Sobre</a>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
 
@@ -1978,11 +1983,11 @@ document.addEventListener('DOMContentLoaded',()=>{
       <article class="mgr-card"><div class="hd"><b>🛡️ Menor Defesa</b><span>somente suportes • HP + PDEF + MDEF + RED</span></div><div class="mgr-list" id="mgrLowDefense"></div></article>
       <article class="mgr-card"><div class="hd"><b>⚔️ DPS • Prioridade de Evolução</b><span>atributos ofensivos da classe + Power</span></div><div class="mgr-list" id="mgrLowOffense"></div></article>
     </div>
-    <section class="classRankPanel">
+    <section class="classRankPanel" id="rankingClasse">
 <div class="classRankHead"><div><h3>🏆 Ranking por Classe</h3><p>Ranking técnico por função. DPS usa ataque, Suporte usa defesa e Híbrido combina ataque + defesa. Top 5 visível por classe.</p></div><div class="classRankLegend">TOP 5 • COMPARAÇÃO DENTRO DA PRÓPRIA CLASSE</div></div>
 <div class="classRankGrid" id="classTop3Grid"></div>
 </section>
-    <article class="member-explorer">
+    <article class="member-explorer" id="centralMembros">
       <div class="mx-head"><div><div class="mx-title">👥 Central de Membros</div><div class="mx-sub">Filtre qualquer status da planilha, classe e faixa de valor. Clique no player para abrir a ficha completa.</div></div><span class="gl-badge" id="mxCount">0 MEMBROS</span></div>
       <div class="mx-filters">
         <input id="mxSearch" placeholder="Buscar player...">
@@ -2197,7 +2202,7 @@ function pctRank(value, arr){const a=arr.filter(v=>Number.isFinite(v)).sort((x,y
 function classRole(job){
   const j=norm(job||'');
   if(/priest|high priest|music|minstrel|bard|dancer|support|creator|bio|biochem|genetic/.test(j)) return 'SUPORTE';
-  if(/paladin|lord knight|knight|crusader/.test(j)) return 'TANK';
+  if(/paladin|paladino|lord knight|lordknight|lk|knight|cavaleiro|crusader|cruzado/.test(j)) return 'TANK';
   if(/sniper|hunter|gunslinger|high wizard|\bhw\b|wizard|stalker|assassin|champion|monk/.test(j)) return 'DPS';
   if(/doram/.test(j)) return 'HÍBRIDO';
   return 'HÍBRIDO';
@@ -2410,7 +2415,7 @@ function classPresentation(job){
     [['sniper','hunter'],['🏹','Precisão em cada passo, liberdade em cada horizonte.']],
     [['doram'],['🐾','Instinto, agilidade e coragem para ir além.']],
     [['priest','high priest'],['✝️','Fé para proteger, força para seguir em frente.']],
-    [['paladin','crusader'],['🛡️','Honra na linha de frente, firmeza em cada batalha.']],
+    [['paladin','paladino','crusader','cruzado','lord knight','lordknight','knight','cavaleiro'],['🛡️','Honra na linha de frente, firmeza em cada batalha.']],
     [['hw','high wizard','wizard','mago'],['🔮','Conhecimento transforma magia em poder.']],
     [['gunslinger'],['🔫','Reflexo rápido, mira certeira, nenhum passo em falso.']],
     [['music','minstrel','bard'],['🎵','Cada batalha tem seu ritmo; cada vitória, sua canção.']],
@@ -2420,7 +2425,7 @@ function classPresentation(job){
   for(const [keys,val] of defs) if(keys.some(k=>j.includes(k))) return {icon:val[0],quote:val[1]};
   return {icon:'⚔️',quote:'Coragem para lutar, união para vencer.'};
 }
-function classFamily(job){const j=norm(job||'');if(j.includes('sniper'))return 'Archer';if(j.includes('priest'))return 'Acolyte';if(j.includes('hw')||j.includes('mago')||j.includes('wizard'))return 'Mage';if(j.includes('paladin'))return 'Swordsman';if(j.includes('bio')||j.includes('criador'))return 'Merchant';if(j.includes('stalker'))return 'Thief';if(j.includes('doram')||j.includes('invocador'))return 'Doram';if(j.includes('gunslinger'))return 'Gunslinger';if(j.includes('music')||j.includes('minstrel')||j.includes('menestrel'))return 'Music';return 'Archer'}
+function classFamily(job){const j=norm(job||'');if(j.includes('sniper'))return 'Archer';if(j.includes('priest'))return 'Acolyte';if(j.includes('hw')||j.includes('mago')||j.includes('wizard'))return 'Mage';if(/paladin|paladino|crusader|cruzado|lord knight|lordknight|\blk\b|knight|cavaleiro/.test(j))return 'Swordsman';if(j.includes('bio')||j.includes('criador'))return 'Merchant';if(j.includes('stalker'))return 'Thief';if(j.includes('doram')||j.includes('invocador'))return 'Doram';if(j.includes('gunslinger'))return 'Gunslinger';if(j.includes('music')||j.includes('minstrel')||j.includes('menestrel'))return 'Music';return 'Archer'}
 function classFamilyIcon(x){return {Swordsman:'⚔',Archer:'🏹',Merchant:'⚒',Acolyte:'✚',Thief:'🗡',Mage:'✦',Doram:'🐾',Gunslinger:'✹',Music:'♫'}[x]||'◆'}
 function radarPoints(job){const f=classFamily(job),a={Archer:[48,80,55,35,92,58],Acolyte:[32,42,78,95,45,70],Mage:[25,42,48,98,78,66],Swordsman:[88,50,94,35,45,42],Merchant:[62,45,72,68,55,58],Thief:[58,95,48,42,82,72],Doram:[55,78,66,82,70,78],Gunslinger:[50,88,48,40,95,62],Music:[38,70,58,86,78,88]}[f]||[60,60,60,60,60,60];const ang=[-90,-30,30,90,150,210];return a.map((v,i)=>{const r=8+(v/100)*46,t=ang[i]*Math.PI/180;return `${(60+Math.cos(t)*r).toFixed(1)},${(60+Math.sin(t)*r).toFixed(1)}`}).join(' ')}
 function medianPositive(arr){const a=arr.filter(v=>Number.isFinite(v)&&v>0).sort((x,y)=>x-y);if(!a.length)return 0;const i=Math.floor(a.length/2);return a.length%2?a[i]:(a[i-1]+a[i])/2}
@@ -2894,6 +2899,10 @@ function classTop3Score(member, pool){
     return {score:classRankingDefenseScore(member,pool),kind:'DEFESA'};
   }
 
+  if(role==='TANK'){
+    return {score:classRankingDefenseScore(member,pool),kind:'TANK • DEFESA'};
+  }
+
   if(role==='DPS'){
     const profile=offensiveRaw(member).profile;
     return {
@@ -2949,7 +2958,7 @@ function renderClassTop3(){
     ? `HÍBRIDO ${profileLabel} • ATQ + DEF`
     : ranked[0]._classRank.kind;
 
-  const context=classRole(ranked[0].Job)==='SUPORTE'?'defense':'offense';
+  const context=['SUPORTE','TANK'].includes(classRole(ranked[0].Job))?'defense':'offense';
   const top=ranked.slice(0,5), rest=ranked.slice(5);
   const key=encodeURIComponent(group).replace(/%/g,'_');
 
