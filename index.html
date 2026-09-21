@@ -1860,6 +1860,39 @@ document.addEventListener('DOMContentLoaded',()=>{
 }
 </style>
 
+
+<style id="HIVE_SCORE_PREMIUM_V28">
+/* Pontuação premium aprovada — também exibida logo abaixo de Meu Personagem */
+.myCharRankExplain{margin:10px 18px 16px}
+.myCharRankExplain:empty{display:none}
+.myCharRankExplain .rankExplain{margin:0!important}
+.rankExplainTable{background:linear-gradient(135deg,rgba(12,18,16,.98),rgba(7,13,12,.98))!important;border:1px solid rgba(211,160,25,.58)!important;border-radius:14px!important;box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.02)!important;overflow:hidden!important}
+.rankExplainHead{padding:14px 18px 11px!important;border-bottom:1px solid rgba(255,255,255,.09)!important}
+.rankExplainHead b{font-size:16px!important;color:#ffd33f!important;letter-spacing:-.01em!important}
+.rankExplainContext{display:block!important;margin-top:5px!important;font-size:10px!important;color:#a8aaa5!important}
+.rankExplainTotal{min-width:70px!important;height:40px!important;padding:0 13px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid #9b5c2e!important;border-radius:22px!important;background:linear-gradient(180deg,#1b1713,#11100e)!important;color:#ffe0bf!important;font-size:22px!important;font-weight:950!important;box-shadow:inset 0 0 18px rgba(180,83,24,.10)!important}
+.rankExplainTotal small{font-size:10px!important;margin-left:2px!important;color:#c8b6a2!important}
+.rankInsightStrip{padding:12px 18px 7px!important;gap:12px!important}
+.rankInsight{min-height:58px!important;border-radius:10px!important;padding:9px 13px!important}
+.rankInsight>span{width:42px!important;height:42px!important;border-radius:9px!important;font-size:24px!important}
+.rankInsight small{font-size:9px!important;letter-spacing:.04em!important;margin-bottom:4px!important}
+.rankInsight b{font-size:13px!important;color:#f4f4ef!important}
+.rankTableWrap{padding:0 14px 12px!important;overflow-x:auto!important}
+.rankScoreTable{border-spacing:0 7px!important;min-width:980px!important}
+.rankScoreTable thead th{font-size:9px!important;letter-spacing:.10em!important;color:#aaa99f!important;padding:3px 13px 5px!important}
+.rankTableRow td{height:61px!important;padding:8px 13px!important;background:rgba(17,21,18,.96)!important;border-top:1px solid rgba(36,190,116,.30)!important;border-bottom:1px solid rgba(36,190,116,.30)!important}
+.rankTableRow td:first-child{border-left:1px solid rgba(36,190,116,.30)!important;border-radius:11px 0 0 11px!important}
+.rankTableRow td:last-child{border-right:1px solid rgba(36,190,116,.30)!important;border-radius:0 11px 11px 0!important}
+.rankTableRow.mid td{border-color:rgba(226,177,28,.38)!important}
+.rankTableRow.bad td{border-color:rgba(218,66,66,.42)!important}
+.rankTableAttr{gap:10px!important}.rankTableAttr strong{font-size:13px!important;color:#f6f5f0!important}.rankTableIcon{width:34px!important;height:34px!important;border-radius:9px!important;font-size:18px!important;background:linear-gradient(145deg,#272b27,#171a18)!important;box-shadow:inset 0 1px rgba(255,255,255,.06)!important}
+.rankValueReference strong,.rankGuildReference strong{font-size:15px!important;line-height:1.15!important}.rankValueReference strong em,.rankGuildReference strong{color:#4fe5cf!important;font-style:normal!important}.rankValueReference small,.rankGuildReference small{display:block!important;margin-top:4px!important;font-size:10px!important;line-height:1.2!important;color:#a5a59d!important;font-weight:600!important}
+.rankPerformance{gap:14px!important}.rankPerformance>span{height:9px!important;border-radius:999px!important;background:#252d2a!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.65)!important}.rankPerformance>span i{height:100%!important;border-radius:999px!important;background:linear-gradient(90deg,#18d9a1,#53efcb)!important;box-shadow:0 0 9px rgba(42,226,177,.16)!important}.rankTableRow.mid .rankPerformance>span i{background:linear-gradient(90deg,#e6aa12,#ffd74b)!important}.rankTableRow.bad .rankPerformance>span i{background:linear-gradient(90deg,#d44747,#ff6868)!important}.rankPerformance strong{min-width:58px!important;font-size:15px!important;color:#fff!important}.rankPerformance strong small{font-size:9px!important;color:#aaa!important}
+.rankTableStatus{min-width:112px!important;height:32px!important;padding:0 15px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border-radius:18px!important;font-size:11px!important;font-weight:900!important;line-height:1!important;white-space:nowrap!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;box-shadow:inset 0 1px rgba(255,255,255,.08),0 0 12px rgba(0,0,0,.12)!important}.rankTableStatus.good{color:#7bffd0!important;background:linear-gradient(180deg,#075b40,#073c2e)!important;border:1px solid #13c98a!important}.rankTableStatus.mid{color:#ffe47b!important;background:linear-gradient(180deg,#604b00,#302800)!important;border:1px solid #d7a800!important}.rankTableStatus.bad{color:#ff9b9b!important;background:linear-gradient(180deg,#5c2020,#351515)!important;border:1px solid #d94b4b!important}
+.rankWeight{font-size:14px!important;font-weight:950!important;color:#f7f3e8!important}
+.rankExplainFooter{padding:8px 18px 12px!important;font-size:9px!important;color:#85867f!important}
+@media(max-width:900px){.myCharRankExplain{margin:9px 8px 12px}.rankExplainHead b{font-size:14px!important}.rankInsightStrip{grid-template-columns:1fr!important}.rankScoreTable{min-width:900px!important}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1921,6 +1954,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         <div class="profileTabs"><span class="active" id="myProfileTab">DPS Físico</span><span>DPS Mágico</span><span>Defensivo</span></div>
       </div>
       <div class="myCharMetrics" id="myCharMetrics"></div>
+      <div class="myCharRankExplain" id="myCharRankExplain"></div>
     </div>
     <div class="myCharNotFound" id="myCharNotFound" hidden>
       <div><b>🐝 Conta Discord autenticada, mas não encontrei seu personagem.</b>
@@ -2490,8 +2524,8 @@ function rankMetricDiagnosis(x){
  return {cls:'bad',tag:'PRIORIDADE',txt:`${base} É um dos menores resultados do grupo (${p}/100) e merece prioridade de evolução.`};
 }
 
-function renderRankExplanation(m){
- const box=$('#mRankExplain'); if(!box)return;
+function renderRankExplanation(m,target='#mRankExplain'){
+ const box=$(target); if(!box)return;
  const job=String(m.Job||'').trim(),
        rankGroup=classRankingGroup(m),
        pool=members.filter(x=>classRankingGroup(x)===rankGroup),
@@ -2786,6 +2820,8 @@ function renderMyCharacter(){
   }).join('');
 
   $('#myCharOpen').onclick=()=>openPlayer(encodeURIComponent(m.Personagem));
+  renderRankExplanation(m,'#myCharRankExplain');
+
 }
 
 function doramCombatProfile(m){
