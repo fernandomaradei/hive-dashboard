@@ -1915,6 +1915,12 @@ html{scroll-behavior:smooth}
 @media(max-width:620px){.statRankModal{padding:10px}.statRankHead{padding:18px}.statRankRow{grid-template-columns:48px 1fr 105px;padding:0 11px}.statRankValue{font-size:15px}.statRankList{padding:7px 12px 16px}.statRankCurrent{margin:12px}}
 </style>
 
+
+<style id="v30-central-membros-evolucao">
+#centralMembros .evo-up{color:#39e6a6!important}
+#centralMembros .evo-down{color:#ff7474!important}
+#centralMembros .evo-flat{color:#b7afa4!important}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2015,7 +2021,7 @@ html{scroll-behavior:smooth}
         <button class="mx-clear" id="mxClear">Limpar</button>
       </div>
       <div class="mx-summary" id="mxSummary"></div>
-      <div class="mx-table"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th id="mxMetricHead">Status</th><th>HP</th><th>PDEF</th><th>MDEF</th><th>Discord</th></tr></thead><tbody id="mxRows"></tbody></table></div><div class="mx-mobile-cards" id="mxMobileCards"></div>
+      <div class="mx-table"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power Atual</th><th>Power Anterior</th><th>Evolução</th><th>HP</th><th>PDEF</th><th>MDEF</th><th>Discord</th></tr></thead><tbody id="mxRows"></tbody></table></div><div class="mx-mobile-cards" id="mxMobileCards"></div>
     </article>
     <article class="update-control" id="updateControl">
       <div class="uc-head"><div><div class="uc-title">📅 Controle de Atualizações</div><div class="uc-sub">Acompanhamento automático pela coluna “Última Atualização”. Até 7 dias = atualizado • 8–14 = atenção • 15+ = atrasado.</div></div><span class="uc-badge" id="ucPendingBadge">0 PENDENTES</span></div>
@@ -2239,7 +2245,7 @@ function glScores(m,cache){
   return {survival,offense,power,readiness,priority:100-readiness,role};
 }
 
-const MANAGER_METRICS=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN','Codex','Evolução'];
+const MANAGER_METRICS=['Power Atual','Power Anterior','Evolução','HP','ATK','MATK','PDEF','MDEF','CRIT RES','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN','Codex'];
 function pctRank(value, arr){const a=arr.filter(v=>Number.isFinite(v)).sort((x,y)=>x-y);if(!a.length)return 0;let i=0;while(i<a.length&&a[i]<=value)i++;return i/a.length*100}
 
 function classRole(job){
@@ -2276,15 +2282,30 @@ function setupMemberExplorer(){
  const jobs=[...new Set(members.map(m=>String(m.Job||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));job.innerHTML='<option value="">Todas as classes</option>'+jobs.map(x=>`<option>${esc(x)}</option>`).join('');
  ['mxSearch','mxJob','mxMetric','mxOp','mxValue'].forEach(id=>{const el=$('#'+id);el.addEventListener(id==='mxSearch'||id==='mxValue'?'input':'change',renderMemberExplorer)});$('#mxClear').onclick=()=>{$('#mxSearch').value='';$('#mxJob').value='';$('#mxMetric').value='Power Atual';$('#mxOp').value='all';$('#mxValue').value='';renderMemberExplorer()};
 }
+function fmtEvolution(m){
+ const raw=m?.['Evolução'];
+ if(raw!==null&&raw!==undefined&&String(raw).trim()!=='') return String(raw).trim();
+ const atual=intNum(m?.['Power Atual'],'Power Atual'), anterior=intNum(m?.['Power Anterior'],'Power Anterior');
+ if(!anterior) return '—';
+ const diff=atual-anterior;
+ const pct=(diff/anterior)*100;
+ const sign=diff>0?'+':'';
+ return `${sign}${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1}).format(pct)}%`;
+}
+function evolutionClass(m){
+ const atual=intNum(m?.['Power Atual'],'Power Atual'), anterior=intNum(m?.['Power Anterior'],'Power Anterior');
+ if(!anterior) return '';
+ return atual>anterior?'evo-up':atual<anterior?'evo-down':'evo-flat';
+}
 function renderMemberExplorer(){
  const metric=$('#mxMetric')?.value||'Power Atual', q=norm($('#mxSearch')?.value||''), job=$('#mxJob')?.value||'', op=$('#mxOp')?.value||'all', threshold=intNum($('#mxValue')?.value||'');
  let list=members.filter(m=>(!q||norm(m.Personagem).includes(q)||norm(m.Discord).includes(q))&&(!job||String(m.Job||'')===job));
  if(op!=='all'&&$('#mxValue').value!=='') list=list.filter(m=>op==='lte'?intNum(m[metric],metric)<=threshold:intNum(m[metric],metric)>=threshold);
- list.sort((a,b)=>intNum(b[metric],metric)-intNum(a[metric],metric)); $('#mxCount').textContent=list.length+' MEMBROS'; $('#mxMetricHead').textContent=metric;
+ list.sort((a,b)=>intNum(b[metric],metric)-intNum(a[metric],metric)); $('#mxCount').textContent=list.length+' MEMBROS';
  const vals=list.map(m=>intNum(m[metric],metric)).filter(v=>Number.isFinite(v));const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;const min=vals.length?Math.min(...vals):0,max=vals.length?Math.max(...vals):0;
  $('#mxSummary').innerHTML=`<div class="mx-mini"><span>Filtrados</span><b>${list.length}</b></div><div class="mx-mini"><span>Média • ${esc(metric)}</span><b>${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(avg)}</b></div><div class="mx-mini"><span>Menor</span><b>${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(min)}</b></div><div class="mx-mini"><span>Maior</span><b>${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(max)}</b></div>`;
- $('#mxRows').innerHTML=list.map((m,i)=>`<tr onclick="openPlayer('${encodeURIComponent(m.Personagem)}')"><td>${i+1}</td><td><b>${esc(m.Personagem)}</b></td><td><span class="mx-badge">${esc(m.Job||'—')}</span><small style="display:block;color:#7e776d;margin-top:3px">${classRole(m.Job)}</small></td><td class="num">${fmtInt(m['Power Atual'],'Power Atual')}</td><td class="num metric">${fmtInt(m[metric],metric)}</td><td class="num">${fmtInt(m.HP,'HP')}</td><td class="num">${fmtInt(m.PDEF,'PDEF')}</td><td class="num">${fmtInt(m.MDEF,'MDEF')}</td><td>${esc(m.Discord||'—')}</td></tr>`).join('')||'<tr><td colspan="9">Nenhum membro encontrado com esses filtros.</td></tr>';
- const mobile=$('#mxMobileCards'); if(mobile) mobile.innerHTML=list.map(m=>`<div class="mx-mobile-card" onclick="openPlayer('${encodeURIComponent(m.Personagem)}')"><div class="mx-mobile-top"><div><div class="mx-mobile-name">${esc(m.Personagem)}</div><div class="mx-mobile-meta">${esc(m.Job||'—')} • ${classRole(m.Job)}${m.Discord?' • '+esc(m.Discord):''}</div></div><div class="mx-mobile-power">${fmtInt(m['Power Atual'],'Power Atual')}</div></div><div class="mx-mobile-stats"><div class="mx-mobile-stat metric"><span>${esc(metric)}</span><b>${fmtInt(m[metric],metric)}</b></div><div class="mx-mobile-stat"><span>HP</span><b>${fmtInt(m.HP,'HP')}</b></div><div class="mx-mobile-stat"><span>PDEF / MDEF</span><b>${fmtInt(m.PDEF,'PDEF')} / ${fmtInt(m.MDEF,'MDEF')}</b></div></div></div>`).join('')||'<div class="mx-mobile-card">Nenhum membro encontrado.</div>';
+ $('#mxRows').innerHTML=list.map((m,i)=>`<tr onclick="openPlayer('${encodeURIComponent(m.Personagem)}')"><td>${i+1}</td><td><b>${esc(m.Personagem)}</b></td><td><span class="mx-badge">${esc(m.Job||'—')}</span><small style="display:block;color:#7e776d;margin-top:3px">${classRole(m.Job)}</small></td><td class="num metric">${fmtInt(m['Power Atual'],'Power Atual')}</td><td class="num">${fmtInt(m['Power Anterior'],'Power Anterior')}</td><td class="num ${evolutionClass(m)}">${esc(fmtEvolution(m))}</td><td class="num">${fmtInt(m.HP,'HP')}</td><td class="num">${fmtInt(m.PDEF,'PDEF')}</td><td class="num">${fmtInt(m.MDEF,'MDEF')}</td><td>${esc(m.Discord||'—')}</td></tr>`).join('')||'<tr><td colspan="10">Nenhum membro encontrado com esses filtros.</td></tr>';
+ const mobile=$('#mxMobileCards'); if(mobile) mobile.innerHTML=list.map(m=>`<div class="mx-mobile-card" onclick="openPlayer('${encodeURIComponent(m.Personagem)}')"><div class="mx-mobile-top"><div><div class="mx-mobile-name">${esc(m.Personagem)}</div><div class="mx-mobile-meta">${esc(m.Job||'—')} • ${classRole(m.Job)}${m.Discord?' • '+esc(m.Discord):''}</div></div><div class="mx-mobile-power">${fmtInt(m['Power Atual'],'Power Atual')}</div></div><div class="mx-mobile-stats"><div class="mx-mobile-stat metric"><span>Power Anterior</span><b>${fmtInt(m['Power Anterior'],'Power Anterior')}</b></div><div class="mx-mobile-stat"><span>Evolução</span><b class="${evolutionClass(m)}">${esc(fmtEvolution(m))}</b></div><div class="mx-mobile-stat"><span>HP</span><b>${fmtInt(m.HP,'HP')}</b></div></div></div>`).join('')||'<div class="mx-mobile-card">Nenhum membro encontrado.</div>';
 }
 
 function renderGuildLeague(){
