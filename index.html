@@ -4322,5 +4322,201 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
+
+<style id="HIVE_RANK_EXPLAIN_PREMIUM_V19">
+/* =========================================================
+   Ranking por Classe > Por que recebeu esta pontuação?
+   Reformulação visual — mais compacta, clara e amigável.
+   ========================================================= */
+
+.rankExplain{
+  margin-top:14px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(210,166,42,.42)!important;
+  border-radius:14px!important;
+  background:
+    radial-gradient(circle at 92% 0%,rgba(255,199,49,.035),transparent 30%),
+    linear-gradient(180deg,#10120f 0%,#0b0d0c 100%)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.18)!important;
+}
+
+/* Cabeçalho */
+.rankExplainHead{
+  min-height:50px!important;
+  margin:0!important;
+  padding:10px 16px!important;
+  background:linear-gradient(90deg,rgba(255,205,55,.045),transparent 55%)!important;
+  border-bottom:1px solid rgba(255,255,255,.07)!important;
+}
+.rankExplainHead b{
+  font-size:15px!important;
+  color:#ffd348!important;
+  font-weight:950!important;
+}
+.rankExplainTotal{
+  min-width:58px!important;
+  padding:7px 10px!important;
+  text-align:center!important;
+  font-size:19px!important;
+  border:1px solid rgba(255,188,80,.42)!important;
+  border-radius:999px!important;
+  background:rgba(101,53,22,.22)!important;
+  color:#ffe2b7!important;
+}
+.rankExplainSub{
+  margin:0!important;
+  padding:8px 16px!important;
+  border-bottom:1px solid rgba(255,255,255,.055)!important;
+  background:rgba(255,255,255,.012)!important;
+  font-size:10.5px!important;
+  line-height:1.35!important;
+  color:#9e9d96!important;
+}
+
+/* Resumo: forte x prioridade */
+.rankWhySummary{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:9px!important;
+  padding:11px 16px 5px!important;
+}
+.rankWhySummary>div{
+  min-height:54px!important;
+  padding:9px 12px!important;
+  gap:3px!important;
+  border-radius:9px!important;
+  background:#101512!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+.rankWhyGood{
+  border-color:rgba(43,190,111,.35)!important;
+  background:linear-gradient(135deg,rgba(12,38,25,.72),rgba(13,18,15,.95))!important;
+}
+.rankWhyBad{
+  border-color:rgba(255,147,76,.34)!important;
+  background:linear-gradient(135deg,rgba(48,27,17,.68),rgba(17,16,13,.96))!important;
+}
+.rankWhySummary b{font-size:10px!important}
+.rankWhySummary span{
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  color:#e6e4de!important;
+}
+
+/* Métricas: duas por linha no desktop */
+.rankExplainGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:9px!important;
+  padding:8px 16px 12px!important;
+}
+.rankExplainItem,
+.rankExplainItem:nth-child(odd){
+  min-width:0!important;
+  border:1px solid rgba(255,255,255,.095)!important;
+  border-radius:10px!important;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(255,210,75,.025),transparent 35%),
+    linear-gradient(155deg,#131612,#0e100e)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.02),
+    0 5px 12px rgba(0,0,0,.10)!important;
+}
+
+/* Nome + selo */
+.rankMetricName{
+  min-height:39px!important;
+  padding:7px 11px!important;
+  border-bottom:1px solid rgba(255,255,255,.065)!important;
+}
+.rankMetricName strong{
+  font-size:11.5px!important;
+  color:#f7f4ed!important;
+}
+.rankStatus{
+  padding:4px 7px!important;
+  font-size:7.5px!important;
+  letter-spacing:.035em!important;
+}
+
+/* Quatro números mais fáceis de comparar */
+.rankNumbers{
+  grid-template-columns:1.1fr 1.1fr .85fr .75fr!important;
+  border-bottom:0!important;
+}
+.rankNumbers>div{
+  padding:7px 10px!important;
+  border-right:1px solid rgba(255,255,255,.055)!important;
+}
+.rankNumbers small{
+  margin-bottom:3px!important;
+  font-size:7px!important;
+  letter-spacing:.065em!important;
+  color:#7f837d!important;
+}
+.rankNumbers b{
+  font-size:12.5px!important;
+  line-height:1!important;
+}
+.rankNumbers>div:nth-child(2) b{color:#ffd13c!important}
+
+/* Barra de desempenho */
+.rankProgress{
+  padding:5px 10px 7px!important;
+  border-top:1px solid rgba(255,255,255,.045)!important;
+}
+.rankProgressTop{
+  margin-bottom:5px!important;
+  font-size:8.5px!important;
+  color:#8f938e!important;
+}
+.rankProgressTop strong{font-size:9px!important}
+.rankExplainBar{
+  height:5px!important;
+  background:#272b27!important;
+}
+.rankExplainFill{
+  background:linear-gradient(90deg,#c99618,#ffd238,#ffe277)!important;
+  box-shadow:0 0 7px rgba(255,202,40,.16)!important;
+}
+
+/* Texto explicativo: vira uma observação curta e elegante */
+.rankDiag{
+  margin:0 10px 9px!important;
+  padding:7px 9px!important;
+  min-height:0!important;
+  border-radius:7px!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+  background:rgba(17,42,25,.58)!important;
+}
+.rankDiag span{color:#cfd6cf!important}
+
+/* Fórmula final menos chamativa */
+.rankExplainFormula{
+  margin:0!important;
+  padding:8px 16px 10px!important;
+  border-top:1px solid rgba(255,255,255,.055)!important;
+  background:rgba(255,255,255,.01)!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+  color:#777c76!important;
+}
+
+/* Tablets */
+@media(max-width:980px){
+  .rankExplainGrid{grid-template-columns:1fr!important}
+}
+
+/* Celular */
+@media(max-width:620px){
+  .rankWhySummary{grid-template-columns:1fr!important}
+  .rankNumbers{grid-template-columns:1fr 1fr!important}
+  .rankNumbers>div:nth-child(2){border-right:0!important}
+  .rankNumbers>div:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.055)!important}
+}
+</style>
+
 </body></html
 >
