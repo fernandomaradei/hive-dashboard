@@ -2694,11 +2694,11 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.11,avgMetric(c.humaninc),maxMetric(c.humaninc)),
       rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.11,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
       rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate),.12,avgMetric(c.critrate),maxMetric(c.critrate)),
-      pctMetric('PDMG.R','PDMGR',.09,d),pctMetric('MDMG.R','MDMGR',.07,d),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.05,avgMetric(d.PDEF),maxMetric(d.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.04,avgMetric(d.MDEF),maxMetric(d.MDEF))
+      pctMetric('PDMG.R','PDMGR',.0625,d),pctMetric('MDMG.R','MDMGR',.0625,d),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.0625,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.0625,avgMetric(d.MDEF),maxMetric(d.MDEF))
      ];
-     formula='SNIPER: 75% OFENSIVA + 25% DEFESA. ATK 13% + PDMG 16% + IGNORE PDEF 12% + DMG INC HUMAN 11% + PVP DMG INC 11% + CRIT RATE 12% + PDMG.R 9% + MDMG.R 7% + PDEF 5% + MDEF 4%. Power não participa da nota.';
+     formula='SNIPER: 75% OFENSIVA + 25% DEFESA. ATK 13% + PDMG 16% + IGNORE PDEF 12% + DMG INC HUMAN 11% + PVP DMG INC 11% + CRIT RATE 12% + PDMG.R 6,25% + MDMG.R 6,25% + PDEF 6,25% + MDEF 6,25%. Power não participa da nota.';
    }else if(role==='DPS' && /\\bhw\\b|high wizard|wizard|mage/.test(norm(job))){
      const d=supportDefenseContext(pool);
      items=[
@@ -3174,9 +3174,9 @@ function approvedSniperScore(m,pool){
   const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,r.profile),d=supportDefenseContext(pool);
   return .13*pctRank(r.attack,c.attack)+.16*pctRank(r.damage,c.damage)+.12*pctRank(r.penetration,c.penetration)
        + .11*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.11*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
-       + .12*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate)+.09*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)
-       + .07*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)+.05*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
-       + .04*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF);
+       + .12*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate)+.0625*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)
+       + .0625*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)+.0625*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
+       + .0625*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF);
 }
 function approvedHWScore(m,pool){
   const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,r.profile),d=supportDefenseContext(pool);
