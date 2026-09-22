@@ -2606,68 +2606,114 @@ function renderRankExplanation(m,target='#mRankExplain'){
  const final=classTop3Score(m,pool);
  if(!final){box.innerHTML='';return}
 
+ const pctMetric=(label,ctxKey,weight,c)=>{
+   const v=metricValue(m[label],label);
+   return rankMetric(label,rankAvgFormat(label,v),pctRank(v,c[ctxKey]),weight,avgMetric(c[ctxKey]),maxMetric(c[ctxKey]));
+ };
+
  let items=[], formula='';
+
  if(role==='SUPORTE'){
    const c=supportDefenseContext(pool), healStat=supportHealStat(job);
    if(healStat){
      items=[
-      rankMetric('PDMG.R',rankAvgFormat('PDMG.R',metricValue(m['PDMG.R'],'PDMG.R')),pctRank(metricValue(m['PDMG.R'],'PDMG.R'),c.PDMGR),.20,avgMetric(c.PDMGR),maxMetric(c.PDMGR)),
-      rankMetric('MDMG.R',rankAvgFormat('MDMG.R',metricValue(m['MDMG.R'],'MDMG.R')),pctRank(metricValue(m['MDMG.R'],'MDMG.R'),c.MDMGR),.20,avgMetric(c.MDMGR),maxMetric(c.MDMGR)),
+      pctMetric('PDMG.R','PDMGR',.18,c),
+      pctMetric('MDMG.R','MDMGR',.18,c),
       rankMetric(healStat,fmtInt(m[healStat],healStat),pctRank(intNum(m[healStat],healStat),c[healStat]),.16,avgMetric(c[healStat]),maxMetric(c[healStat])),
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.12,avgMetric(c.HP),maxMetric(c.HP)),
+      pctMetric('DMG RED HUMAN','HUMANRED',.14,c),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.08,avgMetric(c.HP),maxMetric(c.HP)),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.07,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.07,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.07,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.05,avgMetric(c.RED),maxMetric(c.RED))
+     ];
+     formula=`SUPORTE: PDMG.R 18% + MDMG.R 18% + ${healStat} 16% + DMG RED HUMAN 14% + HP 8% + PDEF 7% + MDEF 7% + PVP DMG RED 7% + DMG RED MED 5%.`;
+   }else{
+     items=[
+      pctMetric('PDMG.R','PDMGR',.20,c),
+      pctMetric('MDMG.R','MDMGR',.20,c),
+      pctMetric('DMG RED HUMAN','HUMANRED',.16,c),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.10,avgMetric(c.HP),maxMetric(c.HP)),
       rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.08,avgMetric(c.PDEF),maxMetric(c.PDEF)),
       rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.08,avgMetric(c.MDEF),maxMetric(c.MDEF)),
       rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.10,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
-      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.06,avgMetric(c.RED),maxMetric(c.RED))
-     ];
-     formula=`SUPORTE: PDMG.R 20% + MDMG.R 20% + ${healStat} 16% + HP 12% + PDEF 8% + MDEF 8% + PVP DMG RED 10% + DMG RED MED 6%.`;
-   }else{
-     items=[
-      rankMetric('PDMG.R',rankAvgFormat('PDMG.R',metricValue(m['PDMG.R'],'PDMG.R')),pctRank(metricValue(m['PDMG.R'],'PDMG.R'),c.PDMGR),.22,avgMetric(c.PDMGR),maxMetric(c.PDMGR)),
-      rankMetric('MDMG.R',rankAvgFormat('MDMG.R',metricValue(m['MDMG.R'],'MDMG.R')),pctRank(metricValue(m['MDMG.R'],'MDMG.R'),c.MDMGR),.22,avgMetric(c.MDMGR),maxMetric(c.MDMGR)),
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.16,avgMetric(c.HP),maxMetric(c.HP)),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.10,avgMetric(c.PDEF),maxMetric(c.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.10,avgMetric(c.MDEF),maxMetric(c.MDEF)),
-      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.12,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.08,avgMetric(c.RED),maxMetric(c.RED))
      ];
-     formula='SUPORTE/BIO: PDMG.R 22% + MDMG.R 22% + HP 16% + PDEF 10% + MDEF 10% + PVP DMG RED 12% + DMG RED MED 8%.';
+     formula='SUPORTE/BIO: PDMG.R 20% + MDMG.R 20% + DMG RED HUMAN 16% + HP 10% + PDEF 8% + MDEF 8% + PVP DMG RED 10% + DMG RED MED 8%.';
    }
- }else {
+ }else if(role==='TANK'){
+   const c=supportDefenseContext(pool);
+   const isPaladin=/paladin|paladino|crusader|cruzado/.test(norm(job));
+   if(isPaladin){
+     items=[
+      pctMetric('PDMG.R','PDMGR',.16,c), pctMetric('MDMG.R','MDMGR',.16,c),
+      pctMetric('DMG RED HUMAN','HUMANRED',.18,c),
+      pctMetric('CRIT RATE','CRITRATE',.10,c),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.12,avgMetric(c.HP),maxMetric(c.HP)),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.10,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.08,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.06,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.04,avgMetric(c.RED),maxMetric(c.RED))
+     ];
+     formula='PALADINO: DMG RED HUMAN 18% + PDMG.R 16% + MDMG.R 16% + HP 12% + CRIT RATE 10% + PDEF 10% + MDEF 8% + PVP DMG RED 6% + DMG RED MED 4%.';
+   }else{
+     items=[
+      pctMetric('PDMG.R','PDMGR',.18,c), pctMetric('MDMG.R','MDMGR',.18,c),
+      pctMetric('DMG RED HUMAN','HUMANRED',.20,c),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.14,avgMetric(c.HP),maxMetric(c.HP)),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.10,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.08,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.07,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.05,avgMetric(c.RED),maxMetric(c.RED))
+     ];
+     formula='TANK: DMG RED HUMAN 20% + PDMG.R 18% + MDMG.R 18% + HP 14% + PDEF 10% + MDEF 8% + PVP DMG RED 7% + DMG RED MED 5%.';
+   }
+ }else{
    const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
-   const off=[
-    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.28,avgMetric(c.attack),maxMetric(c.attack)),
-    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.24,avgMetric(c.penetration),maxMetric(c.penetration)),
-    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.22,avgMetric(c.damage),maxMetric(c.damage)),
-    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.16,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
-    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.10,avgMetric(c.power),maxMetric(c.power))
+   const isSniper=/sniper|hunter/.test(norm(job));
+   const off=isSniper ? [
+    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.20,avgMetric(c.attack),maxMetric(c.attack)),
+    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.17,avgMetric(c.penetration),maxMetric(c.penetration)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.15,avgMetric(c.damage),maxMetric(c.damage)),
+    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.12,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+    rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.16,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+    rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate),.12,avgMetric(c.critrate),maxMetric(c.critrate)),
+    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.08,avgMetric(c.power),maxMetric(c.power))
+   ] : [
+    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.24,avgMetric(c.attack),maxMetric(c.attack)),
+    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.20,avgMetric(c.penetration),maxMetric(c.penetration)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.18,avgMetric(c.damage),maxMetric(c.damage)),
+    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.12,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+    rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.18,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+    rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.08,avgMetric(c.power),maxMetric(c.power))
    ];
+
    if(role==='HÍBRIDO'){
      const d=supportDefenseContext(pool);
      const def=[
-      rankMetric('PDMG.R',rankAvgFormat('PDMG.R',metricValue(m['PDMG.R'],'PDMG.R')),pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR),.20,avgMetric(d.PDMGR),maxMetric(d.PDMGR)),
-      rankMetric('MDMG.R',rankAvgFormat('MDMG.R',metricValue(m['MDMG.R'],'MDMG.R')),pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR),.20,avgMetric(d.MDMGR),maxMetric(d.MDMGR)),
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.20,avgMetric(d.HP),maxMetric(d.HP)),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.12,avgMetric(d.PDEF),maxMetric(d.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.10,avgMetric(d.MDEF),maxMetric(d.MDEF)),
+      pctMetric('PDMG.R','PDMGR',.18,d), pctMetric('MDMG.R','MDMGR',.18,d),
+      pctMetric('DMG RED HUMAN','HUMANRED',.16,d),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.12,avgMetric(d.HP),maxMetric(d.HP)),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.10,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.08,avgMetric(d.MDEF),maxMetric(d.MDEF)),
       rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.10,avgMetric(d.PVPRED),maxMetric(d.PVPRED)),
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.08,avgMetric(d.RED),maxMetric(d.RED))
      ];
-     items=[...off.map(x=>({...x,weight:x.weight*.5})),...def.map(x=>({...x,weight:x.weight*.5}))];
-     formula='HÍBRIDO '+(r.profile==='MAGIC'?'MÁGICO':'FÍSICO')+': 50% OFENSIVA + 50% DEFESA. Defesa: PDMG.R 20% + MDMG.R 20% + HP 20% + PDEF 12% + MDEF 10% + PVP DMG RED 10% + DMG RED MED 8%.';
+     items=[...off.map(x=>({...x,weight:x.weight*.50})),...def.map(x=>({...x,weight:x.weight*.50}))];
+     formula='HÍBRIDO: 50% OFENSIVA + 50% DEFESA. DMG INC HUMAN participa da ofensiva e DMG RED HUMAN da defesa, com peso defensivo superior ao HP.';
    }else if(role==='DPS' && dpsUsesDefenseBlend(job)){
      const d=supportDefenseContext(pool);
      const def=[
-      rankMetric('PDMG.R',rankAvgFormat('PDMG.R',metricValue(m['PDMG.R'],'PDMG.R')),pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR),.09,avgMetric(d.PDMGR),maxMetric(d.PDMGR)),
-      rankMetric('MDMG.R',rankAvgFormat('MDMG.R',metricValue(m['MDMG.R'],'MDMG.R')),pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR),.09,avgMetric(d.MDMGR),maxMetric(d.MDMGR)),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.06,avgMetric(d.PDEF),maxMetric(d.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.06,avgMetric(d.MDEF),maxMetric(d.MDEF))
+      pctMetric('PDMG.R','PDMGR',.25,d), pctMetric('MDMG.R','MDMGR',.25,d),
+      pctMetric('DMG RED HUMAN','HUMANRED',.20,d),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.15,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.15,avgMetric(d.MDEF),maxMetric(d.MDEF))
      ];
-     items=[...off.map(x=>({...x,weight:x.weight*.70})),...def];
-     formula='DPS: 70% OFENSIVA + 30% DEFESA. Defesa: PDMG.R 9% + MDMG.R 9% + PDEF 6% + MDEF 6%. Comparação somente com a própria classe.';
+     items=[...off.map(x=>({...x,weight:x.weight*.70})),...def.map(x=>({...x,weight:x.weight*.30}))];
+     formula=`DPS: 70% OFENSIVA + 30% DEFESA. ${isSniper?'Sniper inclui CRIT RATE na ofensiva. ':''}DMG INC HUMAN participa da ofensiva; DMG RED HUMAN participa da defesa. Comparação somente com a própria classe.`;
    }else{
      items=off;
-     formula='OFENSIVA: Ataque 28% + Penetração 24% + Dano 22% + PVP DMG INC 16% + Power 10%.';
+     formula=`OFENSIVA: inclui DMG INC HUMAN.${isSniper?' Sniper também inclui CRIT RATE.':''}`;
    }
  }
 
@@ -2683,30 +2729,10 @@ function renderRankExplanation(m,target='#mRankExplain'){
    const ref=rankReferencePeer(pool,x.label);
    const pctRef=x.targetNum>0 ? Math.max(0,Math.min(100,Math.round((x.currentNum/x.targetNum)*100))) : x.p;
    return `<tr class="rankTableRow ${d.cls} rankStatClickable" onclick="openStatRank('${encodeURIComponent(m.Personagem)}','${encodeURIComponent(x.label)}')" title="Ver ranking de ${esc(x.label)} da classe">
-     <td>
-       <div class="rankTableAttr">
-         <span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span>
-         <strong>${esc(x.label)}</strong>
-       </div>
-     </td>
-     <td>
-       <div class="rankValueReference">
-         <strong>${x.value} <em>/ ${x.targetValue}</em></strong>
-         <small>${pctRef}% da referência</small>
-       </div>
-     </td>
-     <td>
-       <div class="rankGuildReference">
-         <strong>${x.targetValue}</strong>
-         <small>${esc(ref.name)} • maior valor do grupo</small>
-       </div>
-     </td>
-     <td>
-       <div class="rankPerformance">
-         <span><i style="width:${x.p}%"></i></span>
-         <strong>${x.p}<small>/100</small></strong>
-       </div>
-     </td>
+     <td><div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span><strong>${esc(x.label)}</strong></div></td>
+     <td><div class="rankValueReference"><strong>${x.value} <em>/ ${x.targetValue}</em></strong><small>${pctRef}% da referência</small></div></td>
+     <td><div class="rankGuildReference"><strong>${x.targetValue}</strong><small>${esc(ref.name)} • maior valor do grupo</small></div></td>
+     <td><div class="rankPerformance"><span><i style="width:${x.p}%"></i></span><strong>${x.p}<small>/100</small></strong></div></td>
      <td><span class="rankTableStatus ${d.cls}">${statusLabel}</span></td>
      <td class="rankWeight">${(x.weight*100).toFixed(0)}%</td>
    </tr>`;
@@ -2717,29 +2743,19 @@ function renderRankExplanation(m,target='#mRankExplain'){
      <div><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainContext">${esc(final.kind)} • comparado com ${esc(rankGroup)}</span></div>
      <span class="rankExplainTotal">${Math.round(final.score)}<small>/100</small></span>
    </div>
-
    <div class="rankInsightStrip">
      <div class="rankInsight good"><span>↑</span><div><small>PONTOS FORTES</small><b>${strengths.map(x=>esc(x.label)).join(' • ')}</b></div></div>
      <div class="rankInsight warn"><span>◎</span><div><small>FOCO PARA EVOLUIR</small><b>${weaknesses.map(x=>esc(x.label)).join(' • ')}</b></div></div>
    </div>
-
-   <div class="rankTableWrap">
-     <table class="rankScoreTable">
-       <thead><tr>
-         <th>ATRIBUTO</th><th>SEU VALOR / REFERÊNCIA</th><th>REFERÊNCIA HIVE</th><th>DESEMPENHO NA CLASSE</th><th>SITUAÇÃO</th><th>PESO</th>
-       </tr></thead>
-       <tbody>${rows}</tbody>
-     </table>
-   </div>
-
-   <div class="rankExplainFooter">
-     <span>${esc(formula)}</span>
-     <span>Quanto maior a posição, melhor o desempenho dentro da própria classe.</span>
-   </div>
+   <div class="rankTableWrap"><table class="rankScoreTable">
+     <thead><tr><th>ATRIBUTO</th><th>SEU VALOR / REFERÊNCIA</th><th>REFERÊNCIA HIVE</th><th>DESEMPENHO NA CLASSE</th><th>SITUAÇÃO</th><th>PESO</th></tr></thead>
+     <tbody>${rows}</tbody>
+   </table></div>
+   <div class="rankExplainFooter"><span>${esc(formula)}</span><span>Quanto maior a posição, melhor o desempenho dentro da própria classe.</span></div>
  </section>`;
 }
 function statRankDisplay(label,value){
-  if(label==='PDMG.R'||label==='MDMG.R') return rankAvgFormat(label,value);
+  if(['PDMG.R','MDMG.R','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE'].includes(label)) return rankAvgFormat(label,value);
   if(label==='MDMG') return metricFormat(value,'MDGMG');
   if(label==='PDMG'||label==='DMG RED MED') return metricFormat(value,label);
   return fmtInt(value,label==='Power'?'Power Atual':label);
