@@ -2225,14 +2225,14 @@ function supportDefenseScore(m,ctx,pctFn=pctRank){
          + .10*pctFn(intNum(m.HP,'HP'),ctx.HP)
          + .08*healScore;
   }
-  return .20*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
-       + .20*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
-       + .16*pctFn(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),ctx.HUMANRED)
-       + .10*pctFn(intNum(m.HP,'HP'),ctx.HP)
-       + .08*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
-       + .08*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
+  return .17*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
+       + .17*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
+       + .13*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
+       + .13*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
+       + .12*pctFn(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),ctx.HUMANRED)
+       + .12*pctFn(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED)
        + .10*pctFn(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
-       + .08*pctFn(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
+       + .06*pctFn(intNum(m.HP,'HP'),ctx.HP);
 }
 function glScores(m,cache){
   const hp=glPct(glMetric(m,'HP'),cache.HP),pd=glPct(glMetric(m,'PDEF'),cache.PDEF),md=glPct(glMetric(m,'MDEF'),cache.MDEF),pvpred=glPct(glMetric(m,'PVP DMG RED'),cache.PVPRED),red=glPct(num(m['DMG RED MED']),cache.RED);
@@ -2627,16 +2627,16 @@ function renderRankExplanation(m,target='#mRankExplain'){
      formula=`SUPORTE: PDMG.R 18% + MDMG.R 18% + PDEF 13% + MDEF 13% + DMG RED HUMAN 10% + PVP DMG RED 10% + HP 10% + ${healStat} 8%.`;
    }else{
      items=[
-      pctMetric('PDMG.R','PDMGR',.20,c),
-      pctMetric('MDMG.R','MDMGR',.20,c),
-      pctMetric('DMG RED HUMAN','HUMANRED',.16,c),
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.10,avgMetric(c.HP),maxMetric(c.HP)),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.08,avgMetric(c.PDEF),maxMetric(c.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.08,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      pctMetric('PDMG.R','PDMGR',.17,c),
+      pctMetric('MDMG.R','MDMGR',.17,c),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.13,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.13,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      pctMetric('DMG RED HUMAN','HUMANRED',.12,c),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.12,avgMetric(c.RED),maxMetric(c.RED)),
       rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.10,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
-      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.08,avgMetric(c.RED),maxMetric(c.RED))
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.06,avgMetric(c.HP),maxMetric(c.HP))
      ];
-     formula='SUPORTE/BIO: PDMG.R 20% + MDMG.R 20% + DMG RED HUMAN 16% + HP 10% + PDEF 8% + MDEF 8% + PVP DMG RED 10% + DMG RED MED 8%.';
+     formula='BIO: PDMG.R 17% + MDMG.R 17% + PDEF 13% + MDEF 13% + DMG RED HUMAN 12% + DMG RED MED 12% + PVP DMG RED 10% + HP 6%.';
    }
  }else if(role==='TANK'){
    const c=supportDefenseContext(pool);
