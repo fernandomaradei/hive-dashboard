@@ -2703,14 +2703,18 @@ function renderRankExplanation(m,target='#mRankExplain'){
      formula='HÍBRIDO: 50% OFENSIVA + 50% DEFESA. DMG INC HUMAN participa da ofensiva e DMG RED HUMAN da defesa, com peso defensivo superior ao HP.';
    }else if(role==='DPS' && dpsUsesDefenseBlend(job)){
      const d=supportDefenseContext(pool);
-     const def=[
+     const def=isSniper ? [
+      pctMetric('PDMG.R','PDMGR',.35,d), pctMetric('MDMG.R','MDMGR',.35,d),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.15,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.15,avgMetric(d.MDEF),maxMetric(d.MDEF))
+     ] : [
       pctMetric('PDMG.R','PDMGR',.25,d), pctMetric('MDMG.R','MDMGR',.25,d),
       pctMetric('DMG RED HUMAN','HUMANRED',.20,d),
       rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.15,avgMetric(d.PDEF),maxMetric(d.PDEF)),
       rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.15,avgMetric(d.MDEF),maxMetric(d.MDEF))
      ];
      items=[...off.map(x=>({...x,weight:x.weight*.70})),...def.map(x=>({...x,weight:x.weight*.30}))];
-     formula=`DPS: 70% OFENSIVA + 30% DEFESA. ${isSniper?'Sniper inclui CRIT RATE na ofensiva. ':''}DMG INC HUMAN participa da ofensiva; DMG RED HUMAN participa da defesa. Comparação somente com a própria classe.`;
+     formula=`DPS: 70% OFENSIVA + 30% DEFESA. ${isSniper?'Sniper inclui CRIT RATE na ofensiva e não utiliza DMG RED HUMAN. Defesa: PDMG.R 35% + MDMG.R 35% + PDEF 15% + MDEF 15%. ':'DMG RED HUMAN participa da defesa com 20%. '}DMG INC HUMAN participa da ofensiva. Comparação somente com a própria classe.`;
    }else{
      items=off;
      formula=`OFENSIVA: inclui DMG INC HUMAN.${isSniper?' Sniper também inclui CRIT RATE.':''}`;
@@ -2876,7 +2880,7 @@ function personalMetricRows(m,pool){
       rows.push({label:'DMG INC HUMAN',value:metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),display:metricFormat(m['DMG INC HUMAN'],'DMG INC HUMAN'),avg:avgMetric(c.humaninc),pct:pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)});
     }
   }
-  if(['DPS','SUPORTE','TANK','HÍBRIDO'].includes(role)){
+  if(['SUPORTE','TANK','HÍBRIDO'].includes(role) || (role==='DPS' && !/sniper|hunter/.test(norm(m.Job||'')))){
     const d=supportDefenseContext(pool);
     if(!rows.some(x=>x.label==='DMG RED HUMAN')){
       rows.push({label:'DMG RED HUMAN',value:metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),display:metricFormat(m['DMG RED HUMAN'],'DMG RED HUMAN'),avg:avgMetric(d.HUMANRED),pct:pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)});
@@ -3024,16 +3028,17 @@ function doramCombatProfile(m){
   const ppen=intNum(m['IGNORE PDEF'],'IGNORE PDEF'), mpen=intNum(m['IGNORE MDEF'],'IGNORE MDEF');
   const pdmg=metricValue(m.PDMG,'PDMG'), mdmg=metricValue(m.MDGMG,'MDGMG');
 
-  // Compara os três pares físico x mágico. Cada vitória vale 1 ponto.
-  let physical=0, magic=0;
-  if(atk>matk) physical++; else if(matk>atk) magic++;
-  if(ppen>mpen) physical++; else if(mpen>ppen) magic++;
-  if(pdmg>mdmg) physical++; else if(mdmg>pdmg) magic++;
+  // Doram: o tipo de dano é o principal identificador do build.
+  // Isso evita classificar Doram mágico como físico só porque ATK/IGNORE PDEF
+  // ficaram numericamente maiores por equipamentos/status secundários.
+  if(mdmg>pdmg) return 'MAGIC';
+  if(pdmg>mdmg) return 'PHYSICAL';
 
-  if(magic>physical) return 'MAGIC';
-  if(physical>magic) return 'PHYSICAL';
+  // Se o dano estiver empatado/ausente, usa penetração como segundo critério.
+  if(mpen>ppen) return 'MAGIC';
+  if(ppen>mpen) return 'PHYSICAL';
 
-  // Desempate pelo ataque principal.
+  // Último desempate pelo ataque principal.
   return matk>atk ? 'MAGIC' : 'PHYSICAL';
 }
 function rankingOffensiveRaw(m){
@@ -3078,6 +3083,13 @@ function classRankingOffenseScore(m,pool){
 }
 function classDpsDefenseScore(m,pool){
   const c=supportDefenseContext(pool);
+  const isSniper=/sniper|hunter/.test(norm(m?.Job||''));
+  if(isSniper){
+    return .35*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),c.PDMGR)
+         + .35*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),c.MDMGR)
+         + .15*pctRank(intNum(m.PDEF,'PDEF'),c.PDEF)
+         + .15*pctRank(intNum(m.MDEF,'MDEF'),c.MDEF);
+  }
   return .25*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),c.PDMGR)
        + .25*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),c.MDMGR)
        + .20*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),c.HUMANRED)
