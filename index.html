@@ -2646,7 +2646,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
      items=[
       rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.12,avgMetric(c.HP),maxMetric(c.HP)),
       rankMetric('PDMG',metricFormat(m.PDMG,'PDMG'),pctRank(metricValue(m.PDMG,'PDMG'),oc.damage),.12,avgMetric(oc.damage),maxMetric(oc.damage)),
-      rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),oc.critrate),.12,avgMetric(oc.critrate),maxMetric(oc.critrate)),
+      rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.CRITRATE),.12,avgMetric(c.CRITRATE),maxMetric(c.CRITRATE)),
       pctMetric('PDMG.R','PDMGR',.11,c), pctMetric('MDMG.R','MDMGR',.11,c),
       rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.10,avgMetric(c.PDEF),maxMetric(c.PDEF)),
       rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.10,avgMetric(c.MDEF),maxMetric(c.MDEF)),
@@ -2655,7 +2655,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.06,avgMetric(c.RED),maxMetric(c.RED))
      ];
      formula='PALADINO BALANCEADO: HP 12% + PDMG 12% + CRIT RATE 12% + PDMG.R 11% + MDMG.R 11% + PDEF 10% + MDEF 10% + DMG RED HUMAN 8% + PVP DMG RED 8% + DMG RED MED 6%.';
-   }   }else{
+   }else{
      items=[
       pctMetric('PDMG.R','PDMGR',.18,c), pctMetric('MDMG.R','MDMGR',.18,c),
       pctMetric('DMG RED HUMAN','HUMANRED',.20,c),
@@ -3144,15 +3144,22 @@ function classRankingDefenseScore(m,pool){
   if(classRole(m?.Job)==='SUPORTE') return supportDefenseScore(m,ctx,pctRank);
   const isPaladin=/paladin|paladino|crusader|cruzado/.test(norm(m?.Job||''));
   if(isPaladin){
-    return .16*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
-         + .16*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
-         + .18*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),ctx.HUMANRED)
-         + .10*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),ctx.CRITRATE)
-         + .12*pctRank(intNum(m.HP,'HP'),ctx.HP)
-         + .10*pctRank(intNum(m.PDEF,'PDEF'),ctx.PDEF)
-         + .08*pctRank(intNum(m.MDEF,'MDEF'),ctx.MDEF)
-         + .06*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
-         + .04*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
+    const oc=rankingOffenseContext(pool,'PHYSICAL');
+    const metrics=[
+      [.12,intNum(m.HP,'HP'),ctx.HP],
+      [.12,metricValue(m.PDMG,'PDMG'),oc.damage],
+      [.12,metricValue(m['CRIT RATE'],'CRIT RATE'),ctx.CRITRATE],
+      [.11,metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR],
+      [.11,metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR],
+      [.10,intNum(m.PDEF,'PDEF'),ctx.PDEF],
+      [.10,intNum(m.MDEF,'MDEF'),ctx.MDEF],
+      [.08,metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),ctx.HUMANRED],
+      [.08,intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED],
+      [.06,metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED]
+    ];
+    const active=metrics.filter(([w,v,arr])=>arr.some(x=>Number(x)>0));
+    const totalWeight=active.reduce((sum,[w])=>sum+w,0)||1;
+    return active.reduce((sum,[w,v,arr])=>sum+(w/totalWeight)*pctRank(v,arr),0);
   }
   return .18*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
        + .18*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
@@ -3187,24 +3194,6 @@ function approvedHWScore(m,pool){
        + .08*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)+.08*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)
        + .06*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)+.05*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)+.05*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF);
 }
-function approvedPaladinScore(m,pool){
-  const oc=rankingOffenseContext(pool,'PHYSICAL'), d=supportDefenseContext(pool);
-  const vals=[
-    [.12,intNum(m.HP,'HP'),d.HP],
-    [.12,metricValue(m.PDMG,'PDMG'),oc.damage],
-    [.12,metricValue(m['CRIT RATE'],'CRIT RATE'),oc.critrate],
-    [.11,metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR],
-    [.11,metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR],
-    [.10,intNum(m.PDEF,'PDEF'),d.PDEF],
-    [.10,intNum(m.MDEF,'MDEF'),d.MDEF],
-    [.08,metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED],
-    [.08,intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED],
-    [.06,metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED]
-  ];
-  const active=vals.filter(([w,v,arr])=>arr.some(x=>Number(x)>0));
-  const totalW=active.reduce((a,[w])=>a+w,0)||1;
-  return active.reduce((a,[w,v,arr])=>a+(w/totalW)*pctRank(v,arr),0);
-}
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
 
@@ -3213,9 +3202,6 @@ function classTop3Score(member, pool){
   }
 
   if(role==='TANK'){
-    if(/paladin|paladino|crusader|cruzado/.test(norm(member.Job||''))){
-      return {score:approvedPaladinScore(member,pool),kind:'PALADINO • BUILD BALANCEADA'};
-    }
     return {score:classRankingDefenseScore(member,pool),kind:'TANK • DEFESA'};
   }
 
