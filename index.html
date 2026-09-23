@@ -2105,95 +2105,156 @@ html{scroll-behavior:smooth}
 </style>
 
 
-<style id="HIVE_MOBILE_DISCORD_SCORE_FIX_V31_20">
+<style id="HIVE_MOBILE_MYCHAR_FINAL_V31_20">
+/* RESET DEFINITIVO SOMENTE MOBILE — desktop não é alterado */
 @media (max-width:760px){
-  /* Remove o ícone roxo/azul de Discord que ficou solto à esquerda.
-     O 🎮 ao lado do texto continua no lugar correto. */
-  #myCharShell .myCharNameLine > .discordMini{
-    display:none!important;
-    position:static!important;
-    width:0!important;
-    height:0!important;
-    margin:0!important;
-    padding:0!important;
+  #myCharShell{overflow:hidden!important}
+
+  /* Cabeçalho */
+  #myCharShell .myCharSectionHead{
+    display:flex!important; flex-direction:column!important; align-items:stretch!important;
+    gap:10px!important; min-height:0!important; padding:14px!important;
+  }
+  #myCharShell .myCharEyebrow{font-size:20px!important;line-height:1.15!important}
+  #myCharShell .myCharIntro{font-size:11px!important;margin-top:4px!important}
+  #myCharShell .myCharOpen{
+    position:static!important; inset:auto!important; width:100%!important; min-width:0!important;
+    min-height:42px!important; margin:0!important; padding:10px!important; font-size:13px!important;
   }
 
-  /* Índice na classe: reorganizado para o donut não atropelar título/posição */
-  #myCharShell .myHeroKpi.score{
-    position:relative!important;
-    display:flex!important;
-    flex-direction:column!important;
-    align-items:center!important;
-    justify-content:flex-start!important;
-    min-height:220px!important;
-    padding:15px 8px 12px!important;
-    overflow:hidden!important;
+  /* Área principal */
+  #myCharShell .myCharHeroRow{
+    display:grid!important; grid-template-columns:1fr 1fr!important;
+    gap:10px!important; min-height:0!important; padding:10px!important;
   }
-  #myCharShell .myHeroKpi.score > small{
-    order:1!important;
-    position:static!important;
-    width:100%!important;
-    min-height:18px!important;
-    margin:0 0 8px!important;
-    text-align:center!important;
-    font-size:8px!important;
-    line-height:1.15!important;
-    z-index:2!important;
+
+  /* Identidade */
+  #myCharShell .myCharIdentityCard{
+    grid-column:1/-1!important;
+    display:grid!important; grid-template-columns:120px minmax(0,1fr)!important;
+    gap:16px!important; align-items:center!important;
+    width:100%!important; height:auto!important; min-height:150px!important;
+    padding:14px!important; overflow:hidden!important;
+    border:1px solid #343b38!important; border-radius:12px!important;
+    background:rgba(5,18,18,.42)!important;
+  }
+  #myCharShell .myCharPortrait{
+    position:relative!important; inset:auto!important; transform:none!important;
+    width:116px!important; height:116px!important; margin:0!important;
+    align-self:center!important;
+  }
+  #myCharShell .myCharIdentityText{
+    position:static!important; inset:auto!important; transform:none!important;
+    min-width:0!important; width:100%!important; padding:0!important;
+  }
+  /* A frase decorativa do desktop não cabe no mobile */
+  #myCharShell .myCharIdentityText:after{display:none!important;content:none!important}
+  #myCharShell .discordMini,
+  #myCharShell .myCharNameLine .discordMini{display:none!important}
+
+  #myCharShell .myCharNameLine{
+    position:static!important; inset:auto!important; display:block!important;
+    margin:0 0 8px!important; white-space:normal!important;
+  }
+  #myCharShell .myCharNameLine strong{
+    position:static!important; display:block!important; margin:0 0 8px!important;
+    font-size:26px!important; line-height:1.05!important; white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #myCharShell #myCharDiscord{
+    position:static!important; inset:auto!important; display:block!important;
+    margin:0 0 10px!important; max-width:100%!important;
+    font-size:11px!important; line-height:1.3!important; white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #myCharShell #myCharClass{
+    position:static!important; inset:auto!important; display:block!important;
+    margin:0 0 9px!important; font-size:18px!important; line-height:1.1!important;
+  }
+  #myCharShell .myCharRolePills{position:static!important;inset:auto!important;margin:0!important}
+  #myCharShell .myCharRolePills span{font-size:10px!important;padding:5px 10px!important}
+
+  /* Todos os KPIs passam a ter dimensões previsíveis */
+  #myCharShell .myHeroKpi,
+  #myCharShell .myHeroKpi.score{
+    position:relative!important; inset:auto!important; grid-column:auto!important;
+    width:100%!important; height:158px!important; min-height:158px!important;
+    margin:0!important; padding:14px!important; overflow:hidden!important;
+    border:1px solid #343b38!important; border-radius:12px!important;
+    background:rgba(5,18,18,.42)!important; box-sizing:border-box!important;
+  }
+
+  /* Índice: elimina posicionamentos desktop conflitantes */
+  #myCharShell .myHeroKpi.score{
+    display:block!important; text-align:center!important;
+  }
+  #myCharShell .myHeroKpi.score>small{
+    position:static!important; inset:auto!important; transform:none!important;
+    display:block!important; width:100%!important; min-height:0!important;
+    margin:0!important; padding:0!important; text-align:center!important;
+    font-size:8px!important; line-height:12px!important; white-space:nowrap!important;
   }
   #myCharShell .myHeroKpi.score:before{
-    content:""!important;
-    position:absolute!important;
-    top:45px!important;
-    left:50%!important;
-    width:112px!important;
-    height:112px!important;
-    transform:translateX(-50%) rotate(-90deg)!important;
-    margin:0!important;
+    content:""!important; position:absolute!important;
+    top:29px!important; left:50%!important; right:auto!important; bottom:auto!important;
+    width:88px!important; height:88px!important;
+    transform:translateX(-50%)!important; margin:0!important;
   }
-  #myCharShell .myHeroKpi.score > b{
-    order:2!important;
-    position:relative!important;
-    z-index:3!important;
-    display:flex!important;
-    align-items:baseline!important;
-    justify-content:center!important;
-    width:112px!important;
-    height:112px!important;
-    margin:8px 0 0!important;
-    padding:0!important;
-    font-size:38px!important;
-    line-height:112px!important;
-    text-align:center!important;
+  #myCharShell .myHeroKpi.score>b{
+    position:absolute!important; top:58px!important; left:0!important; right:0!important;
+    width:100%!important; margin:0!important; padding:0!important;
+    text-align:center!important; font-size:31px!important; line-height:1!important;
   }
-  #myCharShell .myHeroKpi.score > b small{
-    font-size:12px!important;
-    line-height:1!important;
-    margin-left:2px!important;
-  }
+  #myCharShell .myHeroKpi.score>b small{font-size:10px!important}
   #myCharShell #myCharGroup{
-    order:3!important;
-    position:static!important;
-    z-index:4!important;
-    display:block!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin:7px 0 0!important;
-    padding:0 3px!important;
-    transform:none!important;
-    text-align:center!important;
+    position:absolute!important; top:auto!important; bottom:10px!important;
+    left:8px!important; right:8px!important; width:auto!important;
+    transform:none!important; margin:0!important; padding:0!important;
+    min-width:0!important; max-width:none!important;
+    text-align:center!important; font-size:9px!important; line-height:12px!important;
     white-space:normal!important;
-    font-size:9px!important;
-    line-height:1.2!important;
-    box-sizing:border-box!important;
   }
+  #myCharShell #myCharGroup:before{display:none!important;content:none!important}
+
+  /* Demais KPIs */
+  #myCharShell .myHeroKpi:not(.score){
+    display:flex!important; flex-direction:column!important;
+    align-items:flex-start!important; justify-content:center!important;
+  }
+  #myCharShell .myHeroKpi:not(.score)>small{
+    position:static!important; inset:auto!important; transform:none!important;
+    display:block!important; min-height:0!important; margin:0 0 8px!important;
+    font-size:8px!important; line-height:11px!important; white-space:normal!important;
+  }
+  #myCharShell .myHeroKpi:not(.score)>b{
+    position:static!important; inset:auto!important; transform:none!important;
+    display:block!important; max-width:100%!important; margin:0 0 6px!important;
+    font-size:27px!important; line-height:1.05!important; white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #myCharShell .myHeroKpi:not(.score)>span{
+    position:static!important; inset:auto!important; transform:none!important;
+    display:block!important; max-width:100%!important; margin:0!important;
+    font-size:10px!important; line-height:1.25!important; white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #myCharShell .myHeroKpi.updated>b{
+    font-size:20px!important; line-height:1.08!important; word-break:normal!important;
+  }
+
+  /* Conteúdo inferior */
+  #myCharShell .myQuickRow,
+  #myCharShell .myCharMetrics{grid-template-columns:1fr!important}
+  #myCharShell .myMetricsHead{display:flex!important;flex-direction:column!important;align-items:flex-start!important}
 }
+
 @media (max-width:390px){
-  #myCharShell .myHeroKpi.score{min-height:205px!important}
-  #myCharShell .myHeroKpi.score:before{width:102px!important;height:102px!important}
-  #myCharShell .myHeroKpi.score > b{
-    width:102px!important;height:102px!important;line-height:102px!important;font-size:35px!important
-  }
+  #myCharShell .myCharIdentityCard{grid-template-columns:96px minmax(0,1fr)!important;gap:11px!important;padding:11px!important}
+  #myCharShell .myCharPortrait{width:92px!important;height:92px!important}
+  #myCharShell .myCharNameLine strong{font-size:22px!important}
+  #myCharShell #myCharClass{font-size:16px!important}
+  #myCharShell .myHeroKpi:not(.score)>b{font-size:23px!important}
+  #myCharShell .myHeroKpi.updated>b{font-size:18px!important}
 }
 </style>
 
