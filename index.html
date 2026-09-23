@@ -2216,14 +2216,15 @@ function supportDefenseScore(m,ctx,pctFn=pctRank){
   const healStat=supportHealStat(m.Job);
   const healScore=healStat ? pctFn(intNum(m[healStat],healStat),ctx[healStat]) : 0;
   if(healStat){
-    return .18*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
-         + .18*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
-         + .13*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
-         + .13*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
+    return .17*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
+         + .17*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
+         + .12*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
+         + .12*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
          + .10*pctFn(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),ctx.HUMANRED)
          + .10*pctFn(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
-         + .10*pctFn(intNum(m.HP,'HP'),ctx.HP)
-         + .08*healScore;
+         + .09*pctFn(intNum(m.HP,'HP'),ctx.HP)
+         + .08*healScore
+         + .05*pctFn(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED);
   }
   return .17*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
        + .17*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
@@ -2561,9 +2562,9 @@ function rankMetric(label,value,pct,weight,avgValue,targetValue){
 
 function rankReferenceValue(member,label){
   if(label==='Power') return intNum(member['Power Atual'],'Power Atual');
-  if(label==='MDMG') return metricValue(member['MDGMG'],'MDGMG');
+  if(label==='MDMG') return metricValue((member.MDGM ?? member.MDGMG ?? member.MDMG),'MDGMG');
   if(label==='PDMG') return metricValue(member['PDMG'],'PDMG');
-  if(label==='DMG RED MED') return metricValue(member['DMG RED MED'],'DMG RED MED');
+  if(label==='DMG RED MED'||label==='DMG INC MED') return metricValue(member[label],label);
   if(label==='PDMG.R'||label==='MDMG.R') return metricValue(member[label],label);
   return intNum(member[label],label);
 }
@@ -2616,15 +2617,16 @@ function renderRankExplanation(m,target='#mRankExplain'){
    const c=supportDefenseContext(pool), healStat=supportHealStat(job);
    if(healStat){
      items=[
-      pctMetric('PDMG.R','PDMGR',.18,c), pctMetric('MDMG.R','MDMGR',.18,c),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.13,avgMetric(c.PDEF),maxMetric(c.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.13,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      pctMetric('PDMG.R','PDMGR',.17,c), pctMetric('MDMG.R','MDMGR',.17,c),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.12,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.12,avgMetric(c.MDEF),maxMetric(c.MDEF)),
       pctMetric('DMG RED HUMAN','HUMANRED',.10,c),
       rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.10,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.10,avgMetric(c.HP),maxMetric(c.HP)),
-      rankMetric(healStat,fmtInt(m[healStat],healStat),pctRank(intNum(m[healStat],healStat),c[healStat]),.08,avgMetric(c[healStat]),maxMetric(c[healStat]))
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.09,avgMetric(c.HP),maxMetric(c.HP)),
+      rankMetric(healStat,fmtInt(m[healStat],healStat),pctRank(intNum(m[healStat],healStat),c[healStat]),.08,avgMetric(c[healStat]),maxMetric(c[healStat])),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.05,avgMetric(c.RED),maxMetric(c.RED))
      ];
-     formula=`SUPORTE: PDMG.R 18% + MDMG.R 18% + PDEF 13% + MDEF 13% + DMG RED HUMAN 10% + PVP DMG RED 10% + HP 10% + ${healStat} 8%.`;
+     formula=`SUPORTE: PDMG.R 17% + MDMG.R 17% + PDEF 12% + MDEF 12% + DMG RED HUMAN 10% + PVP DMG RED 10% + HP 9% + ${healStat} 8% + DMG RED MED 5%.`;
    }else{
      items=[
       pctMetric('PDMG.R','PDMGR',.17,c),
@@ -2680,41 +2682,46 @@ function renderRankExplanation(m,target='#mRankExplain'){
     rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate),.12,avgMetric(c.critrate),maxMetric(c.critrate)),
     rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.08,avgMetric(c.power),maxMetric(c.power))
    ] : [
-    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.24,avgMetric(c.attack),maxMetric(c.attack)),
-    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.20,avgMetric(c.penetration),maxMetric(c.penetration)),
-    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.18,avgMetric(c.damage),maxMetric(c.damage)),
-    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.12,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
-    rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.18,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+    rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.23,avgMetric(c.attack),maxMetric(c.attack)),
+    rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.19,avgMetric(c.penetration),maxMetric(c.penetration)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.17,avgMetric(c.damage),maxMetric(c.damage)),
+    rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.11,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+    rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.17,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+    rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.05,avgMetric(c.incmed),maxMetric(c.incmed)),
     rankMetric('Power',fmtInt(m['Power Atual'],'Power Atual'),pctRank(intNum(m['Power Atual'],'Power Atual'),c.power),.08,avgMetric(c.power),maxMetric(c.power))
    ];
 
    if(role==='DPS' && isSniper){
      const d=supportDefenseContext(pool);
      items=[
-      rankMetric('ATK',fmtInt(r.attack,'ATK'),pctRank(r.attack,c.attack),.13,avgMetric(c.attack),maxMetric(c.attack)),
-      rankMetric('PDMG',metricFormat(r.damage,'PDMG'),pctRank(r.damage,c.damage),.16,avgMetric(c.damage),maxMetric(c.damage)),
-      rankMetric('IGNORE PDEF',fmtInt(r.penetration,'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.12,avgMetric(c.penetration),maxMetric(c.penetration)),
-      rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.11,avgMetric(c.humaninc),maxMetric(c.humaninc)),
-      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.11,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
-      rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate),.12,avgMetric(c.critrate),maxMetric(c.critrate)),
-      pctMetric('PDMG.R','PDMGR',.0625,d),pctMetric('MDMG.R','MDMGR',.0625,d),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.0625,avgMetric(d.PDEF),maxMetric(d.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.0625,avgMetric(d.MDEF),maxMetric(d.MDEF))
+      rankMetric('ATK',fmtInt(r.attack,'ATK'),pctRank(r.attack,c.attack),.12,avgMetric(c.attack),maxMetric(c.attack)),
+      rankMetric('PDMG',metricFormat(r.damage,'PDMG'),pctRank(r.damage,c.damage),.14,avgMetric(c.damage),maxMetric(c.damage)),
+      rankMetric('IGNORE PDEF',fmtInt(r.penetration,'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.11,avgMetric(c.penetration),maxMetric(c.penetration)),
+      rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.10,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.10,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+      rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate),.10,avgMetric(c.critrate),maxMetric(c.critrate)),
+      rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.05,avgMetric(c.incmed),maxMetric(c.incmed)),
+      pctMetric('PDMG.R','PDMGR',.0575,d),pctMetric('MDMG.R','MDMGR',.0575,d),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.0575,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.0575,avgMetric(d.MDEF),maxMetric(d.MDEF)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.05,avgMetric(d.RED),maxMetric(d.RED))
      ];
-     formula='SNIPER: 75% OFENSIVA + 25% DEFESA. ATK 13% + PDMG 16% + IGNORE PDEF 12% + DMG INC HUMAN 11% + PVP DMG INC 11% + CRIT RATE 12% + PDMG.R 6,25% + MDMG.R 6,25% + PDEF 6,25% + MDEF 6,25%. Power não participa da nota.';
+     formula='SNIPER: ATK 12% + PDMG 14% + IGNORE PDEF 11% + DMG INC HUMAN 10% + PVP DMG INC 10% + CRIT RATE 10% + DMG INC MED 5% + PDMG.R 5,75% + MDMG.R 5,75% + PDEF 5,75% + MDEF 5,75% + DMG RED MED 5%.';
    }else if(role==='DPS' && /\\bhw\\b|high wizard|wizard|mage/.test(norm(job))){
      const d=supportDefenseContext(pool);
      items=[
-      rankMetric('MATK',fmtInt(r.attack,'MATK'),pctRank(r.attack,c.attack),.15,avgMetric(c.attack),maxMetric(c.attack)),
-      rankMetric('MDMG',metricFormat(r.damage,'MDGMG'),pctRank(r.damage,c.damage),.18,avgMetric(c.damage),maxMetric(c.damage)),
-      rankMetric('IGNORE MDEF',fmtInt(r.penetration,'IGNORE MDEF'),pctRank(r.penetration,c.penetration),.13,avgMetric(c.penetration),maxMetric(c.penetration)),
-      rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.12,avgMetric(c.humaninc),maxMetric(c.humaninc)),
-      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.10,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
-      pctMetric('PDMG.R','PDMGR',.08,d),pctMetric('MDMG.R','MDMGR',.08,d),pctMetric('DMG RED HUMAN','HUMANRED',.06,d),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.05,avgMetric(d.PDEF),maxMetric(d.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.05,avgMetric(d.MDEF),maxMetric(d.MDEF))
+      rankMetric('MATK',fmtInt(r.attack,'MATK'),pctRank(r.attack,c.attack),.14,avgMetric(c.attack),maxMetric(c.attack)),
+      rankMetric('MDMG',metricFormat(r.damage,'MDGMG'),pctRank(r.damage,c.damage),.16,avgMetric(c.damage),maxMetric(c.damage)),
+      rankMetric('IGNORE MDEF',fmtInt(r.penetration,'IGNORE MDEF'),pctRank(r.penetration,c.penetration),.12,avgMetric(c.penetration),maxMetric(c.penetration)),
+      rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.11,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.09,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+      rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.05,avgMetric(c.incmed),maxMetric(c.incmed)),
+      pctMetric('PDMG.R','PDMGR',.07,d),pctMetric('MDMG.R','MDMGR',.07,d),pctMetric('DMG RED HUMAN','HUMANRED',.05,d),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.045,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.045,avgMetric(d.MDEF),maxMetric(d.MDEF)),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.05,avgMetric(d.RED),maxMetric(d.RED))
      ];
-     formula='HW: MATK 15% + MDMG 18% + IGNORE MDEF 13% + DMG INC HUMAN 12% + PVP DMG INC 10% + PDMG.R 8% + MDMG.R 8% + DMG RED HUMAN 6% + PDEF 5% + MDEF 5%.';
+     formula='HW: MATK 14% + MDMG 16% + IGNORE MDEF 12% + DMG INC HUMAN 11% + PVP DMG INC 9% + DMG INC MED 5% + PDMG.R 7% + MDMG.R 7% + DMG RED HUMAN 5% + PDEF 4,5% + MDEF 4,5% + DMG RED MED 5%.';
    }else    if(role==='HÍBRIDO'){
      const d=supportDefenseContext(pool);
      const def=[
@@ -2727,7 +2734,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.08,avgMetric(d.RED),maxMetric(d.RED))
      ];
      items=[...off.map(x=>({...x,weight:x.weight*.50})),...def.map(x=>({...x,weight:x.weight*.50}))];
-     formula='HÍBRIDO: 50% OFENSIVA + 50% DEFESA. DMG INC HUMAN participa da ofensiva e DMG RED HUMAN da defesa, com peso defensivo superior ao HP.';
+     formula='HÍBRIDO: 50% OFENSIVA + 50% DEFESA. DMG INC MED participa da ofensiva (5% do bloco ofensivo) e DMG RED MED participa da defesa (8% do bloco defensivo).';
    }else if(role==='DPS' && dpsUsesDefenseBlend(job)){
      const d=supportDefenseContext(pool);
      const def=isSniper ? [
@@ -2740,11 +2747,19 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.15,avgMetric(d.PDEF),maxMetric(d.PDEF)),
       rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.15,avgMetric(d.MDEF),maxMetric(d.MDEF))
      ];
-     items=[...off.map(x=>({...x,weight:x.weight*.70})),...def.map(x=>({...x,weight:x.weight*.30}))];
-     formula=`DPS: 70% OFENSIVA + 30% DEFESA. ${isSniper?'Sniper inclui CRIT RATE na ofensiva e não utiliza DMG RED HUMAN. Defesa: PDMG.R 35% + MDMG.R 35% + PDEF 15% + MDEF 15%. ':'DMG RED HUMAN participa da defesa com 20%. '}DMG INC HUMAN participa da ofensiva. Comparação somente com a própria classe.`;
+     const baseItems=[...off.map(x=>({...x,weight:x.weight*.70})),...def.map(x=>({...x,weight:x.weight*.30}))];
+     items=[
+       ...baseItems.map(x=>({...x,weight:x.weight*.95})),
+       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.05,avgMetric(d.RED),maxMetric(d.RED))
+     ];
+     formula=`DPS: base ofensiva/defensiva 95% + DMG RED MED 5%. DMG INC MED participa da ofensiva com 5% dentro do bloco ofensivo. Comparação somente com a própria classe.`;
    }else{
-     items=off;
-     formula=`OFENSIVA: inclui DMG INC HUMAN.${isSniper?' Sniper também inclui CRIT RATE.':''}`;
+     const d=supportDefenseContext(pool);
+     items=[
+       ...off.map(x=>({...x,weight:x.weight*.95})),
+       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.05,avgMetric(d.RED),maxMetric(d.RED))
+     ];
+     formula=`DPS: ofensiva 95% + DMG RED MED 5%. DMG INC MED participa da ofensiva.`;
    }
  }
 
@@ -2788,7 +2803,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
 function statRankDisplay(label,value){
   if(['PDMG.R','MDMG.R','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE'].includes(label)) return rankAvgFormat(label,value);
   if(label==='MDMG') return metricFormat(value,'MDGMG');
-  if(label==='PDMG'||label==='DMG RED MED') return metricFormat(value,label);
+  if(label==='PDMG'||label==='DMG RED MED'||label==='DMG INC MED') return metricFormat(value,label);
   return fmtInt(value,label==='Power'?'Power Atual':label);
 }
 function openStatRank(playerEnc,labelEnc){
@@ -3085,6 +3100,7 @@ function rankingOffenseContext(pool,profile){
     damage:base.map(x=>rankingOffensiveRaw(x).damage),
     pvpinc:base.map(x=>intNum(x['PVP DMG INC'],'PVP DMG INC')),
     humaninc:base.map(x=>metricValue(x['DMG INC HUMAN'],'DMG INC HUMAN')),
+    incmed:base.map(x=>metricValue(x['DMG INC MED'],'DMG INC MED')),
     critrate:base.map(x=>metricValue(x['CRIT RATE'],'CRIT RATE')),
     power:base.map(x=>intNum(x['Power Atual'],'Power Atual'))
   };
@@ -3103,11 +3119,12 @@ function classRankingOffenseScore(m,pool){
          + .12*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),ctx.critrate)
          + .08*pctRank(intNum(m['Power Atual'],'Power Atual'),ctx.power);
   }
-  return .24*pctRank(r.attack,ctx.attack)
-       + .20*pctRank(r.penetration,ctx.penetration)
-       + .18*pctRank(r.damage,ctx.damage)
-       + .12*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),ctx.pvpinc)
-       + .18*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),ctx.humaninc)
+  return .23*pctRank(r.attack,ctx.attack)
+       + .19*pctRank(r.penetration,ctx.penetration)
+       + .17*pctRank(r.damage,ctx.damage)
+       + .11*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),ctx.pvpinc)
+       + .17*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),ctx.humaninc)
+       + .05*pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),ctx.incmed)
        + .08*pctRank(intNum(m['Power Atual'],'Power Atual'),ctx.power);
 }
 function classDpsDefenseScore(m,pool){
@@ -3183,18 +3200,23 @@ function classRankingGroup(m){
 
 function approvedSniperScore(m,pool){
   const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,r.profile),d=supportDefenseContext(pool);
-  return .13*pctRank(r.attack,c.attack)+.16*pctRank(r.damage,c.damage)+.12*pctRank(r.penetration,c.penetration)
-       + .11*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.11*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
-       + .12*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate)+.0625*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)
-       + .0625*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)+.0625*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
-       + .0625*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF);
+  return .12*pctRank(r.attack,c.attack)+.14*pctRank(r.damage,c.damage)+.11*pctRank(r.penetration,c.penetration)
+       + .10*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.10*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
+       + .10*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate)
+       + .05*pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed)
+       + .0575*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)
+       + .0575*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)+.0575*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
+       + .0575*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)
+       + .05*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED);
 }
 function approvedHWScore(m,pool){
   const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,r.profile),d=supportDefenseContext(pool);
-  return .15*pctRank(r.attack,c.attack)+.18*pctRank(r.damage,c.damage)+.13*pctRank(r.penetration,c.penetration)
-       + .12*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.10*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
-       + .08*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)+.08*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)
-       + .06*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)+.05*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)+.05*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF);
+  return .14*pctRank(r.attack,c.attack)+.16*pctRank(r.damage,c.damage)+.12*pctRank(r.penetration,c.penetration)
+       + .11*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.09*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
+       + .05*pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed)
+       + .07*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)+.07*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)
+       + .05*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)+.045*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)+.045*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)
+       + .05*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED);
 }
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
@@ -3212,7 +3234,9 @@ function classTop3Score(member, pool){
     if(/sniper|hunter/.test(j)) return {score:approvedSniperScore(member,pool),kind:'DPS FÍSICO • FÓRMULA SNIPER'};
     if(/\bhw\b|high wizard|wizard|mage/.test(j)) return {score:approvedHWScore(member,pool),kind:'DPS MÁGICO • FÓRMULA HW'};
     const offense=classRankingOffenseScore(member,pool);
-    const score=dpsUsesDefenseBlend(member.Job)?(offense*.70)+(classDpsDefenseScore(member,pool)*.30):offense;
+    const baseScore=dpsUsesDefenseBlend(member.Job)?(offense*.70)+(classDpsDefenseScore(member,pool)*.30):offense;
+    const d=supportDefenseContext(pool);
+    const score=(baseScore*.95)+(.05*pctRank(metricValue(member['DMG RED MED'],'DMG RED MED'),d.RED));
     return {score,kind:(profile==='MAGIC'?'DPS MÁGICO':'DPS FÍSICO')+(dpsUsesDefenseBlend(member.Job)?' • 70% ATQ + 30% DEF':'')};
   }
 
