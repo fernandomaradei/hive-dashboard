@@ -1922,339 +1922,157 @@ html{scroll-behavior:smooth}
 #centralMembros .evo-flat{color:#b7afa4!important}
 </style>
 
-<style id="HIVE_MOBILE_MYCHAR_FIX_V31_19">
+
+<style id="HIVE_MOBILE_MYCHAR_FIX_V31_20">
+/* Mobile refeito isoladamente. Nenhuma regra abaixo afeta desktop. */
 @media (max-width:760px){
-  /* Cabeçalho */
-  #myCharShell .myCharSectionHead{
-    display:flex!important;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    gap:10px!important;
-    min-height:0!important;
-    padding:14px 14px 12px!important;
-  }
-  #myCharShell .myCharEyebrow{
-    font-size:20px!important;
-    line-height:1.15!important;
-    text-align:left!important;
-  }
-  #myCharShell .myCharIntro{
-    font-size:11px!important;
-    line-height:1.35!important;
-    margin-top:4px!important;
-  }
-  #myCharShell .myCharOpen{
-    position:static!important;
-    width:100%!important;
-    min-width:0!important;
-    min-height:42px!important;
-    margin:0!important;
-    padding:10px 12px!important;
-    justify-self:auto!important;
-    align-self:stretch!important;
-    font-size:13px!important;
-  }
+  #myCharShell{margin-top:12px!important}
+  #myCharShell .myCharCard{overflow:hidden!important}
 
-  /* Card principal: uma coluna limpa, sem sobreposição */
-  #myCharShell .myCharHeroRow{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:8px!important;
-    min-height:0!important;
-    padding:10px!important;
-    align-items:stretch!important;
-  }
-  #myCharShell .myCharIdentityCard{
-    grid-column:1/-1!important;
-    display:grid!important;
-    grid-template-columns:118px minmax(0,1fr)!important;
-    gap:14px!important;
-    width:100%!important;
-    min-width:0!important;
-    height:auto!important;
-    min-height:150px!important;
-    padding:10px!important;
-    border:1px solid #34352f!important;
-    border-radius:10px!important;
-    box-sizing:border-box!important;
-    overflow:hidden!important;
-  }
-  #myCharShell .myCharPortrait{
-    position:relative!important;
-    inset:auto!important;
-    width:112px!important;
-    height:112px!important;
-    margin:0!important;
-    align-self:center!important;
-    transform:none!important;
-  }
-  #myCharShell .myCharIdentityText{
-    position:relative!important;
-    inset:auto!important;
-    min-width:0!important;
-    align-self:center!important;
-    padding:0!important;
-    transform:none!important;
-  }
-  #myCharShell .myCharNameLine{
-    position:static!important;
-    display:block!important;
-    margin:0 0 7px!important;
-    min-width:0!important;
-    white-space:normal!important;
-  }
-  #myCharShell .myCharNameLine strong{
-    display:block!important;
-    position:static!important;
-    max-width:100%!important;
-    margin:0 0 7px!important;
-    font-size:25px!important;
-    line-height:1.05!important;
-    overflow-wrap:anywhere!important;
-  }
-  #myCharShell #myCharDiscord{
-    position:static!important;
-    display:block!important;
-    max-width:100%!important;
-    margin:0 0 9px!important;
-    font-size:11px!important;
-    line-height:1.3!important;
-    white-space:normal!important;
-    overflow-wrap:anywhere!important;
-  }
-  #myCharShell #myCharClass{
-    position:static!important;
-    display:block!important;
-    margin:0 0 9px!important;
-    font-size:17px!important;
-    line-height:1.15!important;
-  }
-  #myCharShell .myCharRolePills{
-    position:static!important;
-    display:flex!important;
-    margin:0!important;
-  }
-  #myCharShell .myCharRolePills span{
-    font-size:10px!important;
-    padding:5px 10px!important;
-  }
-
-  /* KPIs em 2 colunas */
-  #myCharShell .myHeroKpi,
-  #myCharShell .myHeroKpi.score{
-    grid-column:auto!important;
-    width:auto!important;
-    min-width:0!important;
-    height:auto!important;
-    min-height:142px!important;
-    padding:14px 10px!important;
-    border:1px solid #34352f!important;
-    border-radius:10px!important;
-    box-sizing:border-box!important;
-    overflow:hidden!important;
-  }
-  #myCharShell .myHeroKpi.score:before{
-    width:92px!important;
-    height:92px!important;
-    top:35px!important;
-  }
-  #myCharShell .myHeroKpi.score>b{
-    margin-top:25px!important;
-    font-size:34px!important;
-  }
-  #myCharShell #myCharGroup{
-    margin:19px auto 0!important;
-    min-width:0!important;
-    max-width:100%!important;
-    font-size:9px!important;
-    white-space:normal!important;
-    text-align:center!important;
-  }
-  #myCharShell .myHeroKpi:not(.score)>small{
-    min-height:26px!important;
-    font-size:9px!important;
-  }
-  #myCharShell .myHeroKpi:not(.score)>b{
-    margin-top:8px!important;
-    font-size:28px!important;
-    line-height:1!important;
-    overflow-wrap:anywhere!important;
-  }
-  #myCharShell .myHeroKpi.updated{
-    grid-column:auto!important;
-  }
-
-  #myCharShell .myQuickRow,
-  #myCharShell .myCharMetrics{
-    grid-template-columns:1fr!important;
-  }
-  #myCharShell .myMetricsHead{
-    align-items:flex-start!important;
-    flex-direction:column!important;
-  }
-}
-@media (max-width:390px){
-  #myCharShell .myCharIdentityCard{
-    grid-template-columns:96px minmax(0,1fr)!important;
-    gap:10px!important;
-  }
-  #myCharShell .myCharPortrait{width:92px!important;height:92px!important}
-  #myCharShell .myCharNameLine strong{font-size:21px!important}
-  #myCharShell .myHeroKpi:not(.score)>b{font-size:24px!important}
-}
-</style>
-
-
-<style id="HIVE_MOBILE_MYCHAR_FINAL_V31_20">
-/* RESET DEFINITIVO SOMENTE MOBILE — desktop não é alterado */
-@media (max-width:760px){
-  #myCharShell{overflow:hidden!important}
-
-  /* Cabeçalho */
   #myCharShell .myCharSectionHead{
     display:flex!important; flex-direction:column!important; align-items:stretch!important;
     gap:10px!important; min-height:0!important; padding:14px!important;
   }
   #myCharShell .myCharEyebrow{font-size:20px!important;line-height:1.15!important}
-  #myCharShell .myCharIntro{font-size:11px!important;margin-top:4px!important}
+  #myCharShell .myCharIntro{display:none!important}
   #myCharShell .myCharOpen{
-    position:static!important; inset:auto!important; width:100%!important; min-width:0!important;
-    min-height:42px!important; margin:0!important; padding:10px!important; font-size:13px!important;
+    position:static!important;width:100%!important;min-width:0!important;height:44px!important;
+    min-height:44px!important;margin:0!important;padding:0 10px!important;font-size:13px!important;
   }
 
-  /* Área principal */
+  /* Perfil: retrato menor + bloco textual realmente separado. */
   #myCharShell .myCharHeroRow{
-    display:grid!important; grid-template-columns:1fr 1fr!important;
-    gap:10px!important; min-height:0!important; padding:10px!important;
+    display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;
+    min-height:0!important;padding:10px!important;align-items:stretch!important;
   }
-
-  /* Identidade */
   #myCharShell .myCharIdentityCard{
-    grid-column:1/-1!important;
-    display:grid!important; grid-template-columns:120px minmax(0,1fr)!important;
-    gap:16px!important; align-items:center!important;
-    width:100%!important; height:auto!important; min-height:150px!important;
-    padding:14px!important; overflow:hidden!important;
-    border:1px solid #343b38!important; border-radius:12px!important;
-    background:rgba(5,18,18,.42)!important;
+    grid-column:1/-1!important;display:grid!important;
+    grid-template-columns:150px minmax(0,1fr)!important;gap:14px!important;
+    align-items:center!important;width:100%!important;height:auto!important;min-height:175px!important;
+    padding:12px!important;box-sizing:border-box!important;overflow:hidden!important;
+    border:1px solid #343b38!important;border-radius:11px!important;
   }
   #myCharShell .myCharPortrait{
-    position:relative!important; inset:auto!important; transform:none!important;
-    width:116px!important; height:116px!important; margin:0!important;
-    align-self:center!important;
+    position:relative!important;inset:auto!important;transform:none!important;
+    width:142px!important;height:142px!important;margin:0!important;align-self:center!important;
   }
   #myCharShell .myCharIdentityText{
-    position:static!important; inset:auto!important; transform:none!important;
-    min-width:0!important; width:100%!important; padding:0!important;
+    position:static!important;inset:auto!important;transform:none!important;
+    display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+    justify-content:center!important;min-width:0!important;width:100%!important;padding:0!important;
   }
-  /* A frase decorativa do desktop não cabe no mobile */
-  #myCharShell .myCharIdentityText:after{display:none!important;content:none!important}
-  #myCharShell .discordMini,
-  #myCharShell .myCharNameLine .discordMini{display:none!important}
-
   #myCharShell .myCharNameLine{
-    position:static!important; inset:auto!important; display:block!important;
-    margin:0 0 8px!important; white-space:normal!important;
+    position:static!important;display:flex!important;flex-direction:column!important;
+    align-items:flex-start!important;width:100%!important;min-width:0!important;
+    margin:0!important;white-space:normal!important;
   }
   #myCharShell .myCharNameLine strong{
-    position:static!important; display:block!important; margin:0 0 8px!important;
-    font-size:26px!important; line-height:1.05!important; white-space:normal!important;
-    overflow-wrap:anywhere!important;
+    position:static!important;display:block!important;width:100%!important;max-width:100%!important;
+    margin:0 0 8px!important;font-size:27px!important;line-height:1.05!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
   }
   #myCharShell #myCharDiscord{
-    position:static!important; inset:auto!important; display:block!important;
-    margin:0 0 10px!important; max-width:100%!important;
-    font-size:11px!important; line-height:1.3!important; white-space:normal!important;
-    overflow-wrap:anywhere!important;
+    position:static!important;display:block!important;width:100%!important;max-width:100%!important;
+    margin:0 0 11px!important;font-size:11px!important;line-height:1.25!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
   }
   #myCharShell #myCharClass{
-    position:static!important; inset:auto!important; display:block!important;
-    margin:0 0 9px!important; font-size:18px!important; line-height:1.1!important;
+    position:static!important;display:block!important;width:100%!important;
+    margin:0 0 10px!important;font-size:18px!important;line-height:1.1!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
   }
-  #myCharShell .myCharRolePills{position:static!important;inset:auto!important;margin:0!important}
+  #myCharShell .myCharRolePills{
+    position:static!important;display:flex!important;width:auto!important;margin:0!important;
+  }
   #myCharShell .myCharRolePills span{font-size:10px!important;padding:5px 10px!important}
 
-  /* Todos os KPIs passam a ter dimensões previsíveis */
+  /* Remove qualquer pseudo-elemento/ícone flutuante legado no perfil. */
+  #myCharShell .myCharIdentityCard:before,
+  #myCharShell .myCharIdentityCard:after,
+  #myCharShell .myCharIdentityText:before,
+  #myCharShell .myCharIdentityText:after{display:none!important}
+
+  /* KPIs: altura uniforme e sem posicionamento absoluto legado. */
   #myCharShell .myHeroKpi,
-  #myCharShell .myHeroKpi.score{
-    position:relative!important; inset:auto!important; grid-column:auto!important;
-    width:100%!important; height:158px!important; min-height:158px!important;
-    margin:0!important; padding:14px!important; overflow:hidden!important;
-    border:1px solid #343b38!important; border-radius:12px!important;
-    background:rgba(5,18,18,.42)!important; box-sizing:border-box!important;
+  #myCharShell .myHeroKpi.score,
+  #myCharShell .myHeroKpi.updated{
+    position:relative!important;grid-column:auto!important;display:flex!important;
+    flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;
+    width:100%!important;height:190px!important;min-height:190px!important;
+    padding:16px!important;box-sizing:border-box!important;overflow:hidden!important;
+    border:1px solid #343b38!important;border-radius:11px!important;
+  }
+  #myCharShell .myHeroKpi>small{
+    position:static!important;display:block!important;width:100%!important;min-height:0!important;
+    margin:0 0 10px!important;font-size:9px!important;line-height:1.2!important;
+  }
+  #myCharShell .myHeroKpi>b{
+    position:static!important;display:block!important;width:100%!important;
+    margin:0 0 8px!important;font-size:29px!important;line-height:1.05!important;
+  }
+  #myCharShell .myHeroKpi>span{
+    position:static!important;display:block!important;max-width:100%!important;
+    margin:0!important;font-size:10px!important;line-height:1.3!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
   }
 
-  /* Índice: elimina posicionamentos desktop conflitantes */
+  /* Índice: reconstruído sem o donut legado que estava sobrepondo 75/100. */
   #myCharShell .myHeroKpi.score{
-    display:block!important; text-align:center!important;
+    align-items:center!important;text-align:center!important;
+    background:
+      radial-gradient(circle at 50% 52%,rgba(255,196,30,.10),transparent 43%),
+      transparent!important;
   }
+  #myCharShell .myHeroKpi.score:before,
+  #myCharShell .myHeroKpi.score:after{display:none!important;content:none!important}
   #myCharShell .myHeroKpi.score>small{
-    position:static!important; inset:auto!important; transform:none!important;
-    display:block!important; width:100%!important; min-height:0!important;
-    margin:0!important; padding:0!important; text-align:center!important;
-    font-size:8px!important; line-height:12px!important; white-space:nowrap!important;
-  }
-  #myCharShell .myHeroKpi.score:before{
-    content:""!important; position:absolute!important;
-    top:29px!important; left:50%!important; right:auto!important; bottom:auto!important;
-    width:88px!important; height:88px!important;
-    transform:translateX(-50%)!important; margin:0!important;
+    order:1!important;text-align:center!important;margin:0 0 13px!important;
   }
   #myCharShell .myHeroKpi.score>b{
-    position:absolute!important; top:58px!important; left:0!important; right:0!important;
-    width:100%!important; margin:0!important; padding:0!important;
-    text-align:center!important; font-size:31px!important; line-height:1!important;
+    order:2!important;width:auto!important;margin:0 0 14px!important;
+    font-size:42px!important;line-height:1!important;color:#ffd13e!important;
   }
-  #myCharShell .myHeroKpi.score>b small{font-size:10px!important}
+  #myCharShell .myHeroKpi.score>b small{
+    position:static!important;font-size:12px!important;margin-left:2px!important;
+  }
   #myCharShell #myCharGroup{
-    position:absolute!important; top:auto!important; bottom:10px!important;
-    left:8px!important; right:8px!important; width:auto!important;
-    transform:none!important; margin:0!important; padding:0!important;
-    min-width:0!important; max-width:none!important;
-    text-align:center!important; font-size:9px!important; line-height:12px!important;
-    white-space:normal!important;
+    order:3!important;position:static!important;inset:auto!important;transform:none!important;
+    width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;
+    padding:5px 8px!important;font-size:9px!important;line-height:1.2!important;text-align:center!important;
   }
-  #myCharShell #myCharGroup:before{display:none!important;content:none!important}
 
-  /* Demais KPIs */
-  #myCharShell .myHeroKpi:not(.score){
-    display:flex!important; flex-direction:column!important;
-    align-items:flex-start!important; justify-content:center!important;
-  }
-  #myCharShell .myHeroKpi:not(.score)>small{
-    position:static!important; inset:auto!important; transform:none!important;
-    display:block!important; min-height:0!important; margin:0 0 8px!important;
-    font-size:8px!important; line-height:11px!important; white-space:normal!important;
-  }
-  #myCharShell .myHeroKpi:not(.score)>b{
-    position:static!important; inset:auto!important; transform:none!important;
-    display:block!important; max-width:100%!important; margin:0 0 6px!important;
-    font-size:27px!important; line-height:1.05!important; white-space:normal!important;
-    overflow-wrap:anywhere!important;
-  }
-  #myCharShell .myHeroKpi:not(.score)>span{
-    position:static!important; inset:auto!important; transform:none!important;
-    display:block!important; max-width:100%!important; margin:0!important;
-    font-size:10px!important; line-height:1.25!important; white-space:normal!important;
-    overflow-wrap:anywhere!important;
-  }
+  /* Data pode quebrar em duas linhas sem invadir o card. */
   #myCharShell .myHeroKpi.updated>b{
-    font-size:20px!important; line-height:1.08!important; word-break:normal!important;
+    font-size:22px!important;line-height:1.15!important;overflow-wrap:anywhere!important;
   }
 
-  /* Conteúdo inferior */
-  #myCharShell .myQuickRow,
+  /* Insights abaixo: sem encostar nos KPIs. */
+  #myCharShell .myQuickRow{
+    display:grid!important;grid-template-columns:1fr!important;gap:10px!important;
+    padding:10px!important;margin:0!important;
+  }
+  #myCharShell .myQuick,
+  #myCharShell .myQuote{
+    width:100%!important;min-height:84px!important;box-sizing:border-box!important;
+    margin:0!important;
+  }
+
+  #myCharShell .myMetricsHead{flex-direction:column!important;align-items:flex-start!important}
   #myCharShell .myCharMetrics{grid-template-columns:1fr!important}
-  #myCharShell .myMetricsHead{display:flex!important;flex-direction:column!important;align-items:flex-start!important}
 }
 
-@media (max-width:390px){
-  #myCharShell .myCharIdentityCard{grid-template-columns:96px minmax(0,1fr)!important;gap:11px!important;padding:11px!important}
-  #myCharShell .myCharPortrait{width:92px!important;height:92px!important}
-  #myCharShell .myCharNameLine strong{font-size:22px!important}
+@media (max-width:430px){
+  #myCharShell .myCharIdentityCard{
+    grid-template-columns:128px minmax(0,1fr)!important;gap:11px!important;min-height:158px!important;
+  }
+  #myCharShell .myCharPortrait{width:120px!important;height:120px!important}
+  #myCharShell .myCharNameLine strong{font-size:24px!important}
   #myCharShell #myCharClass{font-size:16px!important}
-  #myCharShell .myHeroKpi:not(.score)>b{font-size:23px!important}
-  #myCharShell .myHeroKpi.updated>b{font-size:18px!important}
+  #myCharShell .myHeroKpi,
+  #myCharShell .myHeroKpi.score,
+  #myCharShell .myHeroKpi.updated{height:175px!important;min-height:175px!important;padding:13px!important}
+  #myCharShell .myHeroKpi:not(.score)>b{font-size:25px!important}
+  #myCharShell .myHeroKpi.updated>b{font-size:19px!important}
 }
 </style>
 
