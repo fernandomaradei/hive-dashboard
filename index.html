@@ -3053,7 +3053,7 @@ function doramCombatProfile(m){
   const atk=intNum(m.ATK,'ATK'), matk=intNum(m.MATK,'MATK');
   const ppen=intNum(m['IGNORE PDEF'],'IGNORE PDEF'), mpen=intNum(m['IGNORE MDEF'],'IGNORE MDEF');
   const pdmg=metricValue(m.PDMG,'PDMG');
-  const rawMdmg=(m.MDGMG ?? m.MDMG ?? m['MDMG'] ?? m['MDMG ']);
+  const rawMdmg=((m.MDGM ?? m.MDGMG ?? m.MDMG) ?? m.MDMG ?? m['MDMG'] ?? m['MDMG ']);
   const mdmg=metricValue(rawMdmg,'MDGMG');
 
   // Doram: o tipo de dano é o principal identificador do build.
@@ -3072,7 +3072,7 @@ function doramCombatProfile(m){
 function rankingOffensiveRaw(m){
   const profile=/\bdoram\b/i.test(String(m.Job||'')) ? doramCombatProfile(m) : damageProfile(m.Job);
   return profile==='MAGIC'
-    ? {profile,attack:intNum(m.MATK,'MATK'),penetration:intNum(m['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue(m.MDGMG,'MDGMG')}
+    ? {profile,attack:intNum(m.MATK,'MATK'),penetration:intNum(m['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue((m.MDGM ?? m.MDGMG ?? m.MDMG),'MDGMG')}
     : {profile,attack:intNum(m.ATK,'ATK'),penetration:intNum(m['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m.PDMG,'PDMG')};
 }
 function rankingOffenseContext(pool,profile){
