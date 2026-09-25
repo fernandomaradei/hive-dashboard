@@ -2584,7 +2584,7 @@ function pctRank(value, arr){const a=arr.filter(v=>Number.isFinite(v)).sort((x,y
 
 function classRole(job){
   const j=norm(job||'');
-  if(/priest|high priest|music|minstrel|bard|dancer|support|creator|bio|biochem|genetic/.test(j)) return 'SUPORTE';
+  if(/priest|high priest|music|minstrel|bard|dancer|support|creator|bio|biochem|genetic|professor|sage/.test(j)) return 'SUPORTE';
   if(/paladin|paladino|lord knight|lordknight|\blk\b|knight|cavaleiro|crusader|cruzado/.test(j)) return 'TANK';
   if(/sniper|hunter|gunslinger|high wizard|\bhw\b|wizard|stalker|assassin|champion|monk/.test(j)) return 'DPS';
   if(/doram/.test(j)) return 'HÍBRIDO';
@@ -2970,7 +2970,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.10,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
       rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.06,avgMetric(c.HP),maxMetric(c.HP))
      ];
-     formula='BIO: PDMG.R 17% + MDMG.R 17% + PDEF 13% + MDEF 13% + DMG RED HUMAN 12% + DMG RED MED 12% + PVP DMG RED 10% + HP 6%.';
+     formula=(/professor|sage/.test(norm(job))?'PROFESSOR':'BIO')+': PDMG.R 17% + MDMG.R 17% + PDEF 13% + MDEF 13% + DMG RED HUMAN 12% + DMG RED MED 12% + PVP DMG RED 10% + HP 6%.';
    }
  }else if(role==='TANK'){
    const c=supportDefenseContext(pool);
