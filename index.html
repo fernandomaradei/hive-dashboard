@@ -2443,7 +2443,7 @@ const fmt=n=>{
   if(n===null||n===undefined||n===''||n==='-') return '—';
   return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(num(n));
 };
-const DECIMAL_METRICS=new Set(['PDMG','MDGMG','PDMG.R','MDMG.R','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE','CRIT DMG']);
+const DECIMAL_METRICS=new Set(['PDMG','MDMG','PDMG.R','MDMG.R','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE','CRIT DMG']);
 const metricValue=(v,field='')=>DECIMAL_METRICS.has(field)?num(v):intNum(v,field);
 const metricFormat=(v,field='')=>{
   if(v===null||v===undefined||v==='') return '—';
@@ -2495,11 +2495,11 @@ function damageProfile(job){
 function offensiveRaw(m){
   const profile=damageProfile(m?.Job);
   const atk=intNum(m?.ATK,'ATK'), matk=intNum(m?.MATK,'MATK');
-  if(profile==='MAGIC') return {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue(m?.MDGMG,'MDGMG'),profile};
+  if(profile==='MAGIC') return {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue((m?.MDMG ?? m?.MDGMG),'MDMG'),profile};
   if(profile==='PHYSICAL') return {attack:atk,penetration:intNum(m?.['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m?.PDMG,'PDMG'),profile};
   const magic=matk>atk;
   return magic
-    ? {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue(m?.MDGMG,'MDGMG'),profile:'MAGIC'}
+    ? {attack:matk,penetration:intNum(m?.['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue((m?.MDMG ?? m?.MDGMG),'MDMG'),profile:'MAGIC'}
     : {attack:atk,penetration:intNum(m?.['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m?.PDMG,'PDMG'),profile:'PHYSICAL'};
 }
 function buildOffenseContext(pool){
@@ -2583,7 +2583,7 @@ function glScores(m,cache){
   return {survival,offense,power,readiness,priority:100-readiness,role};
 }
 
-const MANAGER_METRICS=['Power Atual','Power Anterior','Evolução','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN','Codex'];
+const MANAGER_METRICS=['Power Atual','Power Anterior','Evolução','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN','Codex'];
 function pctRank(value, arr){const a=arr.filter(v=>Number.isFinite(v)).sort((x,y)=>x-y);if(!a.length)return 0;let i=0;while(i<a.length&&a[i]<=value)i++;return i/a.length*100}
 
 function classRole(job){
@@ -2785,7 +2785,7 @@ function classImage(job){const j=norm(job||'').trim();for(const [k,v] of Object.
 function statIcon(k){
   const icons={
     'Power Atual':'⚔️','Codex':'📖','HP':'💗','ATK':'🗡️','MATK':'✦','PDEF':'🛡️','MDEF':'🔷',
-    'CRIT RES':'💠','CRIT DMG':'🎯','IGNORE PDEF':'🏹','IGNORE MDEF':'🔮','PDMG':'💥','MDGMG':'✨',
+    'CRIT RES':'💠','CRIT DMG':'🎯','IGNORE PDEF':'🏹','IGNORE MDEF':'🔮','PDMG':'💥','MDGMG':'✨','MDMG':'✨',
     'PDMG.R':'🛡️','MDMG.R':'🔰','PVP DMG RED':'🧱','PVP DMG INC':'⚡','DMG RED MED':'🛡️','DMG INC MED':'🔥'
   }; return icons[k]||'◆';
 }
@@ -3015,7 +3015,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
    const off=isSniper ? [
     rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.20,avgMetric(c.attack),maxMetric(c.attack)),
     rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.17,avgMetric(c.penetration),maxMetric(c.penetration)),
-    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.15,avgMetric(c.damage),maxMetric(c.damage)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDMG':'PDMG'),pctRank(r.damage,c.damage),.15,avgMetric(c.damage),maxMetric(c.damage)),
     rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.12,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
     rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.16,avgMetric(c.humaninc),maxMetric(c.humaninc)),
     rankMetric('CRIT RATE',rankAvgFormat('CRIT RATE',metricValue(m['CRIT RATE'],'CRIT RATE')),pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate),.12,avgMetric(c.critrate),maxMetric(c.critrate)),
@@ -3023,7 +3023,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
    ] : [
     rankMetric(r.profile==='MAGIC'?'MATK':'ATK',fmtInt(r.attack,r.profile==='MAGIC'?'MATK':'ATK'),pctRank(r.attack,c.attack),.23,avgMetric(c.attack),maxMetric(c.attack)),
     rankMetric(r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',fmtInt(r.penetration,r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.19,avgMetric(c.penetration),maxMetric(c.penetration)),
-    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),pctRank(r.damage,c.damage),.17,avgMetric(c.damage),maxMetric(c.damage)),
+    rankMetric(r.profile==='MAGIC'?'MDMG':'PDMG',metricFormat(r.damage,r.profile==='MAGIC'?'MDMG':'PDMG'),pctRank(r.damage,c.damage),.17,avgMetric(c.damage),maxMetric(c.damage)),
     rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.11,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
     rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.17,avgMetric(c.humaninc),maxMetric(c.humaninc)),
     rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.05,avgMetric(c.incmed),maxMetric(c.incmed)),
@@ -3051,7 +3051,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
      const d=supportDefenseContext(pool);
      items=[
       rankMetric('MATK',fmtInt(r.attack,'MATK'),pctRank(r.attack,c.attack),.14,avgMetric(c.attack),maxMetric(c.attack)),
-      rankMetric('MDMG',metricFormat(r.damage,'MDGMG'),pctRank(r.damage,c.damage),.16,avgMetric(c.damage),maxMetric(c.damage)),
+      rankMetric('MDMG',metricFormat(r.damage,'MDMG'),pctRank(r.damage,c.damage),.16,avgMetric(c.damage),maxMetric(c.damage)),
       rankMetric('IGNORE MDEF',fmtInt(r.penetration,'IGNORE MDEF'),pctRank(r.penetration,c.penetration),.12,avgMetric(c.penetration),maxMetric(c.penetration)),
       rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.11,avgMetric(c.humaninc),maxMetric(c.humaninc)),
       rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.09,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
@@ -3119,7 +3119,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
    const ref=rankReferencePeer(pool,x.label);
    const pctRef=x.targetNum>0 ? Math.max(0,Math.min(100,Math.round((x.currentNum/x.targetNum)*100))) : x.p;
    return `<tr class="rankTableRow ${d.cls} rankStatClickable" onclick="openStatRank('${encodeURIComponent(m.Personagem)}','${encodeURIComponent(x.label)}')" title="Ver ranking de ${esc(x.label)} da classe">
-     <td><div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDGMG':x.label)}</span><strong>${esc(x.label)}</strong></div></td>
+     <td><div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDMG':x.label)}</span><strong>${esc(x.label)}</strong></div></td>
      <td><div class="rankValueReference"><strong>${x.value} <em>/ ${x.targetValue}</em></strong><small>${pctRef}% da referência</small></div></td>
      <td><div class="rankGuildReference"><strong>${x.targetValue}</strong><small>${esc(ref.name)} • maior valor do grupo</small></div></td>
      <td><div class="rankPerformance"><span><i style="width:${x.p}%"></i></span><strong>${x.p}<small>/100</small></strong></div></td>
@@ -3146,7 +3146,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
 }
 function statRankDisplay(label,value){
   if(['PDMG.R','MDMG.R','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE','CRIT DMG'].includes(label)) return rankAvgFormat(label,value);
-  if(label==='MDMG') return metricFormat(value,'MDGMG');
+  if(label==='MDMG') return metricFormat(value,'MDMG');
   if(label==='PDMG'||label==='DMG RED MED'||label==='DMG INC MED') return metricFormat(value,label);
   return fmtInt(value,label==='Power'?'Power Atual':label);
 }
@@ -3178,7 +3178,7 @@ function closeStatRank(){
   modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
 }
 
-function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDGMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
+function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','Codex','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=classImage(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage('priest')};$('#modal').classList.add('open')}
 function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});refresh();setInterval(refresh,REFRESH_MS);
@@ -3236,7 +3236,7 @@ function personalMetricRows(m,pool){
   let rows=[
     {label:r.profile==='MAGIC'?'MATK':'ATK',value:r.attack,display:fmtInt(r.attack),avg:avgMetric(c.attack),pct:pctRank(r.attack,c.attack)},
     {label:r.profile==='MAGIC'?'IGNORE MDEF':'IGNORE PDEF',value:r.penetration,display:fmtInt(r.penetration),avg:avgMetric(c.penetration),pct:pctRank(r.penetration,c.penetration)},
-    {label:r.profile==='MAGIC'?'MDMG':'PDMG',value:r.damage,display:metricFormat(r.damage,r.profile==='MAGIC'?'MDGMG':'PDMG'),avg:avgMetric(c.damage),pct:pctRank(r.damage,c.damage)},
+    {label:r.profile==='MAGIC'?'MDMG':'PDMG',value:r.damage,display:metricFormat(r.damage,r.profile==='MAGIC'?'MDMG':'PDMG'),avg:avgMetric(c.damage),pct:pctRank(r.damage,c.damage)},
     {label:'PVP DMG INC',value:intNum(m['PVP DMG INC'],'PVP DMG INC'),display:fmtInt(m['PVP DMG INC'],'PVP DMG INC'),avg:avgMetric(c.pvpinc),pct:pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)}
   ];
 
@@ -3283,7 +3283,7 @@ function personalMetricRows(m,pool){
 function personalAvgDisplay(x){
   const decimal=['PDMG','MDMG','DMG RED MED','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE','CRIT DMG'].includes(x.label);
   if(['PDMG.R','MDMG.R'].includes(x.label)) return rankAvgFormat(x.label,x.avg);
-  return decimal ? metricFormat(x.avg,x.label==='MDMG'?'MDGMG':x.label) : fmtInt(Math.round(x.avg),x.label);
+  return decimal ? metricFormat(x.avg,x.label==='MDMG'?'MDMG':x.label) : fmtInt(Math.round(x.avg),x.label);
 }
 function personalTarget100(x,pool){
   // A nota 100/100 é percentile/rank relativo ao próprio grupo.
@@ -3297,7 +3297,7 @@ function personalTarget100(x,pool){
 }
 function personalTargetDisplay(x,target){
   const decimal=['PDMG','MDMG','DMG RED MED','DMG RED HUMAN','DMG INC HUMAN','CRIT RATE','CRIT DMG'].includes(x.label);
-  return decimal ? metricFormat(target,x.label==='MDMG'?'MDGMG':x.label) : fmtInt(Math.round(target),x.label);
+  return decimal ? metricFormat(target,x.label==='MDMG'?'MDMG':x.label) : fmtInt(Math.round(target),x.label);
 }
 function personalStatus(x,pool){
   const value=Number(x.value||0);
@@ -3413,8 +3413,8 @@ function doramCombatProfile(m){
   const atk=intNum(m.ATK,'ATK'), matk=intNum(m.MATK,'MATK');
   const ppen=intNum(m['IGNORE PDEF'],'IGNORE PDEF'), mpen=intNum(m['IGNORE MDEF'],'IGNORE MDEF');
   const pdmg=metricValue(m.PDMG,'PDMG');
-  const rawMdmg=((m.MDGM ?? m.MDGMG ?? m.MDMG) ?? m.MDMG ?? m['MDMG'] ?? m['MDMG ']);
-  const mdmg=metricValue(rawMdmg,'MDGMG');
+  const rawMdmg=(m.MDMG ?? m['MDMG'] ?? m['MDMG '] ?? m.MDGMG ?? m.MDGM);
+  const mdmg=metricValue(rawMdmg,'MDMG');
 
   // Doram: o tipo de dano é o principal identificador do build.
   // Isso evita classificar Doram mágico como físico só porque ATK/IGNORE PDEF
@@ -3432,7 +3432,7 @@ function doramCombatProfile(m){
 function rankingOffensiveRaw(m){
   const profile=/\bdoram\b/i.test(String(m.Job||'')) ? doramCombatProfile(m) : damageProfile(m.Job);
   return profile==='MAGIC'
-    ? {profile,attack:intNum(m.MATK,'MATK'),penetration:intNum(m['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue((m.MDGM ?? m.MDGMG ?? m.MDMG),'MDGMG')}
+    ? {profile,attack:intNum(m.MATK,'MATK'),penetration:intNum(m['IGNORE MDEF'],'IGNORE MDEF'),damage:metricValue((m.MDMG ?? m.MDGMG ?? m.MDGM),'MDMG')}
     : {profile,attack:intNum(m.ATK,'ATK'),penetration:intNum(m['IGNORE PDEF'],'IGNORE PDEF'),damage:metricValue(m.PDMG,'PDMG')};
 }
 function rankingOffenseContext(pool,profile){
