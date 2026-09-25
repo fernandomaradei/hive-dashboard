@@ -3107,7 +3107,10 @@ function renderRankExplanation(m,target='#mRankExplain'){
  const strengths=[...items].sort((a,b)=>b.p-a.p).slice(0,2);
  const weaknesses=[...items].sort((a,b)=>a.p-b.p).slice(0,2);
 
- const rows=items.map(x=>{
+ // Exibe os atributos de TODAS as classes do maior peso para o menor peso.
+ // O sort altera somente a ordem visual da tabela; a fórmula e a pontuação permanecem iguais.
+ const displayItems=[...items].sort((a,b)=>b.weight-a.weight);
+ const rows=displayItems.map(x=>{
    const d=rankMetricDiagnosis(x);
    const statusLabel=d.tag==='PONTO FORTE'?'Excelente':
                      d.tag==='ACIMA DA MÉDIA'?'Acima da média':
