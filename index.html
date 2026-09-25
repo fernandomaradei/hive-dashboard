@@ -3033,8 +3033,8 @@ function renderRankExplanation(m,target='#mRankExplain'){
    if(role==='DPS' && isSniper){
      const d=supportDefenseContext(pool);
      items=[
-      rankMetric('ATK',fmtInt(r.attack,'ATK'),pctRank(r.attack,c.attack),.11,avgMetric(c.attack),maxMetric(c.attack)),
-      rankMetric('PDMG',metricFormat(r.damage,'PDMG'),pctRank(r.damage,c.damage),.13,avgMetric(c.damage),maxMetric(c.damage)),
+      rankMetric('ATK',fmtInt(r.attack,'ATK'),pctRank(r.attack,c.attack),.12,avgMetric(c.attack),maxMetric(c.attack)),
+      rankMetric('PDMG',metricFormat(r.damage,'PDMG'),pctRank(r.damage,c.damage),.12,avgMetric(c.damage),maxMetric(c.damage)),
       rankMetric('IGNORE PDEF',fmtInt(r.penetration,'IGNORE PDEF'),pctRank(r.penetration,c.penetration),.10,avgMetric(c.penetration),maxMetric(c.penetration)),
       rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.09,avgMetric(c.humaninc),maxMetric(c.humaninc)),
       rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.09,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
@@ -3046,7 +3046,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.0525,avgMetric(d.MDEF),maxMetric(d.MDEF)),
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.04,avgMetric(d.RED),maxMetric(d.RED))
      ];
-     formula='SNIPER: ATK 11% + PDMG 13% + IGNORE PDEF 10% + DMG INC HUMAN 9% + PVP DMG INC 9% + CRIT RATE 8% + CRIT DMG 10% + DMG INC MED 5% + PDMG.R 5,25% + MDMG.R 5,25% + PDEF 5,25% + MDEF 5,25% + DMG RED MED 4%.';
+     formula='SNIPER: ATK 12% + PDMG 12% + IGNORE PDEF 10% + DMG INC HUMAN 9% + PVP DMG INC 9% + CRIT RATE 8% + CRIT DMG 10% + DMG INC MED 5% + PDMG.R 5,25% + MDMG.R 5,25% + PDEF 5,25% + MDEF 5,25% + DMG RED MED 4%.';
    }else if(role==='DPS' && /\\bhw\\b|high wizard|wizard|mage/.test(norm(job))){
      const d=supportDefenseContext(pool);
      items=[
@@ -3548,7 +3548,7 @@ function classRankingGroup(m){
 
 function approvedSniperScore(m,pool){
   const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,r.profile),d=supportDefenseContext(pool);
-  return .11*pctRank(r.attack,c.attack)+.13*pctRank(r.damage,c.damage)+.10*pctRank(r.penetration,c.penetration)
+  return .12*pctRank(r.attack,c.attack)+.12*pctRank(r.damage,c.damage)+.10*pctRank(r.penetration,c.penetration)
        + .09*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.09*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
        + .08*pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),c.critrate)
        + .10*pctRank(metricValue(m['CRIT DMG'],'CRIT DMG'),c.critdmg)
