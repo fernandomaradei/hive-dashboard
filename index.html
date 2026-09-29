@@ -6206,5 +6206,70 @@ window.hivePremiumClassImage = function(job){
   }
 }
 </style>
+
+
+<!-- HIVE — Aviso automático de Guerra (terça, quinta e domingo) -->
+<style id="hive-war-popup-style">
+  .hive-war-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .hive-war-overlay.open{display:flex}
+  .hive-war-card{position:relative;width:min(520px,94vw);overflow:hidden;border:1px solid rgba(247,182,53,.75);border-radius:24px;background:linear-gradient(145deg,#101513 0%,#07110f 55%,#171008 100%);box-shadow:0 28px 90px rgba(0,0,0,.8),0 0 45px rgba(247,182,53,.12);color:#fff;padding:28px 26px 24px;text-align:center}
+  .hive-war-card:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#f7b635,#ffdf6b,#f7b635)}
+  .hive-war-close{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:12px;border:1px solid rgba(247,182,53,.45);background:rgba(20,17,12,.92);color:#ffd766;font-size:20px;cursor:pointer}
+  .hive-war-icon{font-size:46px;line-height:1;margin:6px 0 10px}
+  .hive-war-title{margin:0;color:#ffd45c;font-size:30px;font-weight:950;letter-spacing:.02em}
+  .hive-war-lead{margin:9px auto 20px;color:#d7d1c5;font-size:15px;line-height:1.45;max-width:430px}
+  .hive-war-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+  .hive-war-box{padding:13px 10px;border-radius:15px;border:1px solid rgba(247,182,53,.24);background:rgba(255,255,255,.035)}
+  .hive-war-box span{display:block;color:#9e9688;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+  .hive-war-box b{font-size:20px;color:#fff}
+  .hive-war-discord{display:flex;align-items:center;justify-content:center;gap:9px;margin:12px 0 16px;padding:13px;border-radius:15px;border:1px solid rgba(255,90,90,.52);background:rgba(167,25,25,.18);color:#ff7777;font-weight:950;font-size:16px;letter-spacing:.035em}
+  .hive-war-note{margin:0 0 18px;color:#eee7d9;font-size:14px;line-height:1.5}
+  .hive-war-rock{margin:0 0 18px;color:#ffd45c;font-size:21px;font-weight:950;letter-spacing:.08em}
+  .hive-war-ok{width:100%;border:0;border-radius:15px;padding:14px 16px;background:linear-gradient(90deg,#f7b635,#ffd85a);color:#17130a;font-size:15px;font-weight:950;cursor:pointer;box-shadow:0 8px 24px rgba(247,182,53,.15)}
+  @media(max-width:620px){.hive-war-card{padding:25px 18px 19px;border-radius:20px}.hive-war-title{font-size:26px}.hive-war-icon{font-size:40px}.hive-war-info{gap:8px}.hive-war-box b{font-size:18px}.hive-war-discord{font-size:15px}}
+</style>
+<div class="hive-war-overlay" id="hiveWarPopup" aria-hidden="true">
+  <div class="hive-war-card" role="dialog" aria-modal="true" aria-labelledby="hiveWarTitle">
+    <button class="hive-war-close" id="hiveWarClose" aria-label="Fechar aviso">×</button>
+    <div class="hive-war-icon">⚔️</div>
+    <h2 class="hive-war-title" id="hiveWarTitle">HOJE TEM GUERRA!</h2>
+    <p class="hive-war-lead">Preparem os personagens, consumíveis e builds!</p>
+    <div class="hive-war-info">
+      <div class="hive-war-box"><span>🛡️ Organização</span><b>20:25</b></div>
+      <div class="hive-war-box"><span>⚔️ Guerra</span><b>20:55</b></div>
+    </div>
+    <div class="hive-war-discord">🎧 DISCORD OBRIGATÓRIO</div>
+    <p class="hive-war-note">Entre <b>30 minutos antes</b> para organização da guild.</p>
+    <div class="hive-war-rock">LET'S ROCK! 🔥</div>
+    <button class="hive-war-ok" id="hiveWarOk">⚔️ Entendido, estarei lá!</button>
+  </div>
+</div>
+<script id="hive-war-popup-script">
+(function(){
+  const popup=document.getElementById('hiveWarPopup');
+  if(!popup) return;
+  const now=new Date();
+  const warDays=new Set([0,2,4]); // domingo, terça, quinta
+  const dayKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const storageKey='hive-war-popup-seen-'+dayKey;
+  function closeWarPopup(){
+    popup.classList.remove('open');
+    popup.setAttribute('aria-hidden','true');
+    try{localStorage.setItem(storageKey,'1')}catch(e){}
+  }
+  if(warDays.has(now.getDay())){
+    let seen=false;
+    try{seen=localStorage.getItem(storageKey)==='1'}catch(e){}
+    if(!seen){
+      popup.classList.add('open');
+      popup.setAttribute('aria-hidden','false');
+    }
+  }
+  document.getElementById('hiveWarClose')?.addEventListener('click',closeWarPopup);
+  document.getElementById('hiveWarOk')?.addEventListener('click',closeWarPopup);
+  popup.addEventListener('click',e=>{if(e.target===popup) closeWarPopup()});
+})();
+</script>
+
 </body></html
 >
