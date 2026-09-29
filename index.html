@@ -6172,5 +6172,25 @@ window.hivePremiumClassImage = function(job){
   }
 }
 </style>
+
+<style id="HIVE_MOBILE_MYCHAR_WIDTH_FIX_V2">
+@media (max-width:760px){
+  /* O shell ainda reserva ~20px laterais em regras legadas.
+     Expande somente o card externo para alinhar com menu/banner. */
+  #myCharShell .myCharCard.myCharExample{
+    width:calc(100% + 40px)!important;
+    max-width:none!important;
+    margin-left:-20px!important;
+    margin-right:-20px!important;
+  }
+}
+@media (max-width:390px){
+  #myCharShell .myCharCard.myCharExample{
+    width:calc(100% + 40px)!important;
+    margin-left:-20px!important;
+    margin-right:-20px!important;
+  }
+}
+</style>
 </body></html
 >
