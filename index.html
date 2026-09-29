@@ -3259,6 +3259,20 @@ function personalMetricRows(m,pool){
     ];
   }
 
+  // Paladino: os cards de melhoria devem priorizar os atributos-chave da build.
+  // Ordem desejada: HP, CRIT RATE, CRIT DMG e PVP DMG INC (PDI).
+  const isPaladin=/paladin|paladino|crusader|cruzado/.test(norm(m.Job||''));
+  if(isPaladin){
+    const d=supportDefenseContext(pool);
+    const oc=rankingOffenseContext(pool,'PHYSICAL');
+    return [
+      {label:'HP',value:intNum(m.HP,'HP'),display:fmtInt(m.HP,'HP'),avg:avgMetric(d.HP),pct:pctRank(intNum(m.HP,'HP'),d.HP)},
+      {label:'CRIT RATE',value:metricValue(m['CRIT RATE'],'CRIT RATE'),display:metricFormat(m['CRIT RATE'],'CRIT RATE'),avg:avgMetric(d.CRITRATE),pct:pctRank(metricValue(m['CRIT RATE'],'CRIT RATE'),d.CRITRATE)},
+      {label:'CRIT DMG',value:metricValue(m['CRIT DMG'],'CRIT DMG'),display:metricFormat(m['CRIT DMG'],'CRIT DMG'),avg:avgMetric(d.CRITDMG),pct:pctRank(metricValue(m['CRIT DMG'],'CRIT DMG'),d.CRITDMG)},
+      {label:'PVP DMG INC',value:intNum(m['PVP DMG INC'],'PVP DMG INC'),display:fmtInt(m['PVP DMG INC'],'PVP DMG INC'),avg:avgMetric(oc.pvpinc),pct:pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),oc.pvpinc)}
+    ];
+  }
+
   const r=rankingOffensiveRaw(m), c=rankingOffenseContext(pool,r.profile);
   let rows=[
     {label:r.profile==='MAGIC'?'MATK':'ATK',value:r.attack,display:fmtInt(r.attack),avg:avgMetric(c.attack),pct:pctRank(r.attack,c.attack)},
