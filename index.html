@@ -6129,14 +6129,18 @@ window.hivePremiumClassImage = function(job){
 }
 </style>
 
-<!-- MOBILE BANNER FIX: exibe a arte completa sem alterar o desktop -->
+<!-- MOBILE BANNER V2: altura proporcional à arte, sem faixas pretas e sem alterar desktop -->
 <style>
 @media (max-width: 780px){
   .hero{
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 3 / 1 !important;
     background-size: contain !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
     background-color: #090805 !important;
+    border-radius: 0 0 18px 18px !important;
   }
 }
 </style>
