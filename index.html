@@ -2253,6 +2253,33 @@ html{scroll-behavior:smooth}
 }
 </style>
 
+
+<style id="HIVE_MOBILE_MYCHAR_FULL_ALIGN_V1">
+/* Alinha Meu Personagem às mesmas bordas do restante da página — somente mobile */
+@media (max-width:760px){
+  #myCharShell{
+    width:100%!important;
+    max-width:none!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    overflow:visible!important;
+  }
+  #myCharShell .myCharCard,
+  #myCharShell .myCharCard.myCharExample,
+  #myCharShell .myCharSection{
+    width:100%!important;
+    max-width:none!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    box-sizing:border-box!important;
+  }
+}
+@media (max-width:390px){
+  #myCharShell{padding-left:0!important;padding-right:0!important;}
+}
+</style>
 </head>
 <body>
 <div class="app">
