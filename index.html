@@ -2285,7 +2285,7 @@ html{scroll-behavior:smooth}
 <div class="app">
   <section class="hero" id="inicio"></section>
   <nav class="nav">
-    <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#sobre">ⓘ Sobre</a>
+    <a class="active" href="#inicio">🏠 Início</a><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#sobre">ⓘ Sobre</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
 
@@ -6271,5 +6271,49 @@ window.hivePremiumClassImage = function(job){
 })();
 </script>
 
+
+<style id="hive-raw-style">
+.hive-raw-nav{font:inherit;color:#ffe2a0;background:rgba(247,182,53,.09);border:1px solid rgba(247,182,53,.48);border-radius:12px;padding:9px 12px;cursor:pointer;white-space:nowrap}
+.hive-raw-nav:hover,.hive-raw-nav:focus-visible{background:rgba(247,182,53,.2);outline:2px solid #f7b635;outline-offset:2px}
+.hive-raw-overlay{position:fixed;inset:0;z-index:999999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.83);backdrop-filter:blur(7px)}
+.hive-raw-overlay.open{display:flex}
+.hive-raw-dialog{position:relative;width:min(100%,520px);max-height:90vh;overflow:auto;border:1px solid rgba(255,196,65,.75);border-radius:22px;padding:25px;background:linear-gradient(145deg,#1c1b16,#090f0e 65%);box-shadow:0 20px 90px #000,0 0 35px rgba(247,182,53,.12);color:#fffaf0}
+.hive-raw-dialog h2{margin:0 35px 5px 0;color:#ffd777;font-size:24px}.hive-raw-dialog p{color:#c6bda9;margin:0 0 17px;font-size:13px}
+.hive-raw-close{position:absolute;top:16px;right:16px;border:1px solid #725c2c;border-radius:9px;background:#25231e;color:#fff;font-size:24px;cursor:pointer;width:37px;height:37px}
+.hive-raw-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0}.hive-raw-tabs button{background:#161b19;border:1px solid #51452d;color:#f3e5c4;border-radius:11px;padding:12px;cursor:pointer;font:inherit;font-weight:900}.hive-raw-tabs button.active{background:linear-gradient(110deg,#ffdd79,#f3af21);color:#16120a;border-color:#ffd777}
+.hive-raw-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hive-raw-fields label{font-size:12px;font-weight:900;color:#e6c779}.hive-raw-fields input{display:block;width:100%;margin-top:7px;padding:12px;border:1px solid #685632;border-radius:10px;background:#0c1110;color:#fff;font:inherit;font-size:18px;outline:none}.hive-raw-fields input:focus{border-color:#ffcf58}
+.hive-raw-result{margin-top:20px;border:1px solid rgba(255,192,60,.38);background:linear-gradient(130deg,rgba(247,182,53,.12),rgba(12,19,17,.9));border-radius:15px;padding:18px;text-align:center}.hive-raw-result small{display:block;color:#f3d898;font-weight:900}.hive-raw-result strong{display:block;color:#ffcc45;font-size:38px;line-height:1.3}.hive-raw-result span{display:block;color:#c6bda9;font-size:12px}
+.hive-raw-foot{margin-top:16px!important;line-height:1.5}
+@media(max-width:560px){.hive-raw-fields{grid-template-columns:1fr}.hive-raw-dialog{padding:20px}.hive-raw-dialog h2{font-size:20px}.hive-raw-nav{padding:8px}}
+</style>
+<div id="hiveRawOverlay" class="hive-raw-overlay" aria-hidden="true">
+  <section class="hive-raw-dialog" role="dialog" aria-modal="true" aria-labelledby="hiveRawTitle">
+    <button class="hive-raw-close" type="button" id="hiveRawClose" aria-label="Fechar calculadora">×</button>
+    <h2 id="hiveRawTitle">🛡️ Calculadora RAW DEF / MDEF</h2>
+    <p>Calcule a defesa bruta usando o bônus do equipamento e o percentual correspondente.</p>
+    <div class="hive-raw-tabs" role="group" aria-label="Tipo de defesa"><button type="button" data-raw-type="PDEF" class="active" aria-pressed="true">RAW DEF</button><button type="button" data-raw-type="MDEF" aria-pressed="false">RAW MDEF</button></div>
+    <div class="hive-raw-fields"><label><span id="hiveRawStatLabel">EQUIPAMENT PDF</span><input id="hiveRawStat" inputmode="decimal" autocomplete="off" placeholder="Ex.: 1200" aria-label="Defesa do equipamento"></label><label>Percentual do equipamento (%)<input id="hiveRawPercent" inputmode="decimal" autocomplete="off" placeholder="Ex.: 20" aria-label="Percentual do equipamento"></label></div>
+    <div class="hive-raw-result" aria-live="polite"><small id="hiveRawResultLabel">RAW DEF ESTIMADO</small><strong id="hiveRawResult">—</strong><span id="hiveRawHint">Preencha os dois campos para calcular</span></div>
+    <p class="hive-raw-foot">Fórmula utilizada: defesa do equipamento ÷ (percentual ÷ 100). O cálculo RAW MDEF usa a mesma estrutura como hipótese; valide com os valores do jogo antes de utilizá-lo como referência definitiva.</p>
+  </section>
+</div>
+<script id="hive-raw-script">
+(()=>{
+ const overlay=document.getElementById('hiveRawOverlay');
+ const open=document.getElementById('hiveRawOpen'),close=document.getElementById('hiveRawClose');
+ const stat=document.getElementById('hiveRawStat'),percent=document.getElementById('hiveRawPercent');
+ const result=document.getElementById('hiveRawResult'),hint=document.getElementById('hiveRawHint');
+ let type='PDEF',previousFocus=null;
+ const parse=v=>{let n=String(v).trim().replace(/\s/g,'');if(n.includes(','))n=n.replace(/\./g,'').replace(',','.');return n?Number(n):NaN};
+ function calculate(){const a=parse(stat.value),b=parse(percent.value);if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=0){result.textContent='—';hint.textContent=b===0?'O percentual deve ser maior que zero':'Informe valores válidos nos dois campos';return}const val=a/(b/100);result.textContent=val.toLocaleString('pt-BR',{maximumFractionDigits:2});hint.textContent='Cálculo estimado a partir dos valores informados'}
+ function show(){previousFocus=document.activeElement;overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';stat.focus();calculate()}
+ function hide(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';previousFocus?.focus?.()}
+ open?.addEventListener('click',show);close?.addEventListener('click',hide);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});
+ document.addEventListener('keydown',e=>{if(!overlay.classList.contains('open'))return;if(e.key==='Escape')hide();if(e.key==='Tab'){const items=[...overlay.querySelectorAll('button,input')];const i=items.indexOf(document.activeElement);if(e.shiftKey&&i===0){e.preventDefault();items[items.length-1].focus()}else if(!e.shiftKey&&i===items.length-1){e.preventDefault();items[0].focus()}}});
+ overlay.querySelectorAll('[data-raw-type]').forEach(b=>b.addEventListener('click',()=>{type=b.dataset.rawType;overlay.querySelectorAll('[data-raw-type]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b))});document.getElementById('hiveRawStatLabel').textContent=type==='PDEF'?'EQUIPAMENT PDF':'EQUIPAMENT MDEF';document.getElementById('hiveRawResultLabel').textContent=type==='PDEF'?'RAW DEF ESTIMADO':'RAW MDEF ESTIMADO';stat.value='';percent.value='';calculate();stat.focus()}));
+ stat.addEventListener('input',calculate);percent.addEventListener('input',calculate);
+})();
+</script>
 </body></html
 >
