@@ -6293,8 +6293,8 @@ window.hivePremiumClassImage = function(job){
     <p>Calcule a defesa bruta usando o bônus do equipamento e o percentual correspondente.</p>
     <div class="hive-raw-tabs" role="group" aria-label="Tipo de defesa"><button type="button" data-raw-type="PDEF" class="active" aria-pressed="true">RAW DEF</button><button type="button" data-raw-type="MDEF" aria-pressed="false">RAW MDEF</button></div>
     <div class="hive-raw-fields"><label><span id="hiveRawStatLabel">EQUIPAMENT PDF</span><input id="hiveRawStat" inputmode="decimal" autocomplete="off" placeholder="Ex.: 1200" aria-label="Defesa do equipamento"></label><label>Percentual do equipamento (%)<input id="hiveRawPercent" inputmode="decimal" autocomplete="off" placeholder="Ex.: 20" aria-label="Percentual do equipamento"></label></div>
-    <div class="hive-raw-result" aria-live="polite"><small id="hiveRawResultLabel">RAW DEF ESTIMADO</small><strong id="hiveRawResult">—</strong><span id="hiveRawHint">Preencha os dois campos para calcular</span></div>
-    <p class="hive-raw-foot">Fórmula utilizada: defesa do equipamento ÷ (percentual ÷ 100). O cálculo RAW MDEF usa a mesma estrutura como hipótese; valide com os valores do jogo antes de utilizá-lo como referência definitiva.</p>
+    <div class="hive-raw-result" aria-live="polite"><small id="hiveRawResultLabel">RAW DEF</small><strong id="hiveRawResult">—</strong><span id="hiveRawHint">Preencha os dois campos para calcular</span></div>
+    <p class="hive-raw-foot">Fórmula: RAW = defesa do equipamento ÷ (1 + bônus percentual ÷ 100). Aplicada a PDF e MDEF conforme a regra definida para a planilha HIVE.</p>
   </section>
 </div>
 <script id="hive-raw-script">
@@ -6305,13 +6305,13 @@ window.hivePremiumClassImage = function(job){
  const result=document.getElementById('hiveRawResult'),hint=document.getElementById('hiveRawHint');
  let type='PDEF',previousFocus=null;
  const parse=v=>{let n=String(v).trim().replace(/\s/g,'');if(n.includes(','))n=n.replace(/\./g,'').replace(',','.');return n?Number(n):NaN};
- function calculate(){const a=parse(stat.value),b=parse(percent.value);if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=0){result.textContent='—';hint.textContent=b===0?'O percentual deve ser maior que zero':'Informe valores válidos nos dois campos';return}const val=a/(b/100);result.textContent=val.toLocaleString('pt-BR',{maximumFractionDigits:2});hint.textContent='Cálculo estimado a partir dos valores informados'}
+ function calculate(){const a=parse(stat.value),b=parse(percent.value);if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=0){result.textContent='—';hint.textContent=b===0?'O percentual deve ser maior que zero':'Informe valores válidos nos dois campos';return}const val=a/(1+b/100);result.textContent=Math.round(val).toLocaleString('pt-BR',{maximumFractionDigits:0});hint.textContent='Defesa base sem o bônus percentual do equipamento'}
  function show(){previousFocus=document.activeElement;overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';stat.focus();calculate()}
  function hide(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';previousFocus?.focus?.()}
  open?.addEventListener('click',show);close?.addEventListener('click',hide);
  overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});
  document.addEventListener('keydown',e=>{if(!overlay.classList.contains('open'))return;if(e.key==='Escape')hide();if(e.key==='Tab'){const items=[...overlay.querySelectorAll('button,input')];const i=items.indexOf(document.activeElement);if(e.shiftKey&&i===0){e.preventDefault();items[items.length-1].focus()}else if(!e.shiftKey&&i===items.length-1){e.preventDefault();items[0].focus()}}});
- overlay.querySelectorAll('[data-raw-type]').forEach(b=>b.addEventListener('click',()=>{type=b.dataset.rawType;overlay.querySelectorAll('[data-raw-type]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b))});document.getElementById('hiveRawStatLabel').textContent=type==='PDEF'?'EQUIPAMENT PDF':'EQUIPAMENT MDEF';document.getElementById('hiveRawResultLabel').textContent=type==='PDEF'?'RAW DEF ESTIMADO':'RAW MDEF ESTIMADO';stat.value='';percent.value='';calculate();stat.focus()}));
+ overlay.querySelectorAll('[data-raw-type]').forEach(b=>b.addEventListener('click',()=>{type=b.dataset.rawType;overlay.querySelectorAll('[data-raw-type]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b))});document.getElementById('hiveRawStatLabel').textContent=type==='PDEF'?'EQUIPAMENT PDF':'EQUIPAMENT MDEF';document.getElementById('hiveRawResultLabel').textContent=type==='PDEF'?'RAW DEF':'RAW MDEF';stat.value='';percent.value='';calculate();stat.focus()}));
  stat.addEventListener('input',calculate);percent.addEventListener('input',calculate);
 })();
 </script>
