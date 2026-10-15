@@ -2288,6 +2288,22 @@ html{scroll-behavior:smooth}
 .rooClassScreen .classHalo{inset:0!important;}
 .rooClassScreen:after{border:1px solid rgba(247,182,53,.42)!important;}
 </style>
+
+<style id="HIVE_CLASS_ART_FULL_FRAME_FIX">
+/* Mostra toda a arte e o nome da classe, sem recortar as laterais. */
+.rooClassScreen .classHalo img#mClassImage {
+  object-fit: contain !important;
+  object-position: center center !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+.rooClassScreen .classHalo {
+  background: #0c0b09 !important;
+}
+</style>
 </head>
 <body>
 <div class="app">
