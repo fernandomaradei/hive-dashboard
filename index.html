@@ -6613,7 +6613,7 @@ window.hivePremiumClassImage = function(job){
   // Rankings baseados na aba MEMBROS, não na aba HISTORICO.
   const normalizeName=(v)=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
   const parsePower=(v)=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'');if(!t)return 0;const clean=t.replace(/\./g,'').replace(',','.');return Number(clean)||0};
-  const roster=(Array.isArray(members)?members:[]).map(m=>({name:normalizeName(m.Personagem),job:normalizeName(m.Job),jobLabel:String(m.Job??'').trim(),power:parsePower(m.Power)})).filter(m=>m.name&&m.power>0).sort((a,b)=>b.power-a.power);
+  const roster=(Array.isArray(members)?members:[]).map(m=>({name:normalizeName(m.Personagem),job:normalizeName(m.Job),jobLabel:String(m.Job??'').trim(),power:parsePower(m['Power Atual'] ?? m.Power)})).filter(m=>m.name&&m.power>0).sort((a,b)=>b.power-a.power);
   const playerName=normalizeName(hivePowerPlayer?.Personagem);
   const player=roster.find(m=>m.name===playerName);
   const generalPos=player?1+roster.filter(m=>m.power>player.power).length:null;
@@ -6917,6 +6917,30 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #modal .hiveMockKpi .hiveNeg {color:#ff7777!important}
 #modal .hiveMockKpi .hiveMetricMuted {color:#bdbbb4!important}
 @media(max-width:650px){#modal .hiveMockKpis{grid-template-columns:1fr!important}#modal .hiveMonthKpi{grid-column:auto!important}}
+</style>
+
+<style id="hive-final-desktop-balanced-20261017">
+/* Desktop: preserve three cards and fit their content within the modal. */
+@media(min-width:1151px){
+ #modal .modalCard{width:min(1500px,calc(100vw - 32px))!important;max-width:calc(100vw - 32px)!important;box-sizing:border-box!important;}
+ #modal .hiveProfileHistoryFull>.hivePowerThreeCards{grid-template-columns:minmax(0,1.85fr) minmax(270px,.98fr) minmax(245px,.83fr)!important;gap:10px!important;}
+ #modal .hivePowerThreeCards>.hivePowerPanel{min-height:245px!important;padding:10px!important;}
+ #modal .hivePowerThreeCards .hivePowerPlot svg{max-height:165px!important;}
+ #modal .hivePowerSummaryPanel .hiveMockKpi{padding:7px!important;gap:2px!important;}
+ #modal .hivePowerSummaryPanel .hiveMockRank{margin-top:8px!important;padding-top:7px!important;}
+ #modal .hivePowerSummaryPanel .hiveRankTile{padding:7px 6px!important;}
+ #modal .hivePowerSummaryPanel .hiveRankTileValue{font-size:22px!important;margin-top:2px!important;}
+ #modal .hivePowerThreeCards .hiveMockRecentRow{padding-top:6px!important;padding-bottom:6px!important;}
+}
+@media(min-width:1151px) and (max-width:1380px){
+ #modal .hiveProfileHistoryFull>.hivePowerThreeCards{grid-template-columns:minmax(0,1.5fr) minmax(255px,1fr) minmax(220px,.85fr)!important;}
+}
+@media(max-width:1150px){#modal .hiveProfileHistoryFull>.hivePowerThreeCards{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+@media(max-width:780px){#modal .hiveProfileHistoryFull>.hivePowerThreeCards{grid-template-columns:1fr!important;}}
+#modal .hivePowerSummaryPanel .hiveRankIcon{font-size:19px!important;width:31px!important;height:31px!important;}
+#modal .hivePowerSummaryPanel .hiveKpiIcon{width:33px!important;height:33px!important;font-size:19px!important;}
+#modal .hivePowerSummaryPanel .hiveRankTileHeading{font-size:10px!important;gap:5px!important;}
+#modal .hivePowerSummaryPanel .hiveRankTile small{font-size:9px!important;}
 </style>
 </body>
 </html>
