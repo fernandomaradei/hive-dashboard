@@ -2464,7 +2464,18 @@ html{scroll-behavior:smooth}
   <section class="panel" id="fullRanking"><div class="panelHead"><div><div class="panelTitle">🏆 RANKING COMPLETO</div><div class="panelSub" id="countLabel"></div></div></div><div class="fulltable"><table><thead><tr><th>#</th><th>Personagem</th><th>Classe</th><th>Power</th><th>Evolução</th><th>HP</th><th>ATK</th><th>MATK</th></tr></thead><tbody id="allRows"></tbody></table></div></section>
   <footer class="footer" id="sobre">✦ HIVE ✦ <span style="font-size:10px;color:#d1b36a;letter-spacing:.28em">JUNTOS SEMPRE MAIS LONGE</span> ✦</footer>
 </div>
-<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
+<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="hiveProfileRight"><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div>
+<section class="hivePowerPanel" aria-label="Evolução de Power do personagem">
+ <div class="hivePowerHead"><h3>📈 Evolução de Power</h3><div class="hivePowerFilters" id="hivePowerFilters"><button data-days="7">7 dias</button><button data-days="30" class="active">30 dias</button><button data-days="90">90 dias</button><button data-days="all">Tudo</button></div></div>
+ <div class="hivePowerSummary" id="hivePowerSummary">Carregando histórico real...</div>
+ <div class="hivePowerPlot" id="hivePowerPlot"></div>
+ <div class="hivePowerFoot">Somente datas com atualização • Fonte: aba HISTORICO</div>
+</section>
+<section class="hivePowerPanel hivePowerTablePanel" aria-label="Histórico de Power">
+ <div class="hivePowerHead"><h3>Histórico de Power</h3><span id="hivePowerCount"></span></div>
+ <div class="hivePowerTableWrap"><table class="hivePowerTable"><thead><tr><th>DATA</th><th>POWER</th><th>VARIAÇÃO</th><th>%</th><th>ALTERAÇÃO</th></tr></thead><tbody id="hivePowerRows"></tbody></table></div>
+</section>
+</div></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
 <script>
 // V45: controle de atualizações + correções preservadas da V43.
 
@@ -3294,7 +3305,7 @@ function hiveNovaArteClasse(job){
  return HIVE_NOVAS_ARTES_CLASSE.sniper;
 }
 
-function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=hiveNovaArteClasse(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage(m.Job)};$('#modal').classList.add('open')}
+function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=hiveNovaArteClasse(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage(m.Job)};$('#modal').classList.add('open');hivePowerPlayer=m;hiveRenderPowerHistory()}
 function closeModal(){$('#modal').classList.remove('open')}
 async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});refresh();setInterval(refresh,REFRESH_MS);
@@ -6481,3 +6492,93 @@ window.hivePremiumClassImage = function(job){
 }
 .rooClassScreen .classHalo{overflow:hidden!important; padding:0!important;}
 </style>
+
+<style id="hive-power-history-profile-v1">
+#modal .modalCard{width:min(1540px,97vw)!important;max-width:none!important}
+#modal .profileGrid{grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr)!important;align-items:start!important;gap:16px!important}
+#modal .hiveProfileRight{min-width:0;display:flex;flex-direction:column;gap:12px}
+#modal .hiveProfileRight .classVisual{width:100%!important;min-height:0!important;height:auto!important;aspect-ratio:1.78!important;padding:0!important;display:block!important;overflow:hidden!important}
+#modal .hiveProfileRight .classVisual .classHalo{inset:0!important;width:100%!important;height:100%!important;position:absolute!important;display:block!important;border:0!important;padding:0!important;box-shadow:none!important;background:#100c0a!important}
+#modal .hiveProfileRight img#mClassImage{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important;filter:none!important;image-rendering:auto!important}
+#modal .hivePowerPanel{min-width:0;background:linear-gradient(140deg,#121411,#0a0d0c);border:1px solid rgba(237,181,35,.6);border-radius:15px;padding:13px 15px;color:#e9dfcd}
+#modal .hivePowerHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#modal .hivePowerHead h3{font-size:16px;margin:0;color:#ffe09a}
+#modal .hivePowerFilters{display:flex;gap:4px;flex-wrap:wrap}
+#modal .hivePowerFilters button{background:#151615;color:#b9b6ae;border:1px solid #33332d;border-radius:8px;padding:7px 11px;cursor:pointer;font:inherit;font-size:11px}
+#modal .hivePowerFilters button.active{background:#382c10;border-color:#e3b234;color:#ffd86e}
+#modal .hivePowerSummary{color:#bbb7ac;text-align:center;font-size:12px;margin:9px 0 4px}
+#modal .hivePowerSummary strong{color:#34e6a1}
+#modal .hivePowerPlot{width:100%;min-height:190px;position:relative}
+#modal .hivePowerPlot svg{display:block;width:100%;height:auto;overflow:visible}
+#modal .hivePowerFoot{font-size:10px;text-align:center;color:#99988d;margin-top:4px}
+#modal .hivePowerTableWrap{max-height:180px;overflow:auto;margin-top:10px}
+#modal .hivePowerTable{border-collapse:collapse;width:100%;font-size:11px;text-align:left}
+#modal .hivePowerTable th{position:sticky;top:0;background:#171817;color:#a7a6a0;font-size:10px;padding:8px}
+#modal .hivePowerTable td{padding:8px;border-top:1px solid #292923}
+#modal .hivePowerTable .positive{color:#36e7a0}#modal .hivePowerTable .negative{color:#ff7777}
+#modal .hivePowerTablePanel #hivePowerCount{font-size:11px;color:#a7a6a0}
+@media(max-width:850px){#modal .profileGrid{grid-template-columns:1fr!important}#modal .hiveProfileRight .classVisual{aspect-ratio:1.78!important}#modal .hivePowerPanel{padding:11px}#modal .hivePowerTable{font-size:10px}}
+</style>
+
+<script id="hive-power-history-v1">
+let hivePowerPlayer=null;
+let hivePowerDays='30';
+function hiveHistoryDate(value){
+ const v=String(value||'').trim();
+ let m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+ if(m)return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||0),+(m[5]||0),+(m[6]||0));
+ m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+ if(m)return new Date(+m[1],+m[2]-1,+m[3],+(m[4]||0),+(m[5]||0),+(m[6]||0));
+ return null;
+}
+function hiveHistoryPower(value){
+ const s=String(value??'').trim();
+ if(!s)return NaN;
+ if(/\d[.,]\d{3}(?:[.,]\d{3})*$/.test(s))return Number(s.replace(/[.,]/g,''));
+ if(/^\d+(?:[.,]\d+)?\s*k$/i.test(s))return Math.round(Number(s.replace(/k/i,'').replace(',','.'))*1000);
+ const n=Number(s.replace(/[^\d]/g,''));return Number.isFinite(n)?n:NaN;
+}
+function hivePowerData(player){
+ if(!player||!Array.isArray(history))return [];
+ const target=norm(player.Personagem).trim();
+ const records=history.filter(r=>norm(r.Personagem).trim()===target).map(r=>({
+  date:hiveHistoryDate(r['Data/Hora']),power:hiveHistoryPower(r.Power),note:String(r['Alteração']||'').trim()
+ })).filter(r=>r.date&&!isNaN(r.date.getTime())&&Number.isFinite(r.power)&&r.power>0).sort((a,b)=>a.date-b.date);
+ // Uma observação por dia: a última atualização efetiva daquela data.
+ const perDay=new Map();for(const r of records){const k=`${r.date.getFullYear()}-${r.date.getMonth()}-${r.date.getDate()}`;perDay.set(k,r)}
+ return [...perDay.values()].sort((a,b)=>a.date-b.date);
+}
+function hivePowerFmt(n){return Math.round(n).toLocaleString('pt-BR')}
+function hivePowerShort(n){return Math.round(n/1000)+'k'}
+function hivePowerDay(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')}
+function hivePowerFullDate(d){return hivePowerDay(d)+'/'+d.getFullYear()}
+function hiveRenderPowerHistory(){
+ const plot=document.getElementById('hivePowerPlot'),rows=document.getElementById('hivePowerRows');if(!plot||!rows)return;
+ document.querySelectorAll('#hivePowerFilters button').forEach(b=>b.classList.toggle('active',b.dataset.days===hivePowerDays));
+ const all=hivePowerData(hivePowerPlayer);
+ const cutoff=new Date();cutoff.setHours(0,0,0,0);if(hivePowerDays!=='all')cutoff.setDate(cutoff.getDate()-Number(hivePowerDays)+1);
+ const points=hivePowerDays==='all'?all:all.filter(r=>r.date>=cutoff);
+ const sum=document.getElementById('hivePowerSummary'),count=document.getElementById('hivePowerCount');
+ count.textContent=points.length+' dia(s) com registro';
+ if(!points.length){sum.textContent='Nenhuma atualização registrada neste período';plot.innerHTML='<div style="padding:65px 12px;text-align:center;color:#a7a6a0">Sem dados para o gráfico</div>';rows.innerHTML='<tr><td colspan="5">Nenhum registro no período selecionado.</td></tr>';return}
+ const latest=points[points.length-1];
+ // Evolução comparada ao registro anterior à última importação, não ao início do período.
+ const latestIndex=all.indexOf(latest),prev=latestIndex>0?all[latestIndex-1]:null;
+ const diff=prev?latest.power-prev.power:null;
+ sum.innerHTML=points.length+' dia(s) com registros • Último Power: <b>'+hivePowerFmt(latest.power)+'</b>'+(diff===null?'': ' • <strong style="color:'+(diff>=0?'#34e6a1':'#ff7777')+'">'+(diff>=0?'+':'')+hivePowerFmt(diff)+' desde a atualização anterior</strong>');
+ const w=760,h=218,L=55,R=17,T=20,B=37;
+ let vals=points.map(p=>p.power),lo=Math.min(...vals),hi=Math.max(...vals),span=Math.max(hi-lo,1000);lo=Math.max(0,lo-span*.18);hi=hi+span*.18;
+ const xx=i=>L+(w-L-R)*(points.length===1?.5:i/(points.length-1));
+ const yy=v=>T+(h-T-B)*(1-(v-lo)/(hi-lo));
+ const coords=points.map((p,i)=>[xx(i),yy(p.power)]);
+ const line=coords.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' ');
+ const area=line+' L'+coords[coords.length-1][0]+' '+(h-B)+' L'+coords[0][0]+' '+(h-B)+' Z';
+ const grid=Array.from({length:4},(_,i)=>{const v=lo+(hi-lo)*i/3,y=yy(v);return '<line x1="'+L+'" x2="'+(w-R)+'" y1="'+y+'" y2="'+y+'" stroke="#343631" stroke-width="1"/><text x="'+(L-9)+'" y="'+(y+4)+'" text-anchor="end" fill="#aaa89d" font-size="11">'+hivePowerShort(v)+'</text>'}).join('');
+ const stride=Math.max(1,Math.ceil(points.length/8));
+ const labels=points.map((p,i)=>(i%stride===0||i===points.length-1)?'<text x="'+xx(i)+'" y="'+(h-12)+'" text-anchor="middle" fill="#bdb8ab" font-size="10">'+hivePowerDay(p.date)+'</text>':'').join('');
+ const dots=points.map((p,i)=>'<circle cx="'+xx(i)+'" cy="'+yy(p.power)+'" r="'+(i===points.length-1?5:3.5)+'" fill="#ffce48" stroke="#ffe59b" stroke-width="1"><title>'+hivePowerFullDate(p.date)+' — Power '+hivePowerFmt(p.power)+'</title></circle>').join('');
+ plot.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Gráfico de Power baseado nas datas de atualização reais"><defs><linearGradient id="hivePowerGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7bb32" stop-opacity=".4"/><stop offset="100%" stop-color="#f7bb32" stop-opacity=".015"/></linearGradient></defs>'+grid+'<path d="'+area+'" fill="url(#hivePowerGradient)"/><path d="'+line+'" stroke="#ffcf45" stroke-width="3" fill="none" stroke-linejoin="round"/>'+dots+labels+'</svg>';
+ rows.innerHTML=points.slice().reverse().map(p=>{const idx=all.indexOf(p),previous=idx>0?all[idx-1]:null,d=previous?p.power-previous.power:null,pct=previous&&previous.power?100*d/previous.power:null,cls=d===null?'':d>=0?'positive':'negative';return '<tr><td>'+hivePowerFullDate(p.date)+'</td><td>'+hivePowerFmt(p.power)+'</td><td class="'+cls+'">'+(d===null?'—':(d>0?'+':'')+hivePowerFmt(d))+'</td><td class="'+cls+'">'+(pct===null?'—':(pct>0?'+':'')+pct.toFixed(1).replace('.',',')+'%')+'</td><td>'+esc(p.note||'—')+'</td></tr>'}).join('');
+}
+document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const b=e.target.closest('button[data-days]');if(!b)return;hivePowerDays=b.dataset.days;hiveRenderPowerHistory()});
+</script>
