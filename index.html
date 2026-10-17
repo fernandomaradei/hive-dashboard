@@ -2472,6 +2472,15 @@ html{scroll-behavior:smooth}
  <div class="hivePowerPlot" id="hivePowerPlot"></div>
  <div class="hivePowerFoot">Somente datas com atualização • Fonte: aba HISTORICO</div>
 </section>
+<section class="hivePowerPanel hivePowerSummaryPanel" aria-label="Resumo de Power">
+<div class="hiveMockTitle">⚡ Resumo de Power</div>
+<div class="hiveMockKpis" id="hiveMockKpis"><div class="hiveMockEmpty">Carregando dados...</div></div>
+<div class="hiveMockRank"><div class="hiveMockRankHead">♛ Ranking da Guilda</div><div class="hiveMockRankBody" id="hiveMockRankBody">Carregando ranking...</div></div>
+</section>
+<section class="hivePowerPanel hivePowerRecentPanel" aria-label="Últimas atualizações">
+<div class="hiveMockTitle">◷ Últimas Atualizações</div>
+<div class="hiveMockRecentList" id="hiveMockRecentList"><div class="hiveMockEmpty">Carregando histórico...</div></div>
+</section>
 <section class="hivePowerPanel hivePowerTablePanel" aria-label="Histórico de Power">
  <div class="hivePowerHead"><h3>Histórico de Power</h3><span id="hivePowerCount"></span></div>
  <div class="hivePowerTableWrap"><table class="hivePowerTable"><thead><tr><th>DATA</th><th>POWER</th><th>VARIAÇÃO</th><th>%</th><th>ALTERAÇÃO</th></tr></thead><tbody id="hivePowerRows"></tbody></table></div>
@@ -6587,19 +6596,7 @@ window.hivePremiumClassImage = function(job){
 </style>
 <script id="hive-power-mockup-real-data-v1">
 (function(){
- function install(){
-  const host=document.querySelector('#modal .hiveProfileHistoryFull');
-  if(!host||host.querySelector('.hivePowerSummaryPanel'))return;
-  const chart=host.querySelector('.hivePowerPanel');
-  if(!chart)return;
-  const summary=document.createElement('section');summary.className='hivePowerPanel hivePowerSummaryPanel';summary.setAttribute('aria-label','Resumo de Power');
-  summary.innerHTML='<div class="hiveMockTitle">⚡ Resumo de Power</div><div class="hiveMockKpis" id="hiveMockKpis"></div><div class="hiveMockRank"><div class="hiveMockRankHead">♛ Ranking da Guilda</div><div class="hiveMockRankBody" id="hiveMockRankBody"></div></div>';
-  const recent=document.createElement('section');recent.className='hivePowerPanel hivePowerRecentPanel';recent.setAttribute('aria-label','Últimas atualizações');
-  recent.innerHTML='<div class="hiveMockTitle">◷ Últimas Atualizações</div><div class="hiveMockRecentList" id="hiveMockRecentList"></div>';
-  chart.after(summary,recent);
- }
  window.hiveUpdateMockupCards=function(all,points){
-  install();
   const k=document.getElementById('hiveMockKpis'),r=document.getElementById('hiveMockRankBody'),list=document.getElementById('hiveMockRecentList');
   if(!k||!r||!list)return;
   const current=all.length?all[all.length-1].power:Number(String(hivePowerPlayer?.Power||'').replace(/\D/g,''))||0;
@@ -6615,7 +6612,6 @@ window.hivePremiumClassImage = function(job){
   const visible=points.slice(-5).reverse();
   list.innerHTML=visible.length?visible.map(p=>{const idx=all.indexOf(p),prev=idx>0?all[idx-1]:null,d=prev?p.power-prev.power:null;return '<div class="hiveMockRecentRow"><span>'+hivePowerDay(p.date)+'</span><b>'+fmt(p.power)+'</b><em class="'+(d!==null&&d<0?'neg':'')+'">'+(d===null?'—':(d>=0?'+':'')+fmt(d))+'</em></div>'}).join(''):'<div class="hiveMockEmpty">Sem atualizações neste período.</div>';
  };
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
 </script>
 </body></html
@@ -6818,3 +6814,5 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 /* Priest e BIO: imagens nativas 1.78:1, sem bordas desfocadas. */
 #modal .hiveProfileRight img#mClassImage{object-fit:cover!important;object-position:center center!important}
 </style>
+</body>
+</html>
