@@ -6613,10 +6613,13 @@ window.hivePremiumClassImage = function(job){
   // Rankings baseados na aba MEMBROS, não na aba HISTORICO.
   const normalizeName=(v)=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
   const parsePower=(v)=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'');if(!t)return 0;const clean=t.replace(/\./g,'').replace(',','.');return Number(clean)||0};
-  const roster=(Array.isArray(members)?members:[]).map(m=>({name:normalizeName(m.Personagem),job:normalizeName(m.Job),jobLabel:String(m.Job??'').trim(),power:parsePower(m['Power Atual'] ?? m.Power)})).filter(m=>m.name&&m.power>0).sort((a,b)=>b.power-a.power);
-  const playerName=normalizeName(hivePowerPlayer?.Personagem);
-  const player=roster.find(m=>m.name===playerName);
-  const generalPos=player?1+roster.filter(m=>m.power>player.power).length:null;
+  // Reutiliza o mesmo ranking geral por Power da página principal.
+  // intNum trata os valores da aba MEMBROS exatamente como o dashboard já faz.
+  const sortedPower=typeof topPower==='function'?topPower():[];
+  const roster=sortedPower.filter(m=>normalizeName(m.Personagem)&&intNum(m['Power Atual'],'Power Atual')>0);
+  const playerName=normalizeName(hivePowerPlayer?.Personagem || document.getElementById('mName')?.textContent);
+  const playerIndex=roster.findIndex(m=>normalizeName(m.Personagem)===playerName);
+  const generalPos=playerIndex>=0?playerIndex+1:null;
   // Ranking da classe: mesma formula de pontos usada no ranking de classes do dashboard.
   // Inclui separacao Doram MAG/PHY por perfil, e nao ordena por Power.
   const sourceMembers=Array.isArray(members)?members:[];
@@ -6941,6 +6944,15 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #modal .hivePowerSummaryPanel .hiveKpiIcon{width:33px!important;height:33px!important;font-size:19px!important;}
 #modal .hivePowerSummaryPanel .hiveRankTileHeading{font-size:10px!important;gap:5px!important;}
 #modal .hivePowerSummaryPanel .hiveRankTile small{font-size:9px!important;}
+</style>
+
+<style id="hive-ranking-icons-power-fix-20261017">
+/* Aumenta os símbolos, sem ampliar a altura dos três quadros. */
+#modal .hivePowerSummaryPanel .hiveKpiTop{display:flex!important;align-items:center!important;gap:9px!important;min-height:39px!important}
+#modal .hivePowerSummaryPanel .hiveKpiIcon{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;flex:0 0 38px!important;font-size:25px!important;line-height:1!important;border-radius:10px!important;padding:0!important;box-sizing:border-box!important}
+#modal .hivePowerSummaryPanel .hiveKpiTop>span:last-child{font-size:11px!important;line-height:1.25!important}
+#modal .hivePowerSummaryPanel .hiveMockKpi{min-width:0!important}
+@media(max-width:600px){#modal .hivePowerSummaryPanel .hiveKpiIcon{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;flex-basis:34px!important;font-size:22px!important}}
 </style>
 </body>
 </html>
