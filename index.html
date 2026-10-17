@@ -6606,7 +6606,11 @@ window.hivePremiumClassImage = function(job){
   const previous=all.length>1?current-all[all.length-2].power:null;
   const fmt=(v)=>Number(v).toLocaleString('pt-BR');
   const change=(v)=>v===null?'<strong>—</strong>':'<strong class="'+(v>=0?'hivePos':'hiveNeg')+'">'+(v>=0?'↑ +':'↓ ')+fmt(v)+'</strong>';
-  k.innerHTML='<div class="hiveMockKpi"><strong>'+fmt(current)+'</strong><span>Power atual</span></div><div class="hiveMockKpi">'+change(previous)+'<span>Última atualização</span></div><div class="hiveMockKpi">'+change(delta(30))+'<span>Em 30 dias</span></div><div class="hiveMockKpi">'+change(delta(90))+'<span>Em 90 dias</span></div>';
+  const compact=(v)=>{if(v===null)return '—';const abs=Math.abs(v);return (abs>=1000?(abs/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+'k':fmt(abs));};
+  const trend=(v)=>v===null?'<strong class="hiveMetricMuted">—</strong>':'<strong class="'+(v>=0?'hivePos':'hiveNeg')+'">'+(v>=0?'↑ +':'↓ -')+compact(v)+'</strong>';
+  k.innerHTML='<div class="hiveMockKpi hiveCurrentKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">⚔️</span><span>Power Atual</span></div><strong>'+compact(current)+'</strong><small>Power atual do personagem</small></div>'+
+    '<div class="hiveMockKpi hiveLatestKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">⚡</span><span>Última atualização</span></div>'+trend(previous)+'<small>Desde o registro anterior</small></div>'+
+    '<div class="hiveMockKpi hiveMonthKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">📊</span><span>Evolução em 30 dias</span></div>'+trend(delta(30))+'<small>Comparado ao período anterior</small></div>';
   const ranked=(Array.isArray(members)?members:[]).map(m=>({name:String(m.Personagem||'').trim().toLowerCase(),power:Number(String(m.Power??'').replace(/\D/g,''))})).filter(m=>m.name&&Number.isFinite(m.power)&&m.power>0).sort((a,b)=>b.power-a.power);
   const target=String(hivePowerPlayer?.Personagem||'').trim().toLowerCase();
   const pos=ranked.findIndex(m=>m.name===target);
@@ -6863,3 +6867,21 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 </style>
 </body>
 </html>
+
+<style id="hive-resumo-final-compacto-20261017">
+/* A tabela antiga permanece no DOM apenas para compatibilidade com o renderer de histórico. */
+#modal .hiveProfileHistoryFull > .hivePowerTablePanel {display:none!important}
+#modal .hiveProfileHistoryFull {grid-template-rows:auto!important}
+#modal .hiveMockRank {display:none!important}
+#modal .hiveMockKpis {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+#modal .hiveMockKpi {min-width:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:5px!important;padding:12px!important;background:linear-gradient(135deg,#171a18,#101412)!important;border:1px solid #292c27!important;border-radius:10px!important}
+#modal .hiveMonthKpi {grid-column:1/-1!important}
+#modal .hiveKpiTop {display:flex;align-items:center;gap:7px;color:#bcb9aa;font-size:11px;font-weight:600}
+#modal .hiveKpiIcon {display:inline-flex;align-items:center;justify-content:center;width:29px;height:29px;flex-shrink:0;background:#28200d;border:1px solid #66501c;border-radius:8px;font-size:16px}
+#modal .hiveMockKpi>strong {font-size:24px!important;line-height:1.1!important;letter-spacing:-.6px}
+#modal .hiveMockKpi>small {font-size:10px;color:#aaa99e}
+#modal .hiveMockKpi .hivePos {color:#28e4a3!important}
+#modal .hiveMockKpi .hiveNeg {color:#ff7777!important}
+#modal .hiveMockKpi .hiveMetricMuted {color:#bdbbb4!important}
+@media(max-width:650px){#modal .hiveMockKpis{grid-template-columns:1fr!important}#modal .hiveMonthKpi{grid-column:auto!important}}
+</style>
