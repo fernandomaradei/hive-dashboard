@@ -6550,6 +6550,74 @@ window.hivePremiumClassImage = function(job){
 <style id="hive-hw-native-aspect-style">
 #modal .hiveProfileRight img#mClassImage{object-fit:cover!important;object-position:center!important}
 </style>
+
+<style id="hive-profile-power-three-column-v1">
+@media(min-width:1050px){
+ #modal .hiveProfileHistoryFull{display:grid!important;grid-template-columns:minmax(0,1.95fr) minmax(0,.94fr) minmax(0,.82fr)!important;gap:9px!important;align-items:stretch!important}
+ #modal .hiveProfileHistoryFull>.hivePowerPanel:first-child{grid-column:1!important;grid-row:1!important}
+ #modal .hiveProfileHistoryFull>.hivePowerSummaryPanel{grid-column:2!important;grid-row:1!important}
+ #modal .hiveProfileHistoryFull>.hivePowerRecentPanel{grid-column:3!important;grid-row:1!important}
+ #modal .hiveProfileHistoryFull>.hivePowerTablePanel{grid-column:1/-1!important;grid-row:2!important}
+ #modal .hiveProfileHistoryFull .hivePowerPlot svg{height:190px!important}
+ #modal .hiveProfileHistoryFull .hivePowerPanel{padding:12px!important;min-width:0!important}
+}
+@media(min-width:1050px) and (max-width:1280px){#modal .hiveProfileHistoryFull{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,.95fr)!important}}
+@media(max-width:1049px){#modal .hiveProfileHistoryFull{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#modal .hiveProfileHistoryFull>.hivePowerPanel:first-child,#modal .hiveProfileHistoryFull>.hivePowerTablePanel{grid-column:1/-1!important}}
+@media(max-width:620px){#modal .hiveProfileHistoryFull{grid-template-columns:1fr!important}
+#modal .hiveProfileHistoryFull>.hivePowerPanel{grid-column:1!important}}
+#modal .hivePowerSummaryPanel,#modal .hivePowerRecentPanel{background:#0d110f!important;border:1px solid #85600c!important;border-radius:12px!important;box-sizing:border-box}
+#modal .hiveMockTitle{color:#f3ce77;font-weight:800;font-size:14px;margin-bottom:11px}
+#modal .hiveMockKpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#modal .hiveMockKpi{background:#141615;border:1px solid #292b26;border-radius:9px;padding:9px 7px;min-width:0}
+#modal .hiveMockKpi strong{display:block;color:#f5f1e9;font-size:clamp(13px,1.25vw,21px);font-weight:800;white-space:nowrap}
+#modal .hiveMockKpi span{display:block;color:#bdb9ac;font-size:10px;line-height:1.35;margin-top:3px}
+#modal .hiveMockKpi .hivePos{color:#34e6a1}
+#modal .hiveMockKpi .hiveNeg{color:#ff7777}
+#modal .hiveMockRank{border-top:1px solid #353026;margin-top:12px;padding-top:9px}
+#modal .hiveMockRankHead{color:#f3ce77;font-size:12px;font-weight:800;margin-bottom:7px}
+#modal .hiveMockRankBody{display:flex;justify-content:space-between;gap:8px;color:#ddd6c4;font-size:12px}
+#modal .hiveMockRankBody b{font-size:21px;color:#fff}
+#modal .hiveMockRecentList{display:flex;flex-direction:column;gap:6px}
+#modal .hiveMockRecentRow{display:grid;grid-template-columns:1fr 1.1fr 1fr;align-items:center;gap:3px;background:#171a18;border:1px solid #242925;border-radius:7px;padding:8px 7px;font-size:11px;color:#cfc9bf}
+#modal .hiveMockRecentRow b{color:#f0ece7;text-align:right;font-size:11px}
+#modal .hiveMockRecentRow em{font-style:normal;text-align:right;color:#34e6a1;font-weight:700}
+#modal .hiveMockRecentRow em.neg{color:#ff7777}
+#modal .hiveMockEmpty{color:#9b9c95;font-size:12px;padding:12px 0}
+</style>
+<script id="hive-power-mockup-real-data-v1">
+(function(){
+ function install(){
+  const host=document.querySelector('#modal .hiveProfileHistoryFull');
+  if(!host||host.querySelector('.hivePowerSummaryPanel'))return;
+  const chart=host.querySelector('.hivePowerPanel');
+  if(!chart)return;
+  const summary=document.createElement('section');summary.className='hivePowerPanel hivePowerSummaryPanel';summary.setAttribute('aria-label','Resumo de Power');
+  summary.innerHTML='<div class="hiveMockTitle">⚡ Resumo de Power</div><div class="hiveMockKpis" id="hiveMockKpis"></div><div class="hiveMockRank"><div class="hiveMockRankHead">♛ Ranking da Guilda</div><div class="hiveMockRankBody" id="hiveMockRankBody"></div></div>';
+  const recent=document.createElement('section');recent.className='hivePowerPanel hivePowerRecentPanel';recent.setAttribute('aria-label','Últimas atualizações');
+  recent.innerHTML='<div class="hiveMockTitle">◷ Últimas Atualizações</div><div class="hiveMockRecentList" id="hiveMockRecentList"></div>';
+  chart.after(summary,recent);
+ }
+ window.hiveUpdateMockupCards=function(all,points){
+  install();
+  const k=document.getElementById('hiveMockKpis'),r=document.getElementById('hiveMockRankBody'),list=document.getElementById('hiveMockRecentList');
+  if(!k||!r||!list)return;
+  const current=all.length?all[all.length-1].power:Number(String(hivePowerPlayer?.Power||'').replace(/\D/g,''))||0;
+  const delta=(days)=>{if(!all.length)return null;const end=all[all.length-1];const cutoff=new Date(end.date);cutoff.setDate(cutoff.getDate()-days);const previous=all.filter(p=>p.date<=cutoff).at(-1);return previous?end.power-previous.power:null};
+  const previous=all.length>1?current-all[all.length-2].power:null;
+  const fmt=(v)=>Number(v).toLocaleString('pt-BR');
+  const change=(v)=>v===null?'<strong>—</strong>':'<strong class="'+(v>=0?'hivePos':'hiveNeg')+'">'+(v>=0?'↑ +':'↓ ')+fmt(v)+'</strong>';
+  k.innerHTML='<div class="hiveMockKpi"><strong>'+fmt(current)+'</strong><span>Power atual</span></div><div class="hiveMockKpi">'+change(previous)+'<span>Última atualização</span></div><div class="hiveMockKpi">'+change(delta(30))+'<span>Em 30 dias</span></div><div class="hiveMockKpi">'+change(delta(90))+'<span>Em 90 dias</span></div>';
+  const ranked=(Array.isArray(members)?members:[]).map(m=>({name:String(m.Personagem||'').trim().toLowerCase(),power:Number(String(m.Power??'').replace(/\D/g,''))})).filter(m=>m.name&&Number.isFinite(m.power)&&m.power>0).sort((a,b)=>b.power-a.power);
+  const target=String(hivePowerPlayer?.Personagem||'').trim().toLowerCase();
+  const pos=ranked.findIndex(m=>m.name===target);
+  r.innerHTML=pos>=0?'<span><b>#'+(pos+1)+'</b> de '+ranked.length+' membros</span><span>Top '+Math.ceil((pos+1)/ranked.length*100)+'%</span>':'<span>Ranking indisponível</span>';
+  const visible=points.slice(-5).reverse();
+  list.innerHTML=visible.length?visible.map(p=>{const idx=all.indexOf(p),prev=idx>0?all[idx-1]:null,d=prev?p.power-prev.power:null;return '<div class="hiveMockRecentRow"><span>'+hivePowerDay(p.date)+'</span><b>'+fmt(p.power)+'</b><em class="'+(d!==null&&d<0?'neg':'')+'">'+(d===null?'—':(d>=0?'+':'')+fmt(d))+'</em></div>'}).join(''):'<div class="hiveMockEmpty">Sem atualizações neste período.</div>';
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>
 </body></html
 >
 <style id="hive-artes-hd-final">
@@ -6655,6 +6723,7 @@ function hiveRenderPowerHistory(){
  const all=hivePowerData(hivePowerPlayer);
  const cutoff=new Date();cutoff.setHours(0,0,0,0);if(hivePowerDays!=='all')cutoff.setDate(cutoff.getDate()-Number(hivePowerDays)+1);
  const points=hivePowerDays==='all'?all:all.filter(r=>r.date>=cutoff);
+ hiveUpdateMockupCards(all,points);
  const sum=document.getElementById('hivePowerSummary'),count=document.getElementById('hivePowerCount');
  count.textContent=points.length+' dia(s) com registro';
  if(!points.length){sum.textContent='Nenhuma atualização registrada neste período';plot.innerHTML='<div style="padding:65px 12px;text-align:center;color:#a7a6a0">Sem dados para o gráfico</div>';rows.innerHTML='<tr><td colspan="5">Nenhum registro no período selecionado.</td></tr>';return}
