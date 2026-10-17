@@ -6611,7 +6611,7 @@ window.hivePremiumClassImage = function(job){
   const monthChange=delta(30);
   k.innerHTML='<div class="hiveMockKpi hiveCurrentKpi"><strong>'+compact(current)+'</strong><small>Power Atual</small></div>'+
     '<div class="hiveMockKpi hiveLatestKpi">'+trend(previous)+'<small>Desde a última atualização</small></div>'+
-    '<div class="hiveMockKpi hiveMonthKpi"><span class="hiveKpiIcon hiveBarsIcon" aria-hidden="true"><i></i><i></i><i></i></span><div class="hiveMonthInfo">'+trend(monthChange)+'<small>Evolução em 30 dias</small></div></div>';
+    '';
   // Rankings baseados na aba MEMBROS, não na aba HISTORICO.
   const normalizeName=(v)=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
   const parsePower=(v)=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'');if(!t)return 0;const clean=t.replace(/\./g,'').replace(',','.');return Number(clean)||0};
@@ -6635,7 +6635,7 @@ window.hivePremiumClassImage = function(job){
   const selectedScore=scoredClass.find(m=>m.name===playerName);
   const classPos=selectedScore?1+scoredClass.filter(m=>m.score>selectedScore.score).length:null;
   const classTotal=scoredClass.length;
-  const rankingCard=(label,pos,total,sub,icon)=>'<div class="hiveRankTile"><div class="hiveRankTileHeading"><span class="hiveRankIcon">'+icon+'</span><span>'+label+'</span></div><div class="hiveRankTileValue">'+(pos!==null?'#'+pos:'—')+'<span>'+(pos!==null?' de '+total:'')+'</span></div><small>'+sub+'</small></div>';
+  const rankingCard=(label,pos,total,sub,icon)=>'<div class="hiveRankTile hiveRankClean"><div class="hiveRankTileHeading"><span>'+label+'</span></div><div class="hiveRankTileValue">'+(pos!==null?'#'+pos:'—')+'<span>'+(pos!==null?' / '+total:'')+'</span></div><small>'+sub+'</small></div>';
   r.innerHTML='<div class="hiveRankTileGrid">'+
     rankingCard('Ranking Geral',generalPos,roster.length,'Por Power • guilda','🏆')+
     rankingCard('Ranking da Classe',classPos,classTotal,(selectedGroup||'Classe não identificada')+' • por pontos','🎖️')+'</div>';
@@ -6976,6 +6976,26 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #modal .hivePowerSummaryPanel .hiveRankTileGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
 #modal .hivePowerSummaryPanel .hiveRankTile{min-width:0!important}
 @media(max-width:650px){#modal .hivePowerSummaryPanel .hiveMockKpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}#modal .hivePowerSummaryPanel .hiveMonthKpi{grid-column:1/-1!important}}
+</style>
+
+<style id="hive-resumo-compacto-ranking-clean-20261017">
+/* Três painéis continuam lado a lado; resumo cabe sem rolagem adicional. */
+@media(min-width:1050px){
+ #modal .hiveProfileHistoryFull{align-items:stretch!important}
+ #modal .hivePowerSummaryPanel{padding:11px 12px!important}
+ #modal .hivePowerSummaryPanel .hiveMockKpis{gap:6px!important}
+ #modal .hivePowerSummaryPanel .hiveMockKpi{min-height:57px!important;padding:7px 9px!important}
+ #modal .hivePowerSummaryPanel .hiveMockRank{margin-top:8px!important;padding-top:7px!important}
+}
+#modal .hivePowerSummaryPanel .hiveMonthKpi{display:none!important}
+#modal .hivePowerSummaryPanel .hiveMockRankHead{margin-bottom:7px!important}
+#modal .hivePowerSummaryPanel .hiveRankTileGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+#modal .hivePowerSummaryPanel .hiveRankClean{background:linear-gradient(145deg,#171a17,#101411)!important;border:1px solid #3a3528!important;border-radius:10px!important;padding:10px 10px 8px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:74px!important;box-sizing:border-box!important}
+#modal .hivePowerSummaryPanel .hiveRankClean .hiveRankTileHeading{font-size:10px!important;letter-spacing:.025em!important;color:#e9c76e!important;font-weight:750!important;line-height:1.2!important}
+#modal .hivePowerSummaryPanel .hiveRankClean .hiveRankTileValue{font-size:29px!important;font-weight:850!important;line-height:1.08!important;color:#fff!important;margin:5px 0 2px!important;white-space:nowrap!important}
+#modal .hivePowerSummaryPanel .hiveRankClean .hiveRankTileValue span{font-size:11px!important;color:#bcb8ac!important;font-weight:500!important;margin-left:5px!important}
+#modal .hivePowerSummaryPanel .hiveRankClean small{font-size:9px!important;color:#999b94!important;line-height:1.25!important}
+@media(max-width:600px){#modal .hivePowerSummaryPanel .hiveRankClean{min-height:67px!important;padding:8px!important}#modal .hivePowerSummaryPanel .hiveRankClean .hiveRankTileValue{font-size:25px!important}}
 </style>
 </body>
 </html>
