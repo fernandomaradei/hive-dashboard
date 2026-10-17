@@ -6468,6 +6468,34 @@ window.hivePremiumClassImage = function(job){
   };
 })();
 </script>
+<style id="hive-profile-compact-class-colors-v2">
+/* Modal de perfil: dimensões compactas no desktop, sem reduzir a resolução das artes. */
+@media(min-width:851px){
+ #modal .modalCard{width:min(1190px,94vw)!important;max-width:1190px!important;padding:18px 20px!important;}
+ #modal .profileGrid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)!important;gap:12px!important;}
+ #modal .allStats{gap:7px!important;}
+ #modal .allStats .mini{min-height:57px!important;padding:8px 9px!important;}
+ #modal .allStats .mini .statIcon{width:31px!important;height:31px!important;font-size:17px!important;}
+ #modal .allStats .mini span{font-size:9px!important;}
+ #modal .allStats .mini b{font-size:15px!important;}
+ #modal .hiveProfileRight{gap:9px!important;}
+ #modal .hiveProfileRight .classVisual{aspect-ratio:1.95!important;}
+ #modal .hivePowerPanel{padding:10px 12px!important;border-radius:12px!important;}
+ #modal .hivePowerHead h3{font-size:14px!important;}
+ #modal .hivePowerFilters button{padding:5px 8px!important;font-size:10px!important;}
+ #modal .hivePowerSummary{font-size:11px!important;margin:6px 0 2px!important;}
+ #modal .hivePowerPlot{min-height:0!important;}
+ #modal .hivePowerTableWrap{max-height:126px!important;margin-top:7px!important;}
+ #modal .hivePowerTable td,#modal .hivePowerTable th{padding:6px!important;}
+ #modal .modalHead{margin-bottom:10px!important;}
+}
+@media(min-width:851px) and (max-width:1100px){
+ #modal .modalCard{width:96vw!important;padding:14px!important;}
+ #modal .profileGrid{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important;}
+}
+/* Mantém a arte integral, sem blur ou upscale via CSS. */
+#modal img#mClassImage{object-fit:contain!important;filter:none!important;image-rendering:auto!important;}
+</style>
 </body></html
 >
 <style id="hive-artes-hd-final">
@@ -6552,9 +6580,22 @@ function hivePowerFmt(n){return Math.round(n).toLocaleString('pt-BR')}
 function hivePowerShort(n){return Math.round(n/1000)+'k'}
 function hivePowerDay(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')}
 function hivePowerFullDate(d){return hivePowerDay(d)+'/'+d.getFullYear()}
+function hivePowerClassTheme(job){
+ const j=String(job||'').toLowerCase();
+ if(/doram/.test(j))return {line:'#ff6cae',light:'#ffc1dc',fill:'#e94598',edge:'#b83e7c'};
+ if(/music|menestrel|bard|dancer/.test(j))return {line:'#bd89ff',light:'#ead6ff',fill:'#8651d7',edge:'#9b65df'};
+ if(/priest|sacerdot/.test(j))return {line:'#ffd27b',light:'#fff1bd',fill:'#efac45',edge:'#c18d3a'};
+ if(/bio|creator|criador/.test(j))return {line:'#72dbb0',light:'#c6ffe6',fill:'#36a982',edge:'#419c7b'};
+ if(/sniper|archer|atirador/.test(j))return {line:'#f8c447',light:'#ffe9a1',fill:'#c78d25',edge:'#c18c27'};
+ if(/hw|wizard|professor|sage/.test(j))return {line:'#a38aff',light:'#ddd1ff',fill:'#7156d4',edge:'#8e74df'};
+ if(/paladin|lk|knight/.test(j))return {line:'#8fbdff',light:'#d7e8ff',fill:'#527fc7',edge:'#719ad0'};
+ if(/gunslinger/.test(j))return {line:'#ff9b69',light:'#ffe1c7',fill:'#d66c39',edge:'#c67a4d'};
+ return {line:'#ffcf45',light:'#ffe59b',fill:'#f7bb32',edge:'#b78c2c'};
+}
 function hiveRenderPowerHistory(){
  const plot=document.getElementById('hivePowerPlot'),rows=document.getElementById('hivePowerRows');if(!plot||!rows)return;
  document.querySelectorAll('#hivePowerFilters button').forEach(b=>b.classList.toggle('active',b.dataset.days===hivePowerDays));
+ const theme=hivePowerClassTheme(hivePowerPlayer?.Job);
  const all=hivePowerData(hivePowerPlayer);
  const cutoff=new Date();cutoff.setHours(0,0,0,0);if(hivePowerDays!=='all')cutoff.setDate(cutoff.getDate()-Number(hivePowerDays)+1);
  const points=hivePowerDays==='all'?all:all.filter(r=>r.date>=cutoff);
@@ -6566,7 +6607,7 @@ function hiveRenderPowerHistory(){
  const latestIndex=all.indexOf(latest),prev=latestIndex>0?all[latestIndex-1]:null;
  const diff=prev?latest.power-prev.power:null;
  sum.innerHTML=points.length+' dia(s) com registros • Último Power: <b>'+hivePowerFmt(latest.power)+'</b>'+(diff===null?'': ' • <strong style="color:'+(diff>=0?'#34e6a1':'#ff7777')+'">'+(diff>=0?'+':'')+hivePowerFmt(diff)+' desde a atualização anterior</strong>');
- const w=760,h=218,L=55,R=17,T=20,B=37;
+ const w=760,h=185,L=55,R=17,T=14,B=33;
  let vals=points.map(p=>p.power),lo=Math.min(...vals),hi=Math.max(...vals),span=Math.max(hi-lo,1000);lo=Math.max(0,lo-span*.18);hi=hi+span*.18;
  const xx=i=>L+(w-L-R)*(points.length===1?.5:i/(points.length-1));
  const yy=v=>T+(h-T-B)*(1-(v-lo)/(hi-lo));
@@ -6576,8 +6617,8 @@ function hiveRenderPowerHistory(){
  const grid=Array.from({length:4},(_,i)=>{const v=lo+(hi-lo)*i/3,y=yy(v);return '<line x1="'+L+'" x2="'+(w-R)+'" y1="'+y+'" y2="'+y+'" stroke="#343631" stroke-width="1"/><text x="'+(L-9)+'" y="'+(y+4)+'" text-anchor="end" fill="#aaa89d" font-size="11">'+hivePowerShort(v)+'</text>'}).join('');
  const stride=Math.max(1,Math.ceil(points.length/8));
  const labels=points.map((p,i)=>(i%stride===0||i===points.length-1)?'<text x="'+xx(i)+'" y="'+(h-12)+'" text-anchor="middle" fill="#bdb8ab" font-size="10">'+hivePowerDay(p.date)+'</text>':'').join('');
- const dots=points.map((p,i)=>'<circle cx="'+xx(i)+'" cy="'+yy(p.power)+'" r="'+(i===points.length-1?5:3.5)+'" fill="#ffce48" stroke="#ffe59b" stroke-width="1"><title>'+hivePowerFullDate(p.date)+' — Power '+hivePowerFmt(p.power)+'</title></circle>').join('');
- plot.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Gráfico de Power baseado nas datas de atualização reais"><defs><linearGradient id="hivePowerGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7bb32" stop-opacity=".4"/><stop offset="100%" stop-color="#f7bb32" stop-opacity=".015"/></linearGradient></defs>'+grid+'<path d="'+area+'" fill="url(#hivePowerGradient)"/><path d="'+line+'" stroke="#ffcf45" stroke-width="3" fill="none" stroke-linejoin="round"/>'+dots+labels+'</svg>';
+ const dots=points.map((p,i)=>'<circle cx="'+xx(i)+'" cy="'+yy(p.power)+'" r="'+(i===points.length-1?5:3.5)+'" fill="'+theme.line+'" stroke="'+theme.light+'" stroke-width="1"><title>'+hivePowerFullDate(p.date)+' — Power '+hivePowerFmt(p.power)+'</title></circle>').join('');
+ plot.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Gráfico de Power baseado nas datas de atualização reais"><defs><linearGradient id="hivePowerGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+theme.fill+'" stop-opacity=".4"/><stop offset="100%" stop-color="'+theme.fill+'" stop-opacity=".015"/></linearGradient></defs>'+grid+'<path d="'+area+'" fill="url(#hivePowerGradient)"/><path d="'+line+'" stroke="'+theme.line+'" stroke-width="3" fill="none" stroke-linejoin="round"/>'+dots+labels+'</svg>';
  rows.innerHTML=points.slice().reverse().map(p=>{const idx=all.indexOf(p),previous=idx>0?all[idx-1]:null,d=previous?p.power-previous.power:null,pct=previous&&previous.power?100*d/previous.power:null,cls=d===null?'':d>=0?'positive':'negative';return '<tr><td>'+hivePowerFullDate(p.date)+'</td><td>'+hivePowerFmt(p.power)+'</td><td class="'+cls+'">'+(d===null?'—':(d>0?'+':'')+hivePowerFmt(d))+'</td><td class="'+cls+'">'+(pct===null?'—':(pct>0?'+':'')+pct.toFixed(1).replace('.',',')+'%')+'</td><td>'+esc(p.note||'—')+'</td></tr>'}).join('');
 }
 document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const b=e.target.closest('button[data-days]');if(!b)return;hivePowerDays=b.dataset.days;hiveRenderPowerHistory()});
