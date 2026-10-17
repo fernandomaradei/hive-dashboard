@@ -6616,13 +6616,24 @@ window.hivePremiumClassImage = function(job){
   const roster=(Array.isArray(members)?members:[]).map(m=>({name:normalizeName(m.Personagem),job:normalizeName(m.Job),jobLabel:String(m.Job??'').trim(),power:parsePower(m.Power)})).filter(m=>m.name&&m.power>0).sort((a,b)=>b.power-a.power);
   const playerName=normalizeName(hivePowerPlayer?.Personagem);
   const player=roster.find(m=>m.name===playerName);
-  const classRoster=player?roster.filter(m=>m.job===player.job):[];
   const generalPos=player?1+roster.filter(m=>m.power>player.power).length:null;
-  const classPos=player?1+classRoster.filter(m=>m.power>player.power).length:null;
+  // Ranking da classe: mesma formula de pontos usada no ranking de classes do dashboard.
+  // Inclui separacao Doram MAG/PHY por perfil, e nao ordena por Power.
+  const sourceMembers=Array.isArray(members)?members:[];
+  const selectedMember=sourceMembers.find(m=>normalizeName(m.Personagem)===playerName);
+  const selectedGroup=selectedMember&&typeof classRankingGroup==='function'?classRankingGroup(selectedMember):null;
+  const classPool=selectedGroup?sourceMembers.filter(m=>classRankingGroup(m)===selectedGroup):[];
+  const scoredClass=typeof classTop3Score==='function'?classPool.map(m=>{
+    const result=classTop3Score(m,classPool);
+    return result&&Number.isFinite(Number(result.score))?{name:normalizeName(m.Personagem),score:Number(result.score)}:null;
+  }).filter(Boolean).sort((a,b)=>b.score-a.score):[];
+  const selectedScore=scoredClass.find(m=>m.name===playerName);
+  const classPos=selectedScore?1+scoredClass.filter(m=>m.score>selectedScore.score).length:null;
+  const classTotal=scoredClass.length;
   const rankingCard=(label,pos,total,sub,icon)=>'<div class="hiveRankTile"><div class="hiveRankTileHeading"><span class="hiveRankIcon">'+icon+'</span><span>'+label+'</span></div><div class="hiveRankTileValue">'+(pos!==null?'#'+pos:'—')+'<span>'+(pos!==null?' de '+total:'')+'</span></div><small>'+sub+'</small></div>';
   r.innerHTML='<div class="hiveRankTileGrid">'+
     rankingCard('Ranking Geral',generalPos,roster.length,'Por Power • guilda','🏆')+
-    rankingCard('Ranking da Classe',classPos,classRoster.length,player?.jobLabel||'Classe não identificada','🎖️')+'</div>';
+    rankingCard('Ranking da Classe',classPos,classTotal,(selectedGroup||'Classe não identificada')+' • por pontos','🎖️')+'</div>';
   const visible=points.slice(-5).reverse();
   list.innerHTML=visible.length?visible.map(p=>{const idx=all.indexOf(p),prev=idx>0?all[idx-1]:null,d=prev?p.power-prev.power:null;return '<div class="hiveMockRecentRow"><span>'+hivePowerDay(p.date)+'</span><b>'+fmt(p.power)+'</b><em class="'+(d!==null&&d<0?'neg':'')+'">'+(d===null?'—':(d>=0?'+':'')+fmt(d))+'</em></div>'}).join(''):'<div class="hiveMockEmpty">Sem atualizações neste período.</div>';
  };
