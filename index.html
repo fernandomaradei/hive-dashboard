@@ -2466,7 +2466,8 @@ html{scroll-behavior:smooth}
 </div>
 <div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="hiveProfileRight"><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div>
 
-</div></div><div class="hiveProfileHistoryFull"><section class="hivePowerPanel" aria-label="Evolução de Power do personagem">
+</div></div><div class="hiveProfileHistoryFull"><div class="hivePowerThreeCards" aria-label="Painel de evolução, resumo e atualizações">
+<section class="hivePowerPanel" aria-label="Evolução de Power do personagem">
  <div class="hivePowerHead"><h3>📈 Evolução de Power</h3><div class="hivePowerFilters" id="hivePowerFilters"><button data-days="7">7 dias</button><button data-days="30" class="active">30 dias</button><button data-days="90">90 dias</button><button data-days="all">Tudo</button></div></div>
  <div class="hivePowerSummary" id="hivePowerSummary">Carregando histórico real...</div>
  <div class="hivePowerPlot" id="hivePowerPlot"></div>
@@ -2481,6 +2482,7 @@ html{scroll-behavior:smooth}
 <div class="hiveMockTitle">◷ Últimas Atualizações</div>
 <div class="hiveMockRecentList" id="hiveMockRecentList"><div class="hiveMockEmpty">Carregando histórico...</div></div>
 </section>
+</div>
 <section class="hivePowerPanel hivePowerTablePanel" aria-label="Histórico de Power">
  <div class="hivePowerHead"><h3>Histórico de Power</h3><span id="hivePowerCount"></span></div>
  <div class="hivePowerTableWrap"><table class="hivePowerTable"><thead><tr><th>DATA</th><th>POWER</th><th>VARIAÇÃO</th><th>%</th><th>ALTERAÇÃO</th></tr></thead><tbody id="hivePowerRows"></tbody></table></div>
@@ -6813,6 +6815,51 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 }
 /* Priest e BIO: imagens nativas 1.78:1, sem bordas desfocadas. */
 #modal .hiveProfileRight img#mClassImage{object-fit:cover!important;object-position:center center!important}
+</style>
+
+<style id="hive-layout-three-cards-desktop-v2">
+/* Isolated grid wrapper: survives previous !important flex-column rules on history parent. */
+#modal .hiveProfileHistoryFull > .hivePowerThreeCards {
+ display:grid!important;grid-template-columns:minmax(0,1.92fr) minmax(0,0.99fr) minmax(0,0.86fr)!important;
+ gap:10px!important;align-items:stretch!important;width:100%!important;min-width:0!important;
+ box-sizing:border-box!important;margin:0!important;padding:0!important;
+}
+#modal .hivePowerThreeCards > .hivePowerPanel {
+ display:flex!important;flex-direction:column!important;min-width:0!important;
+ width:100%!important;min-height:275px!important;margin:0!important;
+ box-sizing:border-box!important;padding:12px!important;
+ background:linear-gradient(150deg,#0c1110,#080b0a)!important;
+ border:1px solid rgba(219,169,31,.73)!important;border-radius:14px!important;
+}
+#modal .hivePowerThreeCards > .hivePowerPanel:first-child {grid-column:auto!important;grid-row:auto!important;}
+#modal .hivePowerThreeCards .hivePowerPlot{flex:1;min-height:0!important;}
+#modal .hivePowerThreeCards .hivePowerPlot svg{width:100%!important;height:auto!important;max-height:205px!important;}
+#modal .hivePowerThreeCards .hivePowerHead{align-items:center!important;}
+#modal .hivePowerThreeCards .hivePowerFilters{gap:3px!important;}
+#modal .hivePowerThreeCards .hivePowerFilters button{padding:5px 7px!important;font-size:10px!important;}
+#modal .hivePowerThreeCards .hiveMockTitle{font-size:14px!important;color:#f8d977!important;font-weight:800!important;margin-bottom:10px!important;}
+#modal .hivePowerThreeCards .hiveMockKpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;}
+#modal .hivePowerThreeCards .hiveMockKpi{min-width:0!important;background:#111615!important;border:1px solid #26302b!important;border-radius:9px!important;padding:10px 7px!important;}
+#modal .hivePowerThreeCards .hiveMockKpi strong{font-size:clamp(14px,1.4vw,21px)!important;line-height:1.2!important;white-space:nowrap!important;}
+#modal .hivePowerThreeCards .hiveMockKpi span{font-size:10px!important;}
+#modal .hivePowerThreeCards .hiveMockRank{margin-top:auto!important;padding-top:10px!important;}
+#modal .hivePowerThreeCards .hiveMockRankHead{color:#f7d471!important;font-weight:800!important;font-size:12px!important;}
+#modal .hivePowerThreeCards .hiveMockRankBody{display:flex!important;gap:6px!important;flex-wrap:wrap!important;}
+#modal .hivePowerThreeCards .hiveMockRankBody>span{flex:1!important;min-width:0!important;background:#111615!important;border:1px solid #26302b!important;border-radius:8px!important;padding:9px 7px!important;font-size:11px!important;}
+#modal .hivePowerThreeCards .hiveMockRecentList{position:relative!important;display:flex!important;flex-direction:column!important;gap:6px!important;}
+#modal .hivePowerThreeCards .hiveMockRecentList:before{content:'';position:absolute;top:14px;bottom:14px;left:7px;width:2px;background:linear-gradient(#ff5ba8,#ab2d79);opacity:.75;pointer-events:none;}
+#modal .hivePowerThreeCards .hiveMockRecentRow{position:relative!important;display:grid!important;grid-template-columns:minmax(0,.75fr) minmax(0,1fr) minmax(0,.9fr)!important;gap:3px!important;align-items:center!important;padding:9px 5px 9px 21px!important;background:#141918!important;border:1px solid #252c28!important;border-radius:8px!important;min-width:0!important;font-size:11px!important;}
+#modal .hivePowerThreeCards .hiveMockRecentRow:before{content:'';position:absolute;left:3px;top:50%;width:10px;height:10px;border-radius:50%;background:#f456a1;transform:translateY(-50%);z-index:1;}
+#modal .hivePowerThreeCards .hiveMockRecentRow b,#modal .hivePowerThreeCards .hiveMockRecentRow em{font-size:11px!important;white-space:nowrap!important;}
+@media (max-width:1150px) and (min-width:781px){
+ #modal .hiveProfileHistoryFull > .hivePowerThreeCards{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)!important;}
+ #modal .hivePowerThreeCards > .hivePowerRecentPanel{grid-column:1/-1!important;min-height:0!important;}
+}
+@media (max-width:780px){
+ #modal .hiveProfileHistoryFull > .hivePowerThreeCards{grid-template-columns:minmax(0,1fr)!important;}
+ #modal .hivePowerThreeCards > .hivePowerPanel{min-height:0!important;}
+ #modal .hivePowerThreeCards .hiveMockKpi strong{font-size:19px!important;}
+}
 </style>
 </body>
 </html>
