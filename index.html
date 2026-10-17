@@ -6609,19 +6609,26 @@ window.hivePremiumClassImage = function(job){
   const compact=(v)=>{if(v===null)return '—';const abs=Math.abs(v);return (abs>=1000?(abs/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+'k':fmt(abs));};
   const trend=(v)=>v===null?'<strong class="hiveMetricMuted">—</strong>':'<strong class="'+(v>=0?'hivePos':'hiveNeg')+'">'+(v>=0?'↑ +':'↓ -')+compact(v)+'</strong>';
   k.innerHTML='<div class="hiveMockKpi hiveCurrentKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">⚔️</span><span>Power Atual</span></div><strong>'+compact(current)+'</strong><small>Power atual do personagem</small></div>'+
-    '<div class="hiveMockKpi hiveLatestKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">⚡</span><span>Última atualização</span></div>'+trend(previous)+'<small>Desde o registro anterior</small></div>'+
-    '<div class="hiveMockKpi hiveMonthKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">📊</span><span>Evolução em 30 dias</span></div>'+trend(delta(30))+'<small>Comparado ao período anterior</small></div>';
-  const ranked=(Array.isArray(members)?members:[]).map(m=>({name:String(m.Personagem||'').trim().toLowerCase(),power:Number(String(m.Power??'').replace(/\D/g,''))})).filter(m=>m.name&&Number.isFinite(m.power)&&m.power>0).sort((a,b)=>b.power-a.power);
-  const target=String(hivePowerPlayer?.Personagem||'').trim().toLowerCase();
-  const pos=ranked.findIndex(m=>m.name===target);
-  r.innerHTML=pos>=0?'<span><b>#'+(pos+1)+'</b> de '+ranked.length+' membros</span><span>Top '+Math.ceil((pos+1)/ranked.length*100)+'%</span>':'<span>Ranking indisponível</span>';
+    '<div class="hiveMockKpi hiveLatestKpi"><div class="hiveKpiTop"><span class="hiveKpiIcon">⚡</span><span>Última atualização</span></div>'+trend(previous)+'<small>Desde o registro anterior</small></div>';
+  // Rankings baseados na aba MEMBROS, não na aba HISTORICO.
+  const normalizeName=(v)=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+  const parsePower=(v)=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'');if(!t)return 0;const clean=t.replace(/\./g,'').replace(',','.');return Number(clean)||0};
+  const roster=(Array.isArray(members)?members:[]).map(m=>({name:normalizeName(m.Personagem),job:normalizeName(m.Job),jobLabel:String(m.Job??'').trim(),power:parsePower(m.Power)})).filter(m=>m.name&&m.power>0).sort((a,b)=>b.power-a.power);
+  const playerName=normalizeName(hivePowerPlayer?.Personagem);
+  const player=roster.find(m=>m.name===playerName);
+  const classRoster=player?roster.filter(m=>m.job===player.job):[];
+  const generalPos=player?1+roster.filter(m=>m.power>player.power).length:null;
+  const classPos=player?1+classRoster.filter(m=>m.power>player.power).length:null;
+  const rankingCard=(label,pos,total,sub,icon)=>'<div class="hiveRankTile"><div class="hiveRankTileHeading"><span class="hiveRankIcon">'+icon+'</span><span>'+label+'</span></div><div class="hiveRankTileValue">'+(pos!==null?'#'+pos:'—')+'<span>'+(pos!==null?' de '+total:'')+'</span></div><small>'+sub+'</small></div>';
+  r.innerHTML='<div class="hiveRankTileGrid">'+
+    rankingCard('Ranking Geral',generalPos,roster.length,'Por Power • guilda','🏆')+
+    rankingCard('Ranking da Classe',classPos,classRoster.length,player?.jobLabel||'Classe não identificada','🎖️')+'</div>';
   const visible=points.slice(-5).reverse();
   list.innerHTML=visible.length?visible.map(p=>{const idx=all.indexOf(p),prev=idx>0?all[idx-1]:null,d=prev?p.power-prev.power:null;return '<div class="hiveMockRecentRow"><span>'+hivePowerDay(p.date)+'</span><b>'+fmt(p.power)+'</b><em class="'+(d!==null&&d<0?'neg':'')+'">'+(d===null?'—':(d>=0?'+':'')+fmt(d))+'</em></div>'}).join(''):'<div class="hiveMockEmpty">Sem atualizações neste período.</div>';
  };
 })();
 </script>
-</body></html
->
+
 <style id="hive-artes-hd-final">
 .rooClassScreen .classHalo img#mClassImage {
   width:100%!important;
@@ -6865,8 +6872,23 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  #modal .hivePowerThreeCards .hiveMockKpi strong{font-size:19px!important;}
 }
 </style>
-</body>
-</html>
+
+<style id="hive-rankings-geral-classe-20261017">
+#modal .hivePowerSummaryPanel .hiveMockRank{display:block!important;margin-top:12px!important;padding-top:10px!important;border-top:1px solid #353021!important}
+#modal .hivePowerSummaryPanel .hiveMockRankHead{font-size:13px!important;margin-bottom:9px!important}
+#modal .hivePowerSummaryPanel .hiveRankTileGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#modal .hivePowerSummaryPanel .hiveRankTile{background:linear-gradient(145deg,#151917,#0d1210);border:1px solid #35372c;border-radius:10px;padding:9px 8px;min-width:0}
+#modal .hivePowerSummaryPanel .hiveRankTileHeading{display:flex;align-items:center;gap:6px;font-size:11px;color:#e5d8a8;font-weight:700}
+#modal .hivePowerSummaryPanel .hiveRankIcon{display:inline-flex;align-items:center;justify-content:center;font-size:21px;width:35px;height:35px;flex:none;border:1px solid #765b21;background:#2c230e;border-radius:9px}
+#modal .hivePowerSummaryPanel .hiveRankTileValue{font-size:25px;font-weight:900;color:#fff;line-height:1.3;margin-top:5px}
+#modal .hivePowerSummaryPanel .hiveRankTileValue span{font-size:10px;font-weight:500;color:#bcb9b0}
+#modal .hivePowerSummaryPanel .hiveRankTile small{display:block;font-size:10px;color:#b9b5a6;overflow-wrap:anywhere}
+#modal .hivePowerSummaryPanel .hiveKpiIcon{width:42px!important;height:42px!important;font-size:24px!important;border-radius:10px!important}
+#modal .hivePowerSummaryPanel .hiveKpiTop{font-size:11px!important;gap:9px!important}
+#modal .hivePowerSummaryPanel .hiveMockKpi{padding:10px!important}
+@media(max-width:650px){#modal .hivePowerSummaryPanel .hiveRankTileGrid{grid-template-columns:1fr}}
+</style>
+
 
 <style id="hive-resumo-final-compacto-20261017">
 /* A tabela antiga permanece no DOM apenas para compatibilidade com o renderer de histórico. */
@@ -6885,3 +6907,5 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #modal .hiveMockKpi .hiveMetricMuted {color:#bdbbb4!important}
 @media(max-width:650px){#modal .hiveMockKpis{grid-template-columns:1fr!important}#modal .hiveMonthKpi{grid-column:auto!important}}
 </style>
+</body>
+</html>
