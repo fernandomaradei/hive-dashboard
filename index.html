@@ -2465,7 +2465,8 @@ html{scroll-behavior:smooth}
   <footer class="footer" id="sobre">✦ HIVE ✦ <span style="font-size:10px;color:#d1b36a;letter-spacing:.28em">JUNTOS SEMPRE MAIS LONGE</span> ✦</footer>
 </div>
 <div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><div><h2 id="mName" style="margin:0;color:#ffd777"></h2><div id="mMeta" style="color:#bfb49f;margin-top:3px"></div></div><button class="close" onclick="closeModal()">✕</button></div><div class="profileGrid"><div class="profileLeft"><div class="allStats" id="mStats"></div></div><div class="hiveProfileRight"><div class="classVisual rooClassScreen"><div class="classBackdrop"></div><div class="classHalo"><img id="mClassImage" alt="Classe do personagem"></div><div class="heroGlow"></div><div class="rooTitle"><small>Ragnarok Origin</small><strong>Classes</strong></div><div class="rooRail" id="mClassRail"></div><div class="rooInfo"><svg class="radar" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="rgba(255,220,155,.32)" stroke-width="1"><polygon points="60,8 105,34 105,86 60,112 15,86 15,34"/><polygon points="60,22 93,41 93,79 60,98 27,79 27,41"/><polygon points="60,36 81,48 81,72 60,84 39,72 39,48"/></g><polygon id="mRadarPoly" points="60,25 88,44 84,76 60,94 34,75 30,43" fill="rgba(247,182,53,.45)" stroke="#f7b635" stroke-width="2"/><g fill="#eadcc2" font-size="8" font-weight="700"><text x="55" y="7">STR</text><text x="102" y="32">AGI</text><text x="102" y="94">VIT</text><text x="55" y="119">INT</text><text x="2" y="94">DEX</text><text x="2" y="32">LUK</text></g></svg><div class="rooClassName" id="mClassName">—</div><div class="rooClassSub">RAGNAROK ORIGIN CLASSIC</div><div class="rooPortraits"><span></span><span class="active"></span><span></span><span></span><span></span></div><p id="mClassQuote">Precisão, coragem e grandes aventuras.</p></div></div>
-<section class="hivePowerPanel" aria-label="Evolução de Power do personagem">
+
+</div></div><div class="hiveProfileHistoryFull"><section class="hivePowerPanel" aria-label="Evolução de Power do personagem">
  <div class="hivePowerHead"><h3>📈 Evolução de Power</h3><div class="hivePowerFilters" id="hivePowerFilters"><button data-days="7">7 dias</button><button data-days="30" class="active">30 dias</button><button data-days="90">90 dias</button><button data-days="all">Tudo</button></div></div>
  <div class="hivePowerSummary" id="hivePowerSummary">Carregando histórico real...</div>
  <div class="hivePowerPlot" id="hivePowerPlot"></div>
@@ -2474,8 +2475,7 @@ html{scroll-behavior:smooth}
 <section class="hivePowerPanel hivePowerTablePanel" aria-label="Histórico de Power">
  <div class="hivePowerHead"><h3>Histórico de Power</h3><span id="hivePowerCount"></span></div>
  <div class="hivePowerTableWrap"><table class="hivePowerTable"><thead><tr><th>DATA</th><th>POWER</th><th>VARIAÇÃO</th><th>%</th><th>ALTERAÇÃO</th></tr></thead><tbody id="hivePowerRows"></tbody></table></div>
-</section>
-</div></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
+</section></div><div id="mRankExplain"></div><div class="modalBrand"><b>HIVE</b><span>Ragnarok Origin Classic</span><div class="modalBrandLine"></div><span>Good People • Great Adventures</span></div></div></div>
 <script>
 // V45: controle de atualizações + correções preservadas da V43.
 
@@ -6623,3 +6623,39 @@ function hiveRenderPowerHistory(){
 }
 document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const b=e.target.closest('button[data-days]');if(!b)return;hivePowerDays=b.dataset.days;hiveRenderPowerHistory()});
 </script>
+
+
+<style id="hive-profile-mockup-layout-v3">
+/* PC: cabeçalho / estatísticas + arte / gráfico / histórico em largura integral. */
+@media (min-width: 901px) {
+  #modal .modalCard {width:min(1250px,95vw)!important;max-width:1250px!important;padding:15px 17px!important;}
+  #modal .modalHead {margin-bottom:12px!important;align-items:center!important;}
+  #modal .modalHead h2 {font-size:25px!important;line-height:1.2!important;}
+  #modal .profileGrid {display:grid!important;grid-template-columns:minmax(0,0.94fr) minmax(0,1.06fr)!important;gap:14px!important;align-items:start!important;}
+  #modal .profileLeft,#modal .hiveProfileRight {min-width:0!important;}
+  #modal .allStats {grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;}
+  #modal .allStats .mini {min-width:0!important;min-height:56px!important;padding:7px 6px!important;border-radius:9px!important;gap:5px!important;}
+  #modal .allStats .mini .statIcon {width:28px!important;height:28px!important;min-width:28px!important;font-size:16px!important;}
+  #modal .allStats .mini span {font-size:8px!important;line-height:1.1!important;}
+  #modal .allStats .mini b {font-size:13px!important;line-height:1.15!important;}
+  #modal .hiveProfileRight .classVisual {width:100%!important;aspect-ratio:1.78!important;min-height:0!important;height:auto!important;max-height:none!important;}
+  #modal .hiveProfileRight img#mClassImage {object-fit:contain!important;filter:none!important;image-rendering:auto!important;}
+  #modal .hiveProfileHistoryFull {display:flex!important;flex-direction:column!important;gap:10px!important;margin-top:12px!important;min-width:0!important;}
+  #modal .hiveProfileHistoryFull .hivePowerPanel {width:100%!important;box-sizing:border-box!important;padding:11px 14px!important;margin:0!important;}
+  #modal .hiveProfileHistoryFull .hivePowerPlot {width:100%!important;min-height:0!important;}
+  #modal .hiveProfileHistoryFull .hivePowerPlot svg {width:100%!important;height:185px!important;}
+  #modal .hiveProfileHistoryFull .hivePowerTableWrap {max-height:142px!important;overflow:auto!important;}
+  #modal .hiveProfileHistoryFull .hivePowerTable td,#modal .hiveProfileHistoryFull .hivePowerTable th {padding:7px 9px!important;}
+  #modal .hiveProfileHistoryFull .hivePowerSummary {margin:4px 0 0!important;}
+}
+@media (min-width:901px) and (max-width:1150px){
+  #modal .modalCard{width:97vw!important;padding:13px!important;}
+  #modal .allStats .mini {padding:5px!important;}
+  #modal .allStats .mini .statIcon{width:24px!important;height:24px!important;min-width:24px!important;}
+}
+@media (max-width:900px){
+  #modal .profileGrid{grid-template-columns:1fr!important;}
+  #modal .hiveProfileHistoryFull{display:flex;flex-direction:column;gap:10px;margin-top:12px;min-width:0;}
+  #modal .hiveProfileHistoryFull .hivePowerPanel{min-width:0;}
+}
+</style>
