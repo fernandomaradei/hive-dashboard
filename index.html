@@ -2855,6 +2855,12 @@ async function copyUpdatePending(){
   try{await navigator.clipboard.writeText(text);const b=$('#ucCopy'),old=b.textContent;b.textContent='✓ Lista copiada!';setTimeout(()=>b.textContent=old,1800)}catch(e){prompt('Copie a lista abaixo:',text)}
 }
 
+function updateGuildFilter(){
+ const w=$w('warFilter').value;
+ const selectedWar=state.wars.find(r=>warId(r)===w);
+ const allowed=selectedWar?[key(selectedWar,'Guilda_1','guilda1'),key(selectedWar,'Guilda_2','guilda2')].map(x=>String(x||'').trim()).filter(Boolean):[];
+ populate('warGuild',allowed,'Todas as guildas');
+}
 function render(){
  const sorted=topPower(),total=members.reduce((s,m)=>s+intNum(m['Power Atual'],'Power Atual'),0),avg=members.length?Math.round(total/members.length):0,classes=new Set(members.map(m=>m.Job).filter(Boolean)).size,top=sorted[0]||{};
  const k=[['👥','MEMBROS',members.length,'Aventureiros'],['⚔️','POWER TOTAL',fmtInt(total),'Força da guild'],['♛','MÉDIA DE POWER',fmtInt(avg),'Média atual'],['📈','TOP POWER',fmtInt(top['Power Atual'],'Power Atual'),top.Personagem||'—'],['👥','CLASSES',classes,'Classes ativas'],['📋','DADOS','Ao vivo','Google Planilhas']];
@@ -7002,9 +7008,9 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div class="war-heading"><div><span class="war-kicker">🛡️ ACESSO STAFF</span><h2>⚔️ Central de Guerra</h2><p>Histórico de batalhas, participantes e estatísticas de combate.</p></div><button id="warReload" type="button">↻ Atualizar</button></div>
  <div id="warNotice" class="war-notice">Carregando histórico...</div>
  <div id="warBattleHero" class="war-battle-hero" hidden aria-live="polite">
-  <div class="war-team war-team-left"><span class="war-team-tag" id="warTag1"></span><div class="war-team-name" id="warTeam1"></div><strong class="war-team-score" id="warScore1"></strong></div>
+  <div class="war-team war-team-left"><span class="war-team-tag" id="warTag1"></span><div class="war-team-identity"><span class="war-guild-emblem" id="warEmblem1" aria-hidden="true"></span><div class="war-team-name" id="warTeam1"></div></div><strong class="war-team-score" id="warScore1"></strong><span class="war-points-label">PONTOS</span></div>
   <div class="war-versus"><span class="war-vs">VS</span><span class="war-battle-date" id="warBattleDate"></span></div>
-  <div class="war-team war-team-right"><span class="war-team-tag" id="warTag2"></span><div class="war-team-name" id="warTeam2"></div><strong class="war-team-score" id="warScore2"></strong></div>
+  <div class="war-team war-team-right"><span class="war-team-tag" id="warTag2"></span><div class="war-team-identity"><span class="war-guild-emblem" id="warEmblem2" aria-hidden="true"></span><div class="war-team-name" id="warTeam2"></div></div><strong class="war-team-score" id="warScore2"></strong><span class="war-points-label">PONTOS</span></div>
  </div>
 
  <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
@@ -7162,6 +7168,19 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  #centralGuerra .war-team-tag{font-size:8px!important;padding:4px 5px!important}
 }
 </style>
+<style id="war-central-banner-v20">
+#centralGuerra .war-team-identity{display:flex;align-items:center;gap:13px;min-width:0;position:relative;z-index:2}
+#centralGuerra .war-team-right .war-team-identity{flex-direction:row-reverse}
+#centralGuerra .war-guild-emblem{display:inline-flex;align-items:center;justify-content:center;flex:0 0 65px;width:65px;height:65px;filter:drop-shadow(0 2px 12px rgba(255,183,60,.32))}
+#centralGuerra .war-team-right .war-guild-emblem{filter:drop-shadow(0 2px 12px rgba(50,160,255,.4))}
+#centralGuerra .war-guild-emblem svg{display:block;width:100%;height:100%}
+#centralGuerra .war-team{position:relative;z-index:2}
+#centralGuerra .war-team-score{display:block!important;font-size:clamp(29px,3.1vw,49px)!important;line-height:1.1!important;margin-top:3px!important}
+#centralGuerra .war-points-label{display:block;letter-spacing:3px;font-size:12px;font-weight:900;color:#f5dca4;text-shadow:0 1px 4px #000;position:relative;z-index:2}
+#centralGuerra .war-team-right .war-points-label{color:#c3e6ff}
+#centralGuerra .war-team-name{position:relative;z-index:2;text-shadow:0 2px 8px #080b12}
+@media(max-width:700px){#centralGuerra .war-guild-emblem{flex-basis:35px;width:35px;height:35px}#centralGuerra .war-team-identity{gap:5px}#centralGuerra .war-team-name{font-size:15px!important}#centralGuerra .war-points-label{font-size:9px;letter-spacing:1px}}
+</style>
 <script id="war-central-script">
 (()=>{
 'use strict';
@@ -7229,6 +7248,9 @@ function updateSortHeaders(){
    th.title=active?'Clique para inverter a ordem':'Clique para ordenar';
  });
 }
+const emblemSvg=(isHive)=>isHive?
+ `<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 4 61 16 70 39 61 65 40 76 19 65 10 39 19 16Z" fill="#191207" stroke="#ffca59" stroke-width="3"/><path d="M40 12 52 30 66 23 56 49 40 64 24 49 14 23 28 30Z" fill="#e7a726" stroke="#ffe3a1" stroke-width="2"/><path d="M30 42 40 28 50 42 40 54Z" fill="#18140e"/></svg>`:
+ `<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 4 64 16 73 40 64 64 40 76 16 64 7 40 16 16Z" fill="#0c203c" stroke="#68caff" stroke-width="3"/><path d="M40 12 58 31 67 27 55 51 40 66 25 51 13 27 22 31Z" fill="#2a83e4" stroke="#b7e9ff" stroke-width="2"/><path d="M26 41 40 23 54 41 40 55Z" fill="#08172d"/></svg>`;
 function renderHero(war){
  const hero=$w('warBattleHero');
  hero.hidden=!war;
@@ -7240,6 +7262,8 @@ function renderHero(war){
  hero.dataset.winner=String(winner);
  $w('warTeam1').textContent=g1;
  $w('warTeam2').textContent=g2;
+ $w('warEmblem1').innerHTML=emblemSvg(g1.trim().toLowerCase()==='hive');
+ $w('warEmblem2').innerHTML=emblemSvg(g2.trim().toLowerCase()==='hive');
  $w('warScore1').textContent=valid?fmt(n1):'—';
  $w('warScore2').textContent=valid?fmt(n2):'—';
  $w('warTag1').textContent=winner===1?'🏆 VENCEDORA':winner===2?'DERROTA':winner===0?'EMPATE':'PLACAR PENDENTE';
@@ -7276,7 +7300,7 @@ async function load(){
    const data=await r.json();
    if(!r.ok||!data.ok)throw Error(data.error||'Falha de leitura');
    state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
-   populateWars();populate('warGuild',state.players.map(guild),'Todas as guildas');populate('warJob',state.players.map(job),'Todas as classes');render();
+   populateWars();updateGuildFilter();populate('warJob',state.players.map(job),'Todas as classes');render();
  }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
 }
 async function init(){
@@ -7284,7 +7308,7 @@ async function init(){
    const r=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});
    if(!r.ok)return;
    $w('warNav').hidden=false;$w('centralGuerra').hidden=false;
-   ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',render));
+   ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter')updateGuildFilter();render();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
    document.querySelectorAll('#centralGuerra th[data-war-sort]').forEach(th=>{
