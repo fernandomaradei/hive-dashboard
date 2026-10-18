@@ -2855,12 +2855,6 @@ async function copyUpdatePending(){
   try{await navigator.clipboard.writeText(text);const b=$('#ucCopy'),old=b.textContent;b.textContent='✓ Lista copiada!';setTimeout(()=>b.textContent=old,1800)}catch(e){prompt('Copie a lista abaixo:',text)}
 }
 
-function updateGuildFilter(){
- const w=$w('warFilter').value;
- const selectedWar=state.wars.find(r=>warId(r)===w);
- const allowed=selectedWar?[key(selectedWar,'Guilda_1','guilda1'),key(selectedWar,'Guilda_2','guilda2')].map(x=>String(x||'').trim()).filter(Boolean):[];
- populate('warGuild',allowed,'Todas as guildas');
-}
 function render(){
  const sorted=topPower(),total=members.reduce((s,m)=>s+intNum(m['Power Atual'],'Power Atual'),0),avg=members.length?Math.round(total/members.length):0,classes=new Set(members.map(m=>m.Job).filter(Boolean)).size,top=sorted[0]||{};
  const k=[['👥','MEMBROS',members.length,'Aventureiros'],['⚔️','POWER TOTAL',fmtInt(total),'Força da guild'],['♛','MÉDIA DE POWER',fmtInt(avg),'Média atual'],['📈','TOP POWER',fmtInt(top['Power Atual'],'Power Atual'),top.Personagem||'—'],['👥','CLASSES',classes,'Classes ativas'],['📋','DADOS','Ao vivo','Google Planilhas']];
@@ -7225,6 +7219,12 @@ const populate=(id,vals,all)=>{
  [...new Set(vals.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR')).forEach(v=>el.add(new Option(v,v)));
  if([...el.options].some(o=>o.value===prev))el.value=prev;
 };
+function updateGuildFilter(){
+ const w=$w('warFilter').value;
+ const selectedWar=state.wars.find(r=>warId(r)===w);
+ const allowed=selectedWar?[key(selectedWar,'Guilda_1','guilda1'),key(selectedWar,'Guilda_2','guilda2')].map(x=>String(x||'').trim()).filter(Boolean):[];
+ populate('warGuild',allowed,'Todas as guildas');
+}
 function populateWars(){
  const el=$w('warFilter'),prev=el.value;
  el.replaceChildren(new Option('Selecione uma guerra',''));
