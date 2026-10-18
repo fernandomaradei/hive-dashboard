@@ -7005,7 +7005,7 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint">Selecione uma guerra acima para visualizar os jogadores e as estatísticas.</div>
  <div class="war-tablewrap" id="warTableWrap" hidden><table class="war-table"><thead><tr><th data-war-sort="Personagem" scope="col" tabindex="0">Personagem</th><th data-war-sort="Guilda" scope="col" tabindex="0">Guilda</th><th data-war-sort="Job" scope="col" tabindex="0">Job</th><th data-war-sort="Kills" scope="col" tabindex="0">K</th><th data-war-sort="Assistencias" scope="col" tabindex="0">A</th><th data-war-sort="Mortes" scope="col" tabindex="0">D</th><th data-war-sort="Ocupacoes" scope="col" tabindex="0">Ocup.</th><th data-war-sort="Pontuacao" scope="col" tabindex="0">Pontos</th><th data-war-sort="Dano_Causado" scope="col" tabindex="0">Dano causado</th><th data-war-sort="Dano_Recebido" scope="col" tabindex="0">Dano recebido</th><th data-war-sort="Cura" scope="col" tabindex="0">Cura</th></tr></thead><tbody id="warRows"></tbody></table></div>
- <p class="war-note">Dados provenientes das importações registradas na planilha. Nenhum registro é apagado por este painel.</p>
+ <p class="war-note">O placar oficial vem da aba GUERRA e não muda com filtros de classe ou jogador. Os totais de dano e cura acompanham os filtros. Nenhum registro é apagado por este painel.</p>
 </section>
 
 <style id="war-central-contrast-fix">
@@ -7061,11 +7061,6 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #centralGuerra th[data-war-sort]::after{content:" ↕";opacity:.65}
 #centralGuerra th[data-direction="asc"]::after{content:" ▲";opacity:1}
 #centralGuerra th[data-direction="desc"]::after{content:" ▼";opacity:1}
-</style>
-<style id="war-central-five-cards-v13">
-#centralGuerra .war-stats{grid-template-columns:repeat(5,minmax(0,1fr))}
-@media(max-width:980px){#centralGuerra .war-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){#centralGuerra .war-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <script id="war-central-script">
 (()=>{
@@ -7136,7 +7131,7 @@ function render(){
  const g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
  const rows=sortRows(state.players.filter(r=>pWar(r)===w&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
- $w('warStats').innerHTML=[['Guerras',1],['Jogadores',rows.length],['Total de pontos',fmt(total('Pontuacao'))],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${t}</small></div>`).join('');
+ $w('warStats').innerHTML=[['Guerras',1],['Jogadores',rows.length],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${escw(t)}</small></div>`).join('');
  $w('warRows').innerHTML=rows.map(r=>`<tr>${columns.map(k=>`<td>${escw(numericKeys.has(k)?fmt(num(key(r,k))):key(r,k))}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="11">Nenhum jogador encontrado.</td></tr>';
  $w('warNotice').textContent=`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
