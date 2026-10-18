@@ -7001,9 +7001,10 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 <section id="centralGuerra" class="war-panel" hidden>
  <div class="war-heading"><div><span class="war-kicker">🛡️ ACESSO STAFF</span><h2>⚔️ Central de Guerra</h2><p>Histórico de batalhas, participantes e estatísticas de combate.</p></div><button id="warReload" type="button">↻ Atualizar</button></div>
  <div id="warNotice" class="war-notice">Carregando histórico...</div>
- <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Todas as guerras</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
- <div id="warStats" class="war-stats"></div>
- <div class="war-tablewrap"><table class="war-table"><thead><tr><th>Guerra</th><th>Personagem</th><th>Guilda</th><th>Job</th><th>K</th><th>A</th><th>D</th><th>Ocup.</th><th>Pontos</th><th>Dano causado</th><th>Dano recebido</th><th>Cura</th></tr></thead><tbody id="warRows"></tbody></table></div>
+ <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
+ <div id="warStats" class="war-stats" hidden></div>
+ <div id="warChooseHint" class="war-choose-hint">Selecione uma guerra acima para visualizar os jogadores e as estatísticas.</div>
+ <div class="war-tablewrap" id="warTableWrap" hidden><table class="war-table"><thead><tr><th data-war-sort="Personagem" scope="col" tabindex="0">Personagem</th><th data-war-sort="Guilda" scope="col" tabindex="0">Guilda</th><th data-war-sort="Job" scope="col" tabindex="0">Job</th><th data-war-sort="Kills" scope="col" tabindex="0">K</th><th data-war-sort="Assistencias" scope="col" tabindex="0">A</th><th data-war-sort="Mortes" scope="col" tabindex="0">D</th><th data-war-sort="Ocupacoes" scope="col" tabindex="0">Ocup.</th><th data-war-sort="Pontuacao" scope="col" tabindex="0">Pontos</th><th data-war-sort="Dano_Causado" scope="col" tabindex="0">Dano causado</th><th data-war-sort="Dano_Recebido" scope="col" tabindex="0">Dano recebido</th><th data-war-sort="Cura" scope="col" tabindex="0">Cura</th></tr></thead><tbody id="warRows"></tbody></table></div>
  <p class="war-note">Dados provenientes das importações registradas na planilha. Nenhum registro é apagado por este painel.</p>
 </section>
 
@@ -7052,39 +7053,118 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 .war-panel{max-width:1320px;margin:34px auto 55px;padding:24px;border:1px solid rgba(247,182,53,.4);border-radius:20px;background:linear-gradient(150deg,#1d1a14,#0d0c0a);color:#fffaf0;font-family:Nunito,system-ui,sans-serif;box-shadow:0 16px 45px #0007}
 .war-panel[hidden],#warNav[hidden]{display:none!important}.war-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.war-heading h2{margin:4px 0;color:#ffd777;font-size:27px}.war-heading p{margin:0;color:#c6bda9}.war-kicker{font-size:11px;letter-spacing:2px;color:#f7b635;font-weight:900}.war-heading button{background:#f7b635;border:0;color:#1b1508;border-radius:10px;padding:10px 17px;font-weight:900;cursor:pointer}.war-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.war-filters label{font-size:12px;color:#d5c5a4;font-weight:800}.war-filters select,.war-filters input{width:100%;margin-top:5px;padding:11px;border:1px solid #6b542e;border-radius:9px;background:#171613;color:#fff;font:inherit;min-width:0}.war-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.war-stat{background:#242015;border:1px solid #5d4926;border-radius:12px;padding:13px}.war-stat strong{display:block;font-size:22px;color:#ffda81}.war-stat small{color:#d3c7af}.war-tablewrap{overflow:auto;max-height:600px;border-radius:12px;border:1px solid #5b492a}.war-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}.war-table th{position:sticky;top:0;background:#31271a;color:#ffd777;text-align:left;padding:11px;z-index:1}.war-table td{padding:10px;border-top:1px solid #3a3225}.war-table tbody tr:hover{background:#30291d}.war-notice{margin-top:14px;color:#ffd777}.war-note{color:#aa9d85;font-size:11px}@media(max-width:760px){.war-panel{margin:16px 10px;padding:15px}.war-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.war-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.war-heading h2{font-size:22px}}@media(max-width:420px){.war-filters{grid-template-columns:1fr}}
 </style>
+<style id="war-central-ux-v12">
+#centralGuerra #warStats[hidden],#centralGuerra #warTableWrap[hidden],#centralGuerra #warChooseHint[hidden]{display:none!important}
+#centralGuerra .war-choose-hint{padding:42px 18px;text-align:center;background:#241e16;border:1px dashed #80612b;border-radius:12px;color:#ffe3a2;font-weight:800}
+#centralGuerra th[data-war-sort]{cursor:pointer;user-select:none;white-space:nowrap;transition:background .15s}
+#centralGuerra th[data-war-sort]:hover,#centralGuerra th[data-war-sort]:focus-visible{background:#785321!important;color:#fff!important;outline:2px solid #e5ad45;outline-offset:-2px}
+#centralGuerra th[data-war-sort]::after{content:" ↕";opacity:.65}
+#centralGuerra th[data-direction="asc"]::after{content:" ▲";opacity:1}
+#centralGuerra th[data-direction="desc"]::after{content:" ▼";opacity:1}
+</style>
 <script id="war-central-script">
 (()=>{
 'use strict';
-const $w=id=>document.getElementById(id), escw=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const num=v=>Number(String(v??'0').replace(/\./g,'').replace(',','.'))||0;
+const $w=id=>document.getElementById(id);
+const escw=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+const num=v=>typeof v==='number'?v:(Number(String(v??'0').replace(/\./g,'').replace(',','.'))||0);
 const fmt=n=>new Intl.NumberFormat('pt-BR').format(n);
-const state={wars:[],players:[],fields:[]};
+const state={wars:[],players:[],fields:[],sortKey:'',sortDir:1};
 const key=(row,...names)=>{for(const n of names)if(row[n]!==undefined)return row[n];return ''};
-const warId=r=>key(r,'Guerra_ID','guerra_id');
-const pWar=r=>key(r,'Guerra_ID','guerra_id');
+const warId=r=>String(key(r,'Guerra_ID','guerra_id'));
+const pWar=warId;
 const player=r=>key(r,'Personagem','personagem');
 const guild=r=>key(r,'Guilda','guilda');
 const job=r=>key(r,'Job','Classe','job');
-const populate=(id,vals,all)=>{const el=$w(id),prev=el.value;el.replaceChildren(new Option(all,''));[...new Set(vals.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR')).forEach(v=>el.add(new Option(v,v)));el.value=prev;};
+const numericKeys=new Set(['Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura']);
+const columns=['Personagem','Guilda','Job','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura'];
+const warLabel=r=>{
+ const g1=String(key(r,'Guilda_1','guilda1')||'Guilda 1');
+ const g2=String(key(r,'Guilda_2','guilda2')||'Guilda 2');
+ const d=String(key(r,'Data_Guerra','data')||'').trim();
+ const p1=key(r,'Placar_1','placar1'),p2=key(r,'Placar_2','placar2');
+ const placar=(p1!==''&&p1!=null&&p2!==''&&p2!=null)?` (${p1} × ${p2})`:'';
+ return `${g1} × ${g2}${placar}${d?' — '+d:''}`;
+};
+const populate=(id,vals,all)=>{
+ const el=$w(id),prev=el.value;
+ el.replaceChildren(new Option(all,''));
+ [...new Set(vals.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR')).forEach(v=>el.add(new Option(v,v)));
+ if([...el.options].some(o=>o.value===prev))el.value=prev;
+};
+function populateWars(){
+ const el=$w('warFilter'),prev=el.value;
+ el.replaceChildren(new Option('Selecione uma guerra',''));
+ state.wars.forEach(w=>{const id=warId(w);if(id)el.add(new Option(warLabel(w),id))});
+ if([...el.options].some(o=>o.value===prev))el.value=prev;
+}
+function sortRows(rows){
+ if(!state.sortKey)return rows;
+ const k=state.sortKey,dir=state.sortDir;
+ return rows.sort((a,b)=>{
+   const av=key(a,k),bv=key(b,k);
+   const cmp=numericKeys.has(k)?num(av)-num(bv):String(av??'').localeCompare(String(bv??''),'pt-BR',{sensitivity:'base',numeric:true});
+   return dir*cmp;
+ });
+}
+function updateSortHeaders(){
+ document.querySelectorAll('#centralGuerra th[data-war-sort]').forEach(th=>{
+   const active=th.dataset.warSort===state.sortKey;
+   th.setAttribute('aria-sort',active?(state.sortDir===1?'ascending':'descending'):'none');
+   th.dataset.direction=active?(state.sortDir===1?'asc':'desc'):'';
+   th.title=active?'Clique para inverter a ordem':'Clique para ordenar';
+ });
+}
 function render(){
- const w=$w('warFilter').value,g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
- const rows=state.players.filter(r=>(!w||pWar(r)===w)&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q)));
- const wars=new Set(rows.map(pWar));const total=(k)=>rows.reduce((sum,r)=>sum+num(r[k]),0);
- $w('warStats').innerHTML=[['Guerras',wars.size],['Jogadores',rows.length],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${t}</small></div>`).join('');
- $w('warRows').innerHTML=rows.map(r=>`<tr>${[pWar(r),player(r),guild(r),job(r),key(r,'Kills'),key(r,'Assistencias'),key(r,'Mortes'),key(r,'Ocupacoes'),key(r,'Pontuacao'),key(r,'Dano_Causado'),key(r,'Dano_Recebido'),key(r,'Cura')].map((v,i)=>`<td>${escw(i>=4?fmt(num(v)):v)}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="12">Nenhum jogador encontrado.</td></tr>';
- $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} linha(s) de jogadores no histórico · ${state.fields.length} campo(s) adicionais`;
+ const w=$w('warFilter').value;
+ const visible=Boolean(w);
+ $w('warStats').hidden=!visible;
+ $w('warTableWrap').hidden=!visible;
+ $w('warChooseHint').hidden=visible;
+ if(!visible){
+   $w('warChooseHint').textContent=state.wars.length?
+     `Escolha uma das ${state.wars.length} guerras acima para visualizar os dados.`:
+     'Nenhuma guerra cadastrada ainda.';
+   $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} registros de jogadores no histórico`;
+   return;
+ }
+ const g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
+ const rows=sortRows(state.players.filter(r=>pWar(r)===w&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
+ const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
+ $w('warStats').innerHTML=[['Guerras',1],['Jogadores',rows.length],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${t}</small></div>`).join('');
+ $w('warRows').innerHTML=rows.map(r=>`<tr>${columns.map(k=>`<td>${escw(numericKeys.has(k)?fmt(num(key(r,k))):key(r,k))}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="11">Nenhum jogador encontrado.</td></tr>';
+ $w('warNotice').textContent=`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
+ updateSortHeaders();
 }
 async function load(){
  $w('warNotice').textContent='Carregando dados protegidos...';
- try{const r=await fetch('/api/war',{credentials:'same-origin',cache:'no-store'});const data=await r.json();if(!r.ok||!data.ok)throw Error(data.error||'Falha de leitura');
- state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
- populate('warFilter',state.wars.map(warId),'Todas as guerras');populate('warGuild',state.players.map(guild),'Todas as guildas');populate('warJob',state.players.map(job),'Todas as classes');render();
+ try{
+   const r=await fetch('/api/war',{credentials:'same-origin',cache:'no-store'});
+   const data=await r.json();
+   if(!r.ok||!data.ok)throw Error(data.error||'Falha de leitura');
+   state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
+   populateWars();populate('warGuild',state.players.map(guild),'Todas as guildas');populate('warJob',state.players.map(job),'Todas as classes');render();
  }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
 }
 async function init(){
- try{const r=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});if(!r.ok)return;
- $w('warNav').hidden=false;$w('centralGuerra').hidden=false;
- ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',render));$w('warPlayer').addEventListener('input',render);$w('warReload').addEventListener('click',load);await load();
+ try{
+   const r=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});
+   if(!r.ok)return;
+   $w('warNav').hidden=false;$w('centralGuerra').hidden=false;
+   ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',render));
+   $w('warPlayer').addEventListener('input',render);
+   $w('warReload').addEventListener('click',load);
+   document.querySelectorAll('#centralGuerra th[data-war-sort]').forEach(th=>{
+     const apply=()=>{
+       const k=th.dataset.warSort;
+       if(state.sortKey===k)state.sortDir*=-1;
+       else{state.sortKey=k;state.sortDir=numericKeys.has(k)?-1:1;}
+       render();
+     };
+     th.addEventListener('click',apply);
+     th.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();apply()}});
+   });
+   await load();
  }catch(e){console.warn('Central de Guerra indisponível',e)}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
