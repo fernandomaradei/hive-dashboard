@@ -2354,7 +2354,7 @@ html{scroll-behavior:smooth}
 <div class="app">
   <section class="hero" id="inicio"></section>
   <nav class="nav">
-    <a class="active" href="#inicio">🏠 Início</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#sobre">ⓘ Sobre</a>
+    <a class="active" href="#inicio">🏠 Início</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#centralGuerra" id="warNav" hidden>⚔️ Central de Guerra</a><a href="#sobre">ⓘ Sobre</a>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
 
@@ -6997,5 +6997,56 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #modal .hivePowerSummaryPanel .hiveRankClean small{font-size:9px!important;color:#999b94!important;line-height:1.25!important}
 @media(max-width:600px){#modal .hivePowerSummaryPanel .hiveRankClean{min-height:67px!important;padding:8px!important}#modal .hivePowerSummaryPanel .hiveRankClean .hiveRankTileValue{font-size:25px!important}}
 </style>
+
+<section id="centralGuerra" class="war-panel" hidden>
+ <div class="war-heading"><div><span class="war-kicker">🛡️ ACESSO STAFF</span><h2>⚔️ Central de Guerra</h2><p>Histórico de batalhas, participantes e estatísticas de combate.</p></div><button id="warReload" type="button">↻ Atualizar</button></div>
+ <div id="warNotice" class="war-notice">Carregando histórico...</div>
+ <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Todas as guerras</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
+ <div id="warStats" class="war-stats"></div>
+ <div class="war-tablewrap"><table class="war-table"><thead><tr><th>Guerra</th><th>Personagem</th><th>Guilda</th><th>Job</th><th>K</th><th>A</th><th>D</th><th>Ocup.</th><th>Pontos</th><th>Dano causado</th><th>Dano recebido</th><th>Cura</th></tr></thead><tbody id="warRows"></tbody></table></div>
+ <p class="war-note">Dados provenientes das importações registradas na planilha. Nenhum registro é apagado por este painel.</p>
+</section>
+<style id="war-central-style">
+.war-panel{max-width:1320px;margin:34px auto 55px;padding:24px;border:1px solid rgba(247,182,53,.4);border-radius:20px;background:linear-gradient(150deg,#1d1a14,#0d0c0a);color:#fffaf0;font-family:Nunito,system-ui,sans-serif;box-shadow:0 16px 45px #0007}
+.war-panel[hidden],#warNav[hidden]{display:none!important}.war-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.war-heading h2{margin:4px 0;color:#ffd777;font-size:27px}.war-heading p{margin:0;color:#c6bda9}.war-kicker{font-size:11px;letter-spacing:2px;color:#f7b635;font-weight:900}.war-heading button{background:#f7b635;border:0;color:#1b1508;border-radius:10px;padding:10px 17px;font-weight:900;cursor:pointer}.war-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.war-filters label{font-size:12px;color:#d5c5a4;font-weight:800}.war-filters select,.war-filters input{width:100%;margin-top:5px;padding:11px;border:1px solid #6b542e;border-radius:9px;background:#171613;color:#fff;font:inherit;min-width:0}.war-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.war-stat{background:#242015;border:1px solid #5d4926;border-radius:12px;padding:13px}.war-stat strong{display:block;font-size:22px;color:#ffda81}.war-stat small{color:#d3c7af}.war-tablewrap{overflow:auto;max-height:600px;border-radius:12px;border:1px solid #5b492a}.war-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}.war-table th{position:sticky;top:0;background:#31271a;color:#ffd777;text-align:left;padding:11px;z-index:1}.war-table td{padding:10px;border-top:1px solid #3a3225}.war-table tbody tr:hover{background:#30291d}.war-notice{margin-top:14px;color:#ffd777}.war-note{color:#aa9d85;font-size:11px}@media(max-width:760px){.war-panel{margin:16px 10px;padding:15px}.war-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.war-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.war-heading h2{font-size:22px}}@media(max-width:420px){.war-filters{grid-template-columns:1fr}}
+</style>
+<script id="war-central-script">
+(()=>{
+'use strict';
+const $w=id=>document.getElementById(id), escw=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>Number(String(v??'0').replace(/\./g,'').replace(',','.'))||0;
+const fmt=n=>new Intl.NumberFormat('pt-BR').format(n);
+const state={wars:[],players:[],fields:[]};
+const key=(row,...names)=>{for(const n of names)if(row[n]!==undefined)return row[n];return ''};
+const warId=r=>key(r,'Guerra_ID','guerra_id');
+const pWar=r=>key(r,'Guerra_ID','guerra_id');
+const player=r=>key(r,'Personagem','personagem');
+const guild=r=>key(r,'Guilda','guilda');
+const job=r=>key(r,'Job','Classe','job');
+const populate=(id,vals,all)=>{const el=$w(id),prev=el.value;el.replaceChildren(new Option(all,''));[...new Set(vals.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR')).forEach(v=>el.add(new Option(v,v)));el.value=prev;};
+function render(){
+ const w=$w('warFilter').value,g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
+ const rows=state.players.filter(r=>(!w||pWar(r)===w)&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q)));
+ const wars=new Set(rows.map(pWar));const total=(k)=>rows.reduce((sum,r)=>sum+num(r[k]),0);
+ $w('warStats').innerHTML=[['Guerras',wars.size],['Jogadores',rows.length],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${t}</small></div>`).join('');
+ $w('warRows').innerHTML=rows.map(r=>`<tr>${[pWar(r),player(r),guild(r),job(r),key(r,'Kills'),key(r,'Assistencias'),key(r,'Mortes'),key(r,'Ocupacoes'),key(r,'Pontuacao'),key(r,'Dano_Causado'),key(r,'Dano_Recebido'),key(r,'Cura')].map((v,i)=>`<td>${escw(i>=4?fmt(num(v)):v)}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="12">Nenhum jogador encontrado.</td></tr>';
+ $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} linha(s) de jogadores no histórico · ${state.fields.length} campo(s) adicionais`;
+}
+async function load(){
+ $w('warNotice').textContent='Carregando dados protegidos...';
+ try{const r=await fetch('/api/war',{credentials:'same-origin',cache:'no-store'});const data=await r.json();if(!r.ok||!data.ok)throw Error(data.error||'Falha de leitura');
+ state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
+ populate('warFilter',state.wars.map(warId),'Todas as guerras');populate('warGuild',state.players.map(guild),'Todas as guildas');populate('warJob',state.players.map(job),'Todas as classes');render();
+ }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
+}
+async function init(){
+ try{const r=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});if(!r.ok)return;
+ $w('warNav').hidden=false;$w('centralGuerra').hidden=false;
+ ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',render));$w('warPlayer').addEventListener('input',render);$w('warReload').addEventListener('click',load);await load();
+ }catch(e){console.warn('Central de Guerra indisponível',e)}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 </body>
 </html>
