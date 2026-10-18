@@ -7292,6 +7292,27 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
   #centralGuerra .war-battle-hero .war-team-tag{font-size:8px!important;padding:3px 6px!important}
 }
 </style>
+<style id="war-banner-corners-v23">
+/* Estende as artes ate as bordas externas; a mascara so dissolve para o centro. */
+#centralGuerra .war-battle-hero::before,
+#centralGuerra .war-battle-hero::after{
+ width:51%!important;
+ background-size:cover!important;
+ background-repeat:no-repeat!important;
+}
+#centralGuerra .war-battle-hero::before{
+ left:0!important;right:auto!important;
+ background-position:left center!important;
+ -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 44%,transparent 100%)!important;
+ mask-image:linear-gradient(90deg,#000 0%,#000 44%,transparent 100%)!important;
+}
+#centralGuerra .war-battle-hero::after{
+ right:0!important;left:auto!important;
+ background-position:right center!important;
+ -webkit-mask-image:linear-gradient(270deg,#000 0%,#000 44%,transparent 100%)!important;
+ mask-image:linear-gradient(270deg,#000 0%,#000 44%,transparent 100%)!important;
+}
+</style>
 <script id="war-central-script">
 (()=>{
 'use strict';
@@ -7345,7 +7366,17 @@ function updateGuildFilter(){
 function populateWars(){
  const el=$w('warFilter'),prev=el.value;
  el.replaceChildren(new Option('Selecione uma guerra',''));
- state.wars.forEach(w=>{const id=warId(w);if(id)el.add(new Option(warLabel(w),id))});
+ [...state.wars].sort((a,b)=>{
+   const dateKey=w=>{
+     const raw=String(key(w,'Data_Guerra','data')||'').trim();
+     const iso=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+     if(iso)return `${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`;
+     const br=raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+     if(br)return `${br[3]}-${br[2].padStart(2,'0')}-${br[1].padStart(2,'0')}`;
+     return '';
+   };
+   return dateKey(b).localeCompare(dateKey(a)) || warId(b).localeCompare(warId(a));
+ }).forEach(w=>{const id=warId(w);if(id)el.add(new Option(warLabel(w),id))});
  if([...el.options].some(o=>o.value===prev))el.value=prev;
 }
 function sortRows(rows){
