@@ -7062,6 +7062,11 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #centralGuerra th[data-direction="asc"]::after{content:" ▲";opacity:1}
 #centralGuerra th[data-direction="desc"]::after{content:" ▼";opacity:1}
 </style>
+<style id="war-central-five-cards-v13">
+#centralGuerra .war-stats{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:980px){#centralGuerra .war-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){#centralGuerra .war-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 <script id="war-central-script">
 (()=>{
 'use strict';
@@ -7131,7 +7136,7 @@ function render(){
  const g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
  const rows=sortRows(state.players.filter(r=>pWar(r)===w&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
- $w('warStats').innerHTML=[['Guerras',1],['Jogadores',rows.length],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${t}</small></div>`).join('');
+ $w('warStats').innerHTML=[['Guerras',1],['Jogadores',rows.length],['Total de pontos',fmt(total('Pontuacao'))],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${t}</small></div>`).join('');
  $w('warRows').innerHTML=rows.map(r=>`<tr>${columns.map(k=>`<td>${escw(numericKeys.has(k)?fmt(num(key(r,k))):key(r,k))}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="11">Nenhum jogador encontrado.</td></tr>';
  $w('warNotice').textContent=`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
