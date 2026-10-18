@@ -7001,11 +7001,18 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 <section id="centralGuerra" class="war-panel" hidden>
  <div class="war-heading"><div><span class="war-kicker">🛡️ ACESSO STAFF</span><h2>⚔️ Central de Guerra</h2><p>Histórico de batalhas, participantes e estatísticas de combate.</p></div><button id="warReload" type="button">↻ Atualizar</button></div>
  <div id="warNotice" class="war-notice">Carregando histórico...</div>
+ <div id="warBattleHero" class="war-battle-hero" hidden aria-live="polite">
+  <div class="war-team war-team-left"><span class="war-team-tag" id="warTag1"></span><div class="war-team-name" id="warTeam1"></div><strong class="war-team-score" id="warScore1"></strong></div>
+  <div class="war-versus"><span class="war-vs">VS</span><span class="war-battle-date" id="warBattleDate"></span></div>
+  <div class="war-team war-team-right"><span class="war-team-tag" id="warTag2"></span><div class="war-team-name" id="warTeam2"></div><strong class="war-team-score" id="warScore2"></strong></div>
+ </div>
+
  <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint">Selecione uma guerra acima para visualizar os jogadores e as estatísticas.</div>
- <div class="war-tablewrap" id="warTableWrap" hidden><table class="war-table"><thead><tr><th data-war-sort="Personagem" scope="col" tabindex="0">Personagem</th><th data-war-sort="Guilda" scope="col" tabindex="0">Guilda</th><th data-war-sort="Job" scope="col" tabindex="0">Job</th><th data-war-sort="Kills" scope="col" tabindex="0">K</th><th data-war-sort="Assistencias" scope="col" tabindex="0">A</th><th data-war-sort="Mortes" scope="col" tabindex="0">D</th><th data-war-sort="Ocupacoes" scope="col" tabindex="0">Ocup.</th><th data-war-sort="Pontuacao" scope="col" tabindex="0">Pontos</th><th data-war-sort="Dano_Causado" scope="col" tabindex="0">Dano causado</th><th data-war-sort="Dano_Recebido" scope="col" tabindex="0">Dano recebido</th><th data-war-sort="Cura" scope="col" tabindex="0">Cura</th></tr></thead><tbody id="warRows"></tbody></table></div>
- <p class="war-note">O placar oficial vem da aba GUERRA e não muda com filtros de classe ou jogador. Os totais de dano e cura acompanham os filtros. Nenhum registro é apagado por este painel.</p>
+ <div class="war-results-title" id="warResultsTitle" hidden><div><strong>⚔️ Jogadores da Guerra</strong><span>Ordene pelos cabeçalhos e deslize horizontalmente para ver os detalhes.</span></div><span class="war-results-count" id="warResultsCount"></span></div>
+ <div class="war-tablewrap" id="warTableWrap" hidden><table class="war-table"><thead><tr><th data-war-sort="Personagem" scope="col" tabindex="0">Personagem</th><th data-war-sort="Guilda" scope="col" tabindex="0">Guilda</th><th data-war-sort="Job" scope="col" tabindex="0">Job</th><th data-war-sort="Kills" scope="col" tabindex="0">K</th><th data-war-sort="Assistencias" scope="col" tabindex="0">A</th><th data-war-sort="Mortes" scope="col" tabindex="0">D</th><th data-war-sort="Ocupacoes" scope="col" tabindex="0">Ocup.</th><th data-war-sort="Pontuacao" scope="col" tabindex="0">Pontos</th><th data-war-sort="Dano_Causado" scope="col" tabindex="0">Dano causado</th><th data-war-sort="Dano_Recebido" scope="col" tabindex="0">Dano recebido</th><th data-war-sort="Cura" scope="col" tabindex="0">Cura</th><th data-war-sort="Pontos_Assistencias" scope="col" tabindex="0">Pts. assist.</th><th data-war-sort="Pontos_Mortes" scope="col" tabindex="0">Pts. mortes</th><th data-war-sort="Pontos_Ocupacoes" scope="col" tabindex="0">Pts. ocup.</th></tr></thead><tbody id="warRows"></tbody></table></div>
+ <p class="war-note">🏆 A vencedora é a guilda com o maior placar oficial. As estatísticas individuais seguem os filtros selecionados. O histórico é preservado.</p>
 </section>
 
 <style id="war-central-contrast-fix">
@@ -7074,28 +7081,68 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #centralGuerra th[data-direction="asc"]::after{content:" ▲";opacity:1}
 #centralGuerra th[data-direction="desc"]::after{content:" ▼";opacity:1}
 </style>
+<style id="war-central-design-v18">
+/* Visual inspirado no mockup; sem dados ilustrativos ou imagens de personagens inventadas. */
+#centralGuerra.war-panel{background:linear-gradient(135deg,#111821 0%,#101116 48%,#16120e 100%)!important;border-color:#a67a32!important;box-shadow:0 25px 65px #000b!important}
+#centralGuerra .war-heading h2{font-size:clamp(24px,2.5vw,35px);text-shadow:0 2px 22px #c9902c30}
+#centralGuerra .war-battle-hero{display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr);align-items:center;gap:14px;margin:18px 0 22px;padding:26px 22px;min-height:150px;border:1px solid #9e783d;border-radius:18px;background:radial-gradient(ellipse at 18% 50%,#74501f85,transparent 45%),radial-gradient(ellipse at 85% 50%,#154f8c90,transparent 45%),linear-gradient(110deg,#221c14,#101824 55%,#101c2c);box-shadow:inset 0 0 55px #0008,0 12px 30px #0006}
+#centralGuerra .war-battle-hero[hidden]{display:none!important}
+#centralGuerra .war-team{min-width:0;display:flex;flex-direction:column;gap:7px}
+#centralGuerra .war-team-left{text-align:left;align-items:flex-start}
+#centralGuerra .war-team-right{text-align:right;align-items:flex-end}
+#centralGuerra .war-team-tag{display:inline-flex;border:1px solid #697387;border-radius:999px;padding:5px 12px;font-size:11px;font-weight:900;letter-spacing:1px;color:#bdc8d9;background:#101827a8}
+#centralGuerra [data-winner="1"] .war-team-left .war-team-tag,#centralGuerra [data-winner="2"] .war-team-right .war-team-tag{color:#ffe6a3;border-color:#c79332;background:#5d3b12}
+#centralGuerra .war-team-name{font-size:clamp(20px,3vw,35px);font-weight:1000;letter-spacing:1px;overflow-wrap:anywhere;color:#f7e9c7}
+#centralGuerra .war-team-score{font-size:clamp(28px,4vw,47px);line-height:1;color:#f9d994;font-variant-numeric:tabular-nums}
+#centralGuerra .war-team-right .war-team-score{color:#add8ff}
+#centralGuerra .war-versus{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+#centralGuerra .war-vs{font-size:clamp(38px,5vw,64px);line-height:1;font-weight:1000;font-style:italic;color:#ffc44e;text-shadow:0 0 20px #ff8b31a6}
+#centralGuerra .war-battle-date{font-size:11px;color:#d7c7ae;font-weight:800}
+#centralGuerra .war-stats .war-stat{display:flex;align-items:center;gap:12px;min-height:86px;padding:15px!important;background:#171e30!important;border-color:#4a5480!important}
+#centralGuerra .war-stat .war-stat-icon{font-size:27px;line-height:1;flex-shrink:0}
+#centralGuerra .war-stats .war-stat strong{font-size:clamp(19px,2vw,26px);line-height:1.1;color:#fff1c8!important}
+#centralGuerra .war-stats .war-stat small{display:block;margin-top:6px;color:#e2e6f3!important}
+#centralGuerra .war-stats .war-stat-blue{background:linear-gradient(110deg,#172237,#142d43)!important;border-color:#4775a0!important}
+#centralGuerra .war-stats .war-stat-red{background:linear-gradient(110deg,#32171d,#4a2026)!important;border-color:#a04349!important}
+#centralGuerra .war-stats .war-stat-green{background:linear-gradient(110deg,#142d23,#20462e)!important;border-color:#3c8157!important}
+#centralGuerra .war-results-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;padding:14px 18px;border:1px solid #795c2d;border-bottom:0;border-radius:14px 14px 0 0;background:linear-gradient(90deg,#302418,#181c20)}
+#centralGuerra .war-results-title[hidden]{display:none!important}
+#centralGuerra .war-results-title strong{display:block;color:#ffe3a2;font-size:17px}
+#centralGuerra .war-results-title span{display:block;color:#c8bdad;font-size:12px;margin-top:3px}
+#centralGuerra .war-results-count{white-space:nowrap}
+#centralGuerra .war-tablewrap{max-height:560px;overflow:auto!important;border-radius:0 0 14px 14px!important;scrollbar-color:#b89148 #201e1b;scrollbar-width:thin}
+#centralGuerra .war-table{min-width:1420px!important;width:100%!important}
+#centralGuerra .war-table th{background:#40301e!important;color:#ffdd94!important;font-size:11px}
+#centralGuerra .war-table tbody tr{background:#171d24!important}
+#centralGuerra .war-table tbody tr:nth-child(even){background:#25282b!important}
+#centralGuerra .war-table tbody tr:hover{background:#37424b!important}
+#centralGuerra .war-table td{color:#f5f4f0!important}
+#centralGuerra .war-filters select:focus,#centralGuerra .war-filters input:focus{outline:2px solid #edb84b;outline-offset:1px}
+@media(max-width:760px){#centralGuerra .war-battle-hero{grid-template-columns:minmax(0,1fr) 65px minmax(0,1fr);padding:16px 10px;gap:4px;min-height:130px}#centralGuerra .war-team-tag{font-size:9px;padding:4px 6px}#centralGuerra .war-team-name{font-size:17px}#centralGuerra .war-team-score{font-size:24px}#centralGuerra .war-vs{font-size:29px}#centralGuerra .war-battle-date{font-size:9px}#centralGuerra .war-results-title{flex-wrap:wrap}}
+</style>
 <script id="war-central-script">
 (()=>{
 'use strict';
 const $w=id=>document.getElementById(id);
-const escw=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+const escw=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>typeof v==='number'?v:(Number(String(v??'0').replace(/\./g,'').replace(',','.'))||0);
 const fmt=n=>new Intl.NumberFormat('pt-BR').format(n);
 const state={wars:[],players:[],fields:[],sortKey:'',sortDir:1};
 const key=(row,...names)=>{for(const n of names)if(row[n]!==undefined)return row[n];return ''};
 const warId=r=>String(key(r,'Guerra_ID','guerra_id'));
-const pWar=warId;
 const player=r=>key(r,'Personagem','personagem');
 const guild=r=>key(r,'Guilda','guilda');
 const job=r=>key(r,'Job','Classe','job');
-const numericKeys=new Set(['Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura']);
-const columns=['Personagem','Guilda','Job','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura'];
+const numericKeys=new Set(['Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes']);
+const columns=['Personagem','Guilda','Job','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes'];
+const hasScore=v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(Number(String(v).replace(',','.')));
+const getScores=r=>[key(r,'Placar_1','placar1'),key(r,'Placar_2','placar2')];
 const warLabel=r=>{
  const g1=String(key(r,'Guilda_1','guilda1')||'Guilda 1');
  const g2=String(key(r,'Guilda_2','guilda2')||'Guilda 2');
  const d=String(key(r,'Data_Guerra','data')||'').trim();
- const p1=key(r,'Placar_1','placar1'),p2=key(r,'Placar_2','placar2');
- const placar=(p1!==''&&p1!=null&&p2!==''&&p2!=null)?` (${p1} × ${p2})`:'';
+ const [p1,p2]=getScores(r);
+ const placar=hasScore(p1)&&hasScore(p2)?` (${p1} × ${p2})`:'';
  return `${g1} × ${g2}${placar}${d?' — '+d:''}`;
 };
 const populate=(id,vals,all)=>{
@@ -7127,24 +7174,45 @@ function updateSortHeaders(){
    th.title=active?'Clique para inverter a ordem':'Clique para ordenar';
  });
 }
+function renderHero(war){
+ const hero=$w('warBattleHero');
+ hero.hidden=!war;
+ if(!war)return;
+ const g1=String(key(war,'Guilda_1','guilda1')||'Guilda 1');
+ const g2=String(key(war,'Guilda_2','guilda2')||'Guilda 2');
+ const [p1,p2]=getScores(war);
+ const valid=hasScore(p1)&&hasScore(p2);
+ const n1=Number(String(p1).replace(',','.')),n2=Number(String(p2).replace(',','.'));
+ const winner=valid?(n1>n2?1:n2>n1?2:0):-1;
+ hero.dataset.winner=String(winner);
+ $w('warTeam1').textContent=g1;
+ $w('warTeam2').textContent=g2;
+ $w('warScore1').textContent=valid?fmt(n1):'—';
+ $w('warScore2').textContent=valid?fmt(n2):'—';
+ $w('warTag1').textContent=winner===1?'🏆 VENCEDORA':winner===2?'DERROTA':winner===0?'EMPATE':'PLACAR PENDENTE';
+ $w('warTag2').textContent=winner===2?'🏆 VENCEDORA':winner===1?'DERROTA':winner===0?'EMPATE':'PLACAR PENDENTE';
+ const d=String(key(war,'Data_Guerra','data')||'');
+ $w('warBattleDate').textContent=d?'📅 '+d:'BATALHA';
+}
 function render(){
  const w=$w('warFilter').value;
  const visible=Boolean(w);
  $w('warStats').hidden=!visible;
  $w('warTableWrap').hidden=!visible;
+ $w('warResultsTitle').hidden=!visible;
  $w('warChooseHint').hidden=visible;
+ renderHero(state.wars.find(r=>warId(r)===w));
  if(!visible){
-   $w('warChooseHint').textContent=state.wars.length?
-     `Escolha uma das ${state.wars.length} guerras acima para visualizar os dados.`:
-     'Nenhuma guerra cadastrada ainda.';
+   $w('warChooseHint').textContent=state.wars.length?`Escolha uma das ${state.wars.length} guerras acima para visualizar os dados.`:'Nenhuma guerra cadastrada ainda.';
    $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} registros de jogadores no histórico`;
    return;
  }
  const g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
- const rows=sortRows(state.players.filter(r=>pWar(r)===w&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
+ const rows=sortRows(state.players.filter(r=>warId(r)===w&&(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
- $w('warStats').innerHTML=[['Guerras',1],['Jogadores',rows.length],['Dano causado',fmt(total('Dano_Causado'))],['Cura',fmt(total('Cura'))]].map(([t,v])=>`<div class="war-stat"><strong>${v}</strong><small>${escw(t)}</small></div>`).join('');
- $w('warRows').innerHTML=rows.map(r=>`<tr>${columns.map(k=>`<td>${escw(numericKeys.has(k)?fmt(num(key(r,k))):key(r,k))}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="11">Nenhum jogador encontrado.</td></tr>';
+ $w('warStats').innerHTML=[['⚔️','Guerras','1','war-stat-purple'],['👥','Jogadores',rows.length,'war-stat-blue'],['🔥','Dano causado',fmt(total('Dano_Causado')),'war-stat-red'],['✚','Cura',fmt(total('Cura')),'war-stat-green']].map(([ic,t,v,cls])=>`<div class="war-stat ${cls}"><span class="war-stat-icon">${ic}</span><div><strong>${v}</strong><small>${escw(t)}</small></div></div>`).join('');
+ $w('warRows').innerHTML=rows.map((r,i)=>`<tr>${columns.map(k=>`<td>${escw(numericKeys.has(k)?fmt(num(key(r,k))):key(r,k))}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="14">Nenhum jogador encontrado.</td></tr>';
+ $w('warResultsCount').textContent=`${rows.length} jogador(es)`;
  $w('warNotice').textContent=`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
 }
