@@ -7175,6 +7175,123 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
 #centralGuerra .war-team-name{position:relative;z-index:2;text-shadow:0 2px 8px #080b12}
 @media(max-width:700px){#centralGuerra .war-guild-emblem{flex-basis:35px;width:35px;height:35px}#centralGuerra .war-team-identity{gap:5px}#centralGuerra .war-team-name{font-size:15px!important}#centralGuerra .war-points-label{font-size:9px;letter-spacing:1px}}
 </style>
+
+<style id="war-banner-complete-v22">
+/* Banner completo: duas artes integradas ao fundo, placares centrais e emblemas. */
+#centralGuerra .war-battle-hero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(155px,.55fr) minmax(0,1fr)!important;
+  align-items:center!important;
+  min-height:255px!important;
+  padding:26px clamp(16px,2.5vw,42px)!important;
+  gap:12px!important;
+  background:linear-gradient(105deg,#39210c 0%,#15121b 38%,#111a2b 63%,#082343 100%)!important;
+  isolation:isolate!important;
+}
+#centralGuerra .war-battle-hero::before,
+#centralGuerra .war-battle-hero::after{
+  content:""!important;
+  position:absolute!important;
+  top:0!important;bottom:0!important;
+  width:43%!important;
+  pointer-events:none!important;
+  z-index:0!important;
+  background-size:auto 115%!important;
+  background-position:center!important;
+}
+#centralGuerra .war-battle-hero::before{
+  left:0!important;right:auto!important;
+  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 52%,transparent 100%)!important;
+  mask-image:linear-gradient(90deg,#000 0%,#000 52%,transparent 100%)!important;
+}
+#centralGuerra .war-battle-hero::after{
+  right:0!important;left:auto!important;
+  -webkit-mask-image:linear-gradient(270deg,#000 0%,#000 52%,transparent 100%)!important;
+  mask-image:linear-gradient(270deg,#000 0%,#000 52%,transparent 100%)!important;
+}
+#centralGuerra .war-battle-hero .war-team,
+#centralGuerra .war-battle-hero .war-versus{z-index:3!important;position:relative!important;min-width:0!important}
+#centralGuerra .war-battle-hero .war-team{
+  gap:10px!important;
+  padding:0!important;
+  text-shadow:0 2px 12px #000,0 0 18px #000!important;
+}
+#centralGuerra .war-battle-hero .war-team-left{
+  align-items:flex-end!important;
+  text-align:right!important;
+  padding-left:clamp(85px,13vw,180px)!important;
+}
+#centralGuerra .war-battle-hero .war-team-right{
+  align-items:flex-start!important;
+  text-align:left!important;
+  padding-right:clamp(85px,13vw,180px)!important;
+}
+#centralGuerra .war-battle-hero .war-team-identity,
+#centralGuerra .war-battle-hero .war-team-right .war-team-identity{
+  flex-direction:row!important;
+  gap:12px!important;
+  align-items:center!important;
+}
+#centralGuerra .war-battle-hero .war-guild-emblem{
+  width:58px!important;height:58px!important;flex:0 0 58px!important;
+}
+#centralGuerra .war-battle-hero .war-team-name{
+  font-size:clamp(21px,2.5vw,37px)!important;
+  line-height:1.1!important;
+  white-space:normal!important;
+  text-shadow:0 2px 12px #000,0 0 12px #000!important;
+}
+#centralGuerra .war-battle-hero .war-team-score{
+  font-size:clamp(37px,4vw,59px)!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  text-shadow:0 2px 12px #000,0 0 16px #000!important;
+}
+#centralGuerra .war-battle-hero .war-points-label{
+  font-size:11px!important;
+  letter-spacing:2.6px!important;
+  color:#fff0ce!important;
+}
+#centralGuerra .war-battle-hero .war-versus{
+  align-self:center!important;
+  justify-self:center!important;
+  padding:12px 8px!important;
+  background:radial-gradient(ellipse,#0c1018c7,transparent 75%)!important;
+}
+#centralGuerra .war-battle-hero .war-vs{
+  font-size:clamp(54px,6vw,83px)!important;
+  filter:drop-shadow(0 0 9px #ffb52b88);
+}
+#centralGuerra .war-battle-hero .war-battle-date{
+  font-size:12px!important;
+  color:#fff1cf!important;
+  letter-spacing:.4px!important;
+}
+#centralGuerra .war-battle-hero .war-team-tag{
+  font-size:10px!important;
+  letter-spacing:.7px!important;
+}
+@media(max-width:1050px){
+  #centralGuerra .war-battle-hero{grid-template-columns:minmax(0,1fr) 90px minmax(0,1fr)!important;min-height:230px!important}
+  #centralGuerra .war-battle-hero .war-team-left{padding-left:60px!important}
+  #centralGuerra .war-battle-hero .war-team-right{padding-right:60px!important}
+  #centralGuerra .war-battle-hero .war-guild-emblem{width:42px!important;height:42px!important;flex-basis:42px!important}
+}
+@media(max-width:680px){
+  #centralGuerra .war-battle-hero{grid-template-columns:minmax(0,1fr) 55px minmax(0,1fr)!important;min-height:180px!important;padding:12px 8px!important;gap:2px!important}
+  #centralGuerra .war-battle-hero .war-team-left{padding-left:0!important;align-items:center!important;text-align:center!important}
+  #centralGuerra .war-battle-hero .war-team-right{padding-right:0!important;align-items:center!important;text-align:center!important}
+  #centralGuerra .war-battle-hero .war-team-identity,
+  #centralGuerra .war-battle-hero .war-team-right .war-team-identity{flex-direction:column!important;gap:3px!important}
+  #centralGuerra .war-battle-hero .war-guild-emblem{width:29px!important;height:29px!important;flex-basis:29px!important}
+  #centralGuerra .war-battle-hero .war-team-name{font-size:clamp(14px,3.6vw,21px)!important}
+  #centralGuerra .war-battle-hero .war-team-score{font-size:clamp(23px,6vw,33px)!important}
+  #centralGuerra .war-battle-hero .war-vs{font-size:35px!important}
+  #centralGuerra .war-battle-hero .war-battle-date{font-size:9px!important}
+  #centralGuerra .war-battle-hero .war-points-label{font-size:8px!important;letter-spacing:1px!important}
+  #centralGuerra .war-battle-hero .war-team-tag{font-size:8px!important;padding:3px 6px!important}
+}
+</style>
 <script id="war-central-script">
 (()=>{
 'use strict';
