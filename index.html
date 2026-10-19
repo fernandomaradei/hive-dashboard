@@ -8155,6 +8155,7 @@ const STORAGE_PREFIX='hive_plantel_staff_war_v2_';
 let activeWar='vale';
 const storageKey=()=>STORAGE_PREFIX+activeWar;
 const warName=()=>WAR_MODES[activeWar].name;
+const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
 const loadWarFormation=()=>{
  try{
   let raw=localStorage.getItem(storageKey());
@@ -8250,7 +8251,7 @@ function render(){
     <button type="button" class="hp-compact-add" data-add="${esc(idOf(m))}" title="Alocar na PT selecionada">＋</button>
    </div>`;
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
- const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
+
  const unified=!!WAR_MODES[activeWar].unified,grouped=!!WAR_MODES[activeWar].grouped;
  const ptHtml=(f,p)=>{const pt=formation[f][p],n=p+1+(unified&&f==='sub'?8:0),role=grouped?hpMainPtRole(p):'';
   return `<div class="hp-pt ${role?'hp-pt-role-'+role.toLowerCase():''}"><h4><span>PT ${n}${role?` <em class="hp-pt-role-label">${role}</em>`:''}</span><small>${pt.filter(Boolean).length}/5</small></h4><div class="hp-pt-progress"><span style="width:${pt.filter(Boolean).length*20}%"></span></div>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${f}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-index">${i+1}</span><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`};
@@ -8343,7 +8344,7 @@ async function hpDrawExport(){
  rect(0,159,W,5,'#d8a24c');
  label('⚜  HIVE',72,91,72,'#f5d18b','bold');
  label('MONTAGEM DE PLANTEL',455,88,49,'#f2c66c','bold');
- label(warName().toUpperCase(),460,151,22,'#f9d58e','bold');
+ label('MODALIDADE: '+warName().toUpperCase(),460,151,26,'#ffda8b','bold');
  label('FORMAÇÃO OFICIAL DA GUILDA',459,127,23,'#b9c8dc');
  label(new Date().toLocaleDateString('pt-BR'),W-255,83,29,'#e5eafa','bold');
  const cards=[
@@ -8398,7 +8399,7 @@ async function hpDrawExport(){
  };
  fieldDraw('main',activeWar==='overrun'?'🔥  OVERRUN · PT 1–8':'⚔  MAIN FIELD',358,'#f3c16b');
  fieldDraw('sub',activeWar==='overrun'?'🔥  OVERRUN · PT 9–16':'◆  SUB FIELD',970,'#31c4ff');
- label('HIVE  •  PLANTEL DA GUILDA',70,1619,21,'#8ca8c3','bold');
+ label('HIVE  •  '+warName().toUpperCase()+'  •  PLANTEL DA GUILDA',70,1619,21,'#f5d18b','bold');
  label('Gerado para compartilhamento  •  Um jogador por vaga',W-800,1619,19,'#8ca8c3');
  return canvas;
 }
