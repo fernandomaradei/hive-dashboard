@@ -2852,6 +2852,18 @@ html{scroll-behavior:smooth}
 #centralGuerra .war-games-high{color:#62f0b8;background:#0c3b31;border-color:#239e78}
 #centralGuerra .war-games-mid{color:#ffdc7e;background:#3b2d0d;border-color:#a77a24}
 #centralGuerra .war-games-low{color:#ffae81;background:#40251d;border-color:#bb6b47}
+</style><style id="hive-pt-role-v22">
+#hivePlantelPanel .hp-role-legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 12px}
+#hivePlantelPanel .hp-role-tag{border:1px solid #b48c48;border-radius:6px;padding:5px 10px;color:#f2c16b;background:#19180f;font-size:11px;font-weight:800;letter-spacing:.055em}
+#hivePlantelPanel .hp-role-tag small{font-size:10px;font-weight:500;opacity:.85;margin-left:6px}
+#hivePlantelPanel .hp-role-flex{border-color:#568bb2;color:#88cbfa;background:#101c2a}
+#hivePlantelPanel .hp-role-roaming{border-color:#438e7b;color:#83e3c3;background:#0b211e}
+#hivePlantelPanel .hp-role-rat{border-color:#8a68b0;color:#d8adfa;background:#211629}
+#hivePlantelPanel .hp-pt-role-label{font-style:normal;font-size:10px;letter-spacing:.05em;margin-left:6px;padding:3px 5px;border:1px solid currentColor;border-radius:5px;white-space:nowrap}
+#hivePlantelPanel .hp-pt-role-mid .hp-pt-role-label{color:#f2c16b}
+#hivePlantelPanel .hp-pt-role-flex .hp-pt-role-label{color:#88cbfa}
+#hivePlantelPanel .hp-pt-role-roaming .hp-pt-role-label{color:#83e3c3}
+#hivePlantelPanel .hp-pt-role-rat .hp-pt-role-label{color:#d8adfa}
 </style></head>
 <body>
 <div class="app">
@@ -8183,7 +8195,8 @@ function render(){
     <button type="button" class="hp-compact-add" data-add="${esc(idOf(m))}" title="Alocar na PT selecionada">＋</button>
    </div>`;
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
- $('hpPts').innerHTML=['main','sub'].map(f=>`<section class="hp-field-section"><div class="hp-field-title"><strong>${f==='main'?'⚔️ Main Field':'🛡️ Sub Field'}</strong><div class="hp-field-summary"><b>${formation[f].flat().filter(Boolean).length}/40</b><div class="hp-field-meter"><span style="width:${formation[f].flat().filter(Boolean).length/40*100}%"></span></div><small>8 PTs · 5 jogadores cada</small></div></div><div class="hp-pts">`+formation[f].map((pt,p)=>`<div class="hp-pt"><h4><span>PT ${p+1}</span><small>${pt.filter(Boolean).length}/5</small></h4><div class="hp-pt-progress"><span style="width:${pt.filter(Boolean).length*20}%"></span></div>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${f}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-index">${i+1}</span><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('')+'</div></section>').join('');
+ const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
+ $('hpPts').innerHTML=['main','sub'].map(f=>`<section class="hp-field-section"><div class="hp-field-title"><strong>${f==='main'?'⚔️ Main Field':'🛡️ Sub Field'}</strong><div class="hp-field-summary"><b>${formation[f].flat().filter(Boolean).length}/40</b><div class="hp-field-meter"><span style="width:${formation[f].flat().filter(Boolean).length/40*100}%"></span></div><small>8 PTs · 5 jogadores cada</small></div></div>${f==='main'?'<div class="hp-role-legend"><span class="hp-role-tag hp-role-mid">MID <small>PT 1–3</small></span><span class="hp-role-tag hp-role-flex">FLEX <small>PT 4–5</small></span><span class="hp-role-tag hp-role-roaming">ROAMING <small>PT 6–7</small></span><span class="hp-role-tag hp-role-rat">RAT <small>PT 8</small></span></div>':''}<div class="hp-pts">`+formation[f].map((pt,p)=>`<div class="hp-pt ${f==='main'?'hp-pt-role-'+hpMainPtRole(p).toLowerCase():''}"><h4><span>PT ${p+1}${f==='main'?` <em class="hp-pt-role-label">${hpMainPtRole(p)}</em>`:''}</span><small>${pt.filter(Boolean).length}/5</small></h4><div class="hp-pt-progress"><span style="width:${pt.filter(Boolean).length*20}%"></span></div>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${f}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-index">${i+1}</span><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('')+'</div></section>').join('');
 }
 function locate(f,p,i){return formation[f]?.[p]?.[i]??null}
 function move(id,target,origin){
@@ -8301,6 +8314,11 @@ async function hpDrawExport(){
    rect(x,top,cw,ch,'#0a1625',13);
    c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(x+1,top+1,cw-2,ch-2);
    label('PT '+(p+1),x+17,top+33,24,accent,'bold');
+   if(fld==='main'){
+    const role=hpMainPtRole(p);
+    const roleColor=role==='MID'?'#f2c16b':role==='FLEX'?'#7fc8f5':role==='ROAMING'?'#78e4bd':'#d9a4fb';
+    label(role,x+105,top+32,19,roleColor,'bold');
+   }
    label(formation[fld][p].filter(Boolean).length+'/5',x+cw-67,top+33,21,accent,'bold');
    line(x+14,top+45,cw-28,'#354559');
    for(let i=0;i<5;i++){
