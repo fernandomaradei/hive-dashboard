@@ -2593,7 +2593,7 @@ html{scroll-behavior:smooth}
 @media(max-width:1100px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr!important}#hivePlantelPanel .hp-roster{max-height:none!important}}
 @media(max-width:600px){#hivePlantelPanel .hp-layout{grid-template-columns:minmax(0,1fr)!important}#hivePlantelPanel .hp-table-head,#hivePlantelPanel .hp-member.hp-member-compact{min-width:530px}}
 </style><style id="hp-mockup-premium-v11">
-#hivePlantelPanel .hp-top{min-height:102px;padding:15px clamp(15px,2.4vw,50px);background-image:linear-gradient(90deg,rgba(2,11,23,.97),rgba(5,16,30,.72) 43%,rgba(6,12,23,.3)),var(--hp-banner,none);background-size:cover;background-position:center 43%;border-bottom:2px solid #c99a48;box-shadow:0 8px 25px #0009}
+#hivePlantelPanel .hp-top{min-height:102px;padding:15px clamp(15px,2.4vw,50px);/* preserve the embedded fantasy banner from v9 instead of overriding it */background-size:cover;background-position:center 43%;border-bottom:2px solid #c99a48;box-shadow:0 8px 25px #0009}
 #hivePlantelPanel .hp-brand-mark{border-color:#bd8d3f;box-shadow:0 0 25px #d5a24930}
 #hivePlantelPanel .hp-top h2{font-size:clamp(19px,1.6vw,29px);letter-spacing:.7px;text-shadow:0 2px 8px #000}
 #hivePlantelPanel .hp-top .hp-actions{gap:7px}
@@ -7794,7 +7794,7 @@ window.addEventListener('hive:open-war',init);
  <header class="hp-top">
   <div class="hp-brand"><span class="hp-brand-mark">⚜</span><div><h2><span class="hp-brand-hive">HIVE</span><span class="hp-brand-separator">│</span> MONTAGEM DE PLANTEL</h2><p>Exclusivo Staff · Membros atuais · Sem duplicidade entre Main e Sub Field</p></div></div>
   <div class="hp-actions">
-   <button type="button" id="hpImageExport">▣ Exportar imagem</button><button type="button" id="hpPdfExport">▤ Exportar PDF</button><button type="button" id="hpExport" title="Backup editável em JSON">⬇ Backup JSON</button>
+   <button type="button" id="hpImageExport" title="Baixar PNG com as vagas ocupadas (não precisa preencher 80)">▣ Exportar imagem</button><button type="button" id="hpPdfExport" title="Baixar PDF com as vagas ocupadas (não precisa preencher 80)">▤ Exportar PDF</button><button type="button" id="hpExport" title="Backup editável em JSON">⬇ Backup JSON</button>
    <button type="button" id="hpImport">⬆ Importar formação</button>
    <button type="button" id="hpTopClear" class="hp-danger">♻ Limpar formação</button><button type="button" id="hpClose">← Central de Guerra</button>
    <input type="file" id="hpImportFile" accept=".json,application/json" hidden>
@@ -7977,7 +7977,8 @@ function hpDrawExport(){
  };
  const label=(str,x,y,size=24,color='#edf5ff',weight='400',maxWidth)=>{
   c.fillStyle=color;c.font=`${weight} ${size}px Arial, sans-serif`;
-  c.fillText(String(str),x,y,maxWidth);
+  if(Number.isFinite(maxWidth)&&maxWidth>0)c.fillText(String(str),x,y,maxWidth);
+  else c.fillText(String(str),x,y);
  };
  const line=(x,y,w,color='#2d425a')=>{rect(x,y,w,2,color)};
  const truncate=(v,max=27)=>{const t=String(v||'');return t.length>max?t.slice(0,max-1)+'…':t};
@@ -8024,7 +8025,7 @@ function hpDrawExport(){
     const yy=top+77+i*29;
     if(i%2===0)rect(x+12,yy-22,cw-24,29,'#132336',5);
     label(String(i+1).padStart(2,'0'),x+20,yy,17,'#8ca7c3','bold');
-    label(id?truncate(nameOf(m||{Personagem:id}),25):'— vaga disponível —',x+66,yy,21,id?'#f2f6ff':'#62778c',id?'bold':'400',cw-182);
+    label(id?truncate(m?nameOf(m):id,25):'— vaga disponível —',x+66,yy,21,id?'#f2f6ff':'#62778c',id?'bold':'400',cw-182);
     if(id&&m)label(truncate(jobOf(m),15),x+cw-124,yy,14,'#8cb4da','400',108);
    }
   }
@@ -8039,11 +8040,11 @@ async function hpExportImage(){
  try{
   $('hpStatus').textContent='Gerando imagem do plantel...';
   const canvas=hpDrawExport();
-  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  const blob=await new Promise(resolve=>{if(canvas.toBlob)canvas.toBlob(resolve,'image/png');else fetch(canvas.toDataURL('image/png')).then(r=>r.blob()).then(resolve).catch(()=>resolve(null))});
   if(!blob)throw Error('Falha ao criar imagem PNG.');
   hpDownload(blob,'HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.png');
   $('hpStatus').textContent='Imagem PNG gerada.';
- }catch(e){$('hpStatus').textContent='Erro ao exportar imagem: '+e.message}
+ }catch(e){console.error('HIVE PNG export:',e);$('hpStatus').textContent='Erro ao exportar imagem: '+e.message;alert('Não foi possível gerar a imagem: '+e.message)}
 }
 function hpPdfFromCanvas(canvas){
  // One-page landscape PDF, with the full canvas as an embedded JPEG.
@@ -8075,7 +8076,7 @@ async function hpExportPdf(){
   const canvas=hpDrawExport();
   hpDownload(hpPdfFromCanvas(canvas),'HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.pdf');
   $('hpStatus').textContent='PDF gerado.';
- }catch(e){$('hpStatus').textContent='Erro ao exportar PDF: '+e.message}
+ }catch(e){console.error('HIVE PDF export:',e);$('hpStatus').textContent='Erro ao exportar PDF: '+e.message;alert('Não foi possível gerar o PDF: '+e.message)}
 }
 
 async function init(){
