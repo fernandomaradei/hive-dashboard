@@ -2864,6 +2864,17 @@ html{scroll-behavior:smooth}
 #hivePlantelPanel .hp-pt-role-flex .hp-pt-role-label{color:#88cbfa}
 #hivePlantelPanel .hp-pt-role-roaming .hp-pt-role-label{color:#83e3c3}
 #hivePlantelPanel .hp-pt-role-rat .hp-pt-role-label{color:#d8adfa}
+</style><style id="hive-war-modes-v24">
+#hivePlantelPanel .hp-war-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 14px}
+#hivePlantelPanel .hp-war-mode{min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid #40546c;border-radius:12px;background:linear-gradient(135deg,#102239,#0b1727);color:#d9e8f7;font-weight:800;font-size:14px;cursor:pointer;transition:transform .12s,border-color .12s}
+#hivePlantelPanel .hp-war-mode small{font-size:10px;font-weight:500;color:#9bb4ca}
+#hivePlantelPanel .hp-war-mode.active{background:linear-gradient(135deg,#4a3417,#1d1b1d);border-color:#f2c16b;color:#ffd788;box-shadow:inset 0 0 0 1px #d8a24c55,0 0 16px #b7812828}
+#hivePlantelPanel .hp-war-mode:hover{transform:translateY(-2px);border-color:#d8a24c}
+#hivePlantelPanel.hp-overrun-mode .hp-pts-overrun{grid-template-columns:repeat(4,minmax(0,1fr))}
+#hivePlantelPanel.hp-overrun-mode .hp-field-overrun{border-color:#e0a647}
+#hivePlantelPanel.hp-overrun-mode #hpMainCard,#hivePlantelPanel.hp-overrun-mode #hpSubCard{display:none!important}
+@media(max-width:850px){#hivePlantelPanel .hp-war-modes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){#hivePlantelPanel .hp-war-mode{font-size:12px;min-height:62px}}
 </style></head>
 <body>
 <div class="app">
@@ -8081,12 +8092,18 @@ window.addEventListener('hive:open-war',init);
   <div class="hp-hero-motto" aria-hidden="true"><span>MAIS QUE UMA GUILDA</span><strong>UMA FAMÍLIA</strong></div>
  </header>
  <main class="hp-main">
+  <nav class="hp-war-modes" id="hpWarModes" aria-label="Modalidade de guerra">
+    <button type="button" class="hp-war-mode active" data-hp-war="vale">⚔ Vale of Clash<small>MID · FLEX · ROAMING · RAT</small></button>
+    <button type="button" class="hp-war-mode" data-hp-war="stellar">✦ Stellar Clash<small>8 PTs por campo</small></button>
+    <button type="button" class="hp-war-mode" data-hp-war="vigrid">🛡 Vigrid Avenge<small>8 PTs por campo</small></button>
+    <button type="button" class="hp-war-mode" data-hp-war="overrun">🔥 OVERRUN<small>16 PTs · Campo único</small></button>
+  </nav>
   <div class="hp-summary">
    <div class="hp-kpi hp-kpi-members"><span class="hp-kpi-icon">♟</span><div><b id="hpMembersCount">—</b><small>Membros cadastrados</small></div></div>
    <div class="hp-kpi hp-kpi-free"><span class="hp-kpi-icon">♟</span><div><b id="hpFreeCount">—</b><small>Disponíveis</small><div class="hp-kpi-aux" id="hpAvailablePercent">100% do efetivo</div></div></div>
-   <div class="hp-kpi hp-kpi-main"><span class="hp-kpi-icon">⚔</span><div class="hp-kpi-detail"><b id="hpMainCount">0/40</b><small>Main Field</small><div class="hp-meter"><span id="hpMainMeter"></span></div><span class="hp-kpi-percent" id="hpMainPercent">0%</span></div></div>
-   <div class="hp-kpi hp-kpi-sub"><span class="hp-kpi-icon">⬡</span><div class="hp-kpi-detail"><b id="hpSubCount">0/40</b><small>Sub Field</small><div class="hp-meter"><span id="hpSubMeter"></span></div><span class="hp-kpi-percent" id="hpSubPercent">0%</span></div></div>
-   <div class="hp-kpi hp-kpi-total"><span class="hp-kpi-icon">⚜</span><div class="hp-kpi-detail"><small>Total de vagas</small><b>80</b><small id="hpTotalPercent">0% preenchido</small></div><div class="hp-total-ring" id="hpTotalRing"><span id="hpTotalRingText">0%</span></div></div>
+   <div class="hp-kpi hp-kpi-main" id="hpMainCard"><span class="hp-kpi-icon">⚔</span><div class="hp-kpi-detail"><b id="hpMainCount">0/40</b><small>Main Field</small><div class="hp-meter"><span id="hpMainMeter"></span></div><span class="hp-kpi-percent" id="hpMainPercent">0%</span></div></div>
+   <div class="hp-kpi hp-kpi-sub" id="hpSubCard"><span class="hp-kpi-icon">⬡</span><div class="hp-kpi-detail"><b id="hpSubCount">0/40</b><small>Sub Field</small><div class="hp-meter"><span id="hpSubMeter"></span></div><span class="hp-kpi-percent" id="hpSubPercent">0%</span></div></div>
+   <div class="hp-kpi hp-kpi-total"><span class="hp-kpi-icon">⚜</span><div class="hp-kpi-detail"><small id="hpTotalLabel">Total de vagas</small><b>80</b><small id="hpTotalPercent">0% preenchido</small></div><div class="hp-total-ring" id="hpTotalRing"><span id="hpTotalRingText">0%</span></div></div>
   </div>
   <div class="hp-layout">
    <aside class="hp-panel hp-roster">
@@ -8132,7 +8149,45 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLocaleLowerCase('pt-BR');
 const fmt=x=>new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(Number(x)||0);
 const num=x=>{if(typeof x==='number')return x;let v=String(x??'').trim().replace(/\s/g,'');if(!v)return 0;if(v.includes(',')&&v.includes('.'))v=v.replace(/\./g,'').replace(',','.');else if(/^\d{1,3}([.,]\d{3})+$/.test(v))v=v.replace(/[.,]/g,'');else v=v.replace(',','.');return Number(v)||0};
-const STORAGE='hive_plantel_staff_v1';
+const LEGACY_STORAGE='hive_plantel_staff_v1';
+const WAR_MODES={vale:{name:'Vale of Clash',grouped:true},stellar:{name:'Stellar Clash',grouped:false},vigrid:{name:'Vigrid Avenge',grouped:false},overrun:{name:'OVERRUN',grouped:false,unified:true}};
+const STORAGE_PREFIX='hive_plantel_staff_war_v2_';
+let activeWar='vale';
+const storageKey=()=>STORAGE_PREFIX+activeWar;
+const warName=()=>WAR_MODES[activeWar].name;
+const loadWarFormation=()=>{
+ try{
+  let raw=localStorage.getItem(storageKey());
+  if(!raw&&activeWar==='vale')raw=localStorage.getItem(LEGACY_STORAGE);
+  return sanitize(JSON.parse(raw||'null'));
+ }catch{return blank()}
+};
+function setWarMode(next){
+ if(!WAR_MODES[next]||next===activeWar)return;
+ activeWar=next;
+ formation=loadWarFormation();
+ selected=null;dragged=null;
+ $('hpTarget').value='main';$('hpPt').value='0';
+ updateWarControls();render();
+ $('hpStatus').textContent=warName()+' selecionado. Formação independente carregada.';
+}
+function updateWarControls(){
+ const unified=!!WAR_MODES[activeWar].unified;
+ $('hpWarModes').querySelectorAll('[data-hp-war]').forEach(btn=>{
+  const active=btn.dataset.hpWar===activeWar;
+  btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',String(active));
+ });
+ $('hivePlantelPanel').classList.toggle('hp-overrun-mode',unified);
+ $('hpMainCard').hidden=unified;$('hpSubCard').hidden=unified;
+ $('hpTotalLabel').textContent=unified?'OVERRUN · 16 PTs':'Total de vagas';
+ const target=$('hpTarget'),previous=target.value;
+ target.innerHTML=unified?'<option value="main">OVERRUN · PT 1–8</option><option value="sub">OVERRUN · PT 9–16</option>':'<option value="main">Main Field</option><option value="sub">Sub Field</option>';
+ target.value=previous==='sub'?'sub':'main';
+ $('hpPt').replaceChildren();
+ for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1+(unified&&target.value==='sub'?8:0)),String(i)));
+ $('hpPt').value='0';
+}
+
 const blank=()=>({main:Array.from({length:8},()=>Array(5).fill(null)),sub:Array.from({length:8},()=>Array(5).fill(null))});
 let formation=blank(),members=[],averages=new Map(),field='main',ready=false,selected=null,dragged=null,warMoved=false,jobFilter='',sortKey='name',sortDir=1;
 const idOf=m=>norm(m.Personagem||m.personagem||m.Nick||'');
@@ -8142,7 +8197,7 @@ const stat=(m,...keys)=>{for(const k of keys)if(m[k]!==undefined&&m[k]!==null&&m
 const used=()=>new Set([...formation.main.flat(),...formation.sub.flat()].filter(Boolean));
 const valid=f=>f&&['main','sub'].every(k=>Array.isArray(f[k])&&f[k].length===8&&f[k].every(pt=>Array.isArray(pt)&&pt.length===5));
 function sanitize(f){const result=blank(),seen=new Set(),allowed=new Set(members.map(idOf));if(!valid(f))return result;for(const k of ['main','sub'])for(let p=0;p<8;p++)for(let i=0;i<5;i++){const id=norm(f[k][p][i]);if(id&&allowed.has(id)&&!seen.has(id)){result[k][p][i]=id;seen.add(id)}}return result}
-function save(){try{localStorage.setItem(STORAGE,JSON.stringify(formation));$('hpStatus').textContent='Formação salva neste navegador.'}catch{$('hpStatus').textContent='Salvamento local indisponível. Exporte a formação.'}}
+function save(){try{localStorage.setItem(storageKey(),JSON.stringify(formation));$('hpStatus').textContent='Formação salva neste navegador.'}catch{$('hpStatus').textContent='Salvamento local indisponível. Exporte a formação.'}}
 function meanText(id){const a=averages.get(id);if(!a)return '<span class="hp-hint">Sem histórico de guerra</span>';return `Média HIVE · ${a.games} guerra${a.games===1?'':'s'}<br>Dano <b>${fmt(a.damage)}</b> · Recebido <b>${fmt(a.taken)}</b><br>Cura <b>${fmt(a.heal)}</b> · K/A/D <b>${a.kills.toFixed(1).replace('.',',')}/${a.assists.toFixed(1).replace('.',',')}/${a.deaths.toFixed(1).replace('.',',')}</b>`}
 function render(){
  const assigned=used(),byId=new Map(members.map(m=>[idOf(m),m]));
@@ -8196,7 +8251,16 @@ function render(){
    </div>`;
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
  const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
- $('hpPts').innerHTML=['main','sub'].map(f=>`<section class="hp-field-section"><div class="hp-field-title"><strong>${f==='main'?'⚔️ Main Field':'🛡️ Sub Field'}</strong><div class="hp-field-summary"><b>${formation[f].flat().filter(Boolean).length}/40</b><div class="hp-field-meter"><span style="width:${formation[f].flat().filter(Boolean).length/40*100}%"></span></div><small>8 PTs · 5 jogadores cada</small></div></div>${'<div class="hp-role-legend"><span class="hp-role-tag hp-role-mid">MID <small>PT 1–3</small></span><span class="hp-role-tag hp-role-flex">FLEX <small>PT 4–5</small></span><span class="hp-role-tag hp-role-roaming">ROAMING <small>PT 6–7</small></span><span class="hp-role-tag hp-role-rat">RAT <small>PT 8</small></span></div>'}<div class="hp-pts">`+formation[f].map((pt,p)=>`<div class="hp-pt ${'hp-pt-role-'+hpMainPtRole(p).toLowerCase()}"><h4><span>PT ${p+1}${` <em class="hp-pt-role-label">${hpMainPtRole(p)}</em>`}</span><small>${pt.filter(Boolean).length}/5</small></h4><div class="hp-pt-progress"><span style="width:${pt.filter(Boolean).length*20}%"></span></div>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${f}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-index">${i+1}</span><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('')+'</div></section>').join('');
+ const unified=!!WAR_MODES[activeWar].unified,grouped=!!WAR_MODES[activeWar].grouped;
+ const ptHtml=(f,p)=>{const pt=formation[f][p],n=p+1+(unified&&f==='sub'?8:0),role=grouped?hpMainPtRole(p):'';
+  return `<div class="hp-pt ${role?'hp-pt-role-'+role.toLowerCase():''}"><h4><span>PT ${n}${role?` <em class="hp-pt-role-label">${role}</em>`:''}</span><small>${pt.filter(Boolean).length}/5</small></h4><div class="hp-pt-progress"><span style="width:${pt.filter(Boolean).length*20}%"></span></div>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${f}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-index">${i+1}</span><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`};
+ const legend='<div class="hp-role-legend"><span class="hp-role-tag hp-role-mid">MID <small>PT 1–3</small></span><span class="hp-role-tag hp-role-flex">FLEX <small>PT 4–5</small></span><span class="hp-role-tag hp-role-roaming">ROAMING <small>PT 6–7</small></span><span class="hp-role-tag hp-role-rat">RAT <small>PT 8</small></span></div>';
+ if(unified){
+  $('hpPts').innerHTML=`<section class="hp-field-section hp-field-overrun"><div class="hp-field-title"><strong>🔥 OVERRUN · CAMPO ÚNICO</strong><div class="hp-field-summary"><b>${assigned.size}/80</b><div class="hp-field-meter"><span style="width:${assigned.size/80*100}%"></span></div><small>16 PTs · 5 jogadores cada · sem divisão Main/Sub</small></div></div><div class="hp-pts hp-pts-overrun">${['main','sub'].flatMap(f=>formation[f].map((_,p)=>ptHtml(f,p))).join('')}</div></section>`;
+ }else{
+  $('hpPts').innerHTML=['main','sub'].map(f=>`<section class="hp-field-section"><div class="hp-field-title"><strong>${f==='main'?'⚔️ Main Field':'🛡️ Sub Field'}</strong><div class="hp-field-summary"><b>${formation[f].flat().filter(Boolean).length}/40</b><div class="hp-field-meter"><span style="width:${formation[f].flat().filter(Boolean).length/40*100}%"></span></div><small>8 PTs · 5 jogadores cada</small></div></div>${grouped?legend:''}<div class="hp-pts">${formation[f].map((_,p)=>ptHtml(f,p)).join('')}</div></section>`).join('');
+ }
+
 }
 function locate(f,p,i){return formation[f]?.[p]?.[i]??null}
 function move(id,target,origin){
@@ -8279,13 +8343,14 @@ async function hpDrawExport(){
  rect(0,159,W,5,'#d8a24c');
  label('⚜  HIVE',72,91,72,'#f5d18b','bold');
  label('MONTAGEM DE PLANTEL',455,88,49,'#f2c66c','bold');
+ label(warName().toUpperCase(),460,151,22,'#f9d58e','bold');
  label('FORMAÇÃO OFICIAL DA GUILDA',459,127,23,'#b9c8dc');
  label(new Date().toLocaleDateString('pt-BR'),W-255,83,29,'#e5eafa','bold');
  const cards=[
   ['MEMBROS',String(members.length),'#6dc7ff'],
   ['DISPONÍVEIS',String(members.length-total),'#30d7a6'],
-  ['MAIN FIELD',formation.main.flat().filter(Boolean).length+'/40','#f1bd62'],
-  ['SUB FIELD',formation.sub.flat().filter(Boolean).length+'/40','#2abfff'],
+  [activeWar==='overrun'?'PT 1–8':'MAIN FIELD',formation.main.flat().filter(Boolean).length+'/40','#f1bd62'],
+  [activeWar==='overrun'?'PT 9–16':'SUB FIELD',formation.sub.flat().filter(Boolean).length+'/40','#2abfff'],
   ['VAGAS OCUPADAS',total+'/80','#f5d18b']
  ];
  cards.forEach((a,i)=>{
@@ -8313,11 +8378,11 @@ async function hpDrawExport(){
    const col=p%4,row=Math.floor(p/4),x=58+pad+col*(cw+gap),top=y+87+row*(ch+15);
    rect(x,top,cw,ch,'#0a1625',13);
    c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(x+1,top+1,cw-2,ch-2);
-   label('PT '+(p+1),x+17,top+33,24,accent,'bold');
+   label('PT '+(p+1+(activeWar==='overrun'&&fld==='sub'?8:0)),x+17,top+33,24,accent,'bold');
    {
-     const role=hpMainPtRole(p);
+     const role=WAR_MODES[activeWar].grouped?hpMainPtRole(p):'';
     const roleColor=role==='MID'?'#f2c16b':role==='FLEX'?'#7fc8f5':role==='ROAMING'?'#78e4bd':'#d9a4fb';
-    label(role,x+105,top+32,19,roleColor,'bold');
+    if(role)label(role,x+105,top+32,19,roleColor,'bold');
    }
    label(formation[fld][p].filter(Boolean).length+'/5',x+cw-67,top+33,21,accent,'bold');
    line(x+14,top+45,cw-28,'#354559');
@@ -8331,8 +8396,8 @@ async function hpDrawExport(){
    }
   }
  };
- fieldDraw('main','⚔  MAIN FIELD',358,'#f3c16b');
- fieldDraw('sub','◆  SUB FIELD',970,'#31c4ff');
+ fieldDraw('main',activeWar==='overrun'?'🔥  OVERRUN · PT 1–8':'⚔  MAIN FIELD',358,'#f3c16b');
+ fieldDraw('sub',activeWar==='overrun'?'🔥  OVERRUN · PT 9–16':'◆  SUB FIELD',970,'#31c4ff');
  label('HIVE  •  PLANTEL DA GUILDA',70,1619,21,'#8ca8c3','bold');
  label('Gerado para compartilhamento  •  Um jogador por vaga',W-800,1619,19,'#8ca8c3');
  return canvas;
@@ -8343,7 +8408,7 @@ async function hpExportImage(){
   const canvas=await hpDrawExport();
   const blob=await new Promise(resolve=>{if(canvas.toBlob)canvas.toBlob(resolve,'image/png');else fetch(canvas.toDataURL('image/png')).then(r=>r.blob()).then(resolve).catch(()=>resolve(null))});
   if(!blob)throw Error('Falha ao criar imagem PNG.');
-  hpDownload(blob,'HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.png');
+  hpDownload(blob,'HIVE_'+activeWar+'_Plantel_'+new Date().toISOString().slice(0,10)+'.png');
   $('hpStatus').textContent='Imagem PNG gerada.';
  }catch(e){console.error('HIVE PNG export:',e);$('hpStatus').textContent='Erro ao exportar imagem: '+e.message;alert('Não foi possível gerar a imagem: '+e.message)}
 }
@@ -8375,7 +8440,7 @@ async function hpExportPdf(){
  try{
   $('hpStatus').textContent='Gerando PDF do plantel...';
   const canvas=await hpDrawExport();
-  hpDownload(hpPdfFromCanvas(canvas),'HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.pdf');
+  hpDownload(hpPdfFromCanvas(canvas),'HIVE_'+activeWar+'_Plantel_'+new Date().toISOString().slice(0,10)+'.pdf');
   $('hpStatus').textContent='PDF gerado.';
  }catch(e){console.error('HIVE PDF export:',e);$('hpStatus').textContent='Erro ao exportar PDF: '+e.message;alert('Não foi possível gerar o PDF: '+e.message)}
 }
@@ -8413,7 +8478,7 @@ async function init(){
      const jobs=[...new Set(members.map(jobOf))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
      $('hpJobFilters').innerHTML=[{name:'Todas',value:''},...jobs.map(j=>({name:j,value:j}))].map(({name,value})=>`<button type="button" class="hp-job-chip" data-hp-job="${esc(value)}" aria-pressed="false">${esc(name)} <span class="hp-job-count">0</span></button>`).join('');
      $('hpPt').replaceChildren();for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1),String(i)));
-     try{formation=sanitize(JSON.parse(localStorage.getItem(STORAGE)||'null'))}catch{formation=blank()}
+     formation=loadWarFormation();updateWarControls();
      try{await loadAverages();$('hpStatus').textContent='Médias HIVE carregadas.'}catch(err){$('hpStatus').textContent=err.message+' Os jogadores continuam disponíveis.'}
      ready=true;
     }catch(err){$('hpStatus').textContent=err.message;openHub('plantel');return}
@@ -8424,8 +8489,9 @@ async function init(){
   $('hpJobFilters').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-job]');if(!btn)return;jobFilter=btn.dataset.hpJob;render()});
   $('hpSortButtons').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-sort]');if(!btn)return;const key=btn.dataset.hpSort;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=key==='name'?1:-1}render()});
   
+  $('hpWarModes').addEventListener('click',e=>{const b=e.target.closest('[data-hp-war]');if(b)setWarMode(b.dataset.hpWar)});
   $('hpSearch').addEventListener('input',render);
-  $('hpTarget').addEventListener('change',()=>{field=$('hpTarget').value;render()});
+  $('hpTarget').addEventListener('change',()=>{field=$('hpTarget').value;const n=$('hpPt').selectedIndex;updateWarControls();$('hpPt').selectedIndex=Math.min(Math.max(n,0),7);render()});
   $('hpRosterList').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)add(b.dataset.add)});
   $('hpPts').addEventListener('click',e=>{
    const remove=e.target.closest('[data-remove]');if(remove){const [f,p,i]=remove.dataset.remove.split(':');formation[f][+p][+i]=null;selected=null;save();render();return}
@@ -8443,9 +8509,9 @@ async function init(){
   $('hpImageExport').addEventListener('click',hpExportImage);
   $('hpPdfExport').addEventListener('click',hpExportPdf);
   $('hpTopClear').addEventListener('click',()=>{if(confirm('Limpar todos os jogadores de Main e Sub Field?')){formation=blank();save();render()}});
-  $('hpExport').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:2,exportedAt:new Date().toISOString(),formation},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+  $('hpExport').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:3,war:activeWar,warName:warName(),exportedAt:new Date().toISOString(),formation},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HIVE_'+activeWar+'_Plantel_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
   $('hpImport').addEventListener('click',()=>$('hpImportFile').click());
-  $('hpImportFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!valid(data.formation))throw Error('Arquivo inválido');formation=sanitize(data.formation);save();render()}catch(err){$('hpStatus').textContent='Erro: '+err.message}e.target.value=''});
+  $('hpImportFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!valid(data.formation))throw Error('Arquivo inválido');if(data.war&&data.war!==activeWar)throw Error('Backup de '+data.war+'. Selecione essa modalidade antes de importar.');formation=sanitize(data.formation);save();render()}catch(err){$('hpStatus').textContent='Erro: '+err.message}e.target.value=''});
  }catch(err){console.error('Falha ao configurar ações do plantel HIVE:',err);const status=$('hpStatus');if(status)status.textContent='Erro ao preparar controles: '+err.message}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
