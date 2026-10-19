@@ -2433,6 +2433,37 @@ html{scroll-behavior:smooth}
 #hivePlantelPanel .hp-layout{grid-template-columns:minmax(335px,395px) minmax(0,1fr)}
 @media(max-width:950px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr}}
 </style>
+<style id="hp-roster-reference-v6">
+/* Compact roster inspired by the supplied Data Room reference. */
+#hivePlantelPanel .hp-layout{grid-template-columns:minmax(490px,560px) minmax(0,1fr);gap:12px}
+#hivePlantelPanel .hp-roster{padding:11px}
+#hivePlantelPanel .hp-roster h3{font-size:14px;margin-bottom:8px}
+#hivePlantelPanel .hp-member-toolbar input{font-size:12px;padding:8px}
+#hivePlantelPanel .hp-job-filters{max-height:unset;overflow:visible;gap:4px;padding:0;margin-bottom:8px}
+#hivePlantelPanel .hp-job-chip{font-size:10px;padding:4px 6px;border-radius:5px}
+#hivePlantelPanel .hp-sort-header{margin:6px 0 0;padding:0;border:0}
+#hivePlantelPanel .hp-table-head{display:grid;grid-template-columns:minmax(128px,1.7fr) repeat(4,minmax(58px,1fr)) 26px;gap:0;border-top:1px solid #334158;border-bottom:1px solid #334158;padding:4px 0}
+#hivePlantelPanel .hp-table-head button{background:transparent;border:0;padding:5px 2px;border-radius:0;font-size:10px;color:#a9b8ca;text-align:right;white-space:nowrap}
+#hivePlantelPanel .hp-table-head button:first-child{text-align:left}
+#hivePlantelPanel .hp-table-head button.active{color:#f0c76b;background:transparent}
+#hivePlantelPanel .hp-table-head .hp-arrow{font-size:10px}
+#hivePlantelPanel .hp-more-sorts{display:flex;align-items:center;justify-content:flex-end;gap:4px;font-size:10px;color:#92a3b9;padding:3px 0}
+#hivePlantelPanel .hp-more-sorts button{font-size:10px;padding:2px 6px}
+#hivePlantelPanel .hp-more-sorts button.active{color:#f5c971;border-color:#dbac53}
+#hivePlantelPanel .hp-roster-list{overflow-y:auto;overflow-x:hidden}
+#hivePlantelPanel .hp-member.hp-member-compact{display:grid;grid-template-columns:minmax(128px,1.7fr) repeat(4,minmax(58px,1fr)) 26px;align-items:center;gap:0;background:transparent;border:0;border-bottom:1px solid #2a3649;border-radius:0;margin:0;padding:9px 0;cursor:grab}
+#hivePlantelPanel .hp-member.hp-member-compact:hover{background:#1c2a3c}
+#hivePlantelPanel .hp-player-id{display:flex;align-items:center;gap:6px;min-width:0;padding-right:4px}
+#hivePlantelPanel .hp-player-label{min-width:0}
+#hivePlantelPanel .hp-player-label b{display:block;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hivePlantelPanel .hp-player-label small{display:block;font-size:9px;color:#91a8c0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+#hivePlantelPanel .hp-class-dot{width:6px;height:6px;border-radius:50%;background:#25cba5;flex-shrink:0}
+#hivePlantelPanel .hp-cell{font-size:10px;color:#dce7f5;text-align:right;white-space:nowrap;padding-right:3px;font-variant-numeric:tabular-nums}
+#hivePlantelPanel .hp-member .hp-compact-add{border:1px solid #42546b;padding:3px;font-size:12px;line-height:1;width:22px;height:23px}
+#hivePlantelPanel .hp-roster .hp-inputs{margin-top:9px}
+@media(max-width:1100px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr}#hivePlantelPanel .hp-roster{position:static;max-height:none}#hivePlantelPanel .hp-roster-list{max-height:380px}}
+@media(max-width:580px){#hivePlantelPanel .hp-table-head,#hivePlantelPanel .hp-member.hp-member-compact{grid-template-columns:minmax(100px,1.6fr) repeat(4,minmax(43px,1fr)) 23px}#hivePlantelPanel .hp-cell{font-size:9px}#hivePlantelPanel .hp-table-head button{font-size:9px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -7620,17 +7651,14 @@ window.addEventListener('hive:open-war',init);
       <div id="hpJobFilters" class="hp-job-filters" aria-label="Filtrar por classe"></div>
     </div>
     <div class="hp-sort-header" aria-label="Ordenação de jogadores">
-      <span>Ordenar por</span>
-      <div id="hpSortButtons" class="hp-sort-buttons">
-       <button type="button" data-hp-sort="name">Nome <span class="hp-arrow">↑</span></button>
+      <div id="hpSortButtons" class="hp-sort-buttons hp-table-head">
+       <button type="button" data-hp-sort="name">Jogador <span class="hp-arrow">↑</span></button>
        <button type="button" data-hp-sort="power">Power <span class="hp-arrow">↕</span></button>
        <button type="button" data-hp-sort="damage">Dano <span class="hp-arrow">↕</span></button>
-       <button type="button" data-hp-sort="taken">Recebido <span class="hp-arrow">↕</span></button>
        <button type="button" data-hp-sort="heal">Cura <span class="hp-arrow">↕</span></button>
-       <button type="button" data-hp-sort="kills">K <span class="hp-arrow">↕</span></button>
-       <button type="button" data-hp-sort="assists">A <span class="hp-arrow">↕</span></button>
-       <button type="button" data-hp-sort="deaths">D <span class="hp-arrow">↕</span></button>
+       <button type="button" data-hp-sort="taken">Recebido <span class="hp-arrow">↕</span></button>
       </div>
+      <div class="hp-more-sorts">Mais métricas: <button type="button" data-hp-extra="kills">K</button><button type="button" data-hp-extra="assists">A</button><button type="button" data-hp-extra="deaths">D</button></div>
     </div>
     <div class="hp-inputs">
      <select id="hpTarget"><option value="main">Main Field</option><option value="sub">Sub Field</option></select>
@@ -7702,7 +7730,20 @@ function render(){
   btn.setAttribute('aria-pressed',String(active));
   btn.querySelector('.hp-arrow').textContent=active?(sortDir===1?'↑':'↓'):'↕';
  });
- $('hpRosterList').innerHTML=free.map(m=>`<div class="hp-member" draggable="true" data-member="${esc(idOf(m))}"><div><b>${esc(nameOf(m))}</b><small>${esc(jobOf(m))} · Power ${fmt(num(stat(m,'Power Atual','Power')))}</small><div class="hp-stat">${meanText(idOf(m))}</div></div><button type="button" data-add="${esc(idOf(m))}" title="Alocar na PT selecionada">＋</button></div>`).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
+ const compact=v=>{const x=num(v);if(!x)return '—';if(Math.abs(x)>=1e6)return (x/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi';if(Math.abs(x)>=1e3)return (x/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+' mil';return x.toLocaleString('pt-BR',{maximumFractionDigits:0})};
+ $('hpSortButtons').parentElement.querySelectorAll('[data-hp-extra]').forEach(btn=>{btn.classList.toggle('active',btn.dataset.hpExtra===sortKey);btn.textContent=btn.dataset.hpExtra.toUpperCase()+(btn.dataset.hpExtra===sortKey?(sortDir===1?' ↑':' ↓'):' ↕')});
+ $('hpRosterList').innerHTML=free.map(m=>{
+  const avg=averages.get(idOf(m));
+  const power=num(stat(m,'Power Atual','Power'));
+  return `<div class="hp-member hp-member-compact" draggable="true" data-member="${esc(idOf(m))}" title="Arraste para uma vaga ou clique em +">
+    <div class="hp-player-id"><span class="hp-class-dot"></span><div class="hp-player-label"><b>${esc(nameOf(m))}</b><small>${esc(jobOf(m))}${avg?' · '+esc(avg.games||0)+' guerras':' · Sem histórico'}</small></div></div>
+    <span class="hp-cell" title="Power atual">${compact(power)}</span>
+    <span class="hp-cell" title="Dano médio">${compact(avg?.damage)}</span>
+    <span class="hp-cell" title="Cura média">${compact(avg?.heal)}</span>
+    <span class="hp-cell" title="Dano recebido médio">${compact(avg?.taken)}</span>
+    <button type="button" class="hp-compact-add" data-add="${esc(idOf(m))}" title="Alocar na PT selecionada">＋</button>
+   </div>`;
+ }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
  $('hpShowMain').classList.toggle('active',field==='main');$('hpShowSub').classList.toggle('active',field==='sub');
  $('hpPts').innerHTML=formation[field].map((pt,p)=>`<div class="hp-pt"><h4><span>PT ${p+1}</span><small>${pt.filter(Boolean).length}/5</small></h4>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${field}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${field}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('');
 }
@@ -7792,6 +7833,7 @@ async function init(){
   $('hpClose').addEventListener('click',()=>openHub('war'));
   $('hpJobFilters').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-job]');if(!btn)return;jobFilter=btn.dataset.hpJob;render()});
   $('hpSortButtons').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-sort]');if(!btn)return;const key=btn.dataset.hpSort;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=key==='name'?1:-1}render()});
+  $('hpSortButtons').parentElement.querySelector('.hp-more-sorts').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-extra]');if(!btn)return;const key=btn.dataset.hpExtra;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=-1}render()});
   $('hpSearch').addEventListener('input',render);
   $('hpShowMain').addEventListener('click',()=>{field='main';$('hpTarget').value='main';render()});
   $('hpShowSub').addEventListener('click',()=>{field='sub';$('hpTarget').value='sub';render()});
