@@ -8136,23 +8136,16 @@ async function init(){
   for(const el of [$('hpRosterList'),$('hpPts')])el.addEventListener('dragend',()=>{dragged=null;document.querySelectorAll('.hp-dragging,.hp-over').forEach(x=>x.classList.remove('hp-dragging','hp-over'))});
   $('hpPts').addEventListener('dragover',e=>{const slot=e.target.closest('[data-slot]');if(slot&&dragged){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('.hp-over').forEach(x=>x.classList.remove('hp-over'));slot.classList.add('hp-over')}});
   $('hpPts').addEventListener('drop',e=>{const slot=e.target.closest('[data-slot]');if(slot&&dragged){e.preventDefault();move(dragged.id,slot.dataset.slot,dragged.origin);dragged=null}});
-  // Solte um jogador na aba do outro campo: ele irá para a primeira vaga disponível.
-  for(const [target,button] of [['main',$('hpShowMain')],['sub',$('hpShowSub')]]){
-   button.addEventListener('dragover',e=>{if(dragged){e.preventDefault();e.dataTransfer.dropEffect='move'}});
-   button.addEventListener('drop',e=>{if(!dragged)return;e.preventDefault();const data=dragged;
-    const pt=formation[target].findIndex(group=>group.includes(null));if(pt<0){$('hpStatus').textContent='O campo de destino está completo.';return}
-    const slot=formation[target][pt].indexOf(null);move(data.id,`${target}:${pt}:${slot}`,data.origin);
-    field=target;$('hpTarget').value=target;dragged=null;render();
-   });
-  }
+  // Main e Sub Field são exibidos simultaneamente; as antigas abas hpShowMain/hpShowSub
+  // não existem mais. O drag-and-drop acontece diretamente nas vagas de hpPts.
   $('hpClear').addEventListener('click',()=>{if(confirm('Limpar todos os jogadores de Main e Sub Field?')){formation=blank();save();render()}});
   $('hpImageExport').addEventListener('click',hpExportImage);
   $('hpPdfExport').addEventListener('click',hpExportPdf);
-  $('hpTopClear').addEventListener('click',()=>$('hpClear').click());
+  $('hpTopClear').addEventListener('click',()=>{if(confirm('Limpar todos os jogadores de Main e Sub Field?')){formation=blank();save();render()}});
   $('hpExport').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:2,exportedAt:new Date().toISOString(),formation},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
   $('hpImport').addEventListener('click',()=>$('hpImportFile').click());
   $('hpImportFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!valid(data.formation))throw Error('Arquivo inválido');formation=sanitize(data.formation);save();render()}catch(err){$('hpStatus').textContent='Erro: '+err.message}e.target.value=''});
- }catch(err){console.warn('Hub Staff indisponível',err)}
+ }catch(err){console.error('Falha ao configurar ações do plantel HIVE:',err);const status=$('hpStatus');if(status)status.textContent='Erro ao preparar controles: '+err.message}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
