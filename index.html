@@ -2349,12 +2349,56 @@ html{scroll-behavior:smooth}
 <style id="hive-novas-artes-classe-final">
 .rooClassScreen .classHalo img#mClassImage{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;filter:none!important;transform:none!important;image-rendering:auto!important;opacity:1!important}
 </style>
+
+<style id="hive-plantel-styles">
+#hivePlantelPanel[hidden]{display:none!important}
+#hivePlantelPanel{position:fixed;inset:0;z-index:999990;background:#080d16;color:#edf3fb;overflow:auto;font-family:inherit}
+#hivePlantelPanel *{box-sizing:border-box}
+#hivePlantelPanel .hp-top{position:sticky;top:0;z-index:3;background:#0c1422;border-bottom:1px solid #344257;padding:13px clamp(12px,3vw,36px);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#hivePlantelPanel .hp-top h2{margin:0;color:#f3cb73;font-size:23px}
+#hivePlantelPanel .hp-top p{margin:2px 0 0;color:#a5b4c7;font-size:12px}
+#hivePlantelPanel button,#hivePlantelPanel select,#hivePlantelPanel input{font:inherit}
+#hivePlantelPanel button{cursor:pointer;border:1px solid #52627b;border-radius:9px;background:#192638;color:#f0f4ff;padding:8px 12px}
+#hivePlantelPanel button:hover{border-color:#e4b756;background:#28364b}
+#hivePlantelPanel .hp-gold{background:#795419;border-color:#c69942;color:#fff0cf}
+#hivePlantelPanel .hp-main{max-width:1650px;margin:auto;padding:20px clamp(12px,2vw,28px)}
+#hivePlantelPanel .hp-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+#hivePlantelPanel .hp-kpi{border:1px solid #344157;background:#111c2b;border-radius:12px;padding:14px}
+#hivePlantelPanel .hp-kpi b{display:block;font-size:26px;color:#f3c96f}
+#hivePlantelPanel .hp-kpi small{color:#aebed0}
+#hivePlantelPanel .hp-layout{display:grid;grid-template-columns:minmax(280px,370px) minmax(0,1fr);gap:16px;align-items:start}
+#hivePlantelPanel .hp-panel{background:#111a28;border:1px solid #344257;border-radius:14px;padding:14px}
+#hivePlantelPanel .hp-roster{position:sticky;top:93px;max-height:calc(100vh - 116px);display:flex;flex-direction:column}
+#hivePlantelPanel .hp-roster-list{overflow:auto;min-height:120px}
+#hivePlantelPanel h3{color:#f4cb73;margin:0 0 12px;font-size:17px}
+#hivePlantelPanel .hp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+#hivePlantelPanel select,#hivePlantelPanel input{min-width:0;width:100%;background:#090f1a;border:1px solid #44546d;color:#eef4ff;border-radius:8px;padding:9px}
+#hivePlantelPanel .hp-member{border:1px solid #354259;border-radius:10px;padding:10px;margin:7px 0;background:#1a2637;display:flex;align-items:center;justify-content:space-between;gap:8px}
+#hivePlantelPanel .hp-member b{font-size:13px}
+#hivePlantelPanel .hp-member small{display:block;color:#aab7c8;font-size:11px;margin-top:4px;line-height:1.5}
+#hivePlantelPanel .hp-member button{font-weight:700;color:#f4cb73}
+#hivePlantelPanel .hp-fieldbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+#hivePlantelPanel .hp-fieldbar .hp-switch{display:flex;gap:8px}
+#hivePlantelPanel .hp-switch button.active{background:#85611f;border-color:#f0c266;color:#fff}
+#hivePlantelPanel .hp-pts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#hivePlantelPanel .hp-pt{border:1px solid #34465c;border-radius:12px;background:#172234;padding:12px;min-width:0}
+#hivePlantelPanel .hp-pt h4{display:flex;justify-content:space-between;margin:0 0 9px;color:#f2cb79}
+#hivePlantelPanel .hp-slot{display:flex;justify-content:space-between;align-items:center;gap:6px;min-height:39px;border-top:1px solid #2b3b50;padding:5px 0}
+#hivePlantelPanel .hp-slot .hp-slot-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+#hivePlantelPanel .hp-slot small{color:#9caec5}
+#hivePlantelPanel .hp-slot button{font-size:11px;padding:5px 7px}
+#hivePlantelPanel .hp-note{color:#9aabc1;font-size:12px;margin:10px 0}
+#hivePlantelPanel .hp-actions{display:flex;gap:8px;flex-wrap:wrap}
+#hivePlantelPanel .hp-status{color:#b9d9b8;font-size:12px;min-height:18px}
+@media(max-width:950px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr}#hivePlantelPanel .hp-roster{position:static;max-height:none}#hivePlantelPanel .hp-roster-list{max-height:360px}}
+@media(max-width:650px){#hivePlantelPanel .hp-summary{grid-template-columns:repeat(2,1fr)}#hivePlantelPanel .hp-pts{grid-template-columns:1fr}#hivePlantelPanel .hp-inputs{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
   <nav class="nav">
-    <a class="active" href="#inicio">🏠 Início</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#centralGuerra" id="warNav" hidden>⚔️ Central de Guerra</a><a href="#sobre">ⓘ Sobre</a>
+    <a class="active" href="#inicio">🏠 Início</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#centralGuerra" id="warNav" hidden>⚔️ Central de Guerra</a><a href="#plantel" id="hpNav" hidden>🛡️ Montar Plantel</a><a href="#sobre">ⓘ Sobre</a>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
 
@@ -7500,6 +7544,151 @@ async function init(){
    });
    await load();
  }catch(e){console.warn('Central de Guerra indisponível',e)}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<section id="hivePlantelPanel" hidden aria-label="Montagem de plantel HIVE">
+ <header class="hp-top">
+  <div><h2>⚔️ HIVE • MONTAGEM DE PLANTEL</h2><p>Exclusivo Staff · Membros atuais · Sem duplicidade entre Main e Sub Field</p></div>
+  <div class="hp-actions">
+   <button type="button" id="hpExport">⬇ Exportar formação</button>
+   <button type="button" id="hpImport">⬆ Importar formação</button>
+   <button type="button" id="hpClose">✕ Voltar ao dashboard</button>
+   <input type="file" id="hpImportFile" accept=".json,application/json" hidden>
+  </div>
+ </header>
+ <main class="hp-main">
+  <div class="hp-summary">
+   <div class="hp-kpi"><b id="hpMembersCount">—</b><small>Membros cadastrados</small></div>
+   <div class="hp-kpi"><b id="hpFreeCount">—</b><small>Disponíveis</small></div>
+   <div class="hp-kpi"><b id="hpMainCount">0/40</b><small>Main Field</small></div>
+   <div class="hp-kpi"><b id="hpSubCount">0/40</b><small>Sub Field</small></div>
+  </div>
+  <div class="hp-layout">
+   <aside class="hp-panel hp-roster">
+    <h3>👥 Jogadores disponíveis</h3>
+    <div class="hp-inputs">
+     <select id="hpJob"><option value="">Todas as classes</option></select>
+     <input id="hpSearch" placeholder="Buscar nick..." autocomplete="off">
+    </div>
+    <div class="hp-inputs">
+     <select id="hpTarget"><option value="main">Main Field</option><option value="sub">Sub Field</option></select>
+     <select id="hpPt"></select>
+    </div>
+    <p class="hp-note">Escolha o campo e a PT. Clique em + para alocar o jogador na primeira vaga livre. O jogador deixa de aparecer aqui após ser alocado.</p>
+    <div id="hpRosterList" class="hp-roster-list"></div>
+   </aside>
+   <section class="hp-panel">
+    <div class="hp-fieldbar">
+     <h3 style="margin:0">🛡️ Formação da guerra</h3>
+     <div class="hp-switch">
+      <button type="button" id="hpShowMain" class="active">Main Field</button>
+      <button type="button" id="hpShowSub">Sub Field</button>
+     </div>
+    </div>
+    <div id="hpPts" class="hp-pts"></div>
+    <p class="hp-note">O salvamento automático é local neste navegador. Use Exportar/Importar para transferir ou guardar a formação. Não modifica a planilha.</p>
+    <div class="hp-actions"><button type="button" id="hpClear">Limpar formação</button><span id="hpStatus" class="hp-status" role="status"></span></div>
+   </section>
+  </div>
+ </main>
+</section>
+
+<script id="hive-plantel-script">
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+const normalize=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+const n=v=>{if(typeof v==='number')return v;const s=String(v??'').trim().replace(/\s/g,'');return Number(s.replace(/[.,](?=\d{3}(?:[.,]|$))/g,'').replace(',','.'))||0};
+const format=v=>new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(n(v));
+const STORAGE='hive_plantel_staff_v1';
+const blank=()=>({main:Array.from({length:8},()=>Array(5).fill(null)),sub:Array.from({length:8},()=>Array(5).fill(null))});
+let formation=blank(),members=[],field='main',ready=false;
+const used=()=>new Set([...formation.main.flat(),...formation.sub.flat()].filter(Boolean));
+const idOf=m=>normalize(m.Personagem||m.personagem||m.Nick||'');
+const nameOf=m=>String(m.Personagem||m.personagem||m.Nick||'').trim();
+const jobOf=m=>String(m.Job||m.Classe||'—');
+const stat=(m,k)=>m[k]??m[k.toLowerCase()]??'';
+const valid=(f)=>f&&['main','sub'].every(k=>Array.isArray(f[k])&&f[k].length===8&&f[k].every(pt=>Array.isArray(pt)&&pt.length===5));
+function sanitize(f){
+ const next=blank(),seen=new Set(),allowed=new Set(members.map(idOf));
+ if(!valid(f))return next;
+ for(const fld of ['main','sub'])for(let p=0;p<8;p++)for(let s=0;s<5;s++){
+  const id=normalize(f[fld][p][s]);if(id&&allowed.has(id)&&!seen.has(id)){next[fld][p][s]=id;seen.add(id)}
+ }
+ return next;
+}
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify(formation));$('hpStatus').textContent='Formação salva neste navegador.'}catch{$('hpStatus').textContent='Não foi possível salvar localmente; exporte o arquivo.'}}
+function render(){
+ const selected=used(),byId=new Map(members.map(m=>[idOf(m),m]));
+ $('hpMembersCount').textContent=members.length;
+ $('hpFreeCount').textContent=members.length-selected.size;
+ $('hpMainCount').textContent=formation.main.flat().filter(Boolean).length+'/40';
+ $('hpSubCount').textContent=formation.sub.flat().filter(Boolean).length+'/40';
+ const filter=normalize($('hpSearch').value),job=$('hpJob').value;
+ const free=members.filter(m=>!selected.has(idOf(m))&&(!job||jobOf(m)===job)&&(!filter||normalize(nameOf(m)).includes(filter))).sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'pt-BR'));
+ $('hpRosterList').innerHTML=free.map(m=>`<div class="hp-member"><div><b>${esc(nameOf(m))}</b><small>${esc(jobOf(m))} · Power ${format(stat(m,'Power Atual')||stat(m,'Power'))}<br>HP ${format(stat(m,'HP'))} · PDEF ${format(stat(m,'PDEF'))} · MDEF ${format(stat(m,'MDEF'))}</small></div><button type="button" data-add="${esc(idOf(m))}" aria-label="Adicionar ${esc(nameOf(m))}">＋</button></div>`).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
+ $('hpShowMain').classList.toggle('active',field==='main');$('hpShowSub').classList.toggle('active',field==='sub');
+ $('hpPts').innerHTML=formation[field].map((pt,i)=>`<div class="hp-pt"><h4><span>PT ${i+1}</span><small>${pt.filter(Boolean).length}/5</small></h4>${pt.map((id,j)=>`<div class="hp-slot"><span class="hp-slot-name">${id?esc(nameOf(byId.get(id)||{Personagem:id})):`<small>Vaga ${j+1} disponível</small>`}</span>${id?`<button type="button" data-remove="${field}:${i}:${j}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('');
+}
+function add(id){
+ const fld=$('hpTarget').value,p=Number($('hpPt').value),pt=formation[fld]?.[p];
+ if(!pt||used().has(id))return;
+ const slot=pt.indexOf(null);if(slot<0){$('hpStatus').textContent='Esta PT está completa.';return}
+ pt[slot]=id;save();render();
+}
+function open(){ $('hivePlantelPanel').hidden=false;document.body.style.overflow='hidden';render(); }
+function close(){ $('hivePlantelPanel').hidden=true;document.body.style.overflow=''; }
+async function init(){
+ const nav=$('hpNav'),panel=$('hivePlantelPanel');if(!nav||!panel)return;
+ try{
+  const staff=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});
+  if(!staff.ok)return;
+  nav.hidden=false;
+  nav.addEventListener('click',async e=>{
+   e.preventDefault();
+   if(!ready){
+    $('hpStatus').textContent='Carregando membros...';
+    try{
+     const [auth,res]=await Promise.all([fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'}),fetch('/api/data',{credentials:'same-origin',cache:'no-store'})]);
+     if(!auth.ok)throw Error('Acesso Staff não autorizado.');
+     if(!res.ok)throw Error('Falha ao consultar a aba MEMBROS.');
+     const payload=await res.json();
+     if(!payload.ok||!Array.isArray(payload.members))throw Error('Dados de membros indisponíveis.');
+     const map=new Map();for(const m of payload.members){const id=idOf(m);if(id&&!map.has(id))map.set(id,m)}
+     members=[...map.values()];
+     const jobs=[...new Set(members.map(jobOf))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+     $('hpJob').innerHTML='<option value="">Todas as classes</option>'+jobs.map(j=>`<option value="${esc(j)}">${esc(j)}</option>`).join('');
+     for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1),String(i)));
+     try{formation=sanitize(JSON.parse(localStorage.getItem(STORAGE)||'null'))}catch{formation=blank()}
+     ready=true;$('hpStatus').textContent='';
+    }catch(err){$('hpStatus').textContent=err.message;open();return}
+   }
+   open();
+  });
+  $('hpClose').addEventListener('click',close);
+  $('hpJob').addEventListener('change',render);$('hpSearch').addEventListener('input',render);
+  $('hpShowMain').addEventListener('click',()=>{field='main';$('hpTarget').value='main';render()});
+  $('hpShowSub').addEventListener('click',()=>{field='sub';$('hpTarget').value='sub';render()});
+  $('hpTarget').addEventListener('change',()=>{field=$('hpTarget').value;render()});
+  $('hpRosterList').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)add(b.dataset.add)});
+  $('hpPts').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;const [f,p,s]=b.dataset.remove.split(':');formation[f][+p][+s]=null;save();render()});
+  $('hpClear').addEventListener('click',()=>{if(confirm('Limpar todos os jogadores de Main e Sub Field?')){formation=blank();save();render()}});
+  $('hpExport').addEventListener('click',()=>{
+   const data=JSON.stringify({version:1,exportedAt:new Date().toISOString(),formation},null,2);
+   const blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download='HIVE_Plantel_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+  $('hpImport').addEventListener('click',()=>$('hpImportFile').click());
+  $('hpImportFile').addEventListener('change',async e=>{
+   const file=e.target.files?.[0];if(!file)return;
+   try{const data=JSON.parse(await file.text());if(!valid(data.formation))throw Error('Arquivo de formação inválido.');formation=sanitize(data.formation);save();render()}catch(err){$('hpStatus').textContent='Erro na importação: '+err.message}
+   e.target.value='';
+  });
+ }catch(err){console.warn('Plantel Staff indisponível',err)}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
