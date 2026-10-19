@@ -2402,7 +2402,7 @@ html{scroll-behavior:smooth}
 #hpHub button{cursor:pointer;background:#18273a;color:#f2f3f7;border:1px solid #56647a;padding:9px 13px;border-radius:9px;font:inherit}
 #hpHub button.active{background:#79551e;border-color:#e3b552;color:#fff1d2}
 #hpHub .hp-hub-content{max-width:1650px;margin:20px auto;padding:0 18px 36px}
-#hpHub #centralGuerra{display:block;max-width:none!important;width:100%;margin:0!important}
+#hpHub #centralGuerra:not([hidden]){display:block;max-width:none!important;width:100%;margin:0!important}
 #hivePlantelPanel .hp-top h2{font-size:20px}
 #hivePlantelPanel .hp-member{cursor:grab;touch-action:pan-y}
 #hivePlantelPanel .hp-member:active{cursor:grabbing}
@@ -2417,12 +2417,12 @@ html{scroll-behavior:smooth}
 #hivePlantelPanel .hp-member.hp-dragging,#hivePlantelPanel .hp-slot.hp-dragging{opacity:.35}
 #hivePlantelPanel .hp-hint{font-size:11px;color:#e8ca86}
 @media(max-width:700px){#hpHub .hp-hub-head{position:relative}#hpHub .hp-hub-content{padding:0 8px}#hivePlantelPanel .hp-stat{font-size:10px}}
-</style><style>#centralGuerra[hidden]{display:none!important}</style></head>
+</style><style>#centralGuerra[hidden],#hpHub[hidden],#hivePlantelPanel[hidden]{display:none!important}</style></head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
   <nav class="nav">
-    <a class="active" href="#inicio">🏠 Início</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#centralGuerra" id="warNav" hidden>⚔️ Central de Guerra</a><a href="#sobre">ⓘ Sobre</a>
+    <a class="active" href="#inicio">🏠 Início</a><button type="button" id="hiveRawOpen" class="hive-raw-nav">🛡️ Calculadora DEF/MDEF</button><a href="#ranking">🏆 Ranking de Power</a><a href="#rankingClasse">🏅 Ranking por Classe</a><a href="#centralMembros">👥 Central de Membros</a><a href="#updateControl">📅 Central de Atualizações</a><a href="#centralGuerra" id="warNav">⚔️ Central de Guerra</a><a href="#sobre">ⓘ Sobre</a>
     <div class="search"><input id="search" placeholder="Buscar personagem..."/></div>
   </nav>
 
@@ -7548,11 +7548,13 @@ async function load(){
    populateWars();updateGuildFilter();populate('warJob',state.players.map(job),'Todas as classes');render();
  }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
 }
+let warInitialized=false;
 async function init(){
+ if(warInitialized)return;
+ warInitialized=true;
  try{
-   const r=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});
-   if(!r.ok)return;
-   $w('warNav').hidden=false;$w('centralGuerra').hidden=false;
+   // Called ONLY after a user clicks Central de Guerra and passes Staff auth.
+   $w('centralGuerra').hidden=false;
    ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter')updateGuildFilter();render();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
@@ -7569,7 +7571,7 @@ async function init(){
    await load();
  }catch(e){console.warn('Central de Guerra indisponível',e)}
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+window.addEventListener('hive:open-war',init);
 })();
 </script>
 
@@ -7690,10 +7692,25 @@ async function loadAverages(){
 async function init(){
  const nav=$('warNav'),war=$('centralGuerra');if(!nav||!war)return;
  try{
-  const auth=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});if(!auth.ok)return;
-  // Central de Guerra original permanece intacta: só muda de lugar para o hub.
-  $('hpHubWar').appendChild(war);warMoved=true;
-  nav.hidden=false;nav.addEventListener('click',e=>{e.preventDefault();openHub('war')});
+  // No auth request and no war API request during the dashboard load.
+  // Move the hidden section out of the dashboard before making the menu clickable.
+  $('hpHubWar').appendChild(war);warMoved=true;war.hidden=true;
+  nav.hidden=false;
+  let opening=false;
+  nav.addEventListener('click',async e=>{
+   e.preventDefault();
+   if(opening)return;
+   opening=true;
+   const previous=nav.textContent;
+   nav.textContent='⏳ Validando acesso Staff...';
+   try{
+    const auth=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});
+    if(!auth.ok){alert(auth.status===401||auth.status===403?'A Central de Guerra é exclusiva da Staff.':'Não foi possível validar o acesso Staff.');return}
+    openHub('war');
+    window.dispatchEvent(new Event('hive:open-war'));
+   }catch(err){alert('Erro ao validar acesso Staff. Tente novamente.')}
+   finally{nav.textContent=previous;opening=false}
+  });
   $('hpHubClose').addEventListener('click',close);
   $('hpTabWar').addEventListener('click',()=>openHub('war'));
   $('hpTabPlantel').addEventListener('click',async()=>{
