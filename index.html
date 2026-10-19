@@ -2464,6 +2464,38 @@ html{scroll-behavior:smooth}
 @media(max-width:1100px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr}#hivePlantelPanel .hp-roster{position:static;max-height:none}#hivePlantelPanel .hp-roster-list{max-height:380px}}
 @media(max-width:580px){#hivePlantelPanel .hp-table-head,#hivePlantelPanel .hp-member.hp-member-compact{grid-template-columns:minmax(100px,1.6fr) repeat(4,minmax(43px,1fr)) 23px}#hivePlantelPanel .hp-cell{font-size:9px}#hivePlantelPanel .hp-table-head button{font-size:9px}}
 </style>
+<style id="hp-layout-v7">
+/* The sortable header belongs directly to the player list. */
+#hivePlantelPanel .hp-roster .hp-sort-header{margin-top:8px;margin-bottom:0;flex-shrink:0}
+#hivePlantelPanel .hp-roster .hp-table-head{padding:5px 0;background:#142033}
+#hivePlantelPanel .hp-roster .hp-roster-list{margin-top:0}
+#hivePlantelPanel .hp-roster .hp-more-sorts{padding:5px 0 6px}
+#hivePlantelPanel .hp-layout{grid-template-columns:minmax(410px,460px) minmax(0,1fr);gap:12px}
+#hivePlantelPanel .hp-pts{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+#hivePlantelPanel .hp-pt{padding:9px;min-width:0;border-radius:9px}
+#hivePlantelPanel .hp-pt h4{font-size:12px;margin-bottom:4px}
+#hivePlantelPanel .hp-slot{min-height:30px;padding:3px 0}
+#hivePlantelPanel .hp-slot .hp-slot-name{font-size:10px}
+#hivePlantelPanel .hp-slot small{font-size:9px}
+#hivePlantelPanel .hp-slot button{padding:3px 5px;font-size:10px}
+#hivePlantelPanel .hp-panel{padding:11px}
+#hivePlantelPanel .hp-main{max-width:1900px;padding:14px clamp(10px,1.2vw,22px)}
+#hivePlantelPanel .hp-summary{gap:9px;margin-bottom:12px}
+#hivePlantelPanel .hp-kpi{padding:10px 12px}
+#hivePlantelPanel .hp-kpi b{font-size:22px}
+@media(min-width:1101px) and (max-width:1550px){
+ #hivePlantelPanel .hp-layout{grid-template-columns:minmax(350px,390px) minmax(0,1fr)}
+ #hivePlantelPanel .hp-pts{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #hivePlantelPanel .hp-pt{padding:7px}
+}
+@media(max-width:1100px){
+ #hivePlantelPanel .hp-layout{grid-template-columns:1fr}
+ #hivePlantelPanel .hp-pts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ #hivePlantelPanel .hp-pts{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -7650,6 +7682,11 @@ window.addEventListener('hive:open-war',init);
       <input id="hpSearch" placeholder="Buscar personagem..." autocomplete="off" aria-label="Buscar personagem">
       <div id="hpJobFilters" class="hp-job-filters" aria-label="Filtrar por classe"></div>
     </div>
+    <div class="hp-inputs">
+     <select id="hpTarget"><option value="main">Main Field</option><option value="sub">Sub Field</option></select>
+     <select id="hpPt"></select>
+    </div>
+    <p class="hp-note">Arraste um jogador para uma vaga ou use + para alocar na PT selecionada.</p>
     <div class="hp-sort-header" aria-label="Ordenação de jogadores">
       <div id="hpSortButtons" class="hp-sort-buttons hp-table-head">
        <button type="button" data-hp-sort="name">Jogador <span class="hp-arrow">↑</span></button>
@@ -7660,11 +7697,6 @@ window.addEventListener('hive:open-war',init);
       </div>
       <div class="hp-more-sorts">Mais métricas: <button type="button" data-hp-extra="kills">K</button><button type="button" data-hp-extra="assists">A</button><button type="button" data-hp-extra="deaths">D</button></div>
     </div>
-    <div class="hp-inputs">
-     <select id="hpTarget"><option value="main">Main Field</option><option value="sub">Sub Field</option></select>
-     <select id="hpPt"></select>
-    </div>
-    <p class="hp-note">Escolha o campo e a PT. Clique em + para alocar o jogador na primeira vaga livre. O jogador deixa de aparecer aqui após ser alocado.</p>
     <div id="hpRosterList" class="hp-roster-list"></div>
    </aside>
    <section class="hp-panel">
