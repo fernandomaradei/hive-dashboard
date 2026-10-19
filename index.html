@@ -8093,6 +8093,25 @@ window.addEventListener('hive:open-war',init);
  <div class="hp-hub-head"><div class="hive-war-hub-brand"><span class="hive-war-crest" aria-hidden="true">⚜<small>HIVE</small></span><div><strong><span class="hive-war-brand">HIVE</span><span class="hive-war-divider"> │ </span> CENTRAL DE GUERRA</strong><small>Área exclusiva da Staff · Honra, união e conquistas</small></div></div><div class="hp-actions"><button id="hpTabWar" type="button" class="active">⚔️ Histórico de Guerras</button><button id="hpTabPlantel" type="button">🛡️ Montar Plantel</button><button id="hpHubClose" type="button">✕ Voltar ao dashboard</button></div></div>
  <div id="hpHubWar" class="hp-hub-content"></div>
 </section>
+<style id="HIVE_PLANTEL_POWER_TOTAL_V1">
+#hivePlantelPanel .hp-power-summary{margin:12px 0 14px;padding:13px 16px;border:1px solid rgba(243,190,89,.52);border-radius:12px;background:linear-gradient(110deg,rgba(32,24,17,.97),rgba(8,26,43,.97) 55%,rgba(7,28,50,.96));box-shadow:0 7px 25px #0005;color:#ffe1a2}
+#hivePlantelPanel .hp-power-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;font-weight:900;letter-spacing:.07em}
+#hivePlantelPanel .hp-power-heading small{font-size:11px;font-weight:500;letter-spacing:0;color:#adc2d5}
+#hivePlantelPanel .hp-power-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#hivePlantelPanel .hp-power-group{display:grid;grid-template-columns:minmax(90px,1.1fr) 1fr 1fr;align-items:center;gap:8px;padding:10px 12px;border:1px solid #ac7b3959;border-radius:9px;background:#0b1422a8}
+#hivePlantelPanel .hp-power-group>span{font-size:11px;font-weight:800;letter-spacing:.03em}
+#hivePlantelPanel .hp-power-group>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+#hivePlantelPanel .hp-power-group strong{font-size:clamp(16px,1.5vw,23px);font-variant-numeric:tabular-nums;white-space:nowrap}
+#hivePlantelPanel .hp-power-group small{font-size:10px;color:#a8bed1}
+#hivePlantelPanel .hp-power-main strong{color:#ffd078}
+#hivePlantelPanel .hp-power-sub strong{color:#6cd8ff}
+#hivePlantelPanel .hp-power-all strong{color:#ffe4ab}
+#hivePlantelPanel.hp-overrun-mode .hp-power-main,#hivePlantelPanel.hp-overrun-mode .hp-power-sub{display:none}
+#hivePlantelPanel.hp-overrun-mode .hp-power-columns{grid-template-columns:1fr}
+#hivePlantelPanel.hp-overrun-mode .hp-power-all>span{font-size:13px}
+@media(max-width:1100px){#hivePlantelPanel .hp-power-columns{grid-template-columns:1fr}#hivePlantelPanel .hp-power-group{grid-template-columns:minmax(110px,1fr) 1fr 1fr}}
+@media(max-width:480px){#hivePlantelPanel .hp-power-summary{padding:10px}#hivePlantelPanel .hp-power-group{padding:9px 7px;gap:5px}#hivePlantelPanel .hp-power-group>span{font-size:10px}#hivePlantelPanel .hp-power-group strong{font-size:17px}}
+</style>
 <section id="hivePlantelPanel" hidden aria-label="Montagem de plantel HIVE">
  <header class="hp-top">
   <div class="hp-brand"><span class="hp-brand-mark"><span class="hp-brand-flower">⚜</span><span class="hp-mark-caption">HIVE</span></span><div class="hp-brand-copy"><h2><span class="hp-brand-hive">HIVE</span><span class="hp-brand-separator">│</span> MONTAGEM DE PLANTEL</h2><p>Exclusivo Staff · Membros atuais · Sem duplicidade entre Main e Sub Field</p><div class="hp-war-virtues"><span>✦ FORÇA</span><span>⚜ DISCIPLINA</span><span>✦ UNIÃO</span><span>♛ CONQUISTAS</span></div></div></div>
@@ -8118,6 +8137,14 @@ window.addEventListener('hive:open-war',init);
    <div class="hp-kpi hp-kpi-sub" id="hpSubCard"><span class="hp-kpi-icon">⬡</span><div class="hp-kpi-detail"><b id="hpSubCount">0/40</b><small>Sub Field</small><div class="hp-meter"><span id="hpSubMeter"></span></div><span class="hp-kpi-percent" id="hpSubPercent">0%</span></div></div>
    <div class="hp-kpi hp-kpi-total"><span class="hp-kpi-icon">⚜</span><div class="hp-kpi-detail"><small id="hpTotalLabel">Total de vagas</small><b>80</b><small id="hpTotalPercent">0% preenchido</small></div><div class="hp-total-ring" id="hpTotalRing"><span id="hpTotalRingText">0%</span></div></div>
   </div>
+  <section class="hp-power-summary" aria-label="Power da formação" aria-live="polite">
+    <div class="hp-power-heading"><span>⚡ POWER DA FORMAÇÃO</span><small id="hpPowerPlayers">0 jogadores com Power informado</small></div>
+    <div class="hp-power-columns">
+      <div class="hp-power-group hp-power-all"><span>⚜ PLANTEL COMPLETO</span><div><strong id="hpPowerTotal">0</strong><small>Power total</small></div><div><strong id="hpPowerAverage">—</strong><small>Power médio</small></div></div>
+      <div class="hp-power-group hp-power-main"><span>⚔ MAIN FIELD</span><div><strong id="hpPowerMainTotal">0</strong><small>Power total</small></div><div><strong id="hpPowerMainAverage">—</strong><small>Power médio</small></div></div>
+      <div class="hp-power-group hp-power-sub"><span>🛡 SUB FIELD</span><div><strong id="hpPowerSubTotal">0</strong><small>Power total</small></div><div><strong id="hpPowerSubAverage">—</strong><small>Power médio</small></div></div>
+    </div>
+  </section>
   <div class="hp-layout">
    <aside class="hp-panel hp-roster">
     <h3>👥 Jogadores disponíveis</h3>
@@ -8271,6 +8298,23 @@ function render(){
  $('hpTotalRingText').textContent=totalPct+'%';
  $('hpTotalRing').style.setProperty('--hp-ring',totalPct+'%');
  $('hpMainCount').textContent=formation.main.flat().filter(Boolean).length+'/40';$('hpSubCount').textContent=formation.sub.flat().filter(Boolean).length+'/40';$('hpMainMeter').style.width=(formation.main.flat().filter(Boolean).length/40*100)+'%';$('hpSubMeter').style.width=(formation.sub.flat().filter(Boolean).length/40*100)+'%';
+ const calcPower=field=>{
+  const ids=formation[field].flat().filter(Boolean);
+  const values=ids.map(id=>byId.get(id)).filter(Boolean).map(hpPowerFromMember).filter(power=>Number.isFinite(power)&&power>0);
+  const total=values.reduce((sum,power)=>sum+power,0);
+  return {total,count:values.length,average:values.length?total/values.length:null};
+ };
+ const mainPower=calcPower('main'),subPower=calcPower('sub');
+ const allPower={total:mainPower.total+subPower.total,count:mainPower.count+subPower.count};
+ allPower.average=allPower.count?allPower.total/allPower.count:null;
+ const powerFmt=value=>value==null?'—':Math.round(value).toLocaleString('pt-BR');
+ $('hpPowerTotal').textContent=powerFmt(allPower.total);
+ $('hpPowerAverage').textContent=powerFmt(allPower.average);
+ $('hpPowerMainTotal').textContent=powerFmt(mainPower.total);
+ $('hpPowerMainAverage').textContent=powerFmt(mainPower.average);
+ $('hpPowerSubTotal').textContent=powerFmt(subPower.total);
+ $('hpPowerSubAverage').textContent=powerFmt(subPower.average);
+ $('hpPowerPlayers').textContent=allPower.count+' de '+totalAssigned+' jogador(es) alocado(s) com Power informado';
  const filter=norm($('hpSearch').value),job=jobFilter;
  const getSortValue=m=>{
   if(sortKey==='name')return nameOf(m);
