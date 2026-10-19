@@ -7949,6 +7949,16 @@ function updateGuildFilter(){
  const allowed=w===HIVE_AVG?['HIVE']:selectedWar?[key(selectedWar,'Guilda_1','guilda1'),key(selectedWar,'Guilda_2','guilda2')].map(x=>String(x||'').trim()).filter(Boolean):[];
  populate('warGuild',allowed,'Todas as guildas');
 }
+function updateJobFilter(){
+ const selected=$w('warFilter').value;
+ const source=selected===HIVE_AVG?(state.membersReady?averageRows():[]):selected?state.players.filter(r=>warId(r)===selected):state.players;
+ // Só listar classes de jogadores que realmente aparecem no recorte selecionado.
+ // Registros sem Job continuam no histórico, mas não criam filtro sem resultados.
+ const missing=source.filter(r=>!String(job(r)??'').trim()||/^(?:n[aã]o identificado|undefined|null|unknown|n\/?a|sem classe)$/i.test(String(job(r)).trim()));
+ if(missing.length)console.info('[HIVE] Registros sem classe mapeada no recorte selecionado:',missing.map(r=>({personagem:player(r),classeOriginal:job(r),guerra:warId(r)})));
+ const valid=source.map(r=>String(job(r)??'').trim()).filter(v=>v&&!/^(?:n[aã]o identificado|undefined|null|unknown|n\/?a|sem classe)$/i.test(v));
+ populate('warJob',valid,'Todas as classes');
+}
 function populateWars(){
  const el=$w('warFilter'),prev=el.value;
  el.replaceChildren(new Option('Selecione uma guerra',''));
@@ -8059,7 +8069,7 @@ async function load(){
    state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
    // Refresh current guild membership on every explicit war refresh, never only on page load.
    await loadCurrentMembers();
-   populateWars();updateGuildFilter();populate('warJob',state.players.map(job),'Todas as classes');render();
+   populateWars();updateGuildFilter();updateJobFilter();render();
  }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
 }
 let warInitialized=false;
@@ -8069,7 +8079,7 @@ async function init(){
  try{
    // Called ONLY after a user clicks Central de Guerra and passes Staff auth.
    $w('centralGuerra').hidden=false;
-   ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter')updateGuildFilter();render();}));
+   ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
    document.querySelectorAll('#centralGuerra th[data-war-sort]').forEach(th=>{
