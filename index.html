@@ -8208,6 +8208,22 @@ const idOf=m=>norm(m.Personagem||m.personagem||m.Nick||'');
 const nameOf=m=>String(m.Personagem||m.personagem||m.Nick||'').trim();
 const jobOf=m=>String(m.Job||m.Classe||'—');
 const stat=(m,...keys)=>{for(const k of keys)if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')return m[k];return ''};
+
+// O Power é sempre lido da aba MEMBROS via /api/data, nunca do histórico de guerra.
+const hpPowerFromMember=m=>{
+ if(!m||typeof m!=='object')return 0;
+ const normalizeKey=k=>String(k).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+ const candidates=['Power Atual','Power','Poder Atual','Poder','PowerAtual','power_atual','powerAtual','PWR'];
+ for(const key of candidates){if(m[key]!=null&&String(m[key]).trim()!==''){const n=num(m[key]);if(n>0)return n}}
+ for(const [key,value] of Object.entries(m)){
+  const k=normalizeKey(key);
+  if(['poweratual','power','poderatual','poder','pwr'].includes(k)&&value!=null&&String(value).trim()!==''){
+   const n=num(value);if(n>0)return n;
+  }
+ }
+ return 0;
+};
+
 const used=()=>new Set([...formation.main.flat(),...formation.sub.flat()].filter(Boolean));
 const valid=f=>f&&['main','sub'].every(k=>Array.isArray(f[k])&&f[k].length===8&&f[k].every(pt=>Array.isArray(pt)&&pt.length===5));
 function sanitize(f){const result=blank(),seen=new Set(),allowed=new Set(members.map(idOf));if(!valid(f))return result;for(const k of ['main','sub'])for(let p=0;p<8;p++)for(let i=0;i<5;i++){const id=norm(f[k][p][i]);if(id&&allowed.has(id)&&!seen.has(id)){result[k][p][i]=id;seen.add(id)}}return result}
@@ -8228,7 +8244,7 @@ function render(){
  const filter=norm($('hpSearch').value),job=jobFilter;
  const getSortValue=m=>{
   if(sortKey==='name')return nameOf(m);
-  if(sortKey==='power')return num(stat(m,'Power Atual','Power'));
+  if(sortKey==='power')return hpPowerFromMember(m);
   return Number(averages.get(idOf(m))?.[sortKey])||0;
  };
  const free=members.filter(m=>!assigned.has(idOf(m))&&(!job||jobOf(m)===job)&&(!filter||norm(nameOf(m)).includes(filter))).sort((a,b)=>{
@@ -8251,7 +8267,7 @@ function render(){
  const compact=v=>{const x=num(v);if(!x)return '—';if(Math.abs(x)>=1e6)return (x/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi';if(Math.abs(x)>=1e3)return (x/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+' mil';return x.toLocaleString('pt-BR',{maximumFractionDigits:0})};
  $('hpRosterList').innerHTML=free.map(m=>{
   const avg=averages.get(idOf(m));
-  const power=num(stat(m,'Power Atual','Power'));
+  const power=hpPowerFromMember(m);
   return `<div class="hp-member hp-member-compact" draggable="true" data-member="${esc(idOf(m))}" title="Arraste para uma vaga ou clique em +">
     <div class="hp-player-id"><span class="hp-class-dot"></span><span class="hp-avatar hp-job-portrait"><img src="${featuredClassImage(jobOf(m))}" alt="Classe ${esc(jobOf(m))}" loading="lazy" onerror="this.style.display='none';this.parentElement.textContent='${esc(nameOf(m).slice(0,1).toUpperCase())}'"></span><div class="hp-player-label"><b>${esc(nameOf(m))}</b><small><em class="hp-class-label">${esc(jobOf(m))}</em>${avg?' · '+esc(avg.games||0)+' guerras':' · Sem histórico'}</small></div></div>
     <span class="hp-cell" title="Power atual">${compact(power)}</span>
@@ -8489,6 +8505,7 @@ async function init(){
      if(!authAgain.ok)throw Error('Acesso Staff não autorizado.');if(!res.ok)throw Error('Falha ao consultar MEMBROS.');
      const payload=await res.json();if(!payload.ok||!Array.isArray(payload.members))throw Error('Aba MEMBROS indisponível.');
      const map=new Map();for(const m of payload.members){const id=idOf(m);if(id&&!map.has(id))map.set(id,m)}members=[...map.values()];
+     if(members.length&&!members.some(m=>hpPowerFromMember(m)>0))console.warn('[HIVE Plantel] /api/data retornou MEMBROS sem valores reconhecíveis de Power. Verifique o mapeamento da coluna Power Atual no Worker. Colunas recebidas:',Object.keys(members[0]||{}));
      const jobs=[...new Set(members.map(jobOf))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
      $('hpJobFilters').innerHTML=[{name:'Todas',value:''},...jobs.map(j=>({name:j,value:j}))].map(({name,value})=>`<button type="button" class="hp-job-chip" data-hp-job="${esc(value)}" aria-pressed="false">${esc(name)} <span class="hp-job-count">0</span></button>`).join('');
      $('hpPt').replaceChildren();for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1),String(i)));
