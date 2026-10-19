@@ -7669,7 +7669,17 @@ function move(id,target,origin){
 function add(id){const f=$('hpTarget').value,p=Number($('hpPt').value),pt=formation[f]?.[p];if(!pt||used().has(id))return;const i=pt.indexOf(null);if(i<0){$('hpStatus').textContent='Esta PT está completa.';return}move(id,`${f}:${p}:${i}`,null)}
 function close(){ $('hivePlantelPanel').hidden=true;$('hpHub').hidden=true;document.body.style.overflow=''; }
 function openHub(tab='war'){
- $('hpHub').hidden=false;$('hivePlantelPanel').hidden=tab!=='plantel';$('hpHubWar').hidden=tab==='plantel';
+ $('hpHub').hidden=false;
+ $('hivePlantelPanel').hidden=tab!=='plantel';
+ $('hpHubWar').hidden=tab==='plantel';
+ // The original war section starts with hidden=true; explicitly reveal it
+ // when opening History, rather than relying on the async war initializer.
+ const war=$('centralGuerra');
+ if(tab==='war'&&war){
+  if(war.parentElement!==$('hpHubWar'))$('hpHubWar').appendChild(war);
+  war.hidden=false;
+  window.dispatchEvent(new Event('hive:open-war'));
+ }
  $('hpTabWar').classList.toggle('active',tab==='war');$('hpTabPlantel').classList.toggle('active',tab==='plantel');
  document.body.style.overflow='hidden';if(tab==='plantel')render();
 }
@@ -7707,7 +7717,6 @@ async function init(){
     const auth=await fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'});
     if(!auth.ok){alert(auth.status===401||auth.status===403?'A Central de Guerra é exclusiva da Staff.':'Não foi possível validar o acesso Staff.');return}
     openHub('war');
-    window.dispatchEvent(new Event('hive:open-war'));
    }catch(err){alert('Erro ao validar acesso Staff. Tente novamente.')}
    finally{nav.textContent=previous;opening=false}
   });
