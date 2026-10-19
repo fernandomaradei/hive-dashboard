@@ -2496,7 +2496,16 @@ html{scroll-behavior:smooth}
  #hivePlantelPanel .hp-pts{grid-template-columns:1fr}
 }
 </style>
-</head>
+<style id="hp-both-fields-v8">
+#hivePlantelPanel .hp-both-fields{display:flex;flex-direction:column;gap:15px}
+#hivePlantelPanel .hp-field-section{min-width:0}
+#hivePlantelPanel .hp-field-section+.hp-field-section{border-top:1px solid #3c4d66;padding-top:13px}
+#hivePlantelPanel .hp-field-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;padding:4px 3px;color:#f4c976;font-size:13px}
+#hivePlantelPanel .hp-field-title span{font-size:11px;color:#b1c2d8;font-weight:400}
+#hivePlantelPanel .hp-field-section .hp-pts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+@media(max-width:1100px){#hivePlantelPanel .hp-field-section .hp-pts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){#hivePlantelPanel .hp-field-section .hp-pts{grid-template-columns:1fr}}
+</style></head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
@@ -7700,14 +7709,8 @@ window.addEventListener('hive:open-war',init);
     <div id="hpRosterList" class="hp-roster-list"></div>
    </aside>
    <section class="hp-panel">
-    <div class="hp-fieldbar">
-     <h3 style="margin:0">🛡️ Formação da guerra</h3>
-     <div class="hp-switch">
-      <button type="button" id="hpShowMain" class="active">Main Field</button>
-      <button type="button" id="hpShowSub">Sub Field</button>
-     </div>
-    </div>
-    <div id="hpPts" class="hp-pts"></div>
+    <div class="hp-fieldbar"><h3 style="margin:0">🛡️ Formação da guerra</h3></div>
+    <div id="hpPts" class="hp-both-fields"></div>
     <p class="hp-note">Arraste jogadores para qualquer vaga e entre PTs; no celular, use + ou toque na vaga para mover. O salvamento automático é local neste navegador. Use Exportar/Importar para transferir ou guardar a formação. Não modifica a planilha.</p>
     <div class="hp-actions"><button type="button" id="hpClear">Limpar formação</button><span id="hpStatus" class="hp-status" role="status"></span></div>
    </section>
@@ -7776,8 +7779,7 @@ function render(){
     <button type="button" class="hp-compact-add" data-add="${esc(idOf(m))}" title="Alocar na PT selecionada">＋</button>
    </div>`;
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
- $('hpShowMain').classList.toggle('active',field==='main');$('hpShowSub').classList.toggle('active',field==='sub');
- $('hpPts').innerHTML=formation[field].map((pt,p)=>`<div class="hp-pt"><h4><span>PT ${p+1}</span><small>${pt.filter(Boolean).length}/5</small></h4>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${field}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${field}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('');
+ $('hpPts').innerHTML=['main','sub'].map(f=>`<section class="hp-field-section"><div class="hp-field-title"><strong>${f==='main'?'⚔️ MAIN FIELD':'🛡️ SUB FIELD'}</strong><span>${formation[f].flat().filter(Boolean).length}/40 jogadores</span></div><div class="hp-pts">`+formation[f].map((pt,p)=>`<div class="hp-pt"><h4><span>PT ${p+1}</span><small>${pt.filter(Boolean).length}/5</small></h4>${pt.map((id,i)=>`<div class="hp-slot ${id?'hp-filled':''}" data-slot="${f}:${p}:${i}" draggable="${id?'true':'false'}"><span class="hp-slot-name">${id?`${esc(nameOf(byId.get(id)||{Personagem:id}))} <small>· ${esc(jobOf(byId.get(id)||{}))}</small>`:`<small>Vaga ${i+1} · solte aqui</small>`}</span>${id?`<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador">✕</button>`:''}</div>`).join('')}</div>`).join('')+'</div></section>').join('');
 }
 function locate(f,p,i){return formation[f]?.[p]?.[i]??null}
 function move(id,target,origin){
@@ -7867,8 +7869,6 @@ async function init(){
   $('hpSortButtons').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-sort]');if(!btn)return;const key=btn.dataset.hpSort;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=key==='name'?1:-1}render()});
   $('hpSortButtons').parentElement.querySelector('.hp-more-sorts').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-extra]');if(!btn)return;const key=btn.dataset.hpExtra;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=-1}render()});
   $('hpSearch').addEventListener('input',render);
-  $('hpShowMain').addEventListener('click',()=>{field='main';$('hpTarget').value='main';render()});
-  $('hpShowSub').addEventListener('click',()=>{field='sub';$('hpTarget').value='sub';render()});
   $('hpTarget').addEventListener('change',()=>{field=$('hpTarget').value;render()});
   $('hpRosterList').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)add(b.dataset.add)});
   $('hpPts').addEventListener('click',e=>{
