@@ -7844,14 +7844,20 @@ const loadCurrentMembers=async()=>{
  }
 };
 
+// Alias explícito e seguro: BRUXO era o nick antigo de Bruxo†.
+// Não remover † nem outros símbolos dos demais jogadores.
+const historicalNickAliases=new Map([['bruxo','Bruxo†']]);
+const currentHistoricalName=value=>historicalNickAliases.get(normalizeMemberName(value))||String(value??'').trim();
 const HIVE_AVG='__HIVE_MEDIA__';
 const isHive=r=>String(guild(r)||'').trim().toLocaleLowerCase('pt-BR')==='hive';
 const averageRows=()=>{
  const grouped=new Map();
  for(const r of state.players){
-  if(!isHive(r)||!state.membersReady||!state.currentMemberIds.has(normalizeMemberName(player(r))))continue;
-  const id=String(player(r)).trim().toLocaleLowerCase('pt-BR');
-  if(!grouped.has(id))grouped.set(id,{name:String(player(r)).trim(),records:new Map()});
+  if(!isHive(r)||!state.membersReady)continue;
+  const currentName=currentHistoricalName(player(r));
+  const id=normalizeMemberName(currentName);
+  if(!state.currentMemberIds.has(id))continue;
+  if(!grouped.has(id))grouped.set(id,{name:currentName,records:new Map()});
   const item=grouped.get(id),battle=warId(r);
   if(battle)item.records.set(battle,r);
  }
