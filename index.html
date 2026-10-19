@@ -7823,13 +7823,33 @@ const $w=id=>document.getElementById(id);
 const escw=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>typeof v==='number'?v:(Number(String(v??'0').replace(/\./g,'').replace(',','.'))||0);
 const fmt=n=>new Intl.NumberFormat('pt-BR').format(n);
-const state={wars:[],players:[],fields:[],sortKey:'',sortDir:1};
+const state={wars:[],players:[],fields:[],sortKey:'',sortDir:1,currentMemberIds:new Set(),membersReady:false,membersError:''};
+const normalizeMemberName=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleLowerCase('pt-BR');
+const loadCurrentMembers=async()=>{
+ state.membersReady=false;
+ state.currentMemberIds=new Set();
+ state.membersError='';
+ try{
+  // Same source as the Montagem de Plantel: /api/data -> MEMBROS.
+  const response=await fetch('/api/data?_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
+  if(!response.ok)throw Error('HTTP '+response.status+' ao consultar MEMBROS');
+  const payload=await response.json();
+  if(!payload?.ok||!Array.isArray(payload.members))throw Error('A aba MEMBROS não retornou uma lista válida');
+  const ids=new Set(payload.members.map(m=>normalizeMemberName(m.Personagem??m.personagem??m.Nick??'')).filter(Boolean));
+  if(!ids.size)throw Error('A aba MEMBROS está vazia; verifique a integração');
+  state.currentMemberIds=ids;
+  state.membersReady=true;
+ }catch(error){
+  state.membersError=error.message||'Falha ao carregar membros atuais';
+ }
+};
+
 const HIVE_AVG='__HIVE_MEDIA__';
 const isHive=r=>String(guild(r)||'').trim().toLocaleLowerCase('pt-BR')==='hive';
 const averageRows=()=>{
  const grouped=new Map();
  for(const r of state.players){
-  if(!isHive(r)||!String(player(r)||'').trim())continue;
+  if(!isHive(r)||!state.membersReady||!state.currentMemberIds.has(normalizeMemberName(player(r))))continue;
   const id=String(player(r)).trim().toLocaleLowerCase('pt-BR');
   if(!grouped.has(id))grouped.set(id,{name:String(player(r)).trim(),records:new Map()});
   const item=grouped.get(id),battle=warId(r);
@@ -7965,6 +7985,11 @@ function render(){
    return;
  }
  const g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
+ if(w===HIVE_AVG&&!state.membersReady){
+  $w('warNotice').textContent='⚠️ Não foi possível validar os membros atuais da aba MEMBROS: '+(state.membersError||'Aguardando carregamento')+'. Clique em Atualizar para tentar novamente. O histórico individual permanece disponível.';
+ }else if(w===HIVE_AVG){
+  $w('warNotice').textContent=`${state.wars.length} guerra(s) no histórico · HIVE MÉDIA limitada aos ${state.currentMemberIds.size} membros atuais da aba MEMBROS.`;
+ }
  const source=w===HIVE_AVG?averageRows():state.players.filter(r=>warId(r)===w);
  const rows=sortRows(source.filter(r=>(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
@@ -7978,7 +8003,7 @@ function render(){
      return `<td class="war-games-cell"><span class="war-games-badge war-games-${tier}" title="Participou de ${played} de ${totalWars} guerras registradas">${played}/${totalWars}</span></td>`;
    }
    return `<td>${escw(numericKeys.has(k)?(w===HIVE_AVG?new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1}).format(num(key(r,k))):fmt(num(key(r,k)))):key(r,k))}</td>`;
- }).join('')}</tr>`).join('')||'<tr><td colspan="15">Nenhum jogador encontrado.</td></tr>';
+ }).join('')}</tr>`).join('')||`<tr><td colspan="15">${w===HIVE_AVG&&!state.membersReady?'Não foi possível carregar a aba MEMBROS. Clique em Atualizar.':'Nenhum membro atual com histórico de guerra encontrado.'}</td></tr>`;
  $w('warResultsCount').textContent=`${rows.length} jogador(es)`;
  $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVE · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
@@ -7990,6 +8015,8 @@ async function load(){
    const data=await r.json();
    if(!r.ok||!data.ok)throw Error(data.error||'Falha de leitura');
    state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
+   // Refresh current guild membership on every explicit war refresh, never only on page load.
+   await loadCurrentMembers();
    populateWars();updateGuildFilter();populate('warJob',state.players.map(job),'Todas as classes');render();
  }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
 }
