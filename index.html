@@ -8531,5 +8531,27 @@ async function init(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
+<style id="hive-war-stats-image-fix-v25-1">
+/* Final CSS override: previous theme uses background: ... !important, so
+   background-image alone cannot override it. Place after all theme styles. */
+#centralGuerra #warStats .war-stat{
+  background:linear-gradient(100deg,rgba(17,22,43,.88),rgba(31,43,69,.43)),var(--hive-war-stat-art) center / cover no-repeat !important;
+  background-size:cover !important;
+  background-position:center !important;
+  border-color:#66769a!important;
+}
+#centralGuerra #warStats .war-stat-purple{
+  background:linear-gradient(100deg,rgba(18,21,44,.90),rgba(42,42,82,.40)),var(--hive-war-stat-art) center / cover no-repeat!important;
+}
+#centralGuerra #warStats .war-stat-blue{
+  background:linear-gradient(100deg,rgba(8,29,53,.90),rgba(17,72,120,.40)),var(--hive-war-stat-art) center / cover no-repeat!important;
+}
+#centralGuerra #warStats .war-stat-red{
+  background:linear-gradient(100deg,rgba(58,14,23,.90),rgba(117,36,47,.40)),var(--hive-war-stat-art) center / cover no-repeat!important;
+}
+#centralGuerra #warStats .war-stat-green{
+  background:linear-gradient(100deg,rgba(10,47,33,.90),rgba(28,106,63,.40)),var(--hive-war-stat-art) center / cover no-repeat!important;
+}
+</style>
 </body>
 </html>
