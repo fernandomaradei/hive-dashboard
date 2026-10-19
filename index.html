@@ -8203,7 +8203,7 @@ function updateWarControls(){
 }
 
 const blank=()=>({main:Array.from({length:8},()=>Array(5).fill(null)),sub:Array.from({length:8},()=>Array(5).fill(null))});
-let formation=blank(),members=[],averages=new Map(),field='main',ready=false,selected=null,dragged=null,warMoved=false,jobFilter='',sortKey='name',sortDir=1;
+let formation=blank(),members=[],averages=new Map(),field='main',ready=false,selected=null,dragged=null,warMoved=false,jobFilter='',sortKey='power',sortDir=-1;
 const idOf=m=>norm(m.Personagem||m.personagem||m.Nick||'');
 const nameOf=m=>String(m.Personagem||m.personagem||m.Nick||'').trim();
 const jobOf=m=>String(m.Job||m.Classe||'—');
