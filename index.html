@@ -3860,7 +3860,7 @@ function hiveNovaArteClasse(job){
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=hiveNovaArteClasse(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage(m.Job)};$('#modal').classList.add('open');hivePowerPlayer=m;hiveRenderPowerHistory()}
 function closeModal(){$('#modal').classList.remove('open')}
-async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length)members=d.members;if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
+async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});refresh();setInterval(refresh,REFRESH_MS);
 
 
@@ -8210,18 +8210,48 @@ const jobOf=m=>String(m.Job||m.Classe||'—');
 const stat=(m,...keys)=>{for(const k of keys)if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')return m[k];return ''};
 
 // O Power é sempre lido da aba MEMBROS via /api/data, nunca do histórico de guerra.
-const hpPowerFromMember=m=>{
+// Usa prioritariamente a coluna Power Atual da aba MEMBROS, igual ao dashboard.
+// O histórico de guerras nunca é usado como fonte de Power.
+const hpPowerNumber=value=>{
+ if(value===undefined||value===null||String(value).trim()==='')return 0;
+ if(typeof value==='number')return Number.isFinite(value)&&value>0?value:0;
+ let raw=String(value).trim().replace(/\s/g,'').replace(/[^0-9.,]/g,'');
+ if(!raw)return 0;
+ if(/^\d{1,3}([.,]\d{3})+$/.test(raw))raw=raw.replace(/[.,]/g,'');
+ else if(raw.includes('.')&&raw.includes(',')){
+  raw=raw.lastIndexOf(',')>raw.lastIndexOf('.')?raw.replace(/\./g,'').replace(',','.'):raw.replace(/,/g,'');
+ }else if(/^\d+,\d{1,2}$/.test(raw))raw=raw.replace(',','.');
+ const valueNum=Number(raw);
+ return Number.isFinite(valueNum)&&valueNum>0?valueNum:0;
+};
+const hpPowerKey=k=>String(k).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+const hpPowerFromRow=m=>{
  if(!m||typeof m!=='object')return 0;
- const normalizeKey=k=>String(k).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
- const candidates=['Power Atual','Power','Poder Atual','Poder','PowerAtual','power_atual','powerAtual','PWR'];
- for(const key of candidates){if(m[key]!=null&&String(m[key]).trim()!==''){const n=num(m[key]);if(n>0)return n}}
+ const priority=['Power Atual','PowerAtual','Power','Poder Atual','Poder','PWR'];
+ for(const key of priority){const n=hpPowerNumber(m[key]);if(n>0)return n}
  for(const [key,value] of Object.entries(m)){
-  const k=normalizeKey(key);
-  if(['poweratual','power','poderatual','poder','pwr'].includes(k)&&value!=null&&String(value).trim()!==''){
-   const n=num(value);if(n>0)return n;
+  if(['poweratual','power','poderatual','poder','pwr'].includes(hpPowerKey(key))){
+   const n=hpPowerNumber(value);if(n>0)return n;
   }
  }
  return 0;
+};
+const hpPowerFromMember=m=>{
+ const direct=hpPowerFromRow(m);
+ if(direct>0)return direct;
+ const player=idOf(m);
+ if(!player)return 0;
+ // O dashboard já mantém os membros atuais carregados em memória.
+ const dashboardMembers=Array.isArray(window.hiveMembers)?window.hiveMembers:
+  (typeof globalThis!=='undefined'&&typeof globalThis.members!=='undefined'&&Array.isArray(globalThis.members)?globalThis.members:[]);
+ const cached=dashboardMembers.find(row=>idOf(row)===player);
+ const fromDashboard=hpPowerFromRow(cached);
+ if(fromDashboard>0)return fromDashboard;
+ try{
+  const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');
+  const row=Array.isArray(saved?.members)?saved.members.find(row=>idOf(row)===player):null;
+  return hpPowerFromRow(row);
+ }catch(_){return 0}
 };
 
 const used=()=>new Set([...formation.main.flat(),...formation.sub.flat()].filter(Boolean));
@@ -8505,6 +8535,14 @@ async function init(){
      if(!authAgain.ok)throw Error('Acesso Staff não autorizado.');if(!res.ok)throw Error('Falha ao consultar MEMBROS.');
      const payload=await res.json();if(!payload.ok||!Array.isArray(payload.members))throw Error('Aba MEMBROS indisponível.');
      const map=new Map();for(const m of payload.members){const id=idOf(m);if(id&&!map.has(id))map.set(id,m)}members=[...map.values()];
+     // Complementa somente Power com a fonte já carregada no dashboard.
+     const dashboardRows=Array.isArray(window.hiveMembers)?window.hiveMembers:[];
+     const dashboardByName=new Map(dashboardRows.map(row=>[idOf(row),row]));
+     members=members.map(m=>{
+      if(hpPowerFromRow(m)>0)return m;
+      const fromDashboard=hpPowerFromRow(dashboardByName.get(idOf(m)));
+      return fromDashboard>0?{...m,'Power Atual':fromDashboard}:m;
+     });
      if(members.length&&!members.some(m=>hpPowerFromMember(m)>0))console.warn('[HIVE Plantel] /api/data retornou MEMBROS sem valores reconhecíveis de Power. Verifique o mapeamento da coluna Power Atual no Worker. Colunas recebidas:',Object.keys(members[0]||{}));
      const jobs=[...new Set(members.map(jobOf))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
      $('hpJobFilters').innerHTML=[{name:'Todas',value:''},...jobs.map(j=>({name:j,value:j}))].map(({name,value})=>`<button type="button" class="hp-job-chip" data-hp-job="${esc(value)}" aria-pressed="false">${esc(name)} <span class="hp-job-count">0</span></button>`).join('');
