@@ -2575,6 +2575,23 @@ html{scroll-behavior:smooth}
 @media(max-width:1150px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr}#hivePlantelPanel .hp-roster{position:static;max-height:none}#hivePlantelPanel .hp-roster-list{max-height:350px}#hivePlantelPanel .hp-field-section .hp-pts{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:850px){#hivePlantelPanel .hp-field-section .hp-pts{grid-template-columns:repeat(2,minmax(0,1fr))}#hivePlantelPanel .hp-top{align-items:flex-start}#hivePlantelPanel .hp-brand-mark{display:none}}
 @media(max-width:500px){#hivePlantelPanel .hp-field-section .hp-pts{grid-template-columns:1fr}#hivePlantelPanel .hp-field-summary small{display:none}#hivePlantelPanel .hp-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style><style id="hp-metrics-class-icons-v10">
+#hivePlantelPanel .hp-layout{grid-template-columns:minmax(550px,650px) minmax(0,1fr)!important;gap:12px}
+#hivePlantelPanel .hp-roster{overflow:hidden}
+#hivePlantelPanel .hp-roster-list{overflow:auto!important;scrollbar-gutter:stable;min-height:130px}
+#hivePlantelPanel .hp-table-head,
+#hivePlantelPanel .hp-member.hp-member-compact{display:grid!important;grid-template-columns:minmax(138px,1.9fr) repeat(7,minmax(42px,1fr)) 25px!important;gap:0!important;min-width:530px}
+#hivePlantelPanel .hp-sort-header{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+#hivePlantelPanel .hp-sort-buttons{flex-wrap:nowrap!important}
+#hivePlantelPanel .hp-table-head button{font-size:10px!important;white-space:nowrap;overflow:visible}
+#hivePlantelPanel .hp-cell{font-size:10px!important;white-space:nowrap}
+#hivePlantelPanel .hp-job-portrait{width:26px!important;height:26px!important;min-width:26px!important;flex:0 0 26px!important;display:flex!important;align-items:center;justify-content:center;border-radius:50%!important;overflow:hidden!important;background:#111b2a!important;border:1px solid #bd914b!important;padding:0!important}
+#hivePlantelPanel .hp-job-portrait img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 22%!important;display:block}
+#hivePlantelPanel .hp-player-label{min-width:0}
+#hivePlantelPanel .hp-player-id{min-width:0}
+@media(max-width:1450px){#hivePlantelPanel .hp-layout{grid-template-columns:minmax(500px,540px) minmax(0,1fr)!important}}
+@media(max-width:1100px){#hivePlantelPanel .hp-layout{grid-template-columns:1fr!important}#hivePlantelPanel .hp-roster{max-height:none!important}}
+@media(max-width:600px){#hivePlantelPanel .hp-layout{grid-template-columns:minmax(0,1fr)!important}#hivePlantelPanel .hp-table-head,#hivePlantelPanel .hp-member.hp-member-compact{min-width:530px}}
 </style></head>
 <body>
 <div class="app">
@@ -7773,8 +7790,10 @@ window.addEventListener('hive:open-war',init);
        <button type="button" data-hp-sort="damage">Dano <span class="hp-arrow">↕</span></button>
        <button type="button" data-hp-sort="heal">Cura <span class="hp-arrow">↕</span></button>
        <button type="button" data-hp-sort="taken">Recebido <span class="hp-arrow">↕</span></button>
+       <button type="button" data-hp-sort="kills">Kills <span class="hp-arrow">↕</span></button>
+       <button type="button" data-hp-sort="assists">Assist. <span class="hp-arrow">↕</span></button>
+       <button type="button" data-hp-sort="deaths">Mortes <span class="hp-arrow">↕</span></button>
       </div>
-      <div class="hp-more-sorts">Mais métricas: <button type="button" data-hp-extra="kills">K</button><button type="button" data-hp-extra="assists">A</button><button type="button" data-hp-extra="deaths">D</button></div>
     </div>
     <div id="hpRosterList" class="hp-roster-list"></div>
    </aside>
@@ -7836,16 +7855,18 @@ function render(){
   btn.querySelector('.hp-arrow').textContent=active?(sortDir===1?'↑':'↓'):'↕';
  });
  const compact=v=>{const x=num(v);if(!x)return '—';if(Math.abs(x)>=1e6)return (x/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi';if(Math.abs(x)>=1e3)return (x/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+' mil';return x.toLocaleString('pt-BR',{maximumFractionDigits:0})};
- $('hpSortButtons').parentElement.querySelectorAll('[data-hp-extra]').forEach(btn=>{btn.classList.toggle('active',btn.dataset.hpExtra===sortKey);btn.textContent=btn.dataset.hpExtra.toUpperCase()+(btn.dataset.hpExtra===sortKey?(sortDir===1?' ↑':' ↓'):' ↕')});
  $('hpRosterList').innerHTML=free.map(m=>{
   const avg=averages.get(idOf(m));
   const power=num(stat(m,'Power Atual','Power'));
   return `<div class="hp-member hp-member-compact" draggable="true" data-member="${esc(idOf(m))}" title="Arraste para uma vaga ou clique em +">
-    <div class="hp-player-id"><span class="hp-class-dot"></span><span class="hp-avatar">${esc(nameOf(m).slice(0,1).toUpperCase())}</span><div class="hp-player-label"><b>${esc(nameOf(m))}</b><small><em class="hp-class-label">${esc(jobOf(m))}</em>${avg?' · '+esc(avg.games||0)+' guerras':' · Sem histórico'}</small></div></div>
+    <div class="hp-player-id"><span class="hp-class-dot"></span><span class="hp-avatar hp-job-portrait"><img src="${featuredClassImage(jobOf(m))}" alt="Classe ${esc(jobOf(m))}" loading="lazy" onerror="this.style.display='none';this.parentElement.textContent='${esc(nameOf(m).slice(0,1).toUpperCase())}'"></span><div class="hp-player-label"><b>${esc(nameOf(m))}</b><small><em class="hp-class-label">${esc(jobOf(m))}</em>${avg?' · '+esc(avg.games||0)+' guerras':' · Sem histórico'}</small></div></div>
     <span class="hp-cell" title="Power atual">${compact(power)}</span>
     <span class="hp-cell" title="Dano médio">${compact(avg?.damage)}</span>
     <span class="hp-cell" title="Cura média">${compact(avg?.heal)}</span>
     <span class="hp-cell" title="Dano recebido médio">${compact(avg?.taken)}</span>
+    <span class="hp-cell" title="Média de kills">${avg?Number(avg.kills||0).toLocaleString('pt-BR',{maximumFractionDigits:1}):'—'}</span>
+    <span class="hp-cell" title="Média de assistências">${avg?Number(avg.assists||0).toLocaleString('pt-BR',{maximumFractionDigits:1}):'—'}</span>
+    <span class="hp-cell" title="Média de mortes">${avg?Number(avg.deaths||0).toLocaleString('pt-BR',{maximumFractionDigits:1}):'—'}</span>
     <button type="button" class="hp-compact-add" data-add="${esc(idOf(m))}" title="Alocar na PT selecionada">＋</button>
    </div>`;
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
@@ -7937,7 +7958,7 @@ async function init(){
   $('hpClose').addEventListener('click',()=>openHub('war'));
   $('hpJobFilters').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-job]');if(!btn)return;jobFilter=btn.dataset.hpJob;render()});
   $('hpSortButtons').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-sort]');if(!btn)return;const key=btn.dataset.hpSort;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=key==='name'?1:-1}render()});
-  $('hpSortButtons').parentElement.querySelector('.hp-more-sorts').addEventListener('click',e=>{const btn=e.target.closest('[data-hp-extra]');if(!btn)return;const key=btn.dataset.hpExtra;if(key===sortKey)sortDir*=-1;else{sortKey=key;sortDir=-1}render()});
+  
   $('hpSearch').addEventListener('input',render);
   $('hpTarget').addEventListener('change',()=>{field=$('hpTarget').value;render()});
   $('hpRosterList').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)add(b.dataset.add)});
