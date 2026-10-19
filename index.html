@@ -8349,20 +8349,36 @@ function openHub(tab='war'){
  $('hpTabWar').classList.toggle('active',tab==='war');$('hpTabPlantel').classList.toggle('active',tab==='plantel');
  document.body.style.overflow='hidden';if(tab==='plantel')render();
 }
+// Mesma regra da Central de Guerra (HIVE MÉDIA): alias BRUXO -> Bruxo†,
+// uma ocorrência por Guerra_ID e média apenas dos valores numéricos válidos.
+const hpHistoricalAliases=new Map([['bruxo','Bruxo†']]);
+const hpCanonicalHistoricalName=name=>hpHistoricalAliases.get(norm(name))||String(name??'').trim();
 async function loadAverages(){
  const res=await fetch('/api/war',{credentials:'same-origin',cache:'no-store'});
  if(!res.ok)throw Error('Falha ao carregar médias de guerra.');
- const data=await res.json();if(!data.ok||!Array.isArray(data.players))throw Error('Histórico de guerra indisponível.');
+ const data=await res.json();
+ if(!data.ok||!Array.isArray(data.players))throw Error('Histórico de guerra indisponível.');
+ const allowed=new Set(members.map(idOf));
  const groups=new Map();
  for(const r of data.players){
-  if(norm(r.Guilda||r.guilda)!=='hive')continue;
-  const id=norm(r.Personagem||r.personagem),war=String(r.Guerra_ID||r.guerra_id||'');if(!id||!war)continue;
-  if(!groups.has(id))groups.set(id,new Map());groups.get(id).set(war,r);
+  if(norm(r.Guilda??r.guilda)!=='hive')continue;
+  const id=norm(hpCanonicalHistoricalName(r.Personagem??r.personagem));
+  const war=String(r.Guerra_ID??r.guerra_id??'');
+  if(!id||!war||!allowed.has(id))continue;
+  if(!groups.has(id))groups.set(id,new Map());
+  groups.get(id).set(war,r);
  }
+ const avg=(rows,k)=>{
+  const values=rows.map(r=>r[k]??r[k.toLowerCase()]).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v)));
+  return values.length?values.reduce((total,v)=>total+num(v),0)/values.length:0;
+ };
  averages=new Map();
  for(const [id,records] of groups){
-  const rows=[...records.values()],avg=k=>rows.reduce((t,r)=>t+num(r[k]??r[k.toLowerCase()]),0)/rows.length;
-  averages.set(id,{games:rows.length,damage:avg('Dano_Causado'),taken:avg('Dano_Recebido'),heal:avg('Cura'),kills:avg('Kills'),assists:avg('Assistencias'),deaths:avg('Mortes')});
+  const rows=[...records.values()];
+  averages.set(id,{
+   games:rows.length,damage:avg(rows,'Dano_Causado'),taken:avg(rows,'Dano_Recebido'),
+   heal:avg(rows,'Cura'),kills:avg(rows,'Kills'),assists:avg(rows,'Assistencias'),deaths:avg(rows,'Mortes')
+  });
  }
 }
 
