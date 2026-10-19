@@ -2752,7 +2752,46 @@ html{scroll-behavior:smooth}
 #hpHub #centralGuerra .war-tablewrap{overflow-x:auto}
 @media(max-width:1000px){#hpHub .hp-hub-head{min-height:185px!important;flex-direction:column}#hpHub .hp-hub-head .hp-actions{align-self:flex-start}#hpHub #centralGuerra .war-heading{min-height:160px}#hpHub #centralGuerra .hive-war-banner-crest{width:75px;height:100px;font-size:45px}}
 @media(max-width:600px){#hpHub .hive-war-crest{width:55px;height:78px;font-size:33px}#hpHub .hive-war-crest small{font-size:9px}#hpHub .hive-war-hub-brand{gap:12px}#hpHub .hive-war-hub-brand strong{font-size:20px!important}#hpHub .hp-hub-head .hp-actions button{padding:8px!important;font-size:11px!important}#hpHub #centralGuerra .war-heading{padding:18px!important}#hpHub #centralGuerra .hive-war-banner-crest{display:none}#hpHub #centralGuerra .war-filters{padding:15px!important}#hpHub #centralGuerra .war-choose-hint{margin:8px 15px!important;padding:16px!important;gap:12px}#hpHub #centralGuerra .hive-war-hint-icon{font-size:36px}#hpHub #centralGuerra .war-choose-hint strong{font-size:14px}}
-</style></head>
+</style>
+<style id="hive-central-command-banner-v16">
+/* Distinct command-room identity for the INNER panel. The panoramic
+   fantasy art remains exclusively on the top-level page banner. */
+#hpHub #centralGuerra .war-heading{
+  min-height:145px!important;
+  padding:23px 30px!important;
+  background-image:
+    radial-gradient(ellipse at 76% 54%,rgba(24,122,175,.23),transparent 42%),
+    radial-gradient(ellipse at 24% 25%,rgba(226,162,63,.17),transparent 52%),
+    repeating-linear-gradient(90deg,transparent 0,transparent 79px,rgba(79,139,174,.075) 80px),
+    repeating-linear-gradient(0deg,transparent 0,transparent 39px,rgba(79,139,174,.06) 40px),
+    linear-gradient(120deg,#071323 0%,#0b1c2c 50%,#061120 100%)!important;
+  background-size:auto!important;
+  background-position:center!important;
+  border-bottom:1px solid #bb873e!important;
+  overflow:hidden;
+}
+#hpHub #centralGuerra .war-heading:before{
+  content:'⚔';position:absolute;right:17%;top:-70px;
+  font-size:240px;line-height:1;color:#bb8c3d;opacity:.085;
+  transform:rotate(-12deg);pointer-events:none;z-index:0;
+  text-shadow:0 0 45px #dbac4d;
+}
+#hpHub #centralGuerra .war-heading:after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(13,47,70,.22) 45%,transparent 90%);
+}
+#hpHub #centralGuerra .war-heading>*{position:relative;z-index:1}
+#hpHub #centralGuerra .hive-war-heading-brand{gap:12px!important}
+/* Avoid a second copy of the HIVE crest immediately below the main banner. */
+#hpHub #centralGuerra .hive-war-banner-crest{display:none!important}
+#hpHub #centralGuerra .war-heading h2{font-size:clamp(26px,2.4vw,37px)!important}
+#hpHub #centralGuerra .war-kicker{color:#f5c56e!important}
+@media(max-width:760px){
+ #hpHub #centralGuerra .war-heading{min-height:135px!important;padding:18px!important}
+ #hpHub #centralGuerra .war-heading:before{right:-10%;font-size:175px;top:-20px}
+}
+</style>
+</head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
