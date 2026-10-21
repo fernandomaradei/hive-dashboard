@@ -9104,5 +9104,36 @@ html body #hpHub #centralGuerra .war-note{color:#b7c0c9!important}
  html body #hpHub #centralGuerra .war-filters{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 </style>
+
+<style id="hive-war-mockup-v28-harmony">
+/* Escopo da Central de Guerra: sem alterar o dashboard ou a API. */
+html body #hpHub{background:#000!important;color:#fff!important}
+html body #hpHub .hp-hub-head{
+ background-image:linear-gradient(90deg,rgba(0,0,0,.99) 0%,rgba(0,0,0,.97) 21%,rgba(0,0,0,.70) 39%,rgba(0,0,0,.04) 66%,rgba(0,0,0,.55) 100%),var(--hive-war-header-image)!important;
+ background-color:#000!important;background-size:cover!important;background-position:center 51%!important;
+ border-bottom:2px solid #c79a3d!important;box-shadow:none!important;
+}
+html body #hpHub .hp-hub-head::before{background:transparent!important;box-shadow:none!important}
+html body #hpHub .hp-hub-head .hive-war-brand{display:none!important}
+html body #hpHub .hp-hub-head .hive-war-divider{display:none!important}
+html body #hpHub .hp-hub-head .hive-war-hub-brand strong{color:#fff!important;text-shadow:0 2px 9px #000!important}
+html body #hpHub #centralGuerra.war-panel{padding-top:10px!important;background:#000!important}
+html body #hpHub #centralGuerra .war-heading{display:none!important}
+html body #hpHub #centralGuerra .war-notice{display:none!important}
+html body #hpHub #centralGuerra .war-notice.hive-war-important{display:block!important;padding:8px 4px!important;color:#ffd17b!important}
+html body #hpHub #centralGuerra .war-battle-hero{margin-top:0!important}
+html body #hpHub #centralGuerra .war-filters{background:#050505!important}
+@media(max-width:760px){html body #hpHub .hp-hub-head{background-position:58% center!important;background-image:linear-gradient(90deg,rgba(0,0,0,.98),rgba(0,0,0,.70) 50%,rgba(0,0,0,.28)),var(--hive-war-header-image)!important}}
+</style>
+<script id="hive-war-mockup-v28-notice">
+(()=>{
+ const header=document.querySelector('#hpHub .hp-hub-head');
+ if(header){const bg=getComputedStyle(header).backgroundImage;const found=bg.match(/url\(\"?(data:image\/[^)]+)\"?\)/);if(found)header.style.setProperty('--hive-war-header-image',`url(${found[1].replace(/\"$/,'')})`)}
+ const notice=document.getElementById('warNotice');
+ if(!notice)return;
+ const update=()=>notice.classList.toggle('hive-war-important',/erro|falha|⚠|indisponível|não foi possível/i.test(notice.textContent||''));
+ new MutationObserver(update).observe(notice,{childList:true,characterData:true,subtree:true});update();
+})();
+</script>
 </body>
 </html>
