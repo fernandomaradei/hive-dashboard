@@ -7902,20 +7902,20 @@ const averageRows=()=>{
   for(const k of numericKeys){
    if(k==='GuerrasParticipadas')continue;
    const valid=records.map(r=>key(r,k)).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v)));
-   out[k]=valid.length?valid.reduce((sum,v)=>sum+num(v),0)/valid.length:0;
+   out[k]=valid.length?valid.reduce((sum,v)=>sum+num(v),0)/valid.length:null;
   }
   return out;
  });
 };
 const key=(row,...names)=>{for(const n of names)if(row[n]!==undefined)return row[n];return ''};
-const warId=r=>String(key(r,'Guerra_ID','guerra_id'));
+const warId=r=>String(key(r,'Guerra_ID','guerra_id','id'));
 const player=r=>key(r,'Personagem','personagem');
 const guild=r=>key(r,'Guilda','guilda');
 const job=r=>key(r,'Job','Classe','job');
 const numericKeys=new Set(['GuerrasParticipadas','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes']);
 const columns=['Personagem','Guilda','Job','GuerrasParticipadas','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes'];
 const hasScore=v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(Number(String(v).replace(',','.')));
-const getScores=r=>[key(r,'Placar_1','placar1'),key(r,'Placar_2','placar2')];
+const getScores=r=>[key(r,'Placar_1','placar1','score_a'),key(r,'Placar_2','placar2','score_b')];
 const warDate=v=>{
  const s=String(v??'').trim();
  const m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -7924,8 +7924,8 @@ const warDate=v=>{
  return b?`${b[1]}-${b[2]}-${b[3]}`:s;
 };
 const hiveFirst=r=>{
- const g1=String(key(r,'Guilda_1','guilda1')||'Guilda 1');
- const g2=String(key(r,'Guilda_2','guilda2')||'Guilda 2');
+ const g1=String(key(r,'Guilda_1','guilda1','guild_a')||'Guilda 1');
+ const g2=String(key(r,'Guilda_2','guilda2','guild_b')||'Guilda 2');
  const [p1,p2]=getScores(r);
  const hive1=g1.trim().toLocaleLowerCase('pt-BR')==='hive';
  const hive2=g2.trim().toLocaleLowerCase('pt-BR')==='hive';
@@ -7933,7 +7933,7 @@ const hiveFirst=r=>{
 };
 const warLabel=r=>{
  const {g1,g2,p1,p2}=hiveFirst(r);
- const d=warDate(key(r,'Data_Guerra','data'));
+ const d=warDate(key(r,'Data_Guerra','data','war_date'));
  const placar=hasScore(p1)&&hasScore(p2)?` (${fmt(Number(p1))} × ${fmt(Number(p2))})`:'';
  return `${g1} × ${g2}${placar}${d?' — '+d:''}`;
 };
@@ -7965,7 +7965,7 @@ function populateWars(){
  el.add(new Option('⭐ HIVE MÉDIA — Todas as guerras',HIVE_AVG));
  [...state.wars].sort((a,b)=>{
    const dateKey=w=>{
-     const raw=String(key(w,'Data_Guerra','data')||'').trim();
+     const raw=String(key(w,'Data_Guerra','data','war_date')||'').trim();
      const iso=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
      if(iso)return `${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`;
      const br=raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
@@ -8013,7 +8013,7 @@ function renderHero(war){
  $w('warScore2').textContent=valid?fmt(n2):'—';
  $w('warTag1').textContent=winner===1?'🏆 VENCEDORA':winner===2?'DERROTA':winner===0?'EMPATE':'PLACAR PENDENTE';
  $w('warTag2').textContent=winner===2?'🏆 VENCEDORA':winner===1?'DERROTA':winner===0?'EMPATE':'PLACAR PENDENTE';
- const d=warDate(key(war,'Data_Guerra','data'));
+ const d=warDate(key(war,'Data_Guerra','data','war_date'));
  $w('warBattleDate').textContent=d?'📅 '+d:'BATALHA';
 }
 function render(){
@@ -8054,7 +8054,7 @@ function render(){
      const tier=played>=4?'high':played>=2?'mid':'low';
      return `<td class="war-games-cell"><span class="war-games-badge war-games-${tier}" title="Participou de ${played} de ${totalWars} guerras registradas">${played}/${totalWars}</span></td>`;
    }
-   return `<td>${escw(numericKeys.has(k)?(w===HIVE_AVG?new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1}).format(num(key(r,k))):fmt(num(key(r,k)))):key(r,k))}</td>`;
+   return `<td>${escw(numericKeys.has(k)?(key(r,k)===null||key(r,k)===''?'—':(w===HIVE_AVG?new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1}).format(num(key(r,k))):fmt(num(key(r,k))))):key(r,k))}</td>`;
  }).join('')}</tr>`).join('')||`<tr><td colspan="15">${w===HIVE_AVG&&!state.membersReady?'Não foi possível carregar a aba MEMBROS. Clique em Atualizar.':'Nenhum membro atual com histórico de guerra encontrado.'}</td></tr>`;
  $w('warResultsCount').textContent=`${rows.length} jogador(es)`;
  $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVE · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
@@ -8063,13 +8063,60 @@ function render(){
 async function load(){
  $w('warNotice').textContent='Carregando dados protegidos...';
  try{
-   const r=await fetch('/api/war',{credentials:'same-origin',cache:'no-store'});
+   // Fonte exclusiva da Central de Guerra: Cloudflare D1.
+   // /api/war (singular) consulta a antiga planilha e não contém as importações do extrator.
+   const r=await fetch('/api/wars?limit=100&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
    const data=await r.json();
-   if(!r.ok||!data.ok)throw Error(data.error||'Falha de leitura');
-   state.wars=data.wars||[];state.players=data.players||[];state.fields=data.fields||[];
-   // Refresh current guild membership on every explicit war refresh, never only on page load.
+   if(!r.ok||!data.ok||!Array.isArray(data.wars))throw Error(data.error||'Falha ao consultar guerras no D1 (HTTP '+r.status+')');
+   state.wars=data.wars;
+   state.players=[];
+   state.fields=[];
+   populateWars();
+   updateGuildFilter();
+   updateJobFilter();
+   render();
+   // Consulta os jogadores pelo ID de cada guerra, com concorrência limitada.
+   // O endpoint de listagem /api/wars não inclui jogadores.
+   let next=0, failed=[];
+   const fetchDetails=async()=>{
+     while(next<state.wars.length){
+       const war=state.wars[next++];
+       try{
+         const response=await fetch('/api/wars?id='+encodeURIComponent(war.id),{credentials:'same-origin',cache:'no-store'});
+         const detail=await response.json();
+         if(!response.ok||!detail.ok||!Array.isArray(detail.players))throw Error(detail.error||'HTTP '+response.status);
+         for(const p of detail.players){
+           const v=(...names)=>{for(const n of names)if(p[n]!==undefined&&p[n]!==null)return p[n];return null};
+           const row={
+             Guerra_ID:String(war.id),
+             Personagem:v('player_name','name')||'',
+             Guilda:v('guild_name')||'',
+             Job:v('class_name')||'',
+             GuerrasParticipadas:1,
+             Kills:v('kills'),
+             Mortes:v('deaths'),
+             Assistencias:v('assists'),
+             Dano_Causado:v('damage'),
+             Dano_Recebido:v('damage_taken'),
+             Cura:v('healing'),
+             Ocupacoes:v('occupation_score'),
+             Pontuacao:v('participation'),
+             Pontos_Assistencias:null,
+             Pontos_Mortes:null,
+             Pontos_Ocupacoes:null
+           };
+           state.players.push(row);
+         }
+       }catch(err){failed.push('Guerra '+war.id+': '+err.message)}
+     }
+   };
+   await Promise.all(Array.from({length:Math.min(4,state.wars.length)},fetchDetails));
    await loadCurrentMembers();
-   populateWars();updateGuildFilter();updateJobFilter();render();
+   updateGuildFilter();updateJobFilter();render();
+   if(failed.length){
+     $w('warNotice').textContent+=' · ⚠️ Falha ao carregar jogadores de '+failed.length+' guerra(s): '+failed.slice(0,2).join('; ');
+     console.warn('Falhas na leitura de guerras D1:',failed);
+   }
  }catch(e){$w('warNotice').textContent='Erro ao carregar: '+e.message;}
 }
 let warInitialized=false;
