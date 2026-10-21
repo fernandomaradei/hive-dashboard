@@ -8033,6 +8033,11 @@ function renderHero(war){
  $w('warTag2').textContent=winner===2?'🏆 VENCEDORA':winner===1?'DERROTA':winner===0?'EMPATE':'PLACAR PENDENTE';
  const d=warDate(key(war,'Data_Guerra','data','war_date'));
  $w('warBattleDate').textContent=d?'📅 '+d:'BATALHA';
+ const modeValue=String(key(war,'mode','Mode','Modo','Tipo_Guerra','tipo_guerra')||'').toLowerCase();
+ const modeLabel=modeValue.includes('vigrid')?'Vigrid Avenge':modeValue.includes('sugar')?'Vale / Sugar':modeValue.includes('vale')?'Vale / Sugar':modeValue.replace(/[_-]/g,' ').trim();
+ let modeNode=hero.querySelector('.war-battle-mode');
+ if(!modeNode){modeNode=document.createElement('span');modeNode.className='war-battle-mode';hero.querySelector('.war-versus').appendChild(modeNode);}
+ modeNode.textContent=modeLabel;modeNode.hidden=!modeLabel;
 }
 function render(){
  const w=$w('warFilter').value;
@@ -8065,7 +8070,7 @@ function render(){
  const rows=sortRows(source.filter(r=>(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
  $w('warStats').innerHTML=[['⚔️','Guerras',w===HIVE_AVG?state.wars.length:'1','war-stat-purple'],['👥','Jogadores',rows.length,'war-stat-blue'],['🔥',w===HIVE_AVG?'Dano médio / jogador':'Dano causado',fmt(w===HIVE_AVG?(rows.length?total('Dano_Causado')/rows.length:0):total('Dano_Causado')),'war-stat-red'],['✚',w===HIVE_AVG?'Cura média / jogador':'Cura',fmt(w===HIVE_AVG?(rows.length?total('Cura')/rows.length:0):total('Cura')),'war-stat-green']].map(([ic,t,v,cls])=>`<div class="war-stat ${cls}"><span class="war-stat-icon">${ic}</span><div><strong>${v}</strong><small>${escw(t)}</small></div></div>`).join('');
- $w('warRows').innerHTML=rows.map((r,i)=>`<tr>${activeColumns(w).map(k=>{
+ $w('warRows').innerHTML=rows.map((r,i)=>`<tr data-war-rank="${i+1}">${activeColumns(w).map(k=>{
    if(k==='GuerrasParticipadas'){
      if(w!==HIVE_AVG)return '<td class="war-games-cell">—</td>';
      const played=Math.max(0,Math.floor(num(key(r,k))));
@@ -9220,5 +9225,62 @@ html body #hpHub #centralGuerra .war-table th{
  html body #hpHub #centralGuerra #warStats .war-stat small{font-size:10px!important}
 }
 </style>
+
+<style id="hive-war-v32-layout">
+/* Cards quase de ponta a ponta, preservando a largura da tabela */
+@media(min-width:1001px){
+ #hpHub #centralGuerra #warStats{
+  margin-left:8px!important;margin-right:8px!important;
+  max-width:calc(100% - 16px)!important;
+  width:calc(100% - 16px)!important;
+  gap:14px!important;
+ }
+}
+#hpHub #centralGuerra #warStats .war-stat{
+ min-height:124px!important;padding:19px 22px!important;
+}
+#hpHub #centralGuerra #warStats .war-stat-icon{
+ font-size:46px!important;min-width:58px!important;
+}
+#hpHub #centralGuerra #warStats .war-stat strong{
+ font-size:clamp(20px,1.8vw,32px)!important;
+}
+#hpHub #centralGuerra #warStats .war-stat small{
+ font-size:13px!important;
+}
+#hpHub #centralGuerra .war-versus .war-battle-mode{
+ display:block;max-width:160px;margin:8px auto 0;
+ border:1px solid #c38c21;border-radius:8px;
+ padding:6px 10px;background:rgba(0,0,0,.82);
+ color:#f9f0dd;font-size:11px;font-weight:800;
+ text-align:center;white-space:nowrap;
+}
+#hpHub #centralGuerra .war-versus .war-battle-mode[hidden]{display:none!important}
+/* Numeração visual das linhas, inclusive quando a tabela é reordenada */
+#hpHub #centralGuerra .war-tablewrap{padding-left:0!important}
+#hpHub #centralGuerra .war-table tbody tr td:first-child{position:relative;padding-left:38px!important}
+#hpHub #centralGuerra .war-table tbody tr td:first-child:before{
+ content:attr(data-rank);position:absolute;left:8px;top:50%;
+ transform:translateY(-50%);color:#c7ccd5;font-weight:900;font-size:12px;
+}
+#hpHub #centralGuerra .war-table tbody tr:nth-child(1) td:first-child:before{content:'♛';color:#ffd66e;font-size:20px}
+#hpHub #centralGuerra .war-table tbody tr:nth-child(2) td:first-child:before{content:'②';color:#d5dce7;font-size:17px}
+#hpHub #centralGuerra .war-table tbody tr:nth-child(3) td:first-child:before{content:'③';color:#df9b61;font-size:17px}
+@media(max-width:760px){
+ #hpHub #centralGuerra #warStats .war-stat{min-height:96px!important;padding:12px!important}
+ #hpHub #centralGuerra #warStats .war-stat-icon{font-size:30px!important;min-width:34px!important}
+ #hpHub #centralGuerra #warStats .war-stat strong{font-size:clamp(15px,3.5vw,22px)!important}
+ #hpHub #centralGuerra #warStats .war-stat small{font-size:10px!important}
+}
+</style>
+<script id="hive-war-v32-ranking">
+/* Atualiza os números depois de cada renderização/ordenação sem alterar dados. */
+(()=>{const body=document.getElementById('warRows');if(!body)return;
+ const update=()=>{Array.from(body.querySelectorAll('tr')).forEach((tr,i)=>{
+  const td=tr.querySelector('td:first-child');if(td)td.setAttribute('data-rank',String(i+1));
+ });};
+ const observer=new MutationObserver(update);observer.observe(body,{childList:true});update();
+})();
+</script>
 </body>
 </html>
