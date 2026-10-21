@@ -9152,5 +9152,73 @@ html body #hpHub #centralGuerra .war-filters{background:#050505!important}
 <script id="hive-war-mockup-v29-notice">
 (()=>{const notice=document.getElementById('warNotice');if(!notice)return;const update=()=>notice.classList.toggle('hive-war-important',/erro|falha|⚠|indisponível|não foi possível/i.test(notice.textContent||''));new MutationObserver(update).observe(notice,{childList:true,characterData:true,subtree:true});update()})();
 </script>
+
+<style id="hive-war-visual-v31">
+/* V31: identidade visual do mockup; regras limitadas à Central de Guerra */
+#hpHub #centralGuerra{font-family:'Nunito',system-ui,sans-serif!important}
+html body #hpHub #centralGuerra .war-stats{
+ gap:12px!important;margin-top:12px!important;margin-bottom:14px!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat{
+ position:relative!important;isolation:isolate;overflow:hidden!important;
+ min-height:102px!important;padding:16px 18px!important;
+ display:flex!important;align-items:center!important;gap:15px!important;
+ border-radius:12px!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 8px 22px rgba(0,0,0,.22)!important;
+ background-size:cover!important;background-position:center!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat-purple{
+ background:linear-gradient(95deg,rgba(20,10,46,.96) 0%,rgba(24,14,64,.86) 60%,rgba(16,9,35,.62) 100%),var(--hive-war-stat-art) center/cover no-repeat!important;
+ border:1px solid #50308d!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat-blue{
+ background:linear-gradient(95deg,rgba(9,16,49,.96) 0%,rgba(13,29,69,.86) 60%,rgba(8,23,53,.60) 100%),var(--hive-war-stat-art) center/cover no-repeat!important;
+ border:1px solid #284e98!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat-red{
+ background:linear-gradient(95deg,rgba(55,7,17,.97) 0%,rgba(66,10,18,.84) 62%,rgba(33,8,12,.60) 100%),var(--hive-war-stat-art) center/cover no-repeat!important;
+ border:1px solid #8c2838!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat-green{
+ background:linear-gradient(95deg,rgba(4,48,28,.97) 0%,rgba(5,64,34,.85) 62%,rgba(3,33,23,.63) 100%),var(--hive-war-stat-art) center/cover no-repeat!important;
+ border:1px solid #167d4b!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat-icon{
+ font-size:39px!important;line-height:1!important;min-width:53px!important;
+ text-align:center!important;filter:drop-shadow(0 3px 9px rgba(0,0,0,.75))!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat strong{
+ display:block!important;color:#fff!important;font-size:clamp(19px,1.65vw,28px)!important;
+ line-height:1.12!important;letter-spacing:.01em!important;font-weight:900!important;
+ text-shadow:0 2px 9px rgba(0,0,0,.72)!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat small{
+ display:block!important;margin-top:6px!important;color:#f5f0e9!important;
+ font-size:12px!important;font-weight:800!important;text-shadow:0 2px 7px #000!important;
+}
+html body #hpHub #centralGuerra .war-results-title{
+ background:linear-gradient(90deg,#080b0f,#050709)!important;
+ border:1px solid #35414d!important;border-radius:12px 12px 0 0!important;
+}
+html body #hpHub #centralGuerra .war-tablewrap{
+ border:1px solid #35414d!important;border-top:0!important;
+ border-radius:0 0 12px 12px!important;
+}
+html body #hpHub #centralGuerra .war-table tbody tr:first-child{
+ background:linear-gradient(90deg,#4a3213,#241c13 72%,#141312)!important;
+}
+html body #hpHub #centralGuerra .war-table tbody tr:first-child td{
+ background:transparent!important;border-top-color:#79521e!important;
+}
+html body #hpHub #centralGuerra .war-table th{
+ background:#10151b!important;font-weight:900!important;
+}
+@media(max-width:760px){
+ html body #hpHub #centralGuerra #warStats .war-stat{min-height:85px!important;padding:12px!important;gap:9px!important}
+ html body #hpHub #centralGuerra #warStats .war-stat-icon{font-size:28px!important;min-width:33px!important}
+ html body #hpHub #centralGuerra #warStats .war-stat strong{font-size:clamp(15px,3.8vw,23px)!important}
+ html body #hpHub #centralGuerra #warStats .war-stat small{font-size:10px!important}
+}
+</style>
 </body>
 </html>
