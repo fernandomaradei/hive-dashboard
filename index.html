@@ -7889,6 +7889,9 @@ const isHive=r=>String(guild(r)||'').trim().toLocaleLowerCase('pt-BR')==='hive';
 const averageRows=()=>{
  const grouped=new Map();
  for(const r of state.players){
+  // Evita misturar estatisticas de modos diferentes na mesma media.
+  const war=state.wars.find(w=>warId(w)===warId(r));
+  if(String(war?.mode||'legacy').toLowerCase()!==averageMode())continue;
   if(!isHive(r)||!state.membersReady)continue;
   const currentName=currentHistoricalName(player(r));
   const id=normalizeMemberName(currentName);
@@ -7917,7 +7920,10 @@ const columns=['Personagem','Guilda','Job','GuerrasParticipadas','Kills','Assist
 const vigridColumns=['Personagem','Guilda','Job','Power','Kills','Mortes','Assistencias','KDA','Dano_Causado','Dano_Recebido','Cura','Participacao','Ocupacoes','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Titulos'];
 const columnTitles={Personagem:'Personagem',Guilda:'Guilda',Job:'Job',Power:'Power',Kills:'K',Mortes:'D',Assistencias:'A',KDA:'KDA',Dano_Causado:'Dano causado',Dano_Recebido:'Dano recebido',Cura:'Cura',Participacao:'Part.',Ocupacoes:'Ocup.',Merito:'Mérito',PP_Vigrid:'PP Vigrid',GP:'GP',Recursos:'Ress.',Moedas:'Mon.',Minutos:'Min',Titulos:'Títulos',GuerrasParticipadas:'Guerras',Pontuacao:'Pontos',Pontos_Assistencias:'Pts. assist.',Pontos_Mortes:'Pts. mortes',Pontos_Ocupacoes:'Pts. ocup.'};
 const selectedMode=w=>String((state.wars.find(r=>warId(r)===w)||{}).mode||'').toLowerCase();
-const activeColumns=w=>w!==HIVE_AVG&&selectedMode(w)==='vigrid_avenge'?vigridColumns:columns;
+// A media usa o mesmo conjunto de colunas da ultima guerra cadastrada.
+const latestWar=()=>[...state.wars].sort((a,b)=>String(b.war_date||'').localeCompare(String(a.war_date||''))||Number(b.id||0)-Number(a.id||0))[0]||null;
+const averageMode=()=>String(latestWar()?.mode||'legacy').toLowerCase();
+const activeColumns=w=>(w===HIVE_AVG?averageMode():selectedMode(w))==='vigrid_avenge'?vigridColumns:columns;
 function updateColumns(w){
  const head=$w('warTableWrap').querySelector('thead tr');
  const keys=activeColumns(w);
@@ -8104,19 +8110,33 @@ async function load(){
          if(!response.ok||!detail.ok||!Array.isArray(detail.players))throw Error(detail.error||'HTTP '+response.status);
          for(const p of detail.players){
            const v=(...names)=>{for(const n of names)if(p[n]!==undefined&&p[n]!==null)return p[n];return null};
-           let extras={};
-           try{extras=typeof p.stats_json==='string'?JSON.parse(p.stats_json||'{}'):(p.stats_json||{});}catch(_){extras={};}
-           // O Worker grava os indicadores Vigrid em stats_json.stats_extra.
-           // Preserva zeros como valores válidos e mantém NULL como indisponível.
-           let detail={};
-           try{detail=typeof extras.stats_extra==='string'?JSON.parse(extras.stats_extra||'{}'):(extras.stats_extra||{});}catch(_){detail={};}
+           const parseObject=(value)=>{
+             if(value&&typeof value==='object')return value;
+             if(typeof value!=='string')return {};
+             try{const obj=JSON.parse(value);return obj&&typeof obj==='object'?obj:{}}catch(_){return {}}
+           };
+           const extras=parseObject(p.stats_json);
+           const detail=parseObject(extras.stats_extra);
+           const other=parseObject(p.stats_extra);
+           const sources=[detail,extras,other,p];
            const ex=(...names)=>{
-             for(const source of [p,extras,detail]){
-               if(!source||typeof source!=='object')continue;
-               for(const n of names)if(Object.prototype.hasOwnProperty.call(source,n)&&source[n]!==null&&source[n]!==undefined&&source[n]!=='')return source[n];
+             for(const source of sources){
+               for(const n of names){
+                 const val=source?.[n];
+                 if(val!==null&&val!==undefined&&val!=='')return val;
+               }
              }
              return null;
            };
+           // Ajuda a diagnosticar campos que nao chegam ao browser apesar de existirem no D1.
+           if(String(p.player_name||'').toLowerCase()==='maradei'){
+             console.info('[HIVE D1] Verificacao de stats_extra:',{
+               stats_json_recebido:p.stats_json!==undefined,
+               stats_extra_recebido:extras.stats_extra!==undefined,
+               campos: Object.keys(detail),
+               pp_vigrid:ex('pp_vigrid'),merito:ex('merito'),gp:ex('gp')
+             });
+           }
            const row={
              Guerra_ID:String(war.id),
              Personagem:v('player_name','name')||'',
@@ -8152,8 +8172,14 @@ async function load(){
      }
    };
    await Promise.all(Array.from({length:Math.min(4,state.wars.length)},fetchDetails));
+   const vigridRows=state.players.filter(p=>state.wars.some(w=>warId(w)===warId(p)&&w.mode==='vigrid_avenge'));
+   const missingExtras=vigridRows.length>0&&!vigridRows.some(p=>p.PP_Vigrid!==null||p.Merito!==null||p.GP!==null);
    await loadCurrentMembers();
    updateGuildFilter();updateJobFilter();render();
+   if(missingExtras){
+     $w('warNotice').textContent+=' · ⚠️ API de jogadores nao retornou atributos extras. Confira /api/wars?id=1 (campo stats_json).';
+     console.warn('[HIVE D1] Campos extras ausentes na resposta da API. Inspecione /api/wars?id=<ID> e verifique stats_json.');
+   }
    if(failed.length){
      $w('warNotice').textContent+=' · ⚠️ Falha ao carregar jogadores de '+failed.length+' guerra(s): '+failed.slice(0,2).join('; ');
      console.warn('Falhas na leitura de guerras D1:',failed);
