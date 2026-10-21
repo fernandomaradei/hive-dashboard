@@ -8106,7 +8106,17 @@ async function load(){
            const v=(...names)=>{for(const n of names)if(p[n]!==undefined&&p[n]!==null)return p[n];return null};
            let extras={};
            try{extras=typeof p.stats_json==='string'?JSON.parse(p.stats_json||'{}'):(p.stats_json||{});}catch(_){extras={};}
-           const ex=(...names)=>{for(const n of names){if(p[n]!==undefined&&p[n]!==null)return p[n];if(extras[n]!==undefined&&extras[n]!==null)return extras[n];}return null;};
+           // O Worker grava os indicadores Vigrid em stats_json.stats_extra.
+           // Preserva zeros como valores válidos e mantém NULL como indisponível.
+           let detail={};
+           try{detail=typeof extras.stats_extra==='string'?JSON.parse(extras.stats_extra||'{}'):(extras.stats_extra||{});}catch(_){detail={};}
+           const ex=(...names)=>{
+             for(const source of [p,extras,detail]){
+               if(!source||typeof source!=='object')continue;
+               for(const n of names)if(Object.prototype.hasOwnProperty.call(source,n)&&source[n]!==null&&source[n]!==undefined&&source[n]!=='')return source[n];
+             }
+             return null;
+           };
            const row={
              Guerra_ID:String(war.id),
              Personagem:v('player_name','name')||'',
@@ -8118,10 +8128,10 @@ async function load(){
              Merito:ex('merit','merito'),
              PP_Vigrid:ex('pp_vigrid','vigrid_pp'),
              GP:ex('gp'),
-             Recursos:ex('resources','recursos'),
-             Moedas:ex('coins','moedas'),
-             Minutos:ex('minutes','minutos','time_played'),
-             Titulos:ex('titles','titulos'),
+             Recursos:ex('ressurreicoes','resurreicoes','resurrections'),
+             Moedas:ex('monstros','monsters'),
+             Minutos:ex('min_individual','minutes','minutos','time_played'),
+             Titulos:ex('titulos','titles'),
              GuerrasParticipadas:1,
              Kills:v('kills'),
              Mortes:v('deaths'),
@@ -8129,8 +8139,8 @@ async function load(){
              Dano_Causado:v('damage'),
              Dano_Recebido:v('damage_taken'),
              Cura:v('healing'),
-             Ocupacoes:v('occupation_score'),
-             Pontuacao:v('participation'),
+             Ocupacoes:ex('occupation_score','ocupacoes','occupation'),
+             Pontuacao:ex('pontuacao','participation'),
              Pontos_Assistencias:null,
              Pontos_Mortes:null,
              Pontos_Ocupacoes:null
