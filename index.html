@@ -9127,6 +9127,27 @@ html body #hpHub #centralGuerra .war-notice.hive-war-important{display:block!imp
 html body #hpHub #centralGuerra .war-battle-hero{margin-top:0!important}
 html body #hpHub #centralGuerra .war-filters{background:#050505!important}
 @media(max-width:760px){html body #hpHub .hp-hub-head{background-position:center,65% center!important}}
+
+/* V30 — continuidade visual das bandeiras até o VS, sem faixas vazias */
+@media(min-width:651px){
+ html body #hpHub #centralGuerra .war-battle-hero::before,
+ html body #hpHub #centralGuerra .war-battle-hero::after{
+   width:59%!important;opacity:1!important;
+   background-size:cover!important;background-repeat:no-repeat!important;
+ }
+ html body #hpHub #centralGuerra .war-battle-hero::before{
+   -webkit-mask-image:linear-gradient(to right,#000 0%,#000 60%,transparent 100%)!important;
+   mask-image:linear-gradient(to right,#000 0%,#000 60%,transparent 100%)!important;
+ }
+ html body #hpHub #centralGuerra .war-battle-hero::after{
+   -webkit-mask-image:linear-gradient(to left,#000 0%,#000 60%,transparent 100%)!important;
+   mask-image:linear-gradient(to left,#000 0%,#000 60%,transparent 100%)!important;
+ }
+}
+@media(max-width:650px){
+ html body #hpHub #centralGuerra .war-battle-hero::before,
+ html body #hpHub #centralGuerra .war-battle-hero::after{width:57%!important;opacity:1!important}
+}
 </style>
 <script id="hive-war-mockup-v29-notice">
 (()=>{const notice=document.getElementById('warNotice');if(!notice)return;const update=()=>notice.classList.toggle('hive-war-important',/erro|falha|⚠|indisponível|não foi possível/i.test(notice.textContent||''));new MutationObserver(update).observe(notice,{childList:true,characterData:true,subtree:true});update()})();
