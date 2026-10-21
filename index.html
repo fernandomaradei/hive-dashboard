@@ -9282,5 +9282,59 @@ html body #hpHub #centralGuerra .war-table th{
  const observer=new MutationObserver(update);observer.observe(body,{childList:true});update();
 })();
 </script>
+
+<style id="hive-war-v33-full-width-unified">
+/* Largura real: desfaz os recuos acumulados das versões antigas */
+html body #hpHub .hp-hub-content{max-width:none!important;width:100%!important;padding:0 12px 30px!important;margin:0 auto!important;background:#050608!important}
+html body #hpHub #centralGuerra.war-panel{max-width:none!important;width:100%!important;padding:0 0 20px!important;background:#050608!important}
+html body #hpHub #centralGuerra .war-heading,
+html body #hpHub #centralGuerra .war-filters,
+html body #hpHub #centralGuerra .war-battle-hero,
+html body #hpHub #centralGuerra #warStats,
+html body #hpHub #centralGuerra .war-results-title,
+html body #hpHub #centralGuerra .war-tablewrap{
+ width:calc(100% - 24px)!important;max-width:none!important;
+ margin-left:12px!important;margin-right:12px!important;
+}
+html body #hpHub #centralGuerra #warStats{
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:14px!important;margin-top:14px!important;margin-bottom:16px!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat{
+ min-width:0!important;min-height:142px!important;padding:22px!important;
+ border-radius:14px!important;align-items:center!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat strong{
+ font-size:clamp(21px,2vw,34px)!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat small{
+ font-size:13px!important;margin-top:8px!important;
+}
+html body #hpHub #centralGuerra #warStats .war-stat-icon{
+ font-size:50px!important;min-width:62px!important;
+}
+/* Plano de fundo uniforme: elimina faixas pretas em tons diferentes */
+html body #hpHub,html body #hpHub .hp-hub-content,
+html body #hpHub #centralGuerra,
+html body #hpHub #centralGuerra .war-content{
+ background-color:#050608!important;
+}
+html body #hpHub #centralGuerra .war-results-title,
+html body #hpHub #centralGuerra .war-filters{
+ background:#080b0f!important;
+}
+@media(max-width:1000px){
+ html body #hpHub #centralGuerra #warStats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html body #hpHub #centralGuerra #warStats .war-stat{min-height:115px!important}
+}
+@media(max-width:560px){
+ html body #hpHub .hp-hub-content{padding:0 5px 16px!important}
+ html body #hpHub #centralGuerra #warStats{gap:8px!important}
+ html body #hpHub #centralGuerra #warStats .war-stat{min-height:100px!important;padding:10px!important}
+ html body #hpHub #centralGuerra #warStats .war-stat-icon{font-size:28px!important;min-width:30px!important}
+ html body #hpHub #centralGuerra #warStats .war-stat strong{font-size:clamp(14px,3.5vw,21px)!important}
+ html body #hpHub #centralGuerra #warStats .war-stat small{font-size:10px!important}
+}
+</style>
 </body>
 </html>
