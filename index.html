@@ -8551,23 +8551,46 @@ function openHub(tab='war'){
 const hpHistoricalAliases=new Map([['bruxo','Bruxo†']]);
 const hpCanonicalHistoricalName=name=>hpHistoricalAliases.get(norm(name))||String(name??'').trim();
 async function loadAverages(){
- const res=await fetch('/api/war',{credentials:'same-origin',cache:'no-store'});
- if(!res.ok)throw Error('Falha ao carregar médias de guerra.');
- const data=await res.json();
- if(!data.ok||!Array.isArray(data.players))throw Error('Histórico de guerra indisponível.');
+ // Fonte de histórico: Cloudflare D1. /api/war era a integração antiga.
+ const listRes=await fetch('/api/wars?limit=100&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
+ if(!listRes.ok)throw Error('Falha ao consultar histórico no D1 (HTTP '+listRes.status+').');
+ const list=await listRes.json();
+ if(!list.ok||!Array.isArray(list.wars))throw Error(list.error||'Histórico D1 indisponível.');
  const allowed=new Set(members.map(idOf));
  const groups=new Map();
- for(const r of data.players){
-  if(norm(r.Guilda??r.guilda)!=='hive')continue;
-  const id=norm(hpCanonicalHistoricalName(r.Personagem??r.personagem));
-  const war=String(r.Guerra_ID??r.guerra_id??'');
-  if(!id||!war||!allowed.has(id))continue;
-  if(!groups.has(id))groups.set(id,new Map());
-  groups.get(id).set(war,r);
- }
+ const warList=list.wars.filter(w=>w.id!==undefined&&w.id!==null);
+ let cursor=0,failed=0,loaded=0;
+ const readWar=async()=>{
+  while(cursor<warList.length){
+   const w=warList[cursor++];
+   try{
+    const res=await fetch('/api/wars?id='+encodeURIComponent(w.id),{credentials:'same-origin',cache:'no-store'});
+    if(!res.ok)throw Error('HTTP '+res.status);
+    const detail=await res.json();
+    if(!detail.ok||!Array.isArray(detail.players))throw Error(detail.error||'Jogadores ausentes');
+    loaded++;
+    for(const r of detail.players){
+     if(norm(r.guild_name??r.Guilda??r.guilda)!=='hive')continue;
+     const id=norm(hpCanonicalHistoricalName(r.player_name??r.Personagem??r.personagem??r.name));
+     if(!id||!allowed.has(id))continue;
+     if(!groups.has(id))groups.set(id,new Map());
+     groups.get(id).set(String(w.id),{
+      Dano_Causado:r.damage??r.Dano_Causado,
+      Dano_Recebido:r.damage_taken??r.Dano_Recebido,
+      Cura:r.healing??r.Cura,
+      Kills:r.kills??r.Kills,
+      Assistencias:r.assists??r.Assistencias,
+      Mortes:r.deaths??r.Mortes
+     });
+    }
+   }catch(err){failed++;console.warn('[HIVE Plantel] Histórico D1 guerra '+w.id,err)}
+  }
+ };
+ await Promise.all(Array.from({length:Math.min(4,warList.length)},readWar));
+ if(warList.length&&!loaded)throw Error('Não foi possível ler os jogadores das guerras no D1.');
  const avg=(rows,k)=>{
-  const values=rows.map(r=>r[k]??r[k.toLowerCase()]).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v)));
-  return values.length?values.reduce((total,v)=>total+num(v),0)/values.length:0;
+  const values=rows.map(r=>r[k]).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v)));
+  return values.length?values.reduce((sum,v)=>sum+num(v),0)/values.length:0;
  };
  averages=new Map();
  for(const [id,records] of groups){
@@ -8577,8 +8600,8 @@ async function loadAverages(){
    heal:avg(rows,'Cura'),kills:avg(rows,'Kills'),assists:avg(rows,'Assistencias'),deaths:avg(rows,'Mortes')
   });
  }
+ if(failed)console.warn('[HIVE Plantel] Guerras D1 não carregadas:',failed,'de',warList.length);
 }
-
 // Independent, self-contained shareable exports; no CDN or backend required.
 function hpDownload(blob,filename){
  const u=URL.createObjectURL(blob),a=document.createElement('a');
@@ -9513,6 +9536,51 @@ html body #hpHub .hp-hub-head .hp-actions button{
  html body #hpHub .hp-hub-head .hive-war-crest{width:62px!important;min-width:62px!important;height:82px!important;font-size:34px!important}
  html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong{font-size:23px!important}
  html body #hpHub .hp-hub-head .hive-war-hub-brand>div>small:before{letter-spacing:.14em!important}
+}
+</style>
+
+<style id="hive-plantel-v38-summary">
+/* Power da formação em uma faixa simples, sem caixas ou cabeçalhos */
+#hivePlantelPanel .hp-power-summary{
+ display:block!important;background:transparent!important;border:0!important;
+ box-shadow:none!important;outline:0!important;padding:5px 8px!important;
+ margin:4px 0 9px!important;border-radius:0!important;
+}
+#hivePlantelPanel .hp-power-heading{display:none!important}
+#hivePlantelPanel .hp-power-columns{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ flex-wrap:wrap!important;gap:12px 28px!important;background:transparent!important;
+ border:0!important;padding:0!important;box-shadow:none!important;
+}
+#hivePlantelPanel .hp-power-group{
+ display:flex!important;align-items:center!important;gap:12px!important;
+ flex:0 1 auto!important;min-width:0!important;padding:0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;outline:0!important;
+}
+#hivePlantelPanel .hp-power-group>span{display:none!important}
+#hivePlantelPanel .hp-power-group>div{
+ display:flex!important;align-items:baseline!important;gap:5px!important;
+ padding:0!important;margin:0!important;min-width:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+}
+#hivePlantelPanel .hp-power-group strong{
+ font-size:19px!important;line-height:1.25!important;margin:0!important;
+}
+#hivePlantelPanel .hp-power-group small{
+ font-size:10px!important;white-space:nowrap!important;margin:0!important;
+}
+#hivePlantelPanel .hp-power-all:before,
+#hivePlantelPanel .hp-power-main:before,
+#hivePlantelPanel .hp-power-sub:before{
+ font-size:11px;font-weight:900;letter-spacing:.04em;color:#f0c66e;
+}
+#hivePlantelPanel .hp-power-all:before{content:"PLANTEL"}
+#hivePlantelPanel .hp-power-main:before{content:"MAIN"}
+#hivePlantelPanel .hp-power-sub:before{content:"SUB"}
+@media(max-width:760px){
+ #hivePlantelPanel .hp-power-columns{gap:8px 16px!important}
+ #hivePlantelPanel .hp-power-group strong{font-size:16px!important}
 }
 </style>
 </body>
