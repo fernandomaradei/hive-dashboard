@@ -8816,47 +8816,122 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   background:linear-gradient(100deg,rgba(10,47,33,.90),rgba(28,106,63,.40)),var(--hive-war-stat-art) center / cover no-repeat!important;
 }
 </style>
-<style id="hive-central-unified-flags-v2">
-/* HIVE Central v2: visual integrado, bandeiras de tecido e sem cartões separados */
-#hpHub #centralGuerra.war-panel{margin:0 auto 25px!important;max-width:1600px!important;width:100%!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#07111e!important;padding:0 18px 24px!important;overflow:visible!important}
-#hpHub #centralGuerra .war-heading{min-height:0!important;background:#07111e!important;background-image:none!important;border:0!important;padding:16px 5px 12px!important;align-items:center!important}
-#hpHub #centralGuerra .hive-war-banner-crest{display:none!important}
-#hpHub #centralGuerra .war-kicker{display:none!important}
-#hpHub #centralGuerra .war-heading h2{font-family:system-ui,sans-serif!important;font-size:clamp(21px,2vw,27px)!important;font-weight:800!important;margin:0 0 3px!important}
-#hpHub #centralGuerra .war-heading p{font-size:12px!important;color:#aebed1!important}
-#hpHub #centralGuerra #warReload{padding:9px 14px!important;font-size:12px!important}
-#hpHub #centralGuerra .war-notice{border:0!important;border-bottom:1px solid #26374a!important;background:transparent!important;padding:8px 5px 12px!important;font-size:12px!important}
-#hpHub #centralGuerra .war-battle-hero{display:grid!important;position:relative!important;isolation:isolate!important;grid-template-columns:minmax(0,1fr) 110px minmax(0,1fr)!important;align-items:center!important;min-height:190px!important;padding:17px 24px!important;margin:12px 0 6px!important;max-width:none!important;gap:10px!important;border:0!important;border-bottom:1px solid #33445b!important;border-radius:0!important;box-shadow:none!important;background:linear-gradient(90deg,#221b12 0%,#101923 42%,#101923 58%,#0d243d 100%)!important;overflow:hidden!important}
+
+<style id="hive-central-mockup-assets-v3">
+
+#hpHub .hp-hub-head{
+  background-image:linear-gradient(90deg,#061323 0%,#061323f2 31%,#06132365 56%,#061323b0 100%),url("assets/castelo_cabecalho.webp")!important;
+  background-size:cover!important;background-position:center!important;
+  min-height:130px!important;border-bottom:2px solid #c79643!important
+}
+
+
+/* Central de Guerra v3 — arte REAL do mockup; CSS isolado da página principal */
+#hpHub #centralGuerra.war-panel{
+  width:100%!important;max-width:1700px!important;margin:0 auto 24px!important;
+  padding:0 18px 26px!important;border:0!important;border-radius:0!important;
+  background:#061323!important;box-shadow:none!important;overflow:visible!important
+}
+#hpHub #centralGuerra .war-heading{
+  min-height:0!important;margin:0!important;padding:12px 2px 9px!important;
+  background:transparent!important;border:0!important;box-shadow:none!important
+}
+#hpHub #centralGuerra .war-heading h2{font:800 clamp(20px,2vw,28px)/1.2 system-ui,sans-serif!important;color:#f7cb72!important}
+#hpHub #centralGuerra .war-heading p{font-size:12px!important;color:#aab8ca!important}
+#hpHub #centralGuerra .hive-war-banner-crest,#hpHub #centralGuerra .war-kicker{display:none!important}
+#hpHub #centralGuerra .war-notice{
+  padding:5px 2px 10px!important;margin:0!important;border:0!important;
+  background:transparent!important;color:#d4b36c!important;font-size:12px!important
+}
+#hpHub #centralGuerra .war-battle-hero{
+  display:grid!important;position:relative!important;isolation:isolate!important;
+  grid-template-columns:minmax(0,1fr) minmax(100px,14%) minmax(0,1fr)!important;
+  min-height:235px!important;margin:10px 0 13px!important;padding:18px 30px!important;gap:12px!important;
+  overflow:hidden!important;border:1px solid #bd873c!important;border-radius:15px!important;
+  box-shadow:inset 0 0 24px #0007!important;
+  background:linear-gradient(90deg,#301805 0%,#0a1829 43%,#0a1829 57%,#062e58 100%)!important
+}
 #hpHub #centralGuerra .war-battle-hero[hidden]{display:none!important}
-#hpHub #centralGuerra .war-battle-hero::before,#hpHub #centralGuerra .war-battle-hero::after{content:""!important;position:absolute!important;top:5%!important;bottom:5%!important;width:27%!important;z-index:0!important;background-repeat:no-repeat!important;background-size:contain!important;opacity:.80!important;filter:drop-shadow(0 8px 9px #0008)!important;mask-image:none!important;-webkit-mask-image:none!important;pointer-events:none!important}
-#hpHub #centralGuerra .war-battle-hero::before{left:3%!important;right:auto!important;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20270%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22fabric%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23f6d58b%22%2F%3E%3Cstop%20offset%3D%22.48%22%20stop-color%3D%22%239c631b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f6d58b%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22shade%22%3E%3Cstop%20stop-color%3D%22%23000%22%20stop-opacity%3D%22.25%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.20%22%2F%3E%3Cstop%20offset%3D%22.75%22%20stop-color%3D%22%23000%22%20stop-opacity%3D%22.16%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.15%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M38%2015%20L38%20265%22%20stroke%3D%22%23b9a982%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%23e4c77e%22%2F%3E%3Cpath%20d%3D%22M44%2037%20C106%208%20165%2062%20228%2035%20S340%2035%20371%2048%20L371%20207%20C304%20175%20266%20238%20195%20211%20S101%20203%2044%20221Z%22%20fill%3D%22url%28%23fabric%29%22%20stroke%3D%22%23f6d58b%22%20stroke-width%3D%225%22%2F%3E%3Cpath%20d%3D%22M44%2037%20C106%208%20165%2062%20228%2035%20S340%2035%20371%2048%20L371%20207%20C304%20175%20266%20238%20195%20211%20S101%20203%2044%20221Z%22%20fill%3D%22url%28%23shade%29%22%2F%3E%3Ctext%20x%3D%22202%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%22123%22%20fill%3D%22%23f6d58b%22%20opacity%3D%22.9%22%3E%E2%9A%9C%3C%2Ftext%3E%3C%2Fsvg%3E")!important;background-position:left center!important;transform:none!important}
-#hpHub #centralGuerra .war-battle-hero::after{right:3%!important;left:auto!important;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20270%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22fabric%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23a8dfff%22%2F%3E%3Cstop%20offset%3D%22.48%22%20stop-color%3D%22%23164d9c%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23a8dfff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22shade%22%3E%3Cstop%20stop-color%3D%22%23000%22%20stop-opacity%3D%22.25%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.20%22%2F%3E%3Cstop%20offset%3D%22.75%22%20stop-color%3D%22%23000%22%20stop-opacity%3D%22.16%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.15%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M38%2015%20L38%20265%22%20stroke%3D%22%23b9a982%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%23e4c77e%22%2F%3E%3Cpath%20d%3D%22M44%2037%20C106%208%20165%2062%20228%2035%20S340%2035%20371%2048%20L371%20207%20C304%20175%20266%20238%20195%20211%20S101%20203%2044%20221Z%22%20fill%3D%22url%28%23fabric%29%22%20stroke%3D%22%23a8dfff%22%20stroke-width%3D%225%22%2F%3E%3Cpath%20d%3D%22M44%2037%20C106%208%20165%2062%20228%2035%20S340%2035%20371%2048%20L371%20207%20C304%20175%20266%20238%20195%20211%20S101%20203%2044%20221Z%22%20fill%3D%22url%28%23shade%29%22%2F%3E%3Ctext%20x%3D%22202%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%22123%22%20fill%3D%22%23a8dfff%22%20opacity%3D%22.9%22%3E%E2%97%86%3C%2Ftext%3E%3C%2Fsvg%3E")!important;background-position:right center!important;transform:scaleX(-1)!important}
-#hpHub #centralGuerra .war-battle-hero .war-team{position:relative!important;z-index:2!important;gap:5px!important;min-width:0!important}
-#hpHub #centralGuerra .war-battle-hero .war-team-left{padding:0 0 0 21%!important;align-items:center!important;text-align:center!important}
-#hpHub #centralGuerra .war-battle-hero .war-team-right{padding:0 21% 0 0!important;align-items:center!important;text-align:center!important}
+#hpHub #centralGuerra .war-battle-hero::before,
+#hpHub #centralGuerra .war-battle-hero::after{
+  content:""!important;display:block!important;position:absolute!important;top:0!important;bottom:0!important;
+  width:40%!important;height:100%!important;z-index:0!important;
+  background-repeat:no-repeat!important;background-size:cover!important;
+  pointer-events:none!important;opacity:1!important;filter:none!important;
+  transform:none!important;mask-image:none!important;-webkit-mask-image:none!important
+}
+#hpHub #centralGuerra .war-battle-hero::before{
+  left:0!important;right:auto!important;
+  background-image:linear-gradient(90deg,transparent 35%,#081524 100%),url("assets/bandeira_hive.webp")!important;
+  background-position:center center!important
+}
+#hpHub #centralGuerra .war-battle-hero::after{
+  right:0!important;left:auto!important;
+  background-image:linear-gradient(270deg,transparent 35%,#081524 100%),url("assets/bandeira_adversaria.webp")!important;
+  background-position:center center!important
+}
+#hpHub #centralGuerra .war-battle-hero .war-team,
+#hpHub #centralGuerra .war-battle-hero .war-versus{position:relative!important;z-index:2!important}
+#hpHub #centralGuerra .war-battle-hero .war-team{gap:7px!important}
+#hpHub #centralGuerra .war-battle-hero .war-team-left{
+  padding:0 0 0 42%!important;align-items:center!important;text-align:center!important
+}
+#hpHub #centralGuerra .war-battle-hero .war-team-right{
+  padding:0 42% 0 0!important;align-items:center!important;text-align:center!important
+}
 #hpHub #centralGuerra .war-battle-hero .war-team-identity{justify-content:center!important;gap:8px!important}
-#hpHub #centralGuerra .war-battle-hero .war-team-name{font-size:clamp(21px,2.5vw,33px)!important;line-height:1.12!important}
-#hpHub #centralGuerra .war-battle-hero .war-team-score{font-size:clamp(33px,3.3vw,48px)!important;line-height:1.1!important}
-#hpHub #centralGuerra .war-battle-hero .war-versus{position:relative!important;z-index:2!important;gap:8px!important}
-#hpHub #centralGuerra .war-battle-hero .war-vs{font-size:clamp(35px,4vw,52px)!important}
-#hpHub #centralGuerra .war-filters{padding:16px 0 10px!important;margin:0!important;background:transparent!important;gap:12px!important}
-#hpHub #centralGuerra .war-filters select,#hpHub #centralGuerra .war-filters input{min-height:40px!important;border-color:#43546b!important}
-#hpHub #centralGuerra .war-stats{margin:6px 0 12px!important;max-width:none!important;gap:8px!important}
-#hpHub #centralGuerra .war-stats .war-stat{min-height:62px!important;border:1px solid #29394c!important;border-radius:7px!important;box-shadow:none!important;padding:9px 12px!important;background:#101e2d!important;background-image:none!important}
-#hpHub #centralGuerra .war-stats .war-stat strong{font-size:clamp(17px,1.7vw,23px)!important}
-#hpHub #centralGuerra .war-stats .war-stat small{font-size:11px!important}
-#hpHub #centralGuerra .war-results-title{margin:13px 0 0!important;max-width:none!important;padding:12px 4px!important;background:transparent!important;border:0!important;border-top:1px solid #304052!important;border-radius:0!important}
-#hpHub #centralGuerra .war-tablewrap{margin:0!important;max-width:none!important;border:1px solid #2b3a4c!important;border-radius:7px!important;box-shadow:none!important}
+#hpHub #centralGuerra .war-battle-hero .war-team-name{
+  color:#fff4df!important;font-size:clamp(22px,2.5vw,35px)!important;
+  text-shadow:0 3px 12px #000!important
+}
+#hpHub #centralGuerra .war-battle-hero .war-team-score{
+  font-size:clamp(34px,3.5vw,55px)!important;text-shadow:0 2px 12px #000!important
+}
+#hpHub #centralGuerra .war-battle-hero .war-versus{gap:9px!important}
+#hpHub #centralGuerra .war-battle-hero .war-vs{
+  font-size:clamp(38px,5vw,68px)!important;color:#ffc960!important
+}
+#hpHub #centralGuerra .war-battle-hero .war-team-tag{
+  border-radius:8px!important;padding:5px 12px!important
+}
+#hpHub #centralGuerra .war-filters{
+  margin:0!important;padding:5px 0 12px!important;background:transparent!important;gap:13px!important
+}
+#hpHub #centralGuerra .war-filters label{font-size:12px!important}
+#hpHub #centralGuerra .war-filters select,
+#hpHub #centralGuerra .war-filters input{
+  min-height:44px!important;border:1px solid #46627e!important;border-radius:7px!important;
+  background:#071626!important
+}
+#hpHub #centralGuerra .war-stats{margin:0 0 12px!important;gap:12px!important}
+#hpHub #centralGuerra .war-stats .war-stat{
+  min-height:70px!important;padding:11px 15px!important;border-radius:9px!important;
+  border:1px solid #40546b!important;box-shadow:none!important
+}
+#hpHub #centralGuerra .war-stats .war-stat strong{font-size:clamp(18px,1.7vw,26px)!important}
+#hpHub #centralGuerra .war-results-title{
+  margin:12px 0 0!important;padding:12px 14px!important;
+  background:#101a26!important;border:1px solid #765832!important;
+  border-radius:12px 12px 0 0!important
+}
+#hpHub #centralGuerra .war-tablewrap{
+  margin:0!important;border:1px solid #765832!important;border-top:0!important;
+  border-radius:0 0 12px 12px!important;box-shadow:none!important
+}
+#hpHub #centralGuerra .war-table tbody tr:nth-child(odd){background:#0a192a!important}
+#hpHub #centralGuerra .war-table tbody tr:nth-child(even){background:#132333!important}
+#hpHub #centralGuerra .war-table tbody tr:hover{background:#27415d!important}
 #hpHub #centralGuerra .war-note{margin:10px 0!important}
-@media(max-width:800px){
- #hpHub #centralGuerra.war-panel{padding:0 10px 15px!important}
- #hpHub #centralGuerra .war-battle-hero{min-height:148px!important;grid-template-columns:minmax(0,1fr) 48px minmax(0,1fr)!important;padding:10px 6px!important;gap:3px!important}
- #hpHub #centralGuerra .war-battle-hero::before,#hpHub #centralGuerra .war-battle-hero::after{width:43%!important;opacity:.28!important}
+@media(max-width:900px){
+ #hpHub #centralGuerra.war-panel{padding:0 9px 16px!important}
+ #hpHub #centralGuerra .war-battle-hero{min-height:165px!important;padding:12px 6px!important;grid-template-columns:minmax(0,1fr) 55px minmax(0,1fr)!important;gap:2px!important}
+ #hpHub #centralGuerra .war-battle-hero::before,#hpHub #centralGuerra .war-battle-hero::after{width:48%!important;opacity:.55!important}
  #hpHub #centralGuerra .war-battle-hero .war-team-left,#hpHub #centralGuerra .war-battle-hero .war-team-right{padding:0!important}
  #hpHub #centralGuerra .war-battle-hero .war-team-name{font-size:17px!important}
- #hpHub #centralGuerra .war-battle-hero .war-team-score{font-size:27px!important}
- #hpHub #centralGuerra .war-battle-hero .war-guild-emblem{width:26px!important;height:26px!important}
+ #hpHub #centralGuerra .war-battle-hero .war-team-score{font-size:28px!important}
+ #hpHub #centralGuerra .war-battle-hero .war-guild-emblem{width:28px!important;height:28px!important;flex-basis:28px!important}
  #hpHub #centralGuerra .war-battle-hero .war-team-tag{font-size:9px!important;padding:3px 6px!important}
+ #hpHub #centralGuerra .war-battle-hero .war-vs{font-size:35px!important}
 }
 
 </style>
