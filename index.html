@@ -9372,5 +9372,65 @@ html body #hpHub #centralGuerra .war-table tbody tr:nth-child(3) td:first-child:
  html body #hpHub #centralGuerra #warStats .war-stat-icon{font-size:29px!important;min-width:33px!important}
 }
 </style>
+<style id="hive-war-v35-premium-header">
+/* Cabeçalho mais sofisticado: contraste preto, dourado e castelo preservado */
+html body #hpHub .hp-hub-head{
+ min-height:168px!important;padding:24px 30px!important;
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:28px!important;position:relative!important;overflow:hidden!important;
+ border-bottom:2px solid #e8ad39!important;
+ box-shadow:inset 0 -8px 20px rgba(0,0,0,.45),0 5px 22px rgba(0,0,0,.5)!important;
+}
+html body #hpHub .hp-hub-head:after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(90deg,rgba(0,0,0,.97) 0%,rgba(0,0,0,.91) 22%,rgba(0,0,0,.54) 46%,rgba(0,0,0,.08) 73%,rgba(0,0,0,.45) 100%);
+ z-index:0;
+}
+html body #hpHub .hp-hub-head>.hive-war-hub-brand,
+html body #hpHub .hp-hub-head>.hp-actions{position:relative!important;z-index:2!important}
+html body #hpHub .hive-war-hub-brand{display:flex!important;align-items:center!important;gap:24px!important}
+html body #hpHub .hive-war-hub-brand>div{border-left:2px solid rgba(244,193,88,.66);padding-left:22px!important}
+html body #hpHub .hive-war-hub-brand>div>strong{
+ display:block!important;font-family:Georgia,'Times New Roman',serif!important;
+ font-size:clamp(29px,3vw,52px)!important;line-height:1.05!important;
+ font-weight:700!important;letter-spacing:.025em!important;color:#fff8e9!important;
+ text-shadow:0 4px 16px rgba(0,0,0,.9)!important;
+}
+html body #hpHub .hive-war-hub-brand>div>strong:before{
+ content:"HIVE  /  COMANDO ESTRATÉGICO";display:block;margin-bottom:9px;
+ color:#e9b852;font:900 10px Nunito,system-ui,sans-serif;letter-spacing:.22em;
+}
+html body #hpHub .hive-war-hub-brand>div>small{
+ display:block!important;font-size:13px!important;color:#dfd5c2!important;
+ margin-top:9px!important;letter-spacing:.01em!important;
+}
+html body #hpHub .hive-war-crest{
+ width:98px!important;height:115px!important;flex-shrink:0!important;
+ filter:drop-shadow(0 8px 14px #000)!important;
+}
+html body #hpHub .hp-actions{display:flex!important;align-items:center!important;gap:10px!important;align-self:flex-start!important}
+html body #hpHub .hp-actions button{
+ min-height:42px!important;border-radius:9px!important;
+ box-shadow:0 4px 12px rgba(0,0,0,.55)!important;
+}
+html body #hpHub #centralGuerra .war-team-score{
+ opacity:1!important;visibility:visible!important;
+ font-size:clamp(39px,4vw,66px)!important;
+ line-height:1.08!important;min-height:1.1em!important;
+}
+@media(max-width:900px){
+ html body #hpHub .hp-hub-head{padding:18px!important;min-height:190px!important;flex-wrap:wrap!important}
+ html body #hpHub .hive-war-hub-brand>div>strong{font-size:clamp(23px,5vw,36px)!important}
+ html body #hpHub .hp-actions{align-self:auto!important}
+}
+@media(max-width:550px){
+ html body #hpHub .hp-hub-head{padding:12px!important;gap:8px!important}
+ html body #hpHub .hive-war-crest{width:65px!important;height:80px!important}
+ html body #hpHub .hive-war-hub-brand{gap:10px!important}
+ html body #hpHub .hive-war-hub-brand>div{padding-left:10px!important}
+ html body #hpHub .hive-war-hub-brand>div>strong:before{font-size:8px!important}
+ html body #hpHub .hive-war-hub-brand>div>small{font-size:10px!important}
+}
+</style>
 </body>
 </html>
