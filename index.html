@@ -9432,5 +9432,88 @@ html body #hpHub #centralGuerra .war-team-score{
  html body #hpHub .hive-war-hub-brand>div>small{font-size:10px!important}
 }
 </style>
+
+<style id="hive-war-v37-cinematic-header">
+/* V37 - somente cabeçalho, usando o mockup aprovado como referência.
+   O restante da Central de Guerra e a pontuação permanecem intactos. */
+html body #hpHub .hp-hub-head{
+ min-height:154px!important;height:154px!important;
+ padding:12px 28px 12px 36px!important;
+ align-items:center!important;justify-content:space-between!important;
+ flex-wrap:nowrap!important;gap:16px!important;
+ background-image:linear-gradient(90deg,rgba(0,0,0,.97) 0%,rgba(0,0,0,.82) 28%,rgba(0,0,0,.18) 60%,rgba(0,0,0,.40) 100%),var(--hive-war-art)!important;
+ background-position:center 46%!important;background-size:cover!important;
+ border-top:0!important;border-bottom:2px solid #e5b653!important;
+ box-shadow:inset 0 -12px 20px #0008,0 4px 13px #0008!important;
+}
+html body #hpHub .hp-hub-head:after{
+ content:""!important;position:absolute!important;inset:auto 0 0!important;
+ height:3px!important;z-index:1!important;
+ background:linear-gradient(90deg,#d59a28,#ffdf82 24%,#bb7a22 70%,#e9bd53)!important;
+ box-shadow:0 0 9px #d7a24b!important;
+}
+html body #hpHub .hp-hub-head .hive-war-hub-brand{
+ display:flex!important;align-items:center!important;flex-wrap:nowrap!important;
+ gap:26px!important;min-width:0!important;flex:0 1 auto!important;
+}
+html body #hpHub .hp-hub-head .hive-war-crest{
+ width:104px!important;height:132px!important;min-width:104px!important;
+ font-size:59px!important;filter:drop-shadow(0 5px 12px #000)!important;
+}
+html body #hpHub .hp-hub-head .hive-war-hub-brand>div{
+ border-left:0!important;padding-left:0!important;min-width:0!important;
+}
+html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong{
+ display:block!important;width:max-content!important;max-width:100%!important;
+ font-family:Georgia,'Times New Roman',serif!important;
+ font-size:clamp(26px,2.75vw,48px)!important;line-height:1.08!important;
+ font-weight:700!important;letter-spacing:.035em!important;
+ color:#ffe3a0!important;text-shadow:0 2px 8px #000,0 0 17px #d59a3044!important;
+ white-space:nowrap!important;padding:0 0 8px!important;
+ border-bottom:1px solid #d4a449!important;
+}
+html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong:before{display:none!important}
+html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong:after{
+ content:"✧";font:18px Georgia,serif;color:#f4c567;position:relative;top:10px;
+ display:block;text-align:center;height:0;line-height:0;
+}
+html body #hpHub .hp-hub-head .hive-war-hub-brand>div>small{
+ display:block!important;margin:13px 0 0!important;color:#f4d795!important;
+ font:800 11px/1.5 system-ui,sans-serif!important;letter-spacing:.25em!important;
+ text-transform:uppercase!important;white-space:nowrap!important;
+}
+html body #hpHub .hp-hub-head .hive-war-hub-brand>div>small:before{
+ content:"COMANDO ESTRATÉGICO";display:block;color:#f8cf74;
+ font:800 10px/1.5 system-ui,sans-serif;letter-spacing:.37em;margin-bottom:2px;
+}
+html body #hpHub .hp-hub-head .hp-actions{
+ display:flex!important;align-items:center!important;align-self:flex-start!important;
+ gap:8px!important;flex-wrap:nowrap!important;flex-shrink:0!important;
+ margin-top:3px!important;z-index:3!important;
+}
+html body #hpHub .hp-hub-head .hp-actions button{
+ white-space:nowrap!important;min-height:41px!important;
+ padding:8px 13px!important;font-size:12px!important;
+ border-radius:8px!important;
+}
+@media(max-width:1150px){
+ html body #hpHub .hp-hub-head{padding:12px 16px!important;gap:9px!important}
+ html body #hpHub .hp-hub-head .hive-war-hub-brand{gap:14px!important}
+ html body #hpHub .hp-hub-head .hive-war-crest{width:78px!important;min-width:78px!important;height:103px!important;font-size:44px!important}
+ html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong{font-size:clamp(23px,2.6vw,35px)!important}
+ html body #hpHub .hp-hub-head .hp-actions button{font-size:10px!important;padding:8px!important}
+}
+@media(max-width:800px){
+ html body #hpHub .hp-hub-head{height:auto!important;min-height:175px!important;flex-wrap:wrap!important;align-content:center!important}
+ html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong{white-space:normal!important;font-size:clamp(23px,5vw,34px)!important}
+ html body #hpHub .hp-hub-head .hive-war-hub-brand>div>small{white-space:normal!important;letter-spacing:.08em!important;font-size:9px!important}
+ html body #hpHub .hp-hub-head .hp-actions{width:100%!important;justify-content:flex-start!important;flex-wrap:wrap!important}
+}
+@media(max-width:430px){
+ html body #hpHub .hp-hub-head .hive-war-crest{width:62px!important;min-width:62px!important;height:82px!important;font-size:34px!important}
+ html body #hpHub .hp-hub-head .hive-war-hub-brand>div>strong{font-size:23px!important}
+ html body #hpHub .hp-hub-head .hive-war-hub-brand>div>small:before{letter-spacing:.14em!important}
+}
+</style>
 </body>
 </html>
