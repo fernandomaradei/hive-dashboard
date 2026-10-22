@@ -2888,6 +2888,19 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 #centralGuerra .war-stats .war-stat-green{background-image:linear-gradient(100deg,rgba(10,47,33,.94),rgba(28,106,63,.56)),var(--hive-war-stat-art)!important}
 #centralGuerra .war-stats .war-stat strong,#centralGuerra .war-stats .war-stat small,#centralGuerra .war-stats .war-stat .war-stat-icon{position:relative;z-index:1;text-shadow:0 1px 4px #0009}
 </style>
+<style id="hivest-banner-mobile-compacto">
+@media (max-width:780px) {
+  .hero {
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    aspect-ratio:3 / 1 !important;
+    background-image:url("assets/banner-hivest-mobile.webp") !important;
+    background-size:cover !important;
+    background-position:center !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -6831,7 +6844,7 @@ window.hivePremiumClassImage = function(job){
   .hero{
     height:auto !important;
     min-height:0 !important;
-    aspect-ratio:2.6 / 1 !important;
+    aspect-ratio:3 / 1 !important;
     background-image:url("assets/banner-hivest-mobile.webp") !important;
     background-size:cover !important;
     background-position:center center !important;
@@ -9583,5 +9596,7 @@ html body #hpHub .hp-hub-head .hp-actions button{
  #hivePlantelPanel .hp-power-group strong{font-size:16px!important}
 }
 </style>
-</body>
+<style id="hivest-mobile-banner-final-fix">
+@media(max-width:780px){.hero{width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:2 / 1!important;background-image:url("assets/banner-hivest-mobile.webp")!important;background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important}}
+</style></body>
 </html>
