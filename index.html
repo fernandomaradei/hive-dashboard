@@ -7914,25 +7914,28 @@ const loadCurrentMembers=async()=>{
 const historicalNickAliases=new Map([['bruxo','Bruxo†']]);
 const currentHistoricalName=value=>historicalNickAliases.get(normalizeMemberName(value))||String(value??'').trim();
 const HIVE_AVG='__HIVE_MEDIA__';
-const isHive=r=>String(guild(r)||'').trim().toLocaleLowerCase('pt-BR')==='hive';
+// HIVE (nome historico) e HIVEST (nome atual) representam a mesma guilda.
+const isHive=r=>['hive','hivest'].includes(String(guild(r)||'').trim().toLocaleLowerCase('pt-BR'));
 const averageRows=()=>{
  const grouped=new Map();
  for(const r of state.players){
-  // Evita misturar estatisticas de modos diferentes na mesma media.
-  const war=state.wars.find(w=>warId(w)===warId(r));
-  if(String(war?.mode||'legacy').toLowerCase()!==averageMode())continue;
-  if(!isHive(r)||!state.membersReady)continue;
-  const currentName=currentHistoricalName(player(r));
-  const id=normalizeMemberName(currentName);
-  if(!state.currentMemberIds.has(id))continue;
-  if(!grouped.has(id))grouped.set(id,{name:currentName,records:new Map()});
-  const item=grouped.get(id),battle=warId(r);
+  // Media calculada exclusivamente com jogadores das guerras importadas no D1.
+  // Agrupa por identificador do personagem quando disponivel; caso contrario, por nick.
+  if(!isHive(r))continue;
+  const rawId=String(key(r,'ID_Personagem')||'').trim();
+  const nick=currentHistoricalName(player(r));
+  const identity=rawId?'id:'+rawId:'nick:'+normalizeMemberName(nick);
+  if(!nick||identity==='nick:')continue;
+  if(!grouped.has(identity))grouped.set(identity,{name:nick,records:new Map()});
+  const item=grouped.get(identity),battle=warId(r);
   if(battle)item.records.set(battle,r);
  }
  return [...grouped.values()].map(item=>{
-  const records=[...item.records.values()],out={Personagem:item.name,Guilda:'HIVE',Job:job(records[records.length-1]),GuerrasParticipadas:records.length};
+  const records=[...item.records.values()];
+  const latest=records[records.length-1];
+  const out={Personagem:item.name,Guilda:'Hivest',Job:job(latest),Campo:key(latest,'Campo'),Tipo_Stats:key(latest,'Tipo_Stats'),GuerrasParticipadas:records.length};
   for(const k of numericKeys){
-   if(k==='GuerrasParticipadas')continue;
+   if(['GuerrasParticipadas','ID_Personagem','ID_Guilda','ID_Job'].includes(k))continue;
    const valid=records.map(r=>key(r,k)).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v)));
    out[k]=valid.length?valid.reduce((sum,v)=>sum+num(v),0)/valid.length:null;
   }
@@ -7963,7 +7966,7 @@ const columnTitles={Personagem:'Personagem',Guilda:'Guilda',Job:'Job',Power:'Pow
 const selectedMode=w=>String((state.wars.find(r=>warId(r)===w)||{}).mode||'').toLowerCase();
 // A media usa o mesmo conjunto de colunas da ultima guerra cadastrada.
 const latestWar=()=>[...state.wars].sort((a,b)=>String(b.war_date||'').localeCompare(String(a.war_date||''))||Number(b.id||0)-Number(a.id||0))[0]||null;
-const averageMode=()=>String(latestWar()?.mode||'legacy').toLowerCase();
+const averageMode=()=>state.wars.some(w=>String(w.mode||'').toLowerCase()==='vigrid_avenge'||w.match_id)?'vigrid_avenge':String(latestWar()?.mode||'legacy').toLowerCase();
 const activeColumns=w=>(w===HIVE_AVG?averageMode():selectedMode(w))==='vigrid_avenge'?vigridColumns:columns;
 function updateColumns(w){
  const head=$w('warTableWrap').querySelector('thead tr');
@@ -8005,12 +8008,12 @@ const populate=(id,vals,all)=>{
 function updateGuildFilter(){
  const w=$w('warFilter').value;
  const selectedWar=state.wars.find(r=>warId(r)===w);
- const allowed=w===HIVE_AVG?['HIVE']:selectedWar?[key(selectedWar,'Guilda_1','guilda1','guild_a'),key(selectedWar,'Guilda_2','guilda2','guild_b')].map(x=>String(x||'').trim()).filter(Boolean):[];
+ const allowed=w===HIVE_AVG?['Hivest']:selectedWar?[key(selectedWar,'Guilda_1','guilda1','guild_a'),key(selectedWar,'Guilda_2','guilda2','guild_b')].map(x=>String(x||'').trim()).filter(Boolean):[];
  populate('warGuild',allowed,'Todas as guildas');
 }
 function updateJobFilter(){
  const selected=$w('warFilter').value;
- const source=selected===HIVE_AVG?(state.membersReady?averageRows():[]):selected?state.players.filter(r=>warId(r)===selected):state.players;
+ const source=selected===HIVE_AVG?averageRows():selected?state.players.filter(r=>warId(r)===selected):state.players;
  // Só listar classes de jogadores que realmente aparecem no recorte selecionado.
  // Registros sem Job continuam no histórico, mas não criam filtro sem resultados.
  const missing=source.filter(r=>!String(job(r)??'').trim()||/^(?:n[aã]o identificado|undefined|null|unknown|n\/?a|sem classe)$/i.test(String(job(r)).trim()));
@@ -8021,7 +8024,7 @@ function updateJobFilter(){
 function populateWars(){
  const el=$w('warFilter'),prev=el.value;
  el.replaceChildren(new Option('Selecione uma guerra',''));
- el.add(new Option('⭐ HIVE MÉDIA — Todas as guerras',HIVE_AVG));
+ el.add(new Option('⭐ HIVEST MÉDIA — Todas as guerras',HIVE_AVG));
  [...state.wars].sort((a,b)=>{
    const dateKey=w=>{
      const raw=String(key(w,'Data_Guerra','data','war_date')||'').trim();
@@ -8089,7 +8092,7 @@ function render(){
  $w('warChooseHint').hidden=visible;
  if(w===HIVE_AVG){
   const hero=$w('warBattleHero');hero.hidden=false;hero.dataset.winner='0';
-  $w('warTeam1').textContent='HIVE MÉDIA';$w('warEmblem1').innerHTML=emblemSvg(true);
+  $w('warTeam1').textContent='HIVEST MÉDIA';$w('warEmblem1').innerHTML=emblemSvg(true);
   $w('warTeam2').textContent='Histórico completo';$w('warEmblem2').innerHTML='';
   $w('warScore1').textContent='—';$w('warScore2').textContent='—';
   $w('warTag1').textContent='📊 MÉDIA POR JOGADOR';$w('warTag2').textContent='TODAS AS PARTIDAS';
@@ -8101,14 +8104,12 @@ function render(){
    return;
  }
  const g=$w('warGuild').value,j=$w('warJob').value,c=$w('warCampo').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
- if(w===HIVE_AVG&&!state.membersReady){
-  $w('warNotice').textContent='⚠️ Não foi possível validar os membros atuais da aba MEMBROS: '+(state.membersError||'Aguardando carregamento')+'. Clique em Atualizar para tentar novamente. O histórico individual permanece disponível.';
- }else if(w===HIVE_AVG){
-  $w('warNotice').textContent=`${state.wars.length} guerra(s) no histórico · HIVE MÉDIA limitada aos ${state.currentMemberIds.size} membros atuais da aba MEMBROS.`;
+ if(w===HIVE_AVG){
+  $w('warNotice').textContent=`${state.wars.length} guerra(s) importada(s) · media por personagem da Hivest (inclui HIVE antiga).`;
  }
  const source=w===HIVE_AVG?averageRows():state.players.filter(r=>warId(r)===w);
  updateColumns(w);
- const rows=sortRows(source.filter(r=>(!g||guild(r)===g)&&(!j||job(r)===j)&&(!c||String(key(r,'Campo')||'').trim().toUpperCase()===c)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
+ const rows=sortRows(source.filter(r=>(!g||(w===HIVE_AVG?isHive(r):guild(r)===g))&&(!j||job(r)===j)&&(!c||String(key(r,'Campo')||'').trim().toUpperCase()===c)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
  $w('warStats').innerHTML=[['⚔️','Guerras',w===HIVE_AVG?state.wars.length:'1','war-stat-purple'],['👥','Jogadores',rows.length,'war-stat-blue'],['🔥',w===HIVE_AVG?'Dano médio / jogador':'Dano causado',fmt(w===HIVE_AVG?(rows.length?total('Dano_Causado')/rows.length:0):total('Dano_Causado')),'war-stat-red'],['✚',w===HIVE_AVG?'Cura média / jogador':'Cura',fmt(w===HIVE_AVG?(rows.length?total('Cura')/rows.length:0):total('Cura')),'war-stat-green']].map(([ic,t,v,cls])=>`<div class="war-stat ${cls}"><span class="war-stat-icon">${ic}</span><div><strong>${v}</strong><small>${escw(t)}</small></div></div>`).join('');
  $w('warRows').innerHTML=rows.map((r,i)=>`<tr data-war-rank="${i+1}">${activeColumns(w).map(k=>{
@@ -8124,9 +8125,9 @@ function render(){
    if(k==='JSON_PCAP')return `<td title="${escw(String(value).slice(0,1200))}"><details><summary>Ver JSON</summary><pre style="max-width:480px;max-height:260px;overflow:auto;white-space:pre-wrap">${escw(typeof value==='string'?value:JSON.stringify(value))}</pre></details></td>`;
    if(k==='Titulos')return `<td>${escw(Array.isArray(value)?value.join(', '):typeof value==='object'?JSON.stringify(value):value)}</td>`;
    return `<td>${escw(numericKeys.has(k)?warDisplayNumber(k,value):value)}</td>`;
- }).join('')}</tr>`).join('')||`<tr><td colspan="${activeColumns(w).length}">${w===HIVE_AVG&&!state.membersReady?'Não foi possível carregar a aba MEMBROS. Clique em Atualizar.':'Nenhum membro atual com histórico de guerra encontrado.'}</td></tr>`;
+ }).join('')}</tr>`).join('')||`<tr><td colspan="${activeColumns(w).length}">${w===HIVE_AVG?'Nenhum jogador HIVE/HIVEST encontrado nas guerras importadas.':'Nenhum jogador encontrado.'}</td></tr>`;
  $w('warResultsCount').textContent=`${rows.length} jogador(es) · ${w===HIVE_AVG?'Média histórica':selectedMode(w)==='vigrid_avenge'?'Vigrid Avenge':'Vale / Sugar'}`;
- $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVE · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
+ $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVEST · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
 }
 async function load(){
