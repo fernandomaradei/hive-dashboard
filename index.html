@@ -7944,10 +7944,23 @@ const averageRows=()=>{
   const latest=records[records.length-1];
   const out={Personagem:item.name,Guilda:'Hivest',Job:job(latest),Campo:key(latest,'Campo'),Tipo_Stats:key(latest,'Tipo_Stats'),GuerrasParticipadas:records.length};
   for(const k of numericKeys){
-   if(['GuerrasParticipadas','ID_Personagem','ID_Guilda','ID_Job'].includes(k))continue;
+   if(['GuerrasParticipadas','ID_Personagem','ID_Guilda','ID_Job','Power'].includes(k))continue;
    const valid=records.map(r=>key(r,k)).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v)));
    out[k]=valid.length?valid.reduce((sum,v)=>sum+num(v),0)/valid.length:null;
   }
+  // Power representa o estado do personagem na ultima guerra disputada, nunca uma media.
+  // Ordenacao pela data da partida, nao pela ordem em que o arquivo foi importado.
+  const warById=new Map(state.wars.map(w=>[String(w.id),w]));
+  const byMostRecent=[...records].sort((a,b)=>{
+   const wa=warById.get(warId(a))||{},wb=warById.get(warId(b))||{};
+   const date=w=>String(w.started_at||w.battle_date||w.war_date||w.Data_Guerra||w.data||'');
+   return date(wb).localeCompare(date(wa))||(Number(wb.id)||0)-(Number(wa.id)||0);
+  });
+  const latestPower=byMostRecent.find(r=>{
+   const value=key(r,'Power');
+   return value!==''&&value!==null&&value!==undefined&&Number.isFinite(num(value))&&num(value)>0;
+  });
+  out.Power=latestPower?num(key(latestPower,'Power')):null;
   return out;
  });
 };
