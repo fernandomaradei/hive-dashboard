@@ -9652,6 +9652,10 @@ async function initRuntime(){
  status('Carregando processador PCAP no navegador (primeira utilização pode demorar)...');
  if(!window.loadPyodide){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js';s.onload=resolve;s.onerror=()=>reject(Error('Falha ao carregar Pyodide. Verifique a conexão com o CDN.'));document.head.appendChild(s)})}
  runtime=await window.loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/'});
+ // V16: Pyodide não inclui sqlite3 por padrão. Algumas rotas de importação do
+ // extrator o requisitam indiretamente; carregue o pacote ANTES de executar Python.
+ status('Preparando dependências do processador (v16)...');
+ await runtime.loadPackage('sqlite3');
  runtime.FS.writeFile('/home/pyodide/extrator_hive_d1_v3_3_minutos.py',pyScript());
  runtime.FS.writeFile('/home/pyodide/HIVE_Exportador_D1_v3_4.py',exportScript());
  return runtime;
@@ -9781,5 +9785,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #hivePcapUpload .hive-pcap-status:empty{display:none}
 </style>
 <style id="hive-unified-v8">#centralGuerra .hive-d1-audit-only{margin:12px 0;border:1px solid #53411e;border-radius:12px;padding:10px 14px;background:#101722}#centralGuerra .hive-d1-audit-only summary{cursor:pointer;color:#ffdb8a;font-size:12px;font-weight:800}#centralGuerra .war-table td details summary{cursor:pointer;color:#ffd777}#centralGuerra .war-table td details pre{font-size:10px;text-align:left}</style>
+<!-- HIVE PCAP IMPORT V16 - PYODIDE SQLITE3 PRELOAD -->
 </body>
 </html>
