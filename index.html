@@ -8135,7 +8135,7 @@ async function load(){
  try{
    // Fonte exclusiva da Central de Guerra: Cloudflare D1.
    // /api/war (singular) consulta a antiga planilha e não contém as importações do extrator.
-   const r=await fetch('/api/wars?limit=100&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
+   const r=await fetch('/api/wars?limit=100&include_players=1&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
    const data=await r.json();
    if(!r.ok||!data.ok||!Array.isArray(data.wars))throw Error(data.error||'Falha ao consultar guerras no D1 (HTTP '+r.status+')');
    state.wars=data.wars;
@@ -8152,9 +8152,16 @@ async function load(){
      while(next<state.wars.length){
        const war=state.wars[next++];
        try{
-         const response=await fetch('/api/wars?id='+encodeURIComponent(war.id),{credentials:'same-origin',cache:'no-store'});
-         const detail=await response.json();
-         if(!response.ok||!detail.ok||!Array.isArray(detail.players))throw Error(detail.error||'HTTP '+response.status);
+         let detail;
+         if(Array.isArray(data.players)){
+           // O Worker v18 devolve os registros no mesmo request das guerras.
+           detail={ok:true,players:data.players.filter(p=>String(p.war_id)===String(war.id))};
+         }else{
+           // Compatibilidade com Workers anteriores, mas sem consultas concorrentes.
+           const response=await fetch('/api/wars?id='+encodeURIComponent(war.id),{credentials:'same-origin',cache:'no-store'});
+           detail=await response.json();
+           if(!response.ok||!detail.ok||!Array.isArray(detail.players))throw Error(detail.error||'HTTP '+response.status);
+         }
          for(const p of detail.players){
            const v=(...names)=>{for(const n of names)if(p[n]!==undefined&&p[n]!==null)return p[n];return null};
            const parseObject=(value)=>{
@@ -8226,7 +8233,7 @@ async function load(){
        }catch(err){failed.push('Guerra '+war.id+': '+err.message)}
      }
    };
-   await Promise.all(Array.from({length:Math.min(4,state.wars.length)},fetchDetails));
+   await fetchDetails();
    const vigridRows=state.players.filter(p=>state.wars.some(w=>warId(w)===warId(p)&&(w.mode==='vigrid_avenge'||w.match_id)));
    const missingExtras=vigridRows.length>0&&!vigridRows.some(p=>p.PP_Vigrid!==null||p.Merito!==null||p.GP!==null);
    await loadCurrentMembers();
@@ -8596,7 +8603,7 @@ function openHub(tab='war'){
  $('hpTabWar').classList.toggle('active',tab==='war');$('hpTabPlantel').classList.toggle('active',tab==='plantel');
  document.body.style.overflow='hidden';if(tab==='plantel')render();
 }
-// Mesma regra da Central de Guerra (HIVE MÉDIA): alias BRUXO -> Bruxo†,
+// Mesma regra da Central de Guerra (HIVEST MÉDIA): alias BRUXO -> Bruxo†,
 // uma ocorrência por Guerra_ID e média apenas dos valores numéricos válidos.
 const hpHistoricalAliases=new Map([['bruxo','Bruxo†']]);
 const hpCanonicalHistoricalName=name=>hpHistoricalAliases.get(norm(name))||String(name??'').trim();
