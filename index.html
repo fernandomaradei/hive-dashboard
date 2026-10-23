@@ -7564,9 +7564,9 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
   <div class="war-team war-team-right"><span class="war-team-tag" id="warTag2"></span><div class="war-team-identity"><span class="war-guild-emblem" id="warEmblem2" aria-hidden="true"></span><div class="war-team-name" id="warTeam2"></div></div><strong class="war-team-score" id="warScore2"></strong><span class="war-points-label">PONTOS</span></div>
  </div>
 
-<section id="hivePcapUpload" class="hive-pcap-panel" aria-label="Importar guerra PCAPNG">
- <div class="hive-pcap-header"><div><strong>📂 Importar guerra</strong></div><span>🔐 Staff</span></div>
- <div class="hive-pcap-controls"><label for="hivePcapFile">Selecionar arquivo<input id="hivePcapFile" type="file" accept=".pcapng"/></label><input id="hivePcapGuild" type="hidden" value="Hivest"/><button type="button" id="hivePcapAnalyze" hidden>Analisar arquivo</button></div>
+<section id="hivePcapUpload" class="hive-pcap-panel" aria-label="Importar guerra" hidden>
+ 
+ <input id="hivePcapFile" type="file" accept=".pcapng" hidden/><input id="hivePcapGuild" type="hidden" value="Hivest"/><button type="button" id="hivePcapAnalyze" hidden>Analisar arquivo</button>
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
@@ -8245,7 +8245,7 @@ window.addEventListener('hive:open-war',init);
 </script>
 
 <section id="hpHub" hidden aria-label="Central de Guerra - Área Staff">
- <div class="hp-hub-head"><div class="hive-war-hub-brand"><span class="hive-war-crest" aria-hidden="true">⚜<small>HIVE</small></span><div><strong><span class="hive-war-brand">HIVE</span><span class="hive-war-divider"> │ </span> CENTRAL DE GUERRA</strong><small>Área exclusiva da Staff · Honra, união e conquistas</small></div></div><div class="hp-actions"><button id="hpTabWar" type="button" class="active">⚔️ Histórico de Guerras</button><button id="hpTabPlantel" type="button">🛡️ Montar Plantel</button><button id="hpHubClose" type="button">✕ Voltar ao dashboard</button></div></div>
+ <div class="hp-hub-head"><div class="hive-war-hub-brand"><span class="hive-war-crest" aria-hidden="true">⚜<small>HIVE</small></span><div><strong><span class="hive-war-brand">HIVE</span><span class="hive-war-divider"> │ </span> CENTRAL DE GUERRA</strong><small>Área exclusiva da Staff · Honra, união e conquistas</small></div></div><div class="hp-actions"><button id="hpTabWar" type="button" class="active">⚔️ Histórico de Guerras</button><button id="hpTabPlantel" type="button">🛡️ Montar Plantel</button><button id="hpImportWar" type="button">📂 Importar Guerra</button><button id="hpHubClose" type="button">✕ Voltar ao dashboard</button></div></div>
  <div id="hpHubWar" class="hp-hub-content"></div>
 </section>
 <style id="HIVE_PLANTEL_POWER_TOTAL_V1">
@@ -9636,6 +9636,7 @@ function cards(items){return items.map(([k,v])=>`<div><small>${esc(k)}</small><s
 async function analyze(){
  if(processing)return;
  const file=$('hivePcapFile')?.files?.[0],guild='Hivest';
+ if(file)$('hivePcapUpload').hidden=false;
  if(!file||!file.name.toLowerCase().endsWith('.pcapng'))return status('Selecione um arquivo .pcapng válido.');
  if(file.size>40*1024*1024)return status('Arquivo acima do limite de 40 MB.');
  processing=true;payload=null;$('hivePcapPreview').hidden=true;$('hivePcapAnalyze').disabled=true;
@@ -9710,5 +9711,36 @@ function bind(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
 </script>
+
+<script id="hive-import-button-v7">
+(function(){
+ function setup(){
+  const button=document.getElementById('hpImportWar');
+  const input=document.getElementById('hivePcapFile');
+  const panel=document.getElementById('hivePcapUpload');
+  if(!button||!input||!panel)return;
+  button.addEventListener('click',()=>{
+    input.value='';
+    input.click();
+  });
+  input.addEventListener('change',()=>{
+    if(input.files && input.files.length){
+      panel.hidden=false;
+      panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  });
+  const cancel=document.getElementById('hivePcapCancel');
+  if(cancel)cancel.addEventListener('click',()=>{panel.hidden=true;input.value='';});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
+ else setup();
+})();
+</script>
+<style id="hive-import-button-v7-css">
+#hivePcapUpload[hidden]{display:none!important}
+#hpImportWar{white-space:nowrap}
+#hivePcapUpload{margin:14px 0}
+#hivePcapUpload .hive-pcap-status:empty{display:none}
+</style>
 </body>
 </html>
