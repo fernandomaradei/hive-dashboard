@@ -2906,7 +2906,13 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 #centralGuerra .hive-pcap-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}#centralGuerra .hive-pcap-header strong{display:block;color:#ffdb8a;font-size:17px}#centralGuerra .hive-pcap-header small{display:block;color:#b8c6d8;font-size:12px;margin-top:4px}#centralGuerra .hive-pcap-header>span{border:1px solid #957337;border-radius:99px;padding:5px 10px;font-size:11px;white-space:nowrap}
 #centralGuerra .hive-pcap-controls{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-top:12px}#centralGuerra .hive-pcap-controls label{display:grid;gap:6px;flex:1;min-width:170px;color:#ffdb8a;font-weight:800;font-size:12px}#centralGuerra .hive-pcap-controls input{min-height:43px;width:100%;border:1px solid #74603f;border-radius:9px;background:#0b1421;color:white;padding:9px}#centralGuerra .hive-pcap-controls button{min-height:43px;border:1px solid #e8b75c;border-radius:10px;background:linear-gradient(145deg,#194974,#09243d);color:#fff3d9;padding:10px 18px;font-weight:900;cursor:pointer}#centralGuerra .hive-pcap-controls button:disabled{opacity:.5;cursor:wait}#centralGuerra .hive-pcap-controls .hive-pcap-secondary{background:#241d17}#centralGuerra .hive-pcap-status{padding:12px;margin-top:12px;border-radius:10px;background:#101a29;color:#c8d8ec;font-size:12px;white-space:pre-wrap}#centralGuerra .hive-pcap-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}#centralGuerra .hive-pcap-summary>div{border:1px solid #5d4c32;border-radius:10px;background:#0d1724;padding:11px;min-width:0}#centralGuerra .hive-pcap-summary small{display:block;color:#a8b9cb;font-size:10px}#centralGuerra .hive-pcap-summary strong{display:block;color:#ffe2a1;font-size:16px;overflow-wrap:anywhere;margin-top:4px}#centralGuerra .hive-d1-table-wrap{overflow:auto;max-height:560px}#centralGuerra #hiveD1Table{width:max-content;min-width:100%;border-collapse:collapse}#centralGuerra #hiveD1Table th{position:sticky;top:0;background:#172c44;color:#ffe0a0;z-index:2}#centralGuerra #hiveD1Table td,#centralGuerra #hiveD1Table th{border-bottom:1px solid #324052;padding:9px 12px;font-size:11px;white-space:nowrap;text-align:left}#centralGuerra #hiveD1Table td{background:#101a29;color:#ecf2f8}#centralGuerra #hiveD1Table tbody tr:hover td{background:#183049}
 @media(max-width:650px){#centralGuerra .hive-pcap-panel,#centralGuerra .hive-d1-details{margin:12px 10px;padding:12px}#centralGuerra .hive-pcap-header{align-items:flex-start}#centralGuerra .hive-pcap-summary{grid-template-columns:repeat(2,minmax(0,1fr))}#centralGuerra .hive-pcap-controls{display:grid}#centralGuerra .hive-pcap-controls button{width:100%}}
-</style></head>
+</style>
+<style id="hive-war-filters-v12">
+@media(min-width:861px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:1.25fr 1fr 1fr .85fr 1fr!important}}
+@media(min-width:621px) and (max-width:860px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:620px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:1fr!important}}
+</style>
+</head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
@@ -7570,13 +7576,11 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
- <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
+ <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint"><span class="hive-war-hint-icon" aria-hidden="true">⚔</span><div><strong>Escolha uma das guerras acima para visualizar os dados.</strong><small>Selecione os filtros para explorar batalhas, participantes e estatísticas.</small></div></div>
  <div class="war-results-title" id="warResultsTitle" hidden><div><strong>⚔️ Jogadores da Guerra</strong><span>Ordene pelos cabeçalhos e deslize horizontalmente para ver os detalhes.</span></div><span class="war-results-count" id="warResultsCount"></span></div>
- <div class="war-tablewrap" id="warTableWrap" hidden><table class="war-table"><thead><tr><th data-war-sort="Personagem" scope="col" tabindex="0">Personagem</th><th data-war-sort="Guilda" scope="col" tabindex="0">Guilda</th><th data-war-sort="Job" scope="col" tabindex="0">Job</th><th data-war-sort="GuerrasParticipadas" scope="col" tabindex="0" title="Guerras distintas em que o jogador participou">Guerras</th><th data-war-sort="Kills" scope="col" tabindex="0">K</th><th data-war-sort="Assistencias" scope="col" tabindex="0">A</th><th data-war-sort="Mortes" scope="col" tabindex="0">D</th><th data-war-sort="Ocupacoes" scope="col" tabindex="0">Ocup.</th><th data-war-sort="Pontuacao" scope="col" tabindex="0">Pontos</th><th data-war-sort="Dano_Causado" scope="col" tabindex="0">Dano causado</th><th data-war-sort="Dano_Recebido" scope="col" tabindex="0">Dano recebido</th><th data-war-sort="Cura" scope="col" tabindex="0">Cura</th><th data-war-sort="Pontos_Assistencias" scope="col" tabindex="0">Pts. assist.</th><th data-war-sort="Pontos_Mortes" scope="col" tabindex="0">Pts. mortes</th><th data-war-sort="Pontos_Ocupacoes" scope="col" tabindex="0">Pts. ocup.</th></tr></thead><tbody id="warRows"></tbody></table></div>
- <section id="hiveD1Details" class="hive-d1-audit-only" hidden><details><summary>🔎 Dados da partida e auditoria da importação (D1)</summary><pre id="hiveD1Audit" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:350px;overflow:auto;background:#0b1421;padding:12px;font-size:11px"></pre></details></section>
- <p class="war-note">🏆 A vencedora é a guilda com o maior placar oficial. As estatísticas individuais seguem os filtros selecionados. O histórico é preservado.</p>
+ <div class="war-tablewrap" id="warTableWrap" hidden><table class="war-table"><thead><tr><th data-war-sort="Personagem" scope="col" tabindex="0">Personagem</th><th data-war-sort="Guilda" scope="col" tabindex="0">Guilda</th><th data-war-sort="Job" scope="col" tabindex="0">Job</th><th data-war-sort="GuerrasParticipadas" scope="col" tabindex="0" title="Guerras distintas em que o jogador participou">Guerras</th><th data-war-sort="Kills" scope="col" tabindex="0">K</th><th data-war-sort="Assistencias" scope="col" tabindex="0">A</th><th data-war-sort="Mortes" scope="col" tabindex="0">D</th><th data-war-sort="Pontuacao" scope="col" tabindex="0">Pontos</th><th data-war-sort="Dano_Causado" scope="col" tabindex="0">Dano causado</th><th data-war-sort="Dano_Recebido" scope="col" tabindex="0">Dano recebido</th><th data-war-sort="Cura" scope="col" tabindex="0">Cura</th><th data-war-sort="Pontos_Assistencias" scope="col" tabindex="0">Pts. assist.</th><th data-war-sort="Pontos_Mortes" scope="col" tabindex="0">Pts. mortes</th><th data-war-sort="Pontos_Ocupacoes" scope="col" tabindex="0">Pts. ocup.</th></tr></thead><tbody id="warRows"></tbody></table></div>
 </section>
 
 <style id="war-central-contrast-fix">
@@ -7940,9 +7944,9 @@ const warId=r=>String(key(r,'Guerra_ID','guerra_id','id'));
 const player=r=>key(r,'Personagem','personagem');
 const guild=r=>key(r,'Guilda','guilda');
 const job=r=>key(r,'Job','Classe','job');
-const numericKeys=new Set(['Power','KDA','Participacao','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Titulos','GuerrasParticipadas','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes','ID_Personagem','ID_Guilda','ID_Job','Tipo_Stats','Tempo_Segundos','Dano_Power']);
+const numericKeys=new Set(['Power','KDA','Participacao','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Titulos','GuerrasParticipadas','Kills','Assistencias','Mortes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes','ID_Personagem','ID_Guilda','ID_Job','Tipo_Stats','Tempo_Segundos','Dano_Power']);
 const columns=['Personagem','Guilda','Job','GuerrasParticipadas','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes'];
-const vigridColumns=['Personagem','Guilda','Job','Power','Kills','Mortes','Assistencias','KDA','Dano_Causado','Dano_Recebido','Cura','Participacao','Ocupacoes','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Campo','Tipo_Stats','Tempo_Segundos','Dano_Power'];
+const vigridColumns=['Personagem','Guilda','Job','Power','Kills','Mortes','Assistencias','KDA','Dano_Causado','Dano_Recebido','Cura','Participacao','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Campo','Tipo_Stats','Tempo_Segundos','Dano_Power'];
 // V10: formatacao visual igual ao painel de referencia; valores D1 preservados para ordenacao.
 const warDisplayNumber=(keyName,value)=>{
  const n=num(value);
@@ -8096,7 +8100,7 @@ function render(){
    $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} registros de jogadores no histórico`;
    return;
  }
- const g=$w('warGuild').value,j=$w('warJob').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
+ const g=$w('warGuild').value,j=$w('warJob').value,c=$w('warCampo').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
  if(w===HIVE_AVG&&!state.membersReady){
   $w('warNotice').textContent='⚠️ Não foi possível validar os membros atuais da aba MEMBROS: '+(state.membersError||'Aguardando carregamento')+'. Clique em Atualizar para tentar novamente. O histórico individual permanece disponível.';
  }else if(w===HIVE_AVG){
@@ -8104,7 +8108,7 @@ function render(){
  }
  const source=w===HIVE_AVG?averageRows():state.players.filter(r=>warId(r)===w);
  updateColumns(w);
- const rows=sortRows(source.filter(r=>(!g||guild(r)===g)&&(!j||job(r)===j)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
+ const rows=sortRows(source.filter(r=>(!g||guild(r)===g)&&(!j||job(r)===j)&&(!c||String(key(r,'Campo')||'').trim().toUpperCase()===c)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
  $w('warStats').innerHTML=[['⚔️','Guerras',w===HIVE_AVG?state.wars.length:'1','war-stat-purple'],['👥','Jogadores',rows.length,'war-stat-blue'],['🔥',w===HIVE_AVG?'Dano médio / jogador':'Dano causado',fmt(w===HIVE_AVG?(rows.length?total('Dano_Causado')/rows.length:0):total('Dano_Causado')),'war-stat-red'],['✚',w===HIVE_AVG?'Cura média / jogador':'Cura',fmt(w===HIVE_AVG?(rows.length?total('Cura')/rows.length:0):total('Cura')),'war-stat-green']].map(([ic,t,v,cls])=>`<div class="war-stat ${cls}"><span class="war-stat-icon">${ic}</span><div><strong>${v}</strong><small>${escw(t)}</small></div></div>`).join('');
  $w('warRows').innerHTML=rows.map((r,i)=>`<tr data-war-rank="${i+1}">${activeColumns(w).map(k=>{
@@ -8243,7 +8247,7 @@ async function init(){
  try{
    // Called ONLY after a user clicks Central de Guerra and passes Staff auth.
    $w('centralGuerra').hidden=false;
-   ['warFilter','warGuild','warJob'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();}));
+   ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
    const sortHandler=e=>{
