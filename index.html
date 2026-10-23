@@ -9660,6 +9660,7 @@ function cards(items){return items.map(([k,v])=>`<div><small>${esc(k)}</small><s
 async function analyze(){
  if(processing)return;
  const file=$('hivePcapFile')?.files?.[0],guild='Hivest';
+ if(!window.__hiveWarImportPassword)return status('Clique em Importar Guerra e informe a senha primeiro.');
  if(file)$('hivePcapUpload').hidden=false;
  if(!file||!file.name.toLowerCase().endsWith('.pcapng'))return status('Selecione um arquivo .pcapng válido.');
  if(file.size>40*1024*1024)return status('Arquivo acima do limite de 40 MB.');
@@ -9694,11 +9695,11 @@ async function confirm(){
  processing=true;$('hivePcapConfirm').disabled=true;
  try{
   status('Enviando '+payload.players.length+' jogadores ao Worker e gravando no D1...');
-  const res=await fetch('/api/wars/import',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),cache:'no-store'});
+  const res=await fetch('/api/wars/import',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-HIVE-Import-Password':window.__hiveWarImportPassword||''},body:JSON.stringify(payload),cache:'no-store'});
   const data=await res.json().catch(()=>({error:'Resposta não JSON'}));
   if(!res.ok||!data.ok)throw Error(data.error||'HTTP '+res.status);
   status(data.duplicado?'Esta partida já estava no banco (ID '+data.war_id+'). Nenhum registro duplicado.':'Importação concluída! ID '+data.war_id+' · '+data.jogadores+' jogadores gravados.');
-  payload=null;$('hivePcapPreview').hidden=true;
+  payload=null;window.__hiveWarImportPassword=null;$('hivePcapPreview').hidden=true;
   $('warReload')?.click();
  }catch(e){status('Falha na gravação: '+(e?.message||e))}
  finally{processing=false;$('hivePcapConfirm').disabled=false}
@@ -9741,9 +9742,24 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const input=document.getElementById('hivePcapFile');
   const panel=document.getElementById('hivePcapUpload');
   if(!button||!input||!panel)return;
-  button.addEventListener('click',()=>{
-    input.value='';
-    input.click();
+  button.addEventListener('click',async()=>{
+    if(button.disabled)return;
+    const password=window.prompt('Senha para importar guerra:');
+    if(password===null)return;
+    if(!password){window.alert('Informe a senha de importação.');return;}
+    button.disabled=true;
+    try{
+      const res=await fetch('/api/wars/import/auth',{
+        method:'POST',credentials:'same-origin',cache:'no-store',
+        headers:{'X-HIVE-Import-Password':password}
+      });
+      const result=await res.json().catch(()=>({}));
+      if(!res.ok||!result.ok)throw Error(result.error||'Senha não autorizada');
+      window.__hiveWarImportPassword=password;
+      input.value='';
+      input.click();
+    }catch(e){window.__hiveWarImportPassword=null;window.alert(e.message||'Falha na autorização');}
+    finally{button.disabled=false;}
   });
   input.addEventListener('change',()=>{
     if(input.files && input.files.length){
@@ -9752,7 +9768,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     }
   });
   const cancel=document.getElementById('hivePcapCancel');
-  if(cancel)cancel.addEventListener('click',()=>{panel.hidden=true;input.value='';});
+  if(cancel)cancel.addEventListener('click',()=>{panel.hidden=true;input.value='';window.__hiveWarImportPassword=null;});
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
  else setup();
