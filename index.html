@@ -7943,6 +7943,18 @@ const job=r=>key(r,'Job','Classe','job');
 const numericKeys=new Set(['Power','KDA','Participacao','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Titulos','GuerrasParticipadas','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes','ID_Personagem','ID_Guilda','ID_Job','Tipo_Stats','Tempo_Segundos','Dano_Power']);
 const columns=['Personagem','Guilda','Job','GuerrasParticipadas','Kills','Assistencias','Mortes','Ocupacoes','Pontuacao','Dano_Causado','Dano_Recebido','Cura','Pontos_Assistencias','Pontos_Mortes','Pontos_Ocupacoes'];
 const vigridColumns=['Personagem','Guilda','Job','Power','Kills','Mortes','Assistencias','KDA','Dano_Causado','Dano_Recebido','Cura','Participacao','Ocupacoes','Merito','PP_Vigrid','GP','Recursos','Moedas','Minutos','Campo','Tipo_Stats','Tempo_Segundos','Dano_Power'];
+// V10: formatacao visual igual ao painel de referencia; valores D1 preservados para ordenacao.
+const warDisplayNumber=(keyName,value)=>{
+ const n=num(value);
+ if(keyName==='Participacao')return new Intl.NumberFormat('pt-BR',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1}).format(n);
+ if(['Dano_Causado','Dano_Recebido','Cura'].includes(keyName)){
+   const abs=Math.abs(n),scale=abs>=1e6?1e6:abs>=1e3?1e3:1;
+   const unit=scale===1e6?' mi':scale===1e3?' mil':'';
+   return new Intl.NumberFormat('pt-BR',{minimumFractionDigits:scale===1?0:1,maximumFractionDigits:1}).format(n/scale)+unit;
+ }
+ if(keyName==='Minutos')return new Intl.NumberFormat('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}).format(n);
+ return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:['KDA','Ocupacoes','PP_Vigrid','Dano_Power'].includes(keyName)?2:0}).format(n);
+};
 const columnTitles={Personagem:'Personagem',Guilda:'Guilda',Job:'Job',Power:'Power',Kills:'K',Mortes:'D',Assistencias:'A',KDA:'KDA',Dano_Causado:'Dano causado',Dano_Recebido:'Dano recebido',Cura:'Cura',Participacao:'Part.',Ocupacoes:'Ocup.',Merito:'Mérito',PP_Vigrid:'PP Vigrid',GP:'GP',Recursos:'Ress.',Moedas:'Mon.',Minutos:'Min',Titulos:'Títulos',ID_Personagem:'ID personagem',ID_Guilda:'ID guilda',ID_Job:'Código job',Campo:'Campo',Tipo_Stats:'Tipo stats',Tempo_Segundos:'Tempo (seg)',Dano_Power:'Dano / Power',JSON_PCAP:'Dados PCAP (JSON)',GuerrasParticipadas:'Guerras',Pontuacao:'Pontos',Pontos_Assistencias:'Pts. assist.',Pontos_Mortes:'Pts. mortes',Pontos_Ocupacoes:'Pts. ocup.'};
 const selectedMode=w=>String((state.wars.find(r=>warId(r)===w)||{}).mode||'').toLowerCase();
 // A media usa o mesmo conjunto de colunas da ultima guerra cadastrada.
@@ -8107,8 +8119,7 @@ function render(){
    if(value===null||value===undefined||value==='')return '<td>—</td>';
    if(k==='JSON_PCAP')return `<td title="${escw(String(value).slice(0,1200))}"><details><summary>Ver JSON</summary><pre style="max-width:480px;max-height:260px;overflow:auto;white-space:pre-wrap">${escw(typeof value==='string'?value:JSON.stringify(value))}</pre></details></td>`;
    if(k==='Titulos')return `<td>${escw(Array.isArray(value)?value.join(', '):typeof value==='object'?JSON.stringify(value):value)}</td>`;
-   const decimal=k==='KDA'||k==='Participacao'||k==='Ocupacoes'||k==='PP_Vigrid'||k==='Dano_Power'||w===HIVE_AVG;
-   return `<td>${escw(numericKeys.has(k)?new Intl.NumberFormat('pt-BR',{maximumFractionDigits:decimal?2:0}).format(num(value)):value)}</td>`;
+   return `<td>${escw(numericKeys.has(k)?warDisplayNumber(k,value):value)}</td>`;
  }).join('')}</tr>`).join('')||`<tr><td colspan="${activeColumns(w).length}">${w===HIVE_AVG&&!state.membersReady?'Não foi possível carregar a aba MEMBROS. Clique em Atualizar.':'Nenhum membro atual com histórico de guerra encontrado.'}</td></tr>`;
  $w('warResultsCount').textContent=`${rows.length} jogador(es) · ${w===HIVE_AVG?'Média histórica':selectedMode(w)==='vigrid_avenge'?'Vigrid Avenge':'Vale / Sugar'}`;
  $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVE · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
