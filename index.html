@@ -8369,11 +8369,11 @@ window.addEventListener('hive:open-war',init);
       <input id="hpSearch" placeholder="Buscar personagem..." autocomplete="off" aria-label="Buscar personagem">
       <div id="hpJobFilters" class="hp-job-filters" aria-label="Filtrar por classe"></div>
     </div>
-    <div class="hp-inputs">
+    <div class="hp-inputs" hidden aria-hidden="true">
      <select id="hpTarget"><option value="main">Main Field</option><option value="sub">Sub Field</option></select>
      <select id="hpPt"></select>
     </div>
-    <p class="hp-note">Arraste um jogador para uma vaga ou use + para alocar na PT selecionada.</p>
+    <p class="hp-note">Arraste um jogador para uma vaga ou use + para ocupar a primeira vaga disponível.</p>
     <div class="hp-sort-header" aria-label="Ordenação de jogadores">
       <div id="hpSortButtons" class="hp-sort-buttons hp-table-head">
        <button type="button" data-hp-sort="name">Jogador <span class="hp-arrow">↑</span></button>
@@ -8456,7 +8456,7 @@ function updateWarControls(){
 }
 
 const blank=()=>({main:Array.from({length:8},()=>Array(5).fill(null)),sub:Array.from({length:8},()=>Array(5).fill(null))});
-let formation=blank(),members=[],averages=new Map(),field='main',ready=false,selected=null,dragged=null,warMoved=false,jobFilter='',sortKey='power',sortDir=-1;
+let formation=blank(),members=[],averages=new Map(),field='main',ready=false,selected=null,dragged=null,warMoved=false,jobFilter='',sortKey='damage',sortDir=-1;
 const idOf=m=>norm(m.Personagem||m.personagem||m.Nick||'');
 const nameOf=m=>String(m.Personagem||m.personagem||m.Nick||'').trim();
 const jobOf=m=>String(m.Job||m.Classe||'—');
@@ -8616,7 +8616,17 @@ function move(id,target,origin){
  else if(current){$('hpStatus').textContent='Vaga ocupada. Arraste um jogador da PT para trocar de posição.';return}
  formation[f][p][i]=id;save();render();
 }
-function add(id){const f=$('hpTarget').value,p=Number($('hpPt').value),pt=formation[f]?.[p];if(!pt||used().has(id))return;const i=pt.indexOf(null);if(i<0){$('hpStatus').textContent='Esta PT está completa.';return}move(id,`${f}:${p}:${i}`,null)}
+function add(id){
+ if(used().has(id))return;
+ // Sem seletores de campo/PT: o botão + ocupa a primeira vaga disponível.
+ for(const f of ['main','sub']){
+  for(let p=0;p<8;p++){
+   const pt=formation[f]?.[p],i=pt?.indexOf(null)??-1;
+   if(i>=0){move(id,`${f}:${p}:${i}`,null);return;}
+  }
+ }
+ $('hpStatus').textContent='Todas as PTs estão completas.';
+}
 function close(){ $('hivePlantelPanel').hidden=true;$('hpHub').hidden=true;document.body.style.overflow=''; }
 function openHub(tab='war'){
  $('hpHub').hidden=false;
