@@ -1059,6 +1059,15 @@ z-index:0}
  .myCharOpen{width:100%!important}
 }
 
+
+/* v19 — Campo como célula colorida, inspirado no Excel e adaptado ao tema HIVE */
+.war-field-cell{white-space:nowrap!important;text-align:center!important}
+.war-field-pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:96px;padding:5px 9px;border-radius:7px;font-size:10px;font-weight:900;letter-spacing:.025em;border:1px solid transparent;line-height:1.2;white-space:nowrap}
+.war-field-pill .war-field-dot{height:6px;width:6px;border-radius:50%;flex:none;background:currentColor;box-shadow:0 0 7px currentColor}
+.war-field-main{color:#91dcff;background:linear-gradient(135deg,rgba(24,97,152,.36),rgba(15,57,91,.30));border-color:rgba(91,180,238,.42)}
+.war-field-sub{color:#ffd38d;background:linear-gradient(135deg,rgba(142,83,21,.32),rgba(90,50,14,.27));border-color:rgba(239,172,69,.39)}
+.war-field-other{color:#c3bec0;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)}
+@media(max-width:650px){.war-field-pill{min-width:82px;padding:4px 6px;font-size:9px}}
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -8123,6 +8132,14 @@ function render(){
    const value=key(r,k);
    if(value===null||value===undefined||value==='')return '<td>—</td>';
    if(k==='JSON_PCAP')return `<td title="${escw(String(value).slice(0,1200))}"><details><summary>Ver JSON</summary><pre style="max-width:480px;max-height:260px;overflow:auto;white-space:pre-wrap">${escw(typeof value==='string'?value:JSON.stringify(value))}</pre></details></td>`;
+   if(k==='Campo'){
+     const field=String(value).trim().toUpperCase();
+     const isMain=field==='PRINCIPAL';
+     const isSub=field==='SECUNDARIO'||field==='SECUNDÁRIO';
+     const cls=isMain?'main':isSub?'sub':'other';
+     const label=isMain?'PRINCIPAL':isSub?'SECUNDÁRIO':String(value);
+     return `<td class="war-field-cell"><span class="war-field-pill war-field-${cls}" title="Campo: ${escw(label)}"><span class="war-field-dot"></span>${escw(label)}</span></td>`;
+   }
    if(k==='Titulos')return `<td>${escw(Array.isArray(value)?value.join(', '):typeof value==='object'?JSON.stringify(value):value)}</td>`;
    return `<td>${escw(numericKeys.has(k)?warDisplayNumber(k,value):value)}</td>`;
  }).join('')}</tr>`).join('')||`<tr><td colspan="${activeColumns(w).length}">${w===HIVE_AVG?'Nenhum jogador HIVE/HIVEST encontrado nas guerras importadas.':'Nenhum jogador encontrado.'}</td></tr>`;
