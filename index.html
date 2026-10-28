@@ -1812,8 +1812,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.myCharMetric').forEach(card=>{
       const badge=card.querySelector('.myCharMetricStatus');
       if(!badge)return;
-      const label=card.classList.contains('bad')?'Precisa evoluir':
-                  card.classList.contains('mid')?'Próximo da média':'Excelente';
+      const label=card.classList.contains('bad')?'Abaixo da média':
+                  card.classList.contains('mid')?'Próximo da média':
+                  card.classList.contains('above')?'Acima da média':'Excelente';
       // Só altera o DOM quando o texto realmente mudou.
       // Isso evita o loop infinito que congelava o navegador.
       if(badge.textContent !== label) badge.textContent = label;
@@ -2974,6 +2975,14 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 @media(max-width:1100px){#centralGuerra .hivest-report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){#centralGuerra .hivest-report-grid{grid-template-columns:1fr}#centralGuerra .hivest-report-head{align-items:flex-start;flex-direction:column}}
 </style>
+
+<style id="HIVEST_MYCHAR_STATUS_FIX_20261028">
+/* Apenas Meu Personagem: acima da média sem alcançar 100/100. */
+.myCharMetric.above .myCharMetricStatus{background:#087947!important;color:#fff!important}
+.myCharMetric.above{border-color:rgba(34,139,105,.62)!important}
+.myCharMetric.above .myCharMetricStatus:empty:after{content:"Acima da média"}
+.myCharMetric.bad .myCharMetricStatus:empty:after{content:"Abaixo da média"}
+</style>
 </head>
 <body>
 <div class="app">
@@ -4085,9 +4094,11 @@ function personalStatus(x,pool){
   const target=personalTarget100(x,pool||[]);
   const tolerance=Math.max(0.000001,Math.abs(avg)*0.002);
 
-  if(value>=target) return {cls:'good',txt:'Excelente'};
-  if(value>avg+tolerance) return {cls:'mid',txt:'Próximo da média'};
-  return {cls:'bad',txt:'Precisa evoluir'};
+  // 100/100 tem prioridade; a média não é o alvo máximo.
+  if(Number(x.pct)>=99.999 || (target>0 && value>=target)) return {cls:'good',txt:'Excelente'};
+  if(value>=avg-tolerance) return {cls:'above',txt:'Acima da média'};
+  if(avg>0 && value>=avg*0.90) return {cls:'mid',txt:'Próximo da média'};
+  return {cls:'bad',txt:'Abaixo da média'};
 }
 function personalUpdateValue(m){
   const raw=m['Última Atualização']||m['Ultima Atualização']||m['Data/Hora']||'—';
@@ -4177,7 +4188,7 @@ function renderMyCharacter(){
       </div>
       <div class="myCharMetricBar"><i style="width:${Math.max(3,Math.min(100,x.pct))}%"></i></div>
       <div class="metricCompare">${s.txt}</div>
-      <div class="myCharMetricStatus">${s.cls==='good'?'Excelente':s.cls==='mid'?'Próximo da média':'Precisa evoluir'}</div>
+      <div class="myCharMetricStatus">${s.txt}</div>
       <div class="metricGoal">${reached?'✓ Você já está no topo!':`ⓘ Falta +${missText} para alcançar 100/100`}</div>
     </div>`;
   }).join('');
