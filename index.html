@@ -8207,6 +8207,63 @@ function renderHivestReport(){
   return `<article class="hivest-report-card"><h4>${icon} ${title}</h4><div class="hivest-report-list">${ranked.length?ranked.map((r,i)=>`<div class="hivest-report-item"><span class="hivest-report-rank">${i+1}º</span><div class="hivest-report-person"><strong>${escw(player(r))}</strong><small>${escw(job(r))}</small><div class="hivest-report-bar"><i style="width:${Math.max(0,Math.min(100,num(key(r,field))/max*100))}%"></i></div></div><b>${escw(warDisplayNumber(field,key(r,field)))}</b></div>`).join(''):'<p class="hivest-report-empty">Sem dados disponíveis para este indicador.</p>'}</div></article>`;
  }).join('');
 }
+async function downloadHivestReportImage(){
+ const btn=$w('hivestReportOpen');
+ if(btn.disabled)return;
+ const previous=btn.textContent;
+ btn.disabled=true;btn.textContent='⏳ Gerando imagem...';
+ let stage;
+ try{
+  renderHivestReport();
+  const info=$w('hivestReportInfo').textContent;
+  const cards=$w('hivestReportGrid').innerHTML;
+  if(!state.wars.length||!state.players.length)throw Error('Os dados da guerra ainda não foram carregados.');
+  if(!window.html2canvas){
+   await new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    script.onload=resolve;script.onerror=()=>reject(Error('Não foi possível carregar o gerador de imagem.'));
+    document.head.appendChild(script);
+   });
+  }
+  stage=document.createElement('div');
+  stage.id='centralGuerra';
+  stage.style.cssText='position:fixed;left:-12000px;top:0;width:1600px;background:#07101e;color:#fff;font-family:Nunito,Arial,sans-serif;padding:18px;z-index:-1;box-sizing:border-box';
+  const battle=$w('warBattleHero').cloneNode(true);
+  battle.removeAttribute('id');battle.hidden=false;
+  battle.style.cssText='width:100%;height:255px;min-height:255px;margin:0 0 18px;display:grid;box-sizing:border-box';
+  // Clona o placar original, inclusive a arte, as equipes, o resultado e a data.
+  stage.appendChild(battle);
+  const panel=document.createElement('div');
+  panel.className='hivest-report';
+  panel.style.cssText='display:block!important;margin:0;background:#081321;border:1px solid #bc8b36;border-radius:14px;padding:18px';
+  const title=document.createElement('div');
+  title.style.cssText='font-size:27px;font-weight:900;color:#ffd777;margin:0 0 5px';
+  title.textContent='📊 REPORT DA ÚLTIMA GUERRA';
+  const subtitle=document.createElement('div');
+  subtitle.style.cssText='font-size:14px;color:#b5c8dc;margin-bottom:16px';
+  subtitle.textContent=info;
+  const grid=document.createElement('div');
+  grid.className='hivest-report-grid';
+  grid.innerHTML=cards;
+  grid.style.cssText='display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important';
+  panel.append(title,subtitle,grid);
+  const foot=document.createElement('p');
+  foot.style.cssText='font-size:11px;color:#9faec2;margin:16px 0 0';
+  foot.textContent='HIVEST • Central de Guerra | Menor dano recebido é um indicador bruto, sem ajuste por tempo ou função.';
+  panel.appendChild(foot);stage.appendChild(panel);document.body.appendChild(stage);
+  await document.fonts.ready;
+  const canvas=await window.html2canvas(stage,{backgroundColor:'#07101e',scale:1.5,useCORS:true,allowTaint:false,logging:false,width:1600,windowWidth:1700,scrollX:0,scrollY:0});
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw Error('Não foi possível finalizar a imagem PNG.');
+  const date=(info.match(/\d{2}-\d{2}-\d{4}/)||[])[0]||'ultima-guerra';
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='HIVEST-Report-Guerra-'+date+'.png';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+ }catch(err){console.error('[HIVEST Report PNG]',err);alert('Não foi possível gerar o PNG: '+err.message);}
+ finally{if(stage)stage.remove();btn.disabled=false;btn.textContent=previous;}
+}
 async function load(){
  $w('warNotice').textContent='Carregando dados protegidos...';
  try{
@@ -8335,7 +8392,7 @@ async function init(){
    ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
-   $w('hivestReportOpen').addEventListener('click',()=>{renderHivestReport();$w('hivestReport').hidden=false;$w('hivestReport').scrollIntoView({behavior:'smooth',block:'start'});});
+   $w('hivestReportOpen').addEventListener('click',downloadHivestReportImage);
    $w('hivestReportClose').addEventListener('click',()=>$w('hivestReport').hidden=true);
    const sortHandler=e=>{
      if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;
