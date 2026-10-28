@@ -90,7 +90,7 @@ def make(pcap,guild,parser):
     players=[]
     for r in rows:
         def c(n):return int(r.get('C:'+str(n),0) or 0)
-        # C:20+C:65+C:51 = monstros; C:62 = ressuscitacoes.
+        # C:20+C:23+C:51+C:65+C:66 = monstros; C:62 = ressuscitacoes.
         # Merito: K+C:18+2*C:20+2*C:65+15*C:19+15*C:51.
         merit=c(2)+c(18)+2*c(20)+2*c(65)+15*c(19)+15*c(51)
         raw={k:v for k,v in r.items() if k.startswith('C:')}
@@ -104,7 +104,7 @@ def make(pcap,guild,parser):
               'duration_seconds':r.get('C:63'),'pp_vigrid':c(1),
               'gp':c(8) if 'C:8' in r else None,
               'merit':merit if any('C:'+str(n) in r for n in (18,19,20,51,65)) else None,
-              'resurrections':c(62),'monsters':c(20)+c(65)+c(51),
+              'resurrections':c(62),'monsters':c(20)+c(23)+c(51)+c(65)+c(66),
               'raw_stats_json':json.dumps(raw,ensure_ascii=False,separators=(',',':'))}
         players.append(item)
         vals={k:v for k,v in item.items() if k!='war_id'}
