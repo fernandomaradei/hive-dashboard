@@ -7638,8 +7638,8 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
- <div class="hivest-report-actions"><button type="button" id="hivestReportOpen">📊 Report da Última Guerra</button></div>
- <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Report da Última Guerra</h3><p id="hivestReportInfo">Dados da última batalha importada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Menor dano recebido é um indicador bruto: não considera tempo de participação ou função do jogador. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
+ <div class="hivest-report-actions"><button type="button" id="hivestReportOpen">📊 Relatório da Guerra</button></div>
+ <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Relatório da Guerra</h3><p id="hivestReportInfo">Dados da guerra selecionada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Menor dano recebido é um indicador bruto: não considera tempo de participação ou função do jogador. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
  <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint"><span class="hive-war-hint-icon" aria-hidden="true">⚔</span><div><strong>Escolha uma das guerras acima para visualizar os dados.</strong><small>Selecione os filtros para explorar batalhas, participantes e estatísticas.</small></div></div>
@@ -8221,8 +8221,9 @@ function renderHivestReport(){
   const date=w=>String(key(w,'Data_Guerra','data','war_date','started_at')||'');
   return date(b).localeCompare(date(a)) || Number(warId(b))-Number(warId(a));
  });
- const war=sorted[0];
- if(!war){target.textContent='Nenhuma guerra importada.';return;}
+ const selectedId=$w('warFilter').value;
+ const war=selectedId===HIVE_AVG?sorted[0]:state.wars.find(r=>warId(r)===selectedId);
+ if(!war){target.textContent='Selecione uma guerra válida para gerar o relatório.';return;}
  const rows=state.players.filter(r=>warId(r)===warId(war)&&isHive(r));
  $w('hivestReportInfo').textContent=warLabel(war)+' · '+rows.length+' jogadores HIVEST';
  const metrics=[['🔥','Top 10 Dano Causado','Dano_Causado',false],['💚','Top 10 Cura','Cura',false],['✨','Top 10 Ressurreições','Recursos',false],['🛡️','Top 10 Menor Dano Recebido','Dano_Recebido',true],['👹','Top 10 Monstros Eliminados','Moedas',false]];
@@ -8257,9 +8258,11 @@ async function downloadHivestReportImage(){
   stage.style.cssText='position:fixed;left:-12000px;top:0;width:1600px;background:#07101e;color:#fff;font-family:Nunito,Arial,sans-serif;padding:18px;z-index:-1;box-sizing:border-box';
   const sortedWars=[...state.wars].sort((a,b)=>String(key(b,'Data_Guerra','data','war_date','started_at')||'').localeCompare(String(key(a,'Data_Guerra','data','war_date','started_at')||''))||Number(warId(b))-Number(warId(a)));
   const currentWar=$w('warFilter').value;
-  if(sortedWars[0])renderHero(sortedWars[0]);
+  const reportWar=currentWar===HIVE_AVG?sortedWars[0]:state.wars.find(r=>warId(r)===currentWar);
+  if(!reportWar)throw Error('Selecione uma guerra válida.');
+  renderHero(reportWar);
   const battle=$w('warBattleHero').cloneNode(true);
-  if(currentWar===HIVE_AVG){render();}else{renderHero(state.wars.find(r=>warId(r)===currentWar));}
+  render();
   battle.removeAttribute('id');battle.hidden=false;
   battle.style.cssText='width:100%;height:255px;min-height:255px;margin:0 0 18px;display:grid;box-sizing:border-box';
   // Clona o placar original, inclusive a arte, as equipes, o resultado e a data.
@@ -8269,7 +8272,7 @@ async function downloadHivestReportImage(){
   panel.style.cssText='display:block!important;margin:0;background:#081321;border:1px solid #bc8b36;border-radius:14px;padding:18px';
   const title=document.createElement('div');
   title.style.cssText='font-family:Georgia,serif;font-size:37px;font-weight:900;color:#ffd777;margin:0 0 7px;text-shadow:0 2px 12px #ad782755;border-bottom:1px solid #b48b3744;padding-bottom:10px';
-  title.textContent='⚔️ RELATÓRIO DA ÚLTIMA GUERRA';
+  title.textContent='⚔️ RELATÓRIO DA GUERRA';
   const subtitle=document.createElement('div');
   subtitle.style.cssText='font-size:14px;color:#b5c8dc;margin-bottom:16px';
   subtitle.textContent=info;
@@ -8288,7 +8291,7 @@ async function downloadHivestReportImage(){
   const canvas=await window.html2canvas(stage,{backgroundColor:'#07101e',scale:1.5,useCORS:true,allowTaint:false,logging:false,width:1600,windowWidth:1700,scrollX:0,scrollY:0});
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if(!blob)throw Error('Não foi possível finalizar a imagem PNG.');
-  const date=(info.match(/\d{2}-\d{2}-\d{4}/)||[])[0]||'ultima-guerra';
+  const date=(info.match(/\d{2}-\d{2}-\d{4}/)||[])[0]||'guerra';
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='HIVEST-Report-Guerra-'+date+'.png';
   document.body.appendChild(a);a.click();a.remove();
