@@ -1071,6 +1071,32 @@ z-index:0}
 
 /* v25: oculta os seletores legados, inclusive quando CSS define display:grid */
 #hivePlantelPanel .hp-roster .hp-inputs, #hivePlantelPanel .hp-inputs[hidden] { display:none !important; }
+
+/* HIVEST REPORT V2 — cinematic mockup, applied only to PNG export */
+#centralGuerra.hivest-export-v2 .hivest-report{background:linear-gradient(155deg,#071424,#050c18)!important;border:1px solid #b68a38!important}
+#centralGuerra.hivest-export-v2 .hivest-report-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:14px!important}
+#centralGuerra.hivest-export-v2 .hivest-report-card{grid-column:span 2;border:1px solid var(--report-accent,#d5a346);border-radius:15px;background:linear-gradient(160deg,var(--report-wash,#211319),#091321 38%,#07111e);padding:0 12px 12px;overflow:hidden;box-shadow:0 0 15px var(--report-glow,#5d34201f)}
+#centralGuerra.hivest-export-v2 .hivest-report-card:nth-child(n+4){grid-column:span 3}
+#centralGuerra.hivest-export-v2 .hivest-report-card:nth-child(1){--report-accent:#fb665d;--report-wash:#3b151b;--report-glow:#e34d3d25}
+#centralGuerra.hivest-export-v2 .hivest-report-card:nth-child(2){--report-accent:#3ce8a0;--report-wash:#09392c;--report-glow:#21d58b20}
+#centralGuerra.hivest-export-v2 .hivest-report-card:nth-child(3){--report-accent:#ffd36d;--report-wash:#352611;--report-glow:#e5ad3520}
+#centralGuerra.hivest-export-v2 .hivest-report-card:nth-child(4){--report-accent:#43baff;--report-wash:#0b2d4a;--report-glow:#339fe525}
+#centralGuerra.hivest-export-v2 .hivest-report-card:nth-child(5){--report-accent:#d65aff;--report-wash:#36134a;--report-glow:#b344ef20}
+#centralGuerra.hivest-export-v2 .hivest-report-card h4{margin:0 -12px 9px;padding:15px 15px 12px;font-size:18px;color:var(--report-accent);background:linear-gradient(90deg,var(--report-wash),transparent);border-bottom:1px solid #ffffff1c}
+#centralGuerra.hivest-export-v2 .hivest-report-card h4 small{display:block;color:#c5cbd4;font-size:10px;font-weight:500;margin:5px 0 0 32px}
+#centralGuerra.hivest-export-v2 .hivest-report-list{gap:0}
+#centralGuerra.hivest-export-v2 .hivest-report-item{grid-template-columns:32px minmax(0,1fr) auto;padding:8px 7px;border-radius:0;background:transparent;border-bottom:1px solid #ffffff13;gap:9px;min-height:43px}
+#centralGuerra.hivest-export-v2 .hivest-report-item:last-child{border-bottom:0}
+#centralGuerra.hivest-export-v2 .hivest-report-rank{border-radius:50%;background:linear-gradient(#294b70,#10243b);border:1px solid #5281ac;color:#f6f8ff;text-align:center;line-height:27px;width:29px;height:29px;font-size:13px}
+#centralGuerra.hivest-export-v2 .hivest-report-item:nth-child(1) .hivest-report-rank{background:linear-gradient(#ffe17b,#b77914);color:#2c1a00;border-color:#ffe9aa}
+#centralGuerra.hivest-export-v2 .hivest-report-item:nth-child(2) .hivest-report-rank{background:linear-gradient(#f4f8ff,#839fb5);color:#142b40;border-color:#f5ffff}
+#centralGuerra.hivest-export-v2 .hivest-report-item:nth-child(3) .hivest-report-rank{background:linear-gradient(#ffc37f,#b96729);color:#271407;border-color:#ffd4a0}
+#centralGuerra.hivest-export-v2 .hivest-report-person strong{font-size:12px;color:#fff}
+#centralGuerra.hivest-export-v2 .hivest-report-person small{font-size:9px;color:#a7bbd0}
+#centralGuerra.hivest-export-v2 .hivest-report-item b{font-size:13px;color:#fff4d2}
+#centralGuerra.hivest-export-v2 .hivest-report-bar{height:5px;margin-top:5px;background:#273345}
+#centralGuerra.hivest-export-v2 .hivest-report-bar i{background:var(--report-accent);box-shadow:0 0 8px var(--report-accent)}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -8227,9 +8253,13 @@ async function downloadHivestReportImage(){
    });
   }
   stage=document.createElement('div');
-  stage.id='centralGuerra';
+  stage.id='centralGuerra';stage.classList.add('hivest-export-v2');
   stage.style.cssText='position:fixed;left:-12000px;top:0;width:1600px;background:#07101e;color:#fff;font-family:Nunito,Arial,sans-serif;padding:18px;z-index:-1;box-sizing:border-box';
+  const sortedWars=[...state.wars].sort((a,b)=>String(key(b,'Data_Guerra','data','war_date','started_at')||'').localeCompare(String(key(a,'Data_Guerra','data','war_date','started_at')||''))||Number(warId(b))-Number(warId(a)));
+  const currentWar=$w('warFilter').value;
+  if(sortedWars[0])renderHero(sortedWars[0]);
   const battle=$w('warBattleHero').cloneNode(true);
+  if(currentWar===HIVE_AVG){render();}else{renderHero(state.wars.find(r=>warId(r)===currentWar));}
   battle.removeAttribute('id');battle.hidden=false;
   battle.style.cssText='width:100%;height:255px;min-height:255px;margin:0 0 18px;display:grid;box-sizing:border-box';
   // Clona o placar original, inclusive a arte, as equipes, o resultado e a data.
@@ -8238,15 +8268,17 @@ async function downloadHivestReportImage(){
   panel.className='hivest-report';
   panel.style.cssText='display:block!important;margin:0;background:#081321;border:1px solid #bc8b36;border-radius:14px;padding:18px';
   const title=document.createElement('div');
-  title.style.cssText='font-size:27px;font-weight:900;color:#ffd777;margin:0 0 5px';
-  title.textContent='📊 REPORT DA ÚLTIMA GUERRA';
+  title.style.cssText='font-family:Georgia,serif;font-size:37px;font-weight:900;color:#ffd777;margin:0 0 7px;text-shadow:0 2px 12px #ad782755;border-bottom:1px solid #b48b3744;padding-bottom:10px';
+  title.textContent='⚔️ RELATÓRIO DA ÚLTIMA GUERRA';
   const subtitle=document.createElement('div');
   subtitle.style.cssText='font-size:14px;color:#b5c8dc;margin-bottom:16px';
   subtitle.textContent=info;
   const grid=document.createElement('div');
   grid.className='hivest-report-grid';
   grid.innerHTML=cards;
-  grid.style.cssText='display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important';
+  const descriptions=['Jogadores que mais causaram dano na guerra','Jogadores que mais curaram aliados na guerra','Jogadores que mais ressuscitaram aliados','Jogadores que menos sofreram dano na guerra','Jogadores que mais eliminaram monstros'];
+  grid.querySelectorAll('.hivest-report-card h4').forEach((h,i)=>{const sub=document.createElement('small');sub.textContent=descriptions[i]||'';h.appendChild(sub);});
+  grid.style.cssText='display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:14px!important';
   panel.append(title,subtitle,grid);
   const foot=document.createElement('p');
   foot.style.cssText='font-size:11px;color:#9faec2;margin:16px 0 0';
