@@ -2924,6 +2924,30 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 @media(min-width:621px) and (max-width:860px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:620px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:1fr!important}}
 </style>
+<style id="hivest-last-war-report-css">
+#centralGuerra .hivest-report-actions{display:flex;justify-content:flex-end;padding:10px 0}
+#centralGuerra .hivest-report-actions button,#centralGuerra #hivestReportClose{background:linear-gradient(135deg,#16365b,#0b1a2d);color:#ffe4a1;border:1px solid #c4943d;border-radius:9px;padding:11px 16px;font-weight:900;cursor:pointer}
+#centralGuerra .hivest-report{margin:12px 0 20px;padding:18px;border:1px solid #bd8d35;border-radius:15px;background:linear-gradient(145deg,#0d1c30,#090e18);scroll-margin-top:18px}
+#centralGuerra .hivest-report[hidden]{display:none!important}
+#centralGuerra .hivest-report-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+#centralGuerra .hivest-report-head h3{margin:0;color:#ffe0a0;font-size:21px}
+#centralGuerra .hivest-report-head p{margin:4px 0;color:#b6c5d6;font-size:12px}
+#centralGuerra .hivest-report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#centralGuerra .hivest-report-card{min-width:0;border:1px solid #345171;border-radius:12px;background:#0c1727;padding:13px}
+#centralGuerra .hivest-report-card h4{margin:0 0 12px;color:#fff0c8;font-size:14px}
+#centralGuerra .hivest-report-list{display:grid;gap:6px}
+#centralGuerra .hivest-report-item{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px;border-radius:8px;background:#15243a}
+#centralGuerra .hivest-report-rank{color:#e6bc69;font-weight:900;font-size:12px}
+#centralGuerra .hivest-report-person{min-width:0}
+#centralGuerra .hivest-report-person strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#fff}
+#centralGuerra .hivest-report-person small{display:block;color:#8faac7;font-size:10px}
+#centralGuerra .hivest-report-item b{color:#ffe09b;font-size:12px;white-space:nowrap}
+#centralGuerra .hivest-report-bar{height:3px;margin-top:5px;background:#27384e;border-radius:6px;overflow:hidden}
+#centralGuerra .hivest-report-bar i{display:block;height:100%;background:#e4b45c}
+#centralGuerra .hivest-report-foot,#centralGuerra .hivest-report-empty{color:#aab8ca;font-size:11px}
+@media(max-width:1100px){#centralGuerra .hivest-report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){#centralGuerra .hivest-report-grid{grid-template-columns:1fr}#centralGuerra .hivest-report-head{align-items:flex-start;flex-direction:column}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -7588,6 +7612,8 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
+ <div class="hivest-report-actions"><button type="button" id="hivestReportOpen">📊 Report da Última Guerra</button></div>
+ <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Report da Última Guerra</h3><p id="hivestReportInfo">Dados da última batalha importada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Menor dano recebido é um indicador bruto: não considera tempo de participação ou função do jogador. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
  <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint"><span class="hive-war-hint-icon" aria-hidden="true">⚔</span><div><strong>Escolha uma das guerras acima para visualizar os dados.</strong><small>Selecione os filtros para explorar batalhas, participantes e estatísticas.</small></div></div>
@@ -8163,6 +8189,24 @@ function render(){
  $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVEST · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
 }
+function renderHivestReport(){
+ const target=$w('hivestReportGrid');
+ const sorted=[...state.wars].sort((a,b)=>{
+  const date=w=>String(key(w,'Data_Guerra','data','war_date','started_at')||'');
+  return date(b).localeCompare(date(a)) || Number(warId(b))-Number(warId(a));
+ });
+ const war=sorted[0];
+ if(!war){target.textContent='Nenhuma guerra importada.';return;}
+ const rows=state.players.filter(r=>warId(r)===warId(war)&&isHive(r));
+ $w('hivestReportInfo').textContent=warLabel(war)+' · '+rows.length+' jogadores HIVEST';
+ const metrics=[['🔥','Top 10 Dano Causado','Dano_Causado',false],['💚','Top 10 Cura','Cura',false],['✨','Top 10 Ressurreições','Recursos',false],['🛡️','Top 10 Menor Dano Recebido','Dano_Recebido',true],['👹','Top 10 Monstros Eliminados','Moedas',false]];
+ target.innerHTML=metrics.map(([icon,title,field,ascending])=>{
+  const ranked=rows.filter(r=>key(r,field)!==null&&key(r,field)!==undefined&&key(r,field)!==''&&Number.isFinite(num(key(r,field))))
+   .sort((a,b)=>(ascending?1:-1)*(num(key(a,field))-num(key(b,field)))||String(player(a)).localeCompare(String(player(b)),'pt-BR')).slice(0,10);
+  const max=Math.max(1,...ranked.map(r=>num(key(r,field))));
+  return `<article class="hivest-report-card"><h4>${icon} ${title}</h4><div class="hivest-report-list">${ranked.length?ranked.map((r,i)=>`<div class="hivest-report-item"><span class="hivest-report-rank">${i+1}º</span><div class="hivest-report-person"><strong>${escw(player(r))}</strong><small>${escw(job(r))}</small><div class="hivest-report-bar"><i style="width:${Math.max(0,Math.min(100,num(key(r,field))/max*100))}%"></i></div></div><b>${escw(warDisplayNumber(field,key(r,field)))}</b></div>`).join(''):'<p class="hivest-report-empty">Sem dados disponíveis para este indicador.</p>'}</div></article>`;
+ }).join('');
+}
 async function load(){
  $w('warNotice').textContent='Carregando dados protegidos...';
  try{
@@ -8291,6 +8335,8 @@ async function init(){
    ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
+   $w('hivestReportOpen').addEventListener('click',()=>{renderHivestReport();$w('hivestReport').hidden=false;$w('hivestReport').scrollIntoView({behavior:'smooth',block:'start'});});
+   $w('hivestReportClose').addEventListener('click',()=>$w('hivestReport').hidden=true);
    const sortHandler=e=>{
      if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;
      const th=e.target.closest('th[data-war-sort]');if(!th)return;
@@ -8303,6 +8349,7 @@ async function init(){
    $w('warTableWrap').addEventListener('click',sortHandler);
    $w('warTableWrap').addEventListener('keydown',sortHandler);
    await load();
+   if(!$w('hivestReport').hidden)renderHivestReport();
  }catch(e){console.warn('Central de Guerra indisponível',e)}
 }
 window.addEventListener('hive:open-war',init);
