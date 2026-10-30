@@ -2951,6 +2951,32 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 @media(min-width:621px) and (max-width:860px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:620px){html body #hpHub #centralGuerra .war-filters{grid-template-columns:1fr!important}}
 </style>
+<style id="hivest-compare-classes-css">
+#centralGuerra .hivest-report-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+#centralGuerra #hivestCompareOpen{border:1px solid #c79a39;border-radius:10px;background:linear-gradient(135deg,#18324c,#0c192c);color:#ffe2a0;font-weight:900;padding:11px 17px;cursor:pointer}
+#centralGuerra #hivestCompareOpen:hover{border-color:#ffda79;background:#183f62}
+#centralGuerra .hivest-class-compare{margin:12px 0 18px;border:1px solid #8c6b30;border-radius:14px;background:linear-gradient(145deg,#101c2b,#080d17);padding:16px;color:#f6f1e7}
+#centralGuerra .hivest-class-compare[hidden]{display:none!important}
+#centralGuerra .hivest-compare-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #584b33;padding-bottom:12px}
+#centralGuerra .hivest-compare-head h3{margin:0;color:#ffd479;font-size:21px}
+#centralGuerra .hivest-compare-head p{margin:5px 0 0;color:#b9c7d9;font-size:12px}
+#centralGuerra #hivestCompareClose{background:#171c25;color:#f9e0a7;border:1px solid #7b6133;border-radius:8px;padding:9px 12px;cursor:pointer}
+#centralGuerra .hivest-compare-controls{display:flex;align-items:end;gap:18px;flex-wrap:wrap;padding:14px 0;color:#aebcd0;font-size:12px}
+#centralGuerra .hivest-compare-controls label{display:flex;flex-direction:column;gap:5px;color:#f8d17b;font-weight:800}
+#centralGuerra #hivestCompareCampo{min-width:190px;padding:9px;border-radius:8px;border:1px solid #7b6133;background:#121e30;color:white}
+#centralGuerra .hivest-compare-scroll{overflow-x:auto;max-height:65vh;overflow-y:auto}
+#centralGuerra .hivest-compare-table{width:100%;min-width:680px;border-collapse:collapse;border-spacing:0;font-size:13px}
+#centralGuerra .hivest-compare-table th{position:sticky;top:0;z-index:1;background:#15243a;color:#ffdf9a;text-align:center;padding:12px 9px;font-size:11px;white-space:nowrap}
+#centralGuerra .hivest-compare-table th:first-child{text-align:left}
+#centralGuerra .hivest-compare-table td{background:transparent;border-bottom:1px solid #263247;padding:11px 9px;text-align:center;color:#f3f6fc}
+#centralGuerra .hivest-compare-table td:first-child{text-align:left;font-weight:800}
+#centralGuerra .hivest-compare-table tbody tr:hover td{background:#1b2c44}
+#centralGuerra .hivest-compare-table tfoot td{background:#1c2d40;font-weight:900;color:#ffe1a0;border-top:1px solid #977438}
+#centralGuerra .hivest-compare-table .hivest-compare-hive{color:#ffda77}
+#centralGuerra .hivest-compare-table .hivest-compare-opponent{color:#7dc5ff}
+#centralGuerra .hivest-compare-note{font-size:11px;color:#9aabc0;margin:12px 0 0;line-height:1.5}
+@media(max-width:650px){#centralGuerra .hivest-class-compare{padding:10px}#centralGuerra .hivest-compare-head h3{font-size:17px}#centralGuerra .hivest-compare-head p{font-size:10px}#centralGuerra #hivestCompareOpen{font-size:12px;padding:9px 11px}}
+</style>
 <style id="hivest-last-war-report-css">
 #centralGuerra .hivest-report-actions{display:flex;justify-content:flex-end;padding:10px 0}
 #centralGuerra .hivest-report-actions button,#centralGuerra #hivestReportClose{background:linear-gradient(135deg,#16365b,#0b1a2d);color:#ffe4a1;border:1px solid #c4943d;border-radius:9px;padding:11px 16px;font-weight:900;cursor:pointer}
@@ -7649,7 +7675,13 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
- <div class="hivest-report-actions"><button type="button" id="hivestReportOpen">📊 Relatório da Guerra</button></div>
+ <div class="hivest-report-actions"><button type="button" id="hivestCompareOpen">⚔️ Comparar Classes</button><button type="button" id="hivestReportOpen">📊 Relatório da Guerra</button></div>
+ <section id="hivestCompare" class="hivest-class-compare" hidden>
+  <div class="hivest-compare-head"><div><h3>⚔️ Comparativo de Classes</h3><p id="hivestCompareInfo">Composição das guildas na guerra selecionada</p></div><button type="button" id="hivestCompareClose">✕ Fechar</button></div>
+  <div class="hivest-compare-controls"><label>Campo<select id="hivestCompareCampo"><option value="TODOS">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO" selected>Secundário</option></select></label><span>Quantidade de jogadores e Power médio por classe</span></div>
+  <div class="hivest-compare-scroll"><table class="hivest-compare-table"><thead id="hivestCompareThead"></thead><tbody id="hivestCompareBody"></tbody><tfoot id="hivestCompareFoot"></tfoot></table></div>
+  <p class="hivest-compare-note">Power médio = soma do Power dos jogadores com Power válido ÷ quantidade desses jogadores. O filtro considera os dois lados da guerra, independentemente dos filtros da tabela principal.</p>
+ </section>
  <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Relatório da Guerra</h3><p id="hivestReportInfo">Dados da guerra selecionada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Rankings dos jogadores HIVEST na guerra selecionada. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
  <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
@@ -8226,6 +8258,66 @@ function render(){
  $w('warNotice').textContent=w===HIVE_AVG?`${rows.length} jogador(es) HIVEST · médias por partida disputada · ${state.wars.length} guerra(s) no histórico`:`${rows.length} jogador(es) exibido(s) · ${state.wars.length} guerra(s) no histórico`;
  updateSortHeaders();
 }
+// Comparativo de classes — usa os mesmos registros já carregados da guerra selecionada.
+const hivestClassAliases={
+ 'high wizard':'High Wizard','hw':'High Wizard','arquimago':'High Wizard','wizard':'High Wizard',
+ 'sniper':'Sniper','atirador de elite':'Sniper',
+ 'doram':'Doram','invocador':'Doram',
+ 'biochemist':'Bio','biochemist':'Bio','bio':'Bio','creator':'Bio','criador':'Bio',
+ 'professor':'Professor','sage':'Professor',
+ 'paladin':'Paladino','paladino':'Paladino',
+ 'lord knight':'Lord Knight','lk':'Lord Knight',
+ 'champion':'Champion','algoz':'Assassin Cross','assassin cross':'Assassin Cross',
+ 'gunslinger':'Gunslinger','insurgente':'Gunslinger',
+ 'high priest':'Priest','priest':'Priest','sumo sacerdote':'Priest',
+ 'music':'Music','minstrel':'Music','gypsy':'Music','menestrel':'Music','cigana':'Music',
+ 'clown':'Music','dancer':'Music','bard':'Music','bardo':'Music'
+};
+function hivestClassName(value){
+ const raw=String(value||'').trim();
+ const normalized=raw.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ return hivestClassAliases[normalized]||raw||'Classe não informada';
+}
+function renderHivestClassCompare(){
+ const panel=$w('hivestCompare');
+ if(panel.hidden)return;
+ const selected=$w('warFilter').value;
+ const war=state.wars.find(r=>warId(r)===selected);
+ const head=$w('hivestCompareThead'),body=$w('hivestCompareBody'),foot=$w('hivestCompareFoot');
+ if(!war){
+  $w('hivestCompareInfo').textContent='Selecione uma guerra específica para comparar as duas guildas.';
+  head.innerHTML='';body.innerHTML='<tr><td>Selecione uma guerra válida no filtro Guerra.</td></tr>';foot.innerHTML='';return;
+ }
+ const all=state.players.filter(r=>warId(r)===selected);
+ const names=[...new Set(all.map(r=>String(guild(r)||'').trim()).filter(Boolean))];
+ const hiveName=names.find(n=>['hive','hivest'].includes(n.toLocaleLowerCase('pt-BR')))||'HIVEST';
+ const enemyName=names.find(n=>n!==hiveName)||String(hiveFirst(war).g2||'Adversária');
+ const campo=$w('hivestCompareCampo').value;
+ const rows=all.filter(r=>{
+  const field=String(key(r,'Campo')||'').trim().toLocaleUpperCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return campo==='TODOS'||field===campo;
+ });
+ const groups=new Map();
+ for(const r of rows){
+  const side=isHive(r)?0:1;
+  const cl=hivestClassName(job(r));
+  if(!groups.has(cl))groups.set(cl,[[],[]]);
+  groups.get(cl)[side].push(r);
+ }
+ const stats=items=>{
+  const powers=items.map(r=>key(r,'Power')).filter(v=>v!==''&&v!==null&&v!==undefined&&Number.isFinite(num(v))&&num(v)>0).map(v=>num(v));
+  return {count:items.length,average:powers.length?Math.round(powers.reduce((a,b)=>a+b,0)/powers.length):null};
+ };
+ const fmtPower=v=>v===null?'—':new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(v);
+ head.innerHTML=`<tr><th>Classe</th><th class="hivest-compare-hive">${escw(hiveName)} qtd.</th><th class="hivest-compare-opponent">${escw(enemyName)} qtd.</th><th class="hivest-compare-hive">${escw(hiveName)} Power médio</th><th class="hivest-compare-opponent">${escw(enemyName)} Power médio</th></tr>`;
+ body.innerHTML=[...groups].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([name,sides])=>{
+  const a=stats(sides[0]),b=stats(sides[1]);
+  return `<tr><td>${escw(name)}</td><td>${a.count}</td><td>${b.count}</td><td>${fmtPower(a.average)}</td><td>${fmtPower(b.average)}</td></tr>`;
+ }).join('')||'<tr><td colspan="5">Nenhum jogador encontrado neste campo.</td></tr>';
+ const a=stats(rows.filter(isHive)),b=stats(rows.filter(r=>!isHive(r)));
+ foot.innerHTML=`<tr><td>Total / média geral</td><td>${a.count}</td><td>${b.count}</td><td>${fmtPower(a.average)}</td><td>${fmtPower(b.average)}</td></tr>`;
+ $w('hivestCompareInfo').textContent=warLabel(war)+' · '+(campo==='TODOS'?'Todos os campos':campo==='PRINCIPAL'?'Somente principal':'Somente secundário');
+}
 function renderHivestReport(){
  const target=$w('hivestReportGrid');
  const sorted=[...state.wars].sort((a,b)=>{
@@ -8435,9 +8527,12 @@ async function init(){
  try{
    // Called ONLY after a user clicks Central de Guerra and passes Staff auth.
    $w('centralGuerra').hidden=false;
-   ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();}));
+   ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();renderHivestClassCompare();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
+   $w('hivestCompareOpen').addEventListener('click',()=>{const panel=$w('hivestCompare');panel.hidden=!panel.hidden;if(!panel.hidden)renderHivestClassCompare();});
+   $w('hivestCompareClose').addEventListener('click',()=>$w('hivestCompare').hidden=true);
+   $w('hivestCompareCampo').addEventListener('change',renderHivestClassCompare);
    $w('hivestReportOpen').addEventListener('click',downloadHivestReportImage);
    $w('hivestReportClose').addEventListener('click',()=>$w('hivestReport').hidden=true);
    const sortHandler=e=>{
@@ -8452,6 +8547,7 @@ async function init(){
    $w('warTableWrap').addEventListener('click',sortHandler);
    $w('warTableWrap').addEventListener('keydown',sortHandler);
    await load();
+   renderHivestClassCompare();
    if(!$w('hivestReport').hidden)renderHivestReport();
  }catch(e){console.warn('Central de Guerra indisponível',e)}
 }
