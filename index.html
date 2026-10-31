@@ -10131,6 +10131,45 @@ body::before{background:linear-gradient(180deg,rgba(3,13,29,.32) 0%,rgba(3,15,32
  .hero{background-image:url('assets/banner-hivest-mobile-novo.webp')!important;background-size:cover!important;background-position:center!important}
  #myCharShell .myCharCard.myCharExample{background:linear-gradient(120deg,rgba(3,20,39,.88),rgba(3,23,44,.84)),url('assets/fundo-ragnarok-hivest.webp') center/cover no-repeat!important}
 }
+
+/* HIVEST V3 - continuidade visual: uma unica paisagem, sem caixas opacas */
+:root{--hivest-glass:rgba(3,23,44,.76);--hivest-glass-deep:rgba(3,17,33,.84)}
+html{background:#061323!important}
+body{background:#061323 url('assets/fundo-ragnarok-hivest.webp') center top / cover fixed no-repeat!important}
+body::before{background:linear-gradient(180deg,rgba(2,12,26,.27),rgba(2,14,29,.48) 48%,rgba(2,12,26,.65))!important}
+.app{width:min(100%,1540px)!important;padding-inline:clamp(8px,1.7vw,26px)!important;margin-inline:auto!important}
+.hero,.nav,#myCharShell,.myCharCard{width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important}
+.hero{aspect-ratio:1205 / 262!important;height:auto!important;max-height:none!important;background-image:url('assets/banner-hivest-desktop-novo.webp')!important;background-size:100% 100%!important;background-position:center!important}
+/* Transparencia no cartao inteiro: a paisagem do BODY aparece uma unica vez, sem duplicacao */
+#myCharShell .myCharCard,#myCharShell .myCharCard.myCharExample,#myCharCard,.myCharCard.myCharExample{
+ background:linear-gradient(125deg,rgba(3,22,42,.78),rgba(5,29,52,.72) 50%,rgba(2,17,34,.82))!important;
+ border:1px solid rgba(230,177,62,.70)!important;
+ box-shadow:0 12px 38px rgba(0,6,20,.32)!important;
+ backdrop-filter:blur(3px)!important;
+}
+/* Remove as superficies pretas legadas que dividem o perfil em blocos */
+#myCharShell .myCharHead,#myCharShell .myCharSectionHead,#myCharShell .myCharHero,#myCharShell .myCharHeroRow,#myCharShell .myCharIdentityCard,#myCharShell .myHeroKpi,#myCharShell .myMetricsHead,#myCharShell .myCharMetrics,#myCharShell .myCharMetricsWrap,#myCharShell .myCharMetricGrid,#myCharShell .myCharAnalysis,#myCharShell .myCharFooter{
+ background:transparent!important;background-image:none!important;box-shadow:none!important;
+}
+#myCharShell .myCharSectionHead,#myCharShell .myMetricsHead{background:rgba(3,22,43,.24)!important}
+#myCharShell .myHeroKpi{background:rgba(5,28,51,.12)!important}
+/* Alertas e atributos usam vidro azul em vez de preto solido */
+#myCharShell .myQuick,#myCharShell .myQuickCard,#myCharShell .myCharMetric,#myCharShell .myCharMetricCard,#myCharShell .myCharMetricItem,#myCharShell .metricTriplet>div{
+ background:linear-gradient(145deg,rgba(4,29,48,.76),rgba(2,19,34,.82))!important;
+ background-image:linear-gradient(145deg,rgba(4,29,48,.76),rgba(2,19,34,.82))!important;
+}
+#myCharShell .myCharMetric{border-color:rgba(48,153,177,.40)!important}
+#myCharShell .myCharHeroRow{min-width:0!important;width:100%!important;grid-template-columns:minmax(0,1.75fr) minmax(0,.85fr) minmax(0,.83fr) minmax(0,.92fr) minmax(0,1.22fr)!important}
+#myCharShell .myCharHeroRow>*{min-width:0!important}
+#myCharShell .myCharIdentityCard{grid-template-columns:minmax(120px,175px) minmax(0,1fr)!important}
+#myCharShell .myCharIdentityText{min-width:0!important}
+@media(max-width:1180px) and (min-width:761px){#myCharShell .myCharHeroRow{grid-template-columns:repeat(2,minmax(0,1fr))!important}#myCharShell .myCharIdentityCard{grid-column:1/-1!important}}
+@media(max-width:780px){
+ body{background-attachment:scroll!important;background-size:auto 100vh!important;background-position:center top!important}
+ .hero{background-image:url('assets/banner-hivest-mobile-novo.webp')!important;aspect-ratio:320 / 260!important;height:auto!important;background-size:100% 100%!important}
+ #myCharShell .myCharHeroRow{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #myCharShell .myCharIdentityCard{grid-column:1/-1!important;grid-template-columns:126px minmax(0,1fr)!important}
+}
 </style>
 <!-- HIVE PCAP IMPORT V16 - PYODIDE SQLITE3 PRELOAD -->
 </body>
