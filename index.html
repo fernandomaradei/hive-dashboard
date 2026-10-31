@@ -10172,5 +10172,68 @@ body::before{background:linear-gradient(180deg,rgba(2,12,26,.27),rgba(2,14,29,.4
 }
 </style>
 <!-- HIVE PCAP IMPORT V16 - PYODIDE SQLITE3 PRELOAD -->
+
+<style id="HIVEST_VISUAL_V4_FINAL">
+/* V4: selos uniformes, sem contorno branco, mantendo estados semânticos */
+#myCharShell .myCharMetricStatus,
+#myCharCard .myCharMetricStatus{
+ border:0!important;outline:0!important;
+ box-shadow:0 2px 9px rgba(0,0,0,.22)!important;
+ border-radius:999px!important;
+ padding:3px 12px!important;
+ color:#fff!important;
+ font-weight:900!important;
+}
+#myCharShell .myCharMetric.good .myCharMetricStatus,
+#myCharShell .myCharMetric.above .myCharMetricStatus,
+#myCharCard .myCharMetric.good .myCharMetricStatus,
+#myCharCard .myCharMetric.above .myCharMetricStatus{
+ background:linear-gradient(180deg,#079d69,#007e53)!important;
+ border:0!important;
+}
+/* Neutraliza fundos pretos nas tabelas, rankings e blocos inferiores */
+.classRankGrid,.classRankPanel,.classRankCard,.classPodium,.classPodiumRow,
+.classPodiumExtra,.classRankMore,.rankExplain,.rankExplainTable,
+.rankExplainHead,.rankInsightStrip,.rankInsight,.rankExplainFooter,
+.mgr-section,.mgr-card,.mgr-list,.mgr-row,.member-explorer,
+.mx-head,.mx-filters,.mx-summary,.mx-mini,.mx-table,.mx-table table,
+.mx-table th,.mx-table td,.mx-mobile-card,.mx-mobile-stat,
+.gl-section,.gl-card,.gl-card-head,.gl-list,.gl-row,.gl-lineup,
+.gl-chip,.gl-alert,.gl-kpi,.gl-priority,.gl-note,.gl-note .formula,
+.kpi,.panel,.fulltable,.modalCard{
+ background-color:rgba(5,30,56,.70)!important;
+ background-image:linear-gradient(140deg,rgba(7,39,71,.70),rgba(3,23,45,.68))!important;
+}
+.classPodiumRow,.mgr-row,.gl-row,.gl-chip,.mx-mobile-card,
+.mx-mobile-stat,.rankInsight,.mx-mini{
+ background-color:rgba(7,40,74,.72)!important;
+ background-image:none!important;
+ border-color:rgba(69,131,180,.22)!important;
+}
+.classPodiumRow:first-child{background:linear-gradient(90deg,rgba(23,80,124,.80),rgba(5,35,66,.70))!important}
+.classPodiumRow:hover,.mgr-row:hover,.gl-row:hover,.gl-chip:hover{
+ background:rgba(19,74,117,.82)!important;
+}
+.classRankMore,.mx-clear{background:rgba(5,26,49,.85)!important;color:#ffd777!important}
+/* Blocos da explicação e métricas abaixo do personagem */
+#myCharShell .myCharCard,#myCharShell .myCharAnalysis,
+#myCharShell .myCharAnalysis *,#myCharShell .myCharMetricsWrap,
+#myCharShell .myCharMetricGrid{
+ --panel:rgba(5,31,57,.78);
+ --panel2:rgba(7,36,64,.80);
+}
+#myCharShell .myCharAnalysis,#myCharShell .myCharAnalysisCard,
+#myCharShell .myCharBreakdown,#myCharShell .myCharExplanation,
+#myCharShell .myCharMetricCard{
+ background:linear-gradient(140deg,rgba(5,34,65,.74),rgba(3,24,48,.72))!important;
+}
+/* Mantém alertas com cores próprias para não perder o significado */
+#myCharShell .myQuick{background:linear-gradient(145deg,rgba(4,29,48,.79),rgba(2,19,34,.83))!important}
+@media(max-width:780px){
+ .classRankGrid,.classRankPanel,.classRankCard,.rankExplain,.mgr-card,.member-explorer{
+ background:rgba(4,28,54,.84)!important;
+ }
+}
+</style>
 </body>
 </html>
