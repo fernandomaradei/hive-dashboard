@@ -3009,6 +3009,35 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 .myCharMetric.above .myCharMetricStatus:empty:after{content:"Acima da média"}
 .myCharMetric.bad .myCharMetricStatus:empty:after{content:"Abaixo da média"}
 </style>
+
+<style id="HIVEST_VISUAL_V5_MODAL_GLASS">
+/* V5: paisagem mais presente, mantendo os textos e graficos legiveis */
+html,body{background-color:#071a31!important}
+body{background-image:url('assets/fundo-ragnarok-hivest.webp')!important;background-size:cover!important;background-position:center top!important;background-attachment:fixed!important}
+body::before{background:linear-gradient(180deg,rgba(2,10,24,.08),rgba(3,13,29,.16) 42%,rgba(2,12,27,.29))!important;backdrop-filter:none!important}
+/* Vidro azul no modal do personagem, sem fundos pretos solidos */
+#modal{background:rgba(1,9,22,.35)!important;backdrop-filter:blur(3px)!important}
+#modal .modalCard{background:linear-gradient(135deg,rgba(5,32,63,.77),rgba(3,23,49,.79))!important;border:1px solid rgba(242,189,71,.75)!important;backdrop-filter:blur(2px)!important;box-shadow:0 22px 70px rgba(0,8,23,.38)!important}
+#modal .modalHead,#modal .profileGrid,#modal .profileLeft,#modal .hiveProfileRight,#modal .hiveProfileHistoryFull,#modal .hivePowerThreeCards{background:transparent!important;background-image:none!important}
+#modal .allStats .mini,#modal .mini,#modal .hivePowerPanel,#modal .hivePowerSummaryPanel,#modal .hivePowerRecentPanel,#modal .hivePowerTablePanel,#modal .hivePowerPlot,#modal .hivePowerTableWrap,#modal .hivePowerSummary,#modal .hivePowerSummaryGrid,#modal .hivePowerSummaryGrid>div,#modal .hivePowerRanking,#modal .hivePowerRankGrid>div,#modal .hivePowerRecentList>div,#modal .hivePowerTable th,#modal .hivePowerTable td{
+ background:linear-gradient(135deg,rgba(7,44,81,.63),rgba(4,28,55,.66))!important;
+ background-color:transparent!important;
+ border-color:rgba(104,159,202,.26)!important;
+}
+#modal .hivePowerPanel{border:1px solid rgba(231,176,57,.67)!important;backdrop-filter:blur(1px)!important}
+#modal .allStats .mini{border:1px solid rgba(111,169,213,.24)!important}
+#modal .hivePowerRecentList>div,#modal .hivePowerTable tr{border-bottom-color:rgba(118,163,199,.22)!important}
+#modal .hivePowerFilters button{background:rgba(4,24,49,.65)!important}
+#modal .hivePowerFilters button.active{background:rgba(134,93,12,.78)!important}
+#modal .hivePowerPlot svg{background:transparent!important}
+/* Manter a arte de classe intacta */
+#modal .classVisual{background-color:#12151d!important}
+/* Demais componentes: retirar o preto das camadas inferiores */
+.classRankCard,.classPodiumRow,.mgr-card,.mgr-row,.gl-card,.gl-row,.gl-lineup,.gl-chip,.rankExplain,.rankExplainTable,.rankInsight,.mx-mini,.mx-mobile-card,.member-explorer{
+ background:linear-gradient(135deg,rgba(7,43,78,.69),rgba(4,26,51,.73))!important;
+}
+@media(max-width:780px){body{background-attachment:scroll!important;background-size:auto 100vh!important}#modal{backdrop-filter:none!important}#modal .modalCard{background:linear-gradient(135deg,rgba(5,30,58,.86),rgba(3,22,46,.88))!important}}
+</style>
 </head>
 <body>
 <div class="app">
