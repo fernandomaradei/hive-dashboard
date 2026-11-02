@@ -3692,6 +3692,16 @@ function rankReferenceValue(member,label){
   if(label==='PDMG.R'||label==='MDMG.R') return metricValue(member[label],label);
   return intNum(member[label],label);
 }
+// Exibição fiel à planilha na tabela de pontuação (sem abreviar ou arredondar).
+// Não altera os números usados nos cálculos, rankings ou metas.
+function rankExactSheetValue(member,label,fallback){
+  if(!member) return fallback;
+  const field=label==='Power'?'Power Atual':label;
+  if(DECIMAL_METRICS.has(field)||label==='PDMG.R'||label==='MDMG.R') return fallback;
+  const raw=member[field];
+  if(raw===null||raw===undefined||String(raw).trim()==='') return fallback;
+  return fmtInt(raw,field);
+}
 function rankReferencePeer(pool,label){
   let best=null, bestValue=-Infinity;
   (pool||[]).forEach(member=>{
@@ -3703,6 +3713,7 @@ function rankReferencePeer(pool,label){
   });
   return {
     name: best?.Personagem || '—',
+    member: best,
     value: Number.isFinite(bestValue) ? rankAvgFormat(label,bestValue) : '—'
   };
 }
@@ -3905,11 +3916,13 @@ function renderRankExplanation(m,target='#mRankExplain'){
                      d.tag==='NA MÉDIA'?'Na média':
                      d.tag==='ABAIXO DA MÉDIA'?'Precisa evoluir':'Prioridade';
    const ref=rankReferencePeer(pool,x.label);
+   const exactCurrent=rankExactSheetValue(m,x.label,x.value);
+   const exactReference=rankExactSheetValue(ref.member,x.label,x.targetValue);
    const pctRef=x.targetNum>0 ? Math.max(0,Math.min(100,Math.round((x.currentNum/x.targetNum)*100))) : x.p;
    return `<tr class="rankTableRow ${d.cls} rankStatClickable" onclick="openStatRank('${encodeURIComponent(m.Personagem)}','${encodeURIComponent(x.label)}')" title="Ver ranking de ${esc(x.label)} da classe">
      <td><div class="rankTableAttr"><span class="rankTableIcon">${statIcon(x.label==='Power'?'Power Atual':x.label==='MDMG'?'MDMG':x.label)}</span><strong>${esc(x.label)}</strong></div></td>
-     <td><div class="rankValueReference"><strong>${x.value} <em>/ ${x.targetValue}</em></strong><small>${pctRef}% da referência</small></div></td>
-     <td><div class="rankGuildReference"><strong>${x.targetValue}</strong><small>${esc(ref.name)} • maior valor do grupo</small></div></td>
+     <td><div class="rankValueReference"><strong>${esc(exactCurrent)} <em>/ ${esc(exactReference)}</em></strong><small>${pctRef}% da referência</small></div></td>
+     <td><div class="rankGuildReference"><strong>${esc(exactReference)}</strong><small>${esc(ref.name)} • maior valor do grupo</small></div></td>
      <td><div class="rankPerformance"><span><i style="width:${x.p}%"></i></span><strong>${x.p}<small>/100</small></strong></div></td>
      <td><span class="rankTableStatus ${d.cls}">${statusLabel}</span></td>
      <td class="rankWeight">${(x.weight*100).toFixed(0)}%</td>
