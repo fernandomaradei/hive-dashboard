@@ -1099,6 +1099,18 @@ z-index:0}
 
 
 /* HIVEST • painel explicativo do ranking — mockup 03/11 */
+/* HIVEST — explicação de ranking para todas as classes, sem arte/ícone de identificação */
+.rankHowClass{gap:13px;padding:20px 12px}
+.rankHowClass strong{font-size:clamp(28px,2.4vw,42px);line-height:1.1;color:#f9f5ee}
+.rankHowClass small{font-size:15px;color:#c9d4dd}
+.rankHowClassCaption{width:100%;padding-top:17px;margin-top:5px;border-top:1px solid rgba(255,203,94,.38);font-size:13px;font-weight:900;color:#ffd35d}
+.rankHowSplit .gen{background:linear-gradient(#79612e,#4c3b1b)}
+.rankHowGeneral{border-top:1px solid #4b5970;margin-top:14px;padding-top:9px}
+.rankHowGeneral>b{display:block;color:#ffd35d;font-size:11px;margin-bottom:7px}
+.rankHowClassArt{display:none!important}
+.rankHowSplit span{min-width:0;overflow:hidden}
+@media(max-width:520px){.rankHowClass strong{font-size:32px}}
+
 .rankHow{margin:16px 0 14px;border:1px solid #c49420;border-radius:17px;background:linear-gradient(130deg,#0d1720,#0a1114 55%,#10130f);overflow:hidden;box-shadow:0 12px 35px #0006;color:#f8f2e7}
 .rankHowHeader{padding:16px 20px;background:linear-gradient(90deg,#132438,#111c28 65%,#0d1418);border-bottom:1px solid #9b792a;display:flex;gap:14px;align-items:center}
 .rankHowIcon{font-size:35px}.rankHowHeader h3{margin:0;font-size:21px;color:#ffd35d}.rankHowHeader p{margin:4px 0 0;font-size:12px;color:#d3d4d0;line-height:1.5}
@@ -3944,25 +3956,32 @@ function renderRankExplanation(m,target='#mRankExplain'){
    </tr>`;
  }).join('');
 
- // Os pesos são derivados dos mesmos itens usados na tabela; não duplicamos a fórmula no layout.
- const isSniperHow=role==='DPS' && /sniper|hunter/.test(norm(job));
- const isHWHow=role==='DPS' && /\bhw\b|high wizard|wizard|mage|bruxo/.test(norm(job));
- const howAttackLabels=isSniperHow?['ATK','PDMG','IGNORE PDEF','CRIT RATE','CRIT DMG','DMG INC HUMAN','DMG INC MED','PVP DMG INC']:
-   ['MATK','IGNORE MDEF','MDMG','DMG INC HUMAN','DMG INC MED','PVP DMG INC'];
- const howAttack=(isSniperHow||isHWHow)?items.filter(x=>howAttackLabels.includes(x.label)):[];
- const howDefense=(isSniperHow||isHWHow)?items.filter(x=>!howAttackLabels.includes(x.label)):[];
- const howWeight=arr=>Math.round(arr.reduce((t,x)=>t+x.weight,0)*100);
- const howRows=arr=>arr.map(x=>`<div class="rankHowStat"><span>${esc(x.label)}</span><b>${Math.round(x.weight*100)}%</b></div>`).join('');
- const howBlock=(isSniperHow||isHWHow)?`<section class="rankHow" aria-label="Como é calculado o ranking da classe">
+ // O painel usa os mesmos itens e pesos da nota, sem recalcular ou alterar o ranking.
+ // Agrupamento visual: ofensiva, defesa/sustentação e eventuais métricas gerais.
+ const offensiveLabels=new Set(['ATK','MATK','PDMG','MDMG','IGNORE PDEF','IGNORE MDEF','CRIT RATE','CRIT DMG','DMG INC HUMAN','DMG INC MED','PVP DMG INC']);
+ const generalLabels=new Set(['Power','Power Atual']);
+ const howAttack=items.filter(x=>offensiveLabels.has(x.label));
+ const howGeneral=items.filter(x=>generalLabels.has(x.label));
+ const howDefense=items.filter(x=>!offensiveLabels.has(x.label)&&!generalLabels.has(x.label));
+ const howWeight=arr=>arr.reduce((t,x)=>t+x.weight,0)*100;
+ const howPct=v=>Number.isInteger(Math.round(v*10)/10)?String(Math.round(v)):v.toFixed(1).replace('.',',');
+ const howRows=arr=>arr.map(x=>`<div class="rankHowStat"><span>${esc(x.label)}</span><b>${howPct(x.weight*100)}%</b></div>`).join('');
+ const howAttackPct=howWeight(howAttack), howDefensePct=howWeight(howDefense), howGeneralPct=howWeight(howGeneral);
+ const howTotal=howAttackPct+howDefensePct+howGeneralPct;
+ const howClassName=rankGroup||job||'Classe';
+ const howRole=role==='SUPORTE'?'Suporte':role==='TANK'?'Tank':role==='HÍBRIDO'?'Híbrido': 'DPS';
+ const howGeneralBlock=howGeneral.length?`<div class="rankHowGeneral"><b>Outros atributos — ${howPct(howGeneralPct)}%</b>${howRows(howGeneral)}</div>`:'';
+ const howPowerRule=howGeneral.length?'<li>POWER participa da nota desta classe com o peso indicado em Outros atributos.</li>':'<li>POWER não participa da nota desta classe.</li>';
+ const howBlock=`<section class="rankHow" aria-label="Como é calculado o ranking da classe">
    <div class="rankHowHeader"><span class="rankHowIcon">🎯</span><div><h3>Como é calculado o Ranking da Classe?</h3><p>Entenda os atributos, os pesos e a posição de cada jogador dentro da própria classe.</p></div></div>
    <div class="rankHowGrid">
-    <div class="rankHowPanel rankHowClass"><div class="rankHowClassArt">${isSniperHow?'🏹':'🧙'}</div><strong>${esc(isSniperHow?'Sniper':'HW')}</strong><small>${esc(isSniperHow?'DPS Físico':'DPS Mágico')}</small><div class="rankHowSplit"><span class="off" style="width:${howWeight(howAttack)}%">${howWeight(howAttack)}%<small>Ataque</small></span><span class="def" style="width:${howWeight(howDefense)}%">${howWeight(howDefense)}%<small>Defesa</small></span></div></div>
-    <div class="rankHowPanel rankHowAttack"><h4>⚔️ Atributos de Ataque</h4>${howRows(howAttack)}<div class="rankHowTotal"><span>Total Ataque</span><span>${howWeight(howAttack)}%</span></div></div>
-    <div class="rankHowPanel rankHowDefense"><h4>🛡️ Atributos de Defesa</h4>${howRows(howDefense)}<div class="rankHowTotal"><span>Total Defesa</span><span>${howWeight(howDefense)}%</span></div></div>
+    <div class="rankHowPanel rankHowClass"><strong>${esc(howClassName)}</strong><small>${esc(howRole)}</small><div class="rankHowClassCaption">Distribuição da avaliação</div><div class="rankHowSplit"><span class="off" style="width:${howAttackPct/howTotal*100}%">${howPct(howAttackPct)}%<small>Ataque</small></span><span class="def" style="width:${howDefensePct/howTotal*100}%">${howPct(howDefensePct)}%<small>Defesa</small></span>${howGeneral.length?`<span class="gen" style="width:${howGeneralPct/howTotal*100}%">${howPct(howGeneralPct)}%<small>Outros</small></span>`:''}</div></div>
+    <div class="rankHowPanel rankHowAttack"><h4>⚔️ Atributos de Ataque — ${howPct(howAttackPct)}%</h4>${howRows(howAttack)||'<p>Nenhum atributo ofensivo nesta fórmula.</p>'}<div class="rankHowTotal"><span>Total Ataque</span><span>${howPct(howAttackPct)}%</span></div></div>
+    <div class="rankHowPanel rankHowDefense"><h4>🛡️ Defesa e Sustentação — ${howPct(howDefensePct)}%</h4>${howRows(howDefense)||'<p>Nenhum atributo defensivo nesta fórmula.</p>'}<div class="rankHowTotal"><span>Total Defesa</span><span>${howPct(howDefensePct)}%</span></div>${howGeneralBlock}</div>
     <div class="rankHowPanel rankHowFormula"><h4>📊 Fórmula de Cálculo</h4><div class="rankHowEquation">Nota = Σ (Percentil do atributo × Peso)</div><p><b>Percentil:</b> porcentagem de jogadores da mesma classe com valor igual ou inferior ao seu naquele atributo.</p><p><b>Peso:</b> importância do atributo na nota final.</p><p><b>Exemplo:</b> percentil 80 em um atributo de 10% contribui com 8 pontos.</p><p><b>Nota final:</b> soma ponderada dos atributos, de 0 a 100.</p></div>
-    <div class="rankHowPanel rankHowRules"><h4>📌 Regras e Observações</h4><ul><li>Ranking da classe ordenado pela pontuação calculada.</li><li>Comparação feita somente com jogadores da mesma classe.</li><li>A referência exibida na tabela é o <b>maior valor do grupo</b>, não a média.</li><li>A nota é baseada em posição percentual, não na divisão pelo valor máximo.</li><li>POWER não participa da nota desta classe.</li></ul></div>
-   </div><div class="rankHowFoot">A pontuação reflete os dados disponíveis no dashboard; mudanças nos jogadores e atributos podem alterar os percentis.</div>
-  </section>`:'';
+    <div class="rankHowPanel rankHowRules"><h4>📌 Regras e Observações</h4><ul><li>Ranking da classe ordenado pela pontuação calculada.</li><li>Comparação feita somente com jogadores da mesma classe.</li><li>A referência exibida na tabela é o <b>maior valor do grupo</b>, não a média.</li><li>A nota é baseada em posição percentual, não na divisão pelo valor máximo.</li>${howPowerRule}</ul></div>
+   </div><div class="rankHowFoot">Os pesos exibidos são os da fórmula desta classe (${howPct(howTotal)}% no total). A pontuação reflete os dados disponíveis no dashboard; mudanças nos jogadores e atributos podem alterar os percentis.</div>
+  </section>`;
 
  box.innerHTML=howBlock+`<section class="rankExplain rankExplainTable">
    <div class="rankExplainHead">
