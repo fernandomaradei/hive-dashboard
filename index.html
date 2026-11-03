@@ -3900,6 +3900,25 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.05,avgMetric(d.RED),maxMetric(d.RED))
      ];
      formula='HW: MATK 12% + IGNORE MDEF 12% + MDMG 12% + DMG INC HUMAN 12% + PVP DMG INC 10% + DMG INC MED 12% + PDMG.R 5% + MDMG.R 5% + DMG RED HUMAN 5% + DMG RED MED 5% + PDEF 5% + MDEF 5%.';
+   }else if(role==='HÍBRIDO' && /\bdoram\b/i.test(job) && doramCombatProfile(m)==='MAGIC'){
+     const d=supportDefenseContext(pool);
+     items=[
+      rankMetric('MATK',fmtInt(r.attack,'MATK'),pctRank(r.attack,c.attack),.11,avgMetric(c.attack),maxMetric(c.attack)),
+      rankMetric('MDMG',metricFormat(r.damage,'MDMG'),pctRank(r.damage,c.damage),.11,avgMetric(c.damage),maxMetric(c.damage)),
+      rankMetric('IGNORE MDEF',fmtInt(r.penetration,'IGNORE MDEF'),pctRank(r.penetration,c.penetration),.11,avgMetric(c.penetration),maxMetric(c.penetration)),
+      rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.10,avgMetric(c.humaninc),maxMetric(c.humaninc)),
+      rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.10,avgMetric(c.incmed),maxMetric(c.incmed)),
+      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.07,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+      pctMetric('PDMG.R','PDMGR',.06,d),pctMetric('MDMG.R','MDMGR',.06,d),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.06,avgMetric(d.PDEF),maxMetric(d.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.06,avgMetric(d.MDEF),maxMetric(d.MDEF)),
+      pctMetric('DMG RED HUMAN','HUMANRED',.04,d),
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.04,avgMetric(d.RED),maxMetric(d.RED)),
+      rankMetric('CRIT RES',fmtInt(m['CRIT RES'],'CRIT RES'),pctRank(intNum(m['CRIT RES'],'CRIT RES'),d.CRITRES),.03,avgMetric(d.CRITRES),maxMetric(d.CRITRES)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED),.03,avgMetric(d.PVPRED),maxMetric(d.PVPRED)),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),d.HP),.02,avgMetric(d.HP),maxMetric(d.HP))
+     ];
+     formula='DORAM MÁGICO: 60% ATAQUE (MATK 11%, MDMG 11%, IGNORE MDEF 11%, DMG INC HUMAN 10%, DMG INC MED 10%, PVP DMG INC 7%) + 40% DEFESA (PDMG.R 6%, MDMG.R 6%, PDEF 6%, MDEF 6%, DMG RED HUMAN 4%, DMG RED MED 4%, CRIT RES 3%, PVP DMG RED 3%, HP 2%). POWER não participa.';
    }else    if(role==='HÍBRIDO'){
      const d=supportDefenseContext(pool);
      const def=[
@@ -4484,6 +4503,22 @@ function approvedHWScore(m,pool){
        + .05*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)+.05*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
        + .05*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)+.05*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED);
 }
+function approvedDoramMagicScore(m,pool){
+  const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,'MAGIC'),d=supportDefenseContext(pool);
+  return .11*pctRank(r.attack,c.attack)+.11*pctRank(r.damage,c.damage)+.11*pctRank(r.penetration,c.penetration)
+       + .10*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)
+       + .10*pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed)
+       + .07*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
+       + .06*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)
+       + .06*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)
+       + .06*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
+       + .06*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)
+       + .04*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)
+       + .04*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED)
+       + .03*pctRank(intNum(m['CRIT RES'],'CRIT RES'),d.CRITRES)
+       + .03*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED)
+       + .02*pctRank(intNum(m.HP,'HP'),d.HP);
+}
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
 
@@ -4504,6 +4539,10 @@ function classTop3Score(member, pool){
     const d=supportDefenseContext(pool);
     const score=(baseScore*.95)+(.05*pctRank(metricValue(member['DMG RED MED'],'DMG RED MED'),d.RED));
     return {score,kind:(profile==='MAGIC'?'DPS MÁGICO':'DPS FÍSICO')+(dpsUsesDefenseBlend(member.Job)?' • 70% ATQ + 30% DEF':'')};
+  }
+
+  if(role==='HÍBRIDO' && /\bdoram\b/i.test(String(member.Job||'')) && doramCombatProfile(member)==='MAGIC'){
+    return {score:approvedDoramMagicScore(member,pool),kind:'HÍBRIDO MÁGICO • 60% ATQ + 40% DEF'};
   }
 
   if(role==='HÍBRIDO'){
