@@ -3846,7 +3846,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.06,avgMetric(d.RED),maxMetric(d.RED))
      ];
      formula='SNIPER: ATK 10% + PDMG 10% + IGNORE PDEF 10% + CRIT RATE 10% + CRIT DMG 8% + DMG INC HUMAN 8% + DMG INC MED 8% + PVP DMG INC 6% + PDMG.R 6% + MDMG.R 6% + PDEF 6% + MDEF 6% + DMG RED MED 6%.';
-   }else if(role==='DPS' && /\\bhw\\b|high wizard|wizard|mage/.test(norm(job))){
+   }else if(role==='DPS' && /\bhw\b|high wizard|wizard|mage|bruxo/.test(norm(job))){
      const d=supportDefenseContext(pool);
      items=[
       rankMetric('MATK',fmtInt(r.attack,'MATK'),pctRank(r.attack,c.attack),.12,avgMetric(c.attack),maxMetric(c.attack)),
@@ -4400,12 +4400,12 @@ function approvedSniperScore(m,pool){
 }
 function approvedHWScore(m,pool){
   const r=rankingOffensiveRaw(m),c=rankingOffenseContext(pool,r.profile),d=supportDefenseContext(pool);
-  return .14*pctRank(r.attack,c.attack)+.16*pctRank(r.damage,c.damage)+.12*pctRank(r.penetration,c.penetration)
-       + .11*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.09*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
-       + .05*pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed)
-       + .07*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)+.07*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)
-       + .05*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)+.045*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)+.045*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)
-       + .05*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED);
+  return .12*pctRank(r.attack,c.attack)+.12*pctRank(r.damage,c.damage)+.12*pctRank(r.penetration,c.penetration)
+       + .12*pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc)+.10*pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc)
+       + .12*pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed)
+       + .05*pctRank(metricValue(m['PDMG.R'],'PDMG.R'),d.PDMGR)+.05*pctRank(metricValue(m['MDMG.R'],'MDMG.R'),d.MDMGR)
+       + .05*pctRank(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),d.HUMANRED)+.05*pctRank(intNum(m.PDEF,'PDEF'),d.PDEF)
+       + .05*pctRank(intNum(m.MDEF,'MDEF'),d.MDEF)+.05*pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED);
 }
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
