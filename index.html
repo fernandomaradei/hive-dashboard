@@ -3853,14 +3853,14 @@ function renderRankExplanation(m,target='#mRankExplain'){
       rankMetric('MDMG',metricFormat(r.damage,'MDMG'),pctRank(r.damage,c.damage),.12,avgMetric(c.damage),maxMetric(c.damage)),
       rankMetric('IGNORE MDEF',fmtInt(r.penetration,'IGNORE MDEF'),pctRank(r.penetration,c.penetration),.12,avgMetric(c.penetration),maxMetric(c.penetration)),
       rankMetric('DMG INC HUMAN',rankAvgFormat('DMG INC HUMAN',metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN')),pctRank(metricValue(m['DMG INC HUMAN'],'DMG INC HUMAN'),c.humaninc),.12,avgMetric(c.humaninc),maxMetric(c.humaninc)),
-      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.11,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
-      rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.11,avgMetric(c.incmed),maxMetric(c.incmed)),
+      rankMetric('PVP DMG INC',fmtInt(m['PVP DMG INC'],'PVP DMG INC'),pctRank(intNum(m['PVP DMG INC'],'PVP DMG INC'),c.pvpinc),.10,avgMetric(c.pvpinc),maxMetric(c.pvpinc)),
+      rankMetric('DMG INC MED',metricFormat(m['DMG INC MED'],'DMG INC MED'),pctRank(metricValue(m['DMG INC MED'],'DMG INC MED'),c.incmed),.12,avgMetric(c.incmed),maxMetric(c.incmed)),
       pctMetric('PDMG.R','PDMGR',.05,d),pctMetric('MDMG.R','MDMGR',.05,d),pctMetric('DMG RED HUMAN','HUMANRED',.05,d),
       rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),d.PDEF),.05,avgMetric(d.PDEF),maxMetric(d.PDEF)),
       rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),d.MDEF),.05,avgMetric(d.MDEF),maxMetric(d.MDEF)),
       rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),d.RED),.05,avgMetric(d.RED),maxMetric(d.RED))
      ];
-     formula='HW: MATK 12% + IGNORE MDEF 12% + MDMG 12% + DMG INC HUMAN 12% + PVP DMG INC 11% + DMG INC MED 11% + PDMG.R 5% + MDMG.R 5% + DMG RED HUMAN 5% + DMG RED MED 5% + PDEF 5% + MDEF 5%.';
+     formula='HW: MATK 12% + IGNORE MDEF 12% + MDMG 12% + DMG INC HUMAN 12% + PVP DMG INC 10% + DMG INC MED 12% + PDMG.R 5% + MDMG.R 5% + DMG RED HUMAN 5% + DMG RED MED 5% + PDEF 5% + MDEF 5%.';
    }else    if(role==='HÍBRIDO'){
      const d=supportDefenseContext(pool);
      const def=[
