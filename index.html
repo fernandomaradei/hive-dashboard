@@ -1097,6 +1097,21 @@ z-index:0}
 #centralGuerra.hivest-export-v2 .hivest-report-bar{height:5px;margin-top:5px;background:#273345}
 #centralGuerra.hivest-export-v2 .hivest-report-bar i{background:var(--report-accent);box-shadow:0 0 8px var(--report-accent)}
 
+
+/* HIVEST • painel explicativo do ranking — mockup 03/11 */
+.rankHow{margin:16px 0 14px;border:1px solid #c49420;border-radius:17px;background:linear-gradient(130deg,#0d1720,#0a1114 55%,#10130f);overflow:hidden;box-shadow:0 12px 35px #0006;color:#f8f2e7}
+.rankHowHeader{padding:16px 20px;background:linear-gradient(90deg,#132438,#111c28 65%,#0d1418);border-bottom:1px solid #9b792a;display:flex;gap:14px;align-items:center}
+.rankHowIcon{font-size:35px}.rankHowHeader h3{margin:0;font-size:21px;color:#ffd35d}.rankHowHeader p{margin:4px 0 0;font-size:12px;color:#d3d4d0;line-height:1.5}
+.rankHowGrid{display:grid;grid-template-columns:1.03fr .85fr .85fr 1.13fr 1fr;gap:12px;padding:14px}
+.rankHowPanel{min-width:0;border:1px solid #53606b;border-radius:13px;background:linear-gradient(160deg,#101c26,#0b1115);padding:13px}
+.rankHowPanel h4{font-size:13px;margin:0 0 11px;color:#f3f5f5}.rankHowAttack{border-color:#168d67}.rankHowAttack h4{color:#7aefc2}.rankHowDefense{border-color:#376aa9}.rankHowDefense h4{color:#9cc8ff}.rankHowFormula{border-color:#c8941b}.rankHowFormula h4,.rankHowRules h4{color:#ffd25d}.rankHowRules{border-color:#b98a22}
+.rankHowClass{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:9px}.rankHowClass strong{font-size:24px}.rankHowClass small{font-size:12px;color:#bfc9cf}.rankHowClassArt{width:94px;height:94px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#2b4c5b,#10202a);border:1px solid #92752d;font-size:52px}.rankHowSplit{display:flex;width:100%;border-radius:11px;overflow:hidden;border:1px solid #557386;margin-top:10px}.rankHowSplit span{padding:12px 4px;text-align:center;font-size:13px;font-weight:900}.rankHowSplit small{display:block;color:#e8f0f1;font-size:10px;margin-top:3px}.rankHowSplit .off{background:linear-gradient(#117e5a,#09533d)}.rankHowSplit .def{background:linear-gradient(#235da3,#163b74)}
+.rankHowStat{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:4px 2px;border-bottom:1px solid #ffffff12}.rankHowStat b{white-space:nowrap}.rankHowStat:last-of-type{border:0}.rankHowTotal{display:flex;justify-content:space-between;margin:10px -6px -6px;padding:9px 10px;border-radius:8px;background:#145d47;color:#baffdf;font-weight:900;font-size:12px}.rankHowDefense .rankHowTotal{background:#1d487e;color:#c8e0ff}
+.rankHowEquation{border:1px solid #b88822;background:#251b0b;border-radius:10px;padding:13px 8px;text-align:center;font-size:12px;font-weight:900;color:#ffe7a2;margin-bottom:12px}.rankHowPanel p,.rankHowPanel li{font-size:11px;line-height:1.5;color:#d8dfdf}.rankHowPanel p{margin:8px 0}.rankHowRules ul{margin:0;padding-left:19px}.rankHowRules li{margin:0 0 9px}.rankHowFoot{font-size:10px;color:#aab9bc;padding:0 16px 13px}
+@media(max-width:1200px){.rankHowGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.rankHowFormula,.rankHowRules{grid-column:span 1}}
+@media(max-width:780px){.rankHowGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.rankHowClass{grid-column:1/-1}.rankHowHeader h3{font-size:17px}}
+@media(max-width:520px){.rankHowGrid{grid-template-columns:1fr}.rankHowHeader{padding:12px}.rankHowPanel{padding:12px}.rankHowHeader p{font-size:11px}}
+
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
@@ -3929,9 +3944,29 @@ function renderRankExplanation(m,target='#mRankExplain'){
    </tr>`;
  }).join('');
 
- box.innerHTML=`<section class="rankExplain rankExplainTable">
+ // Os pesos são derivados dos mesmos itens usados na tabela; não duplicamos a fórmula no layout.
+ const isSniperHow=role==='DPS' && /sniper|hunter/.test(norm(job));
+ const isHWHow=role==='DPS' && /\bhw\b|high wizard|wizard|mage|bruxo/.test(norm(job));
+ const howAttackLabels=isSniperHow?['ATK','PDMG','IGNORE PDEF','CRIT RATE','CRIT DMG','DMG INC HUMAN','DMG INC MED','PVP DMG INC']:
+   ['MATK','IGNORE MDEF','MDMG','DMG INC HUMAN','DMG INC MED','PVP DMG INC'];
+ const howAttack=(isSniperHow||isHWHow)?items.filter(x=>howAttackLabels.includes(x.label)):[];
+ const howDefense=(isSniperHow||isHWHow)?items.filter(x=>!howAttackLabels.includes(x.label)):[];
+ const howWeight=arr=>Math.round(arr.reduce((t,x)=>t+x.weight,0)*100);
+ const howRows=arr=>arr.map(x=>`<div class="rankHowStat"><span>${esc(x.label)}</span><b>${Math.round(x.weight*100)}%</b></div>`).join('');
+ const howBlock=(isSniperHow||isHWHow)?`<section class="rankHow" aria-label="Como é calculado o ranking da classe">
+   <div class="rankHowHeader"><span class="rankHowIcon">🎯</span><div><h3>Como é calculado o Ranking da Classe?</h3><p>Entenda os atributos, os pesos e a posição de cada jogador dentro da própria classe.</p></div></div>
+   <div class="rankHowGrid">
+    <div class="rankHowPanel rankHowClass"><div class="rankHowClassArt">${isSniperHow?'🏹':'🧙'}</div><strong>${esc(isSniperHow?'Sniper':'HW')}</strong><small>${esc(isSniperHow?'DPS Físico':'DPS Mágico')}</small><div class="rankHowSplit"><span class="off" style="width:${howWeight(howAttack)}%">${howWeight(howAttack)}%<small>Ataque</small></span><span class="def" style="width:${howWeight(howDefense)}%">${howWeight(howDefense)}%<small>Defesa</small></span></div></div>
+    <div class="rankHowPanel rankHowAttack"><h4>⚔️ Atributos de Ataque</h4>${howRows(howAttack)}<div class="rankHowTotal"><span>Total Ataque</span><span>${howWeight(howAttack)}%</span></div></div>
+    <div class="rankHowPanel rankHowDefense"><h4>🛡️ Atributos de Defesa</h4>${howRows(howDefense)}<div class="rankHowTotal"><span>Total Defesa</span><span>${howWeight(howDefense)}%</span></div></div>
+    <div class="rankHowPanel rankHowFormula"><h4>📊 Fórmula de Cálculo</h4><div class="rankHowEquation">Nota = Σ (Percentil do atributo × Peso)</div><p><b>Percentil:</b> porcentagem de jogadores da mesma classe com valor igual ou inferior ao seu naquele atributo.</p><p><b>Peso:</b> importância do atributo na nota final.</p><p><b>Exemplo:</b> percentil 80 em um atributo de 10% contribui com 8 pontos.</p><p><b>Nota final:</b> soma ponderada dos atributos, de 0 a 100.</p></div>
+    <div class="rankHowPanel rankHowRules"><h4>📌 Regras e Observações</h4><ul><li>Ranking da classe ordenado pela pontuação calculada.</li><li>Comparação feita somente com jogadores da mesma classe.</li><li>A referência exibida na tabela é o <b>maior valor do grupo</b>, não a média.</li><li>A nota é baseada em posição percentual, não na divisão pelo valor máximo.</li><li>POWER não participa da nota desta classe.</li></ul></div>
+   </div><div class="rankHowFoot">A pontuação reflete os dados disponíveis no dashboard; mudanças nos jogadores e atributos podem alterar os percentis.</div>
+  </section>`:'';
+
+ box.innerHTML=howBlock+`<section class="rankExplain rankExplainTable">
    <div class="rankExplainHead">
-     <div><b>📊 Por que recebeu esta pontuação?</b><span class="rankExplainContext">${esc(final.kind)} • comparado com ${esc(rankGroup)}</span></div>
+     <div><b>📊 Seus Atributos Avaliados</b><span class="rankExplainContext">${esc(final.kind)} • comparado com ${esc(rankGroup)}</span></div>
      <span class="rankExplainTotal">${Math.round(final.score)}<small>/100</small></span>
    </div>
    <div class="rankInsightStrip">
