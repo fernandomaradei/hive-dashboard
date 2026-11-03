@@ -4097,7 +4097,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
    {kind:'def',pct:howDefensePct,label:'Status Defensivos'},
    ...(howGeneral.length?[{kind:'gen',pct:howGeneralPct,label:'Outros'}]:[])
  ].filter(part=>part.pct>0).sort((a,b)=>b.pct-a.pct);
- const howSplitHtml=howSplitParts.map(part=>`<span class="${part.kind}" style="width:${part.pct/howTotal*100}%"><b>${howPct(part.pct)}%</b><small>${part.label}</small></span>`).join('');
+ const howSplitHtml=howSplitParts.map(part=>`<span class="${part.kind}" style="width:${part.pct/howTotal*100}%" title="${part.label}: ${howPct(part.pct)}%" aria-label="${part.label}: ${howPct(part.pct)}%"><b>${howPct(part.pct)}%</b>${part.pct/howTotal*100>=25?`<small>${part.label}</small>`:''}</span>`).join('');
  const howAttackHtml=`<div class="rankHowPanel rankHowAttack"><h4>⚔️ Status Ofensivos — ${howPct(howAttackPct)}%</h4>${howRows(howAttack)||'<p>Nenhum atributo ofensivo nesta fórmula.</p>'}<div class="rankHowTotal"><span>Total Ofensivo</span><span>${howPct(howAttackPct)}%</span></div></div>`;
  const howDefenseHtml=`<div class="rankHowPanel rankHowDefense"><h4>🛡️ Status Defensivos — ${howPct(howDefensePct)}%</h4>${howRows(howDefense)||'<p>Nenhum atributo defensivo nesta fórmula.</p>'}${howGeneralBlock}<div class="rankHowTotal"><span>Total Defensivo</span><span>${howPct(howDefensePct)}%</span></div></div>`;
  const howBlock=`<section class="rankHow" aria-label="Como é calculado o ranking da classe">
