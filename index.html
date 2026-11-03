@@ -3396,16 +3396,16 @@ function supportDefenseScore(m,ctx,pctFn=pctRank){
   const healStat=supportHealStat(m.Job);
   const healScore=healStat ? pctFn(intNum(m[healStat],healStat),ctx[healStat]) : 0;
   if(healStat){
-    return .15*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
-         + .15*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
-         + .11*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
-         + .11*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
+    return .13*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
+         + .13*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
+         + .13*pctFn(intNum(m.PDEF,'PDEF'),ctx.PDEF)
+         + .13*pctFn(intNum(m.MDEF,'MDEF'),ctx.MDEF)
+         + .12*pctFn(intNum(m['CRIT RES'],'CRIT RES'),ctx.CRITRES)
          + .09*pctFn(metricValue(m['DMG RED HUMAN'],'DMG RED HUMAN'),ctx.HUMANRED)
-         + .09*pctFn(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
-         + .08*pctFn(intNum(m.HP,'HP'),ctx.HP)
-         + .08*healScore
-         + .04*pctFn(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED)
-         + .10*pctFn(intNum(m['CRIT RES'],'CRIT RES'),ctx.CRITRES);
+         + .09*pctFn(metricValue(m['DMG RED MED'],'DMG RED MED'),ctx.RED)
+         + .07*pctFn(intNum(m['PVP DMG RED'],'PVP DMG RED'),ctx.PVPRED)
+         + .03*pctFn(intNum(m.HP,'HP'),ctx.HP)
+         + .08*healScore;
   }
   return .15*pctFn(metricValue(m['PDMG.R'],'PDMG.R'),ctx.PDMGR)
        + .15*pctFn(metricValue(m['MDMG.R'],'MDMG.R'),ctx.MDMGR)
@@ -3810,17 +3810,17 @@ function renderRankExplanation(m,target='#mRankExplain'){
    const c=supportDefenseContext(pool), healStat=supportHealStat(job);
    if(healStat){
      items=[
-      pctMetric('PDMG.R','PDMGR',.15,c), pctMetric('MDMG.R','MDMGR',.15,c),
-      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.11,avgMetric(c.PDEF),maxMetric(c.PDEF)),
-      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.11,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      pctMetric('PDMG.R','PDMGR',.13,c), pctMetric('MDMG.R','MDMGR',.13,c),
+      rankMetric('PDEF',fmtInt(m.PDEF,'PDEF'),pctRank(intNum(m.PDEF,'PDEF'),c.PDEF),.13,avgMetric(c.PDEF),maxMetric(c.PDEF)),
+      rankMetric('MDEF',fmtInt(m.MDEF,'MDEF'),pctRank(intNum(m.MDEF,'MDEF'),c.MDEF),.13,avgMetric(c.MDEF),maxMetric(c.MDEF)),
+      rankMetric('CRIT RES',fmtInt(m['CRIT RES'],'CRIT RES'),pctRank(intNum(m['CRIT RES'],'CRIT RES'),c.CRITRES),.12,avgMetric(c.CRITRES),maxMetric(c.CRITRES)),
       pctMetric('DMG RED HUMAN','HUMANRED',.09,c),
-      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.09,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
-      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.08,avgMetric(c.HP),maxMetric(c.HP)),
-      rankMetric(healStat,fmtInt(m[healStat],healStat),pctRank(intNum(m[healStat],healStat),c[healStat]),.08,avgMetric(c[healStat]),maxMetric(c[healStat])),
-      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.04,avgMetric(c.RED),maxMetric(c.RED)),
-      rankMetric('CRIT RES',fmtInt(m['CRIT RES'],'CRIT RES'),pctRank(intNum(m['CRIT RES'],'CRIT RES'),c.CRITRES),.10,avgMetric(c.CRITRES),maxMetric(c.CRITRES))
+      rankMetric('DMG RED MED',metricFormat(m['DMG RED MED'],'DMG RED MED'),pctRank(metricValue(m['DMG RED MED'],'DMG RED MED'),c.RED),.09,avgMetric(c.RED),maxMetric(c.RED)),
+      rankMetric('PVP DMG RED',fmtInt(m['PVP DMG RED'],'PVP DMG RED'),pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),c.PVPRED),.07,avgMetric(c.PVPRED),maxMetric(c.PVPRED)),
+      rankMetric('HP',fmtInt(m.HP,'HP'),pctRank(intNum(m.HP,'HP'),c.HP),.03,avgMetric(c.HP),maxMetric(c.HP)),
+      rankMetric(healStat,fmtInt(m[healStat],healStat),pctRank(intNum(m[healStat],healStat),c[healStat]),.08,avgMetric(c[healStat]),maxMetric(c[healStat]))
      ];
-     formula=`SUPORTE: PDMG.R 15% + MDMG.R 15% + PDEF 11% + MDEF 11% + CRIT RES 10% + DMG RED HUMAN 9% + PVP DMG RED 9% + HP 8% + ${healStat} 8% + DMG RED MED 4%.`;
+     formula=`SUPORTE: PDMG.R 13% + MDMG.R 13% + PDEF 13% + MDEF 13% + CRIT RES 12% + DMG RED HUMAN 9% + DMG RED MED 9% + PVP DMG RED 7% + HP 3% + ${healStat} 8%.`;
    }else{
      items=[
       pctMetric('PDMG.R','PDMGR',.15,c),
