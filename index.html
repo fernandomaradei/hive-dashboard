@@ -4008,13 +4008,13 @@ function renderRankExplanation(m,target='#mRankExplain'){
  const howDefenseFirst=howDefense.length>howAttack.length ||
    (howDefense.length===howAttack.length && howDefensePct>howAttackPct);
  const howSplitParts=[
-   {kind:'off',pct:howAttackPct,label:'Ataque'},
-   {kind:'def',pct:howDefensePct,label:'Defesa'},
+   {kind:'off',pct:howAttackPct,label:'Status Ofensivos'},
+   {kind:'def',pct:howDefensePct,label:'Status Defensivos'},
    ...(howGeneral.length?[{kind:'gen',pct:howGeneralPct,label:'Outros'}]:[])
  ].sort((a,b)=>b.pct-a.pct);
  const howSplitHtml=howSplitParts.map(part=>`<span class="${part.kind}" style="width:${part.pct/howTotal*100}%"><b>${howPct(part.pct)}%</b><small>${part.label}</small></span>`).join('');
- const howAttackHtml=`<div class="rankHowPanel rankHowAttack"><h4>⚔️ Atributos de Ataque — ${howPct(howAttackPct)}%</h4>${howRows(howAttack)||'<p>Nenhum atributo ofensivo nesta fórmula.</p>'}<div class="rankHowTotal"><span>Total Ataque</span><span>${howPct(howAttackPct)}%</span></div></div>`;
- const howDefenseHtml=`<div class="rankHowPanel rankHowDefense"><h4>🛡️ Defesa e Sustentação — ${howPct(howDefensePct)}%</h4>${howRows(howDefense)||'<p>Nenhum atributo defensivo nesta fórmula.</p>'}${howGeneralBlock}<div class="rankHowTotal"><span>Total Defesa</span><span>${howPct(howDefensePct)}%</span></div></div>`;
+ const howAttackHtml=`<div class="rankHowPanel rankHowAttack"><h4>⚔️ Status Ofensivos — ${howPct(howAttackPct)}%</h4>${howRows(howAttack)||'<p>Nenhum atributo ofensivo nesta fórmula.</p>'}<div class="rankHowTotal"><span>Total Ofensivo</span><span>${howPct(howAttackPct)}%</span></div></div>`;
+ const howDefenseHtml=`<div class="rankHowPanel rankHowDefense"><h4>🛡️ Status Defensivos — ${howPct(howDefensePct)}%</h4>${howRows(howDefense)||'<p>Nenhum atributo defensivo nesta fórmula.</p>'}${howGeneralBlock}<div class="rankHowTotal"><span>Total Defensivo</span><span>${howPct(howDefensePct)}%</span></div></div>`;
  const howBlock=`<section class="rankHow" aria-label="Como é calculado o ranking da classe">
    <div class="rankHowHeader"><span class="rankHowIcon">🎯</span><div><h3>Como é calculado o Ranking da Classe?</h3><p>Entenda os atributos, os pesos e a posição de cada jogador dentro da própria classe.</p></div></div>
    <div class="rankHowGrid">
