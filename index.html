@@ -1155,6 +1155,13 @@ z-index:0}
 @media(max-width:780px){.rankHowClass{min-height:320px}.rankHowPortrait{background-size:contain;background-position:center top}.rankHowClassContent{padding-top:190px}}
 @media(max-width:520px){.rankHowClassContent strong{font-size:24px}.rankHowClassContent{padding-top:190px}}
 
+
+/* HIVEST: legendas da barra de proporção sempre legíveis, inclusive em fatias menores. */
+.rankHowSplit > span { flex:0 0 auto; min-width:0; overflow:hidden; white-space:normal; padding:10px 3px; }
+.rankHowSplit > span small { display:block; width:100%; min-width:0; white-space:normal; overflow-wrap:break-word; word-break:normal; line-height:1.25; font-size:clamp(8px,.72vw,10px); text-align:center; }
+.rankHowSplit > span b { flex-shrink:0; }
+/* Sobrescreve a regra antiga que ocultava a legenda abaixo de 65px. */
+@container (max-width: 65px) { .rankHowSplit > span small { display:block; } }
 </style>
 <!-- HIVE V29 EVOLUTION INSIGHT -->
 
