@@ -3192,6 +3192,89 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
  #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr!important;gap:15px!important}
  #hpHub #centralGuerra .war-filter-clear{justify-self:stretch!important}
 }
+</style><style id="hivest-war-unified-compact">
+/* Um único quadro, três faixas compactas: guerra/guilda, classes, campo/jogador */
+#hpHub #centralGuerra .war-inline-filters{
+  margin:12px 16px 15px!important;
+  padding:15px 18px!important;
+  border:1px solid #3b4b5b!important;
+  border-radius:12px!important;
+  background:#0d1722!important;
+  box-shadow:none!important;
+}
+#hpHub #centralGuerra .war-inline-top{
+  display:grid!important;
+  grid-template-columns:minmax(290px,36%) minmax(0,1fr)!important;
+  gap:20px!important;
+  align-items:end!important;
+  padding:0 0 12px!important;
+  border-bottom:1px solid #2c3b4b!important;
+}
+#hpHub #centralGuerra .war-war-select{
+  padding:0!important;margin:0!important;
+  background:transparent!important;border:0!important;
+  border-radius:0!important;min-width:0!important;
+}
+#hpHub #centralGuerra .war-war-select label{
+  display:flex!important;flex-direction:column!important;
+  gap:6px!important;max-width:none!important;
+  color:#d9dee7!important;font-size:11px!important;
+  font-weight:800!important;
+}
+#hpHub #centralGuerra .war-war-select select{
+  width:100%!important;height:35px!important;min-height:35px!important;
+  padding:0 11px!important;border:1px solid #435469!important;
+  border-radius:7px!important;background:#142231!important;
+  color:#f1f3f8!important;font-size:11px!important;font-weight:700!important;
+}
+#hpHub #centralGuerra .war-filter-heading{
+  margin:0 0 7px!important;color:#d9dee7!important;
+  font-size:11px!important;font-weight:800!important;line-height:1.2!important;
+}
+#hpHub #centralGuerra .war-filter-classes{
+  padding:12px 0!important;
+  border-bottom:1px solid #2c3b4b!important;
+}
+#hpHub #centralGuerra .war-inline-bottom{
+  display:grid!important;
+  grid-template-columns:minmax(260px,30%) minmax(0,1fr) auto!important;
+  align-items:end!important;gap:18px!important;
+  padding:12px 0 0!important;
+}
+#hpHub #centralGuerra .war-chip-group{gap:5px!important}
+#hpHub #centralGuerra .war-chip{
+  padding:6px 9px!important;min-height:30px!important;
+  border-radius:6px!important;font-size:10px!important;
+  line-height:1.15!important;font-weight:750!important;
+  background:#182533!important;border:1px solid #3d4d5f!important;
+  color:#dce3eb!important;box-shadow:none!important;
+}
+#hpHub #centralGuerra .war-chip.selected{
+  background:#28271f!important;color:#ffdc87!important;
+  border-color:#bd933d!important;
+}
+#hpHub #centralGuerra .war-player-section input{
+  width:100%!important;height:34px!important;min-height:34px!important;
+  border-radius:7px!important;padding:0 11px!important;
+  background:#142231!important;border:1px solid #435469!important;
+  font-size:11px!important;
+}
+#hpHub #centralGuerra .war-filter-clear{
+  height:34px!important;min-height:34px!important;
+  padding:0 12px!important;border-radius:7px!important;
+  background:#1b2937!important;border:1px solid #4a5a6b!important;
+  color:#e8e9ec!important;font-size:10px!important;
+}
+@media(max-width:950px){
+ #hpHub #centralGuerra .war-inline-top{grid-template-columns:1fr!important;gap:13px!important}
+ #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr 1fr!important;gap:12px!important}
+ #hpHub #centralGuerra .war-filter-clear{grid-column:1/-1!important;justify-self:end!important}
+}
+@media(max-width:600px){
+ #hpHub #centralGuerra .war-inline-filters{margin:9px 8px 12px!important;padding:12px!important}
+ #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr!important}
+ #hpHub #centralGuerra .war-filter-clear{grid-column:auto!important;justify-self:stretch!important}
+}
 </style></head>
 <body>
 <div class="app">
@@ -8076,12 +8159,12 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
   <p class="hivest-compare-note">Power médio = soma do Power dos jogadores com Power válido ÷ quantidade desses jogadores. O filtro considera os dois lados da guerra, independentemente dos filtros da tabela principal.</p>
  </section>
  <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Relatório da Guerra</h3><p id="hivestReportInfo">Dados da guerra selecionada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Rankings dos jogadores HIVEST na guerra selecionada. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
- <div class="war-war-select"><label>⚔ Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label></div>
  <div class="war-inline-filters" aria-label="Filtros da guerra">
   <div class="war-inline-top">
+   <div class="war-war-select"><label>⚔ Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label></div>
    <div class="war-filter-section"><div class="war-filter-heading">♢ Guilda</div><div id="warGuildChips" class="war-chip-group"></div></div>
-   <div class="war-filter-section war-filter-classes"><div class="war-filter-heading">♙ Classe</div><div id="warJobChips" class="war-chip-group"></div></div>
   </div>
+  <div class="war-filter-section war-filter-classes"><div class="war-filter-heading">♙ Classe</div><div id="warJobChips" class="war-chip-group"></div></div>
   <div class="war-inline-bottom">
    <div class="war-filter-section"><div class="war-filter-heading">⚑ Campo</div><div id="warCampoChips" class="war-chip-group"></div></div>
    <div class="war-filter-section war-player-section"><label class="war-filter-heading" for="warPlayer">♟ Jogador</label><input id="warPlayer" type="search" placeholder="Buscar personagem..."></div>
