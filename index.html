@@ -3084,7 +3084,20 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
   box-shadow:none!important;
 }
 </style>
-</head>
+<style id="hivest-war-multiclass-css">
+#centralGuerra .war-multi{position:relative;margin-top:5px;min-width:0}
+#hpHub #centralGuerra .war-multi-btn{width:100%;height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;padding:0 12px;border:1px solid #46627e;border-radius:7px;background:#071626;color:#f2f5fc;font:inherit;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden}
+#centralGuerra .war-multi-btn .war-multi-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#centralGuerra .war-multi-chevron{flex:none;color:#ffd777}
+#centralGuerra .war-multi-menu{position:absolute;z-index:200;top:calc(100% + 4px);left:0;width:max(100%,245px);max-width:min(330px,90vw);padding:8px;background:#080e18;border:1px solid #b98c3b;border-radius:9px;box-shadow:0 14px 35px rgba(0,0,0,.65)}
+#centralGuerra .war-multi-menu[hidden]{display:none!important}
+#centralGuerra .war-multi-actions{display:flex;gap:7px;margin-bottom:7px}
+#centralGuerra .war-multi-actions button{flex:1;background:#14283b;border:1px solid #4d6881;color:#ffe0a0;border-radius:6px;padding:7px 4px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+#centralGuerra .war-multi-options{max-height:260px;overflow:auto;display:grid;gap:2px}
+#centralGuerra .war-multi-option{display:flex;align-items:center;gap:9px;padding:8px;border-radius:5px;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
+#centralGuerra .war-multi-option:hover{background:#19304a}
+#centralGuerra .war-multi-option input{width:15px;height:15px;min-height:0!important;margin:0;accent-color:#e6b54e;flex:none}
+</style></head>
 <body>
 <div class="app">
   <section class="hero" id="inicio"></section>
@@ -7968,7 +7981,12 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
   <p class="hivest-compare-note">Power médio = soma do Power dos jogadores com Power válido ÷ quantidade desses jogadores. O filtro considera os dois lados da guerra, independentemente dos filtros da tabela principal.</p>
  </section>
  <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Relatório da Guerra</h3><p id="hivestReportInfo">Dados da guerra selecionada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Rankings dos jogadores HIVEST na guerra selecionada. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
- <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<select id="warJob"><option value="">Todas as classes</option></select></label><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
+ <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<div class="war-multi" id="warJobMulti">
+<button type="button" id="warJobMultiBtn" class="war-multi-btn" aria-expanded="false" aria-controls="warJobMultiMenu">Todas as classes <span class="war-multi-chevron">▾</span></button>
+<div class="war-multi-menu" id="warJobMultiMenu" hidden>
+<div class="war-multi-actions"><button type="button" id="warJobSelectAll">Todas</button><button type="button" id="warJobClear">Limpar seleção</button></div>
+<div class="war-multi-options" id="warJobOptions"></div>
+</div></div></label><select id="warJob" hidden aria-hidden="true"><option value="">Todas as classes</option></select><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint"><span class="hive-war-hint-icon" aria-hidden="true">⚔</span><div><strong>Escolha uma das guerras acima para visualizar os dados.</strong><small>Selecione os filtros para explorar batalhas, participantes e estatísticas.</small></div></div>
  <div class="war-results-title" id="warResultsTitle" hidden><div><strong>⚔️ Jogadores da Guerra</strong><span>Ordene pelos cabeçalhos e deslize horizontalmente para ver os detalhes.</span></div><span class="war-results-count" id="warResultsCount"></span></div>
@@ -8416,6 +8434,39 @@ function updateGuildFilter(){
  const allowed=w===HIVE_AVG?['Hivest']:selectedWar?[key(selectedWar,'Guilda_1','guilda1','guild_a'),key(selectedWar,'Guilda_2','guilda2','guild_b')].map(x=>String(x||'').trim()).filter(Boolean):[];
  populate('warGuild',allowed,'Todas as guildas');
 }
+const warSelectedJobs=new Set();
+function warJobSummary(){
+ const btn=$w('warJobMultiBtn');
+ if(!btn)return;
+ const names=[...warSelectedJobs];
+ const label=names.length===0?'Todas as classes':names.length===1?names[0]:`${names.length} classes selecionadas`;
+ btn.innerHTML=`<span class="war-multi-label" title="${escw(label)}">${escw(label)}</span><span class="war-multi-chevron">▾</span>`;
+ btn.title=names.length?names.join(', '):'Todas as classes';
+}
+function warJobOptionsRefresh(){
+ const select=$w('warJob'),target=$w('warJobOptions');
+ if(!select||!target)return;
+ const available=[...select.options].map(o=>o.value).filter(Boolean);
+ for(const name of [...warSelectedJobs])if(!available.includes(name))warSelectedJobs.delete(name);
+ target.replaceChildren();
+ for(const name of available){
+  const item=document.createElement('label');item.className='war-multi-option';
+  const check=document.createElement('input');check.type='checkbox';check.value=name;check.checked=warSelectedJobs.has(name);
+  check.addEventListener('change',()=>{if(check.checked)warSelectedJobs.add(name);else warSelectedJobs.delete(name);warJobSummary();render();});
+  const text=document.createElement('span');text.textContent=name;
+  item.append(check,text);target.append(item);
+ }
+ warJobSummary();
+}
+function warJobMultiInit(){
+ const btn=$w('warJobMultiBtn'),menu=$w('warJobMultiMenu');
+ if(!btn||!menu)return;
+ btn.addEventListener('click',()=>{menu.hidden=!menu.hidden;btn.setAttribute('aria-expanded',String(!menu.hidden));});
+ document.addEventListener('click',e=>{if(!$w('warJobMulti').contains(e.target)){menu.hidden=true;btn.setAttribute('aria-expanded','false');}});
+ $w('warJobSelectAll').addEventListener('click',()=>{warSelectedJobs.clear();warJobOptionsRefresh();render();});
+ $w('warJobClear').addEventListener('click',()=>{warSelectedJobs.clear();warJobOptionsRefresh();render();});
+ warJobSummary();
+}
 function updateJobFilter(){
  const selected=$w('warFilter').value;
  const source=selected===HIVE_AVG?averageRows():selected?state.players.filter(r=>warId(r)===selected):state.players;
@@ -8424,7 +8475,7 @@ function updateJobFilter(){
  const missing=source.filter(r=>!String(job(r)??'').trim()||/^(?:n[aã]o identificado|undefined|null|unknown|n\/?a|sem classe)$/i.test(String(job(r)).trim()));
  if(missing.length)console.info('[HIVE] Registros sem classe mapeada no recorte selecionado:',missing.map(r=>({personagem:player(r),classeOriginal:job(r),guerra:warId(r)})));
  const valid=source.map(r=>String(job(r)??'').trim()).filter(v=>v&&!/^(?:n[aã]o identificado|undefined|null|unknown|n\/?a|sem classe)$/i.test(v));
- populate('warJob',valid,'Todas as classes');
+ populate('warJob',valid,'Todas as classes'); warJobOptionsRefresh();
 }
 function populateWars(){
  const el=$w('warFilter'),prev=el.value;
@@ -8508,13 +8559,13 @@ function render(){
    $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} registros de jogadores no histórico`;
    return;
  }
- const g=$w('warGuild').value,j=$w('warJob').value,c=$w('warCampo').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
+ const g=$w('warGuild').value,c=$w('warCampo').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
  if(w===HIVE_AVG){
   $w('warNotice').textContent=`${state.wars.length} guerra(s) importada(s) · media por personagem da Hivest (inclui HIVE antiga).`;
  }
  const source=w===HIVE_AVG?averageRows():state.players.filter(r=>warId(r)===w);
  updateColumns(w);
- const rows=sortRows(source.filter(r=>(!g||(w===HIVE_AVG?isHive(r):guild(r)===g))&&(!j||job(r)===j)&&(!c||String(key(r,'Campo')||'').trim().toUpperCase()===c)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
+ const rows=sortRows(source.filter(r=>(!g||(w===HIVE_AVG?isHive(r):guild(r)===g))&&(!warSelectedJobs.size||warSelectedJobs.has(job(r)))&&(!c||String(key(r,'Campo')||'').trim().toUpperCase()===c)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
  $w('warStats').innerHTML=[['⚔️','Guerras',w===HIVE_AVG?state.wars.length:'1','war-stat-purple'],['👥','Jogadores',rows.length,'war-stat-blue'],['🔥',w===HIVE_AVG?'Dano médio / jogador':'Dano causado',fmt(w===HIVE_AVG?(rows.length?total('Dano_Causado')/rows.length:0):total('Dano_Causado')),'war-stat-red'],['✚',w===HIVE_AVG?'Cura média / jogador':'Cura',fmt(w===HIVE_AVG?(rows.length?total('Cura')/rows.length:0):total('Cura')),'war-stat-green']].map(([ic,t,v,cls])=>`<div class="war-stat ${cls}"><span class="war-stat-icon">${ic}</span><div><strong>${v}</strong><small>${escw(t)}</small></div></div>`).join('');
  $w('warRows').innerHTML=rows.map((r,i)=>`<tr data-war-rank="${i+1}">${activeColumns(w).map(k=>{
@@ -8810,6 +8861,7 @@ async function init(){
  if(warInitialized)return;
  warInitialized=true;
  try{
+   warJobMultiInit();
    // Called ONLY after a user clicks Central de Guerra and passes Staff auth.
    $w('centralGuerra').hidden=false;
    ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();renderHivestClassCompare();}));
