@@ -7973,10 +7973,10 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
- <div class="hivest-report-actions"><button type="button" id="hivestCompareOpen">⚔️ Comparar Classes</button><span class="hivest-report-trigger"><button type="button" id="hivestReportOpen" aria-expanded="false">📊 Relatório da Guerra</button><span id="hivestReportChoices" class="hivest-report-choices" hidden><button type="button" data-report-field="PRINCIPAL">MAINFIELD</button><button type="button" data-report-field="SECUNDARIO">SUBFIELD</button><button type="button" data-report-field="AMBOS">Gerar os dois</button></span></span></div>
+ <div class="hivest-report-actions"><button type="button" id="hivestCompareOpen">⚔️ Comparar Classes</button><button type="button" id="hivestReportOpen">📊 Relatório da Guerra</button></div>
  <section id="hivestCompare" class="hivest-class-compare" hidden>
   <div class="hivest-compare-head"><div><h3>⚔️ Comparativo de Classes</h3><p id="hivestCompareInfo">Composição das guildas na guerra selecionada</p></div><button type="button" id="hivestCompareClose">✕ Fechar</button></div>
-  <div class="hivest-compare-controls"><label>Campo<select id="hivestCompareCampo"><option value="TODOS" selected>Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><span>Quantidade de jogadores e Power médio por classe</span></div>
+  <div class="hivest-compare-controls"><label>Campo<select id="hivestCompareCampo"><option value="TODOS">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO" selected>Secundário</option></select></label><span>Quantidade de jogadores e Power médio por classe</span></div>
   <div class="hivest-compare-scroll"><table class="hivest-compare-table"><thead id="hivestCompareThead"></thead><tbody id="hivestCompareBody"></tbody><tfoot id="hivestCompareFoot"></tfoot></table></div>
   <p class="hivest-compare-note">Power médio = soma do Power dos jogadores com Power válido ÷ quantidade desses jogadores. O filtro considera os dois lados da guerra, independentemente dos filtros da tabela principal.</p>
  </section>
@@ -8654,7 +8654,7 @@ function renderHivestClassCompare(){
  foot.innerHTML=`<tr><td>Total / média geral</td><td>${a.count}</td><td>${b.count}</td><td>${fmtPower(a.average)}</td><td>${fmtPower(b.average)}</td></tr>`;
  $w('hivestCompareInfo').textContent=warLabel(war)+' · '+(campo==='TODOS'?'Todos os campos':campo==='PRINCIPAL'?'Somente principal':'Somente secundário');
 }
-function renderHivestReport(reportField="TODOS"){
+function renderHivestReport(){
  const target=$w('hivestReportGrid');
  const sorted=[...state.wars].sort((a,b)=>{
   const date=w=>String(key(w,'Data_Guerra','data','war_date','started_at')||'');
@@ -8663,12 +8663,7 @@ function renderHivestReport(reportField="TODOS"){
  const selectedId=$w('warFilter').value;
  const war=selectedId===HIVE_AVG?sorted[0]:state.wars.find(r=>warId(r)===selectedId);
  if(!war){target.textContent='Selecione uma guerra válida para gerar o relatório.';return;}
- const rows=state.players.filter(r=>{
-  if(warId(r)!==warId(war)||!isHive(r))return false;
-  if(reportField==="TODOS")return true;
-  const campo=String(key(r,'Campo')||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase();
-  return reportField==="PRINCIPAL"?['PRINCIPAL','MAINFIELD','MAIN FIELD'].includes(campo):['SECUNDARIO','SUBFIELD','SUB FIELD'].includes(campo);
- });
+ const rows=state.players.filter(r=>warId(r)===warId(war)&&isHive(r));
  $w('hivestReportInfo').textContent=warLabel(war)+' · '+rows.length+' jogadores HIVEST';
  const metrics=[['🔥','Top 10 Dano Causado','Dano_Causado',false],['💚','Top 10 Cura','Cura',false],['✨','Top 10 Ressurreições','Recursos',false],['🤝','Top 10 Assistências','Assistencias',false],['👹','Top 10 Monstros Eliminados','Moedas',false]];
  target.innerHTML=metrics.map(([icon,title,field,ascending])=>{
@@ -8678,14 +8673,14 @@ function renderHivestReport(reportField="TODOS"){
   return `<article class="hivest-report-card"><h4>${icon} ${title}</h4><div class="hivest-report-list">${ranked.length?ranked.map((r,i)=>`<div class="hivest-report-item"><span class="hivest-report-rank">${i+1}º</span><div class="hivest-report-person"><strong>${escw(player(r))}</strong><small>${escw(job(r))}</small><div class="hivest-report-bar"><i style="width:${Math.max(0,Math.min(100,num(key(r,field))/max*100))}%"></i></div></div><b>${escw(warDisplayNumber(field,key(r,field)))}</b></div>`).join(''):'<p class="hivest-report-empty">Sem dados disponíveis para este indicador.</p>'}</div></article>`;
  }).join('');
 }
-async function downloadHivestReportImage(reportField='TODOS'){
+async function downloadHivestReportImage(){
  const btn=$w('hivestReportOpen');
  if(btn.disabled)return;
  const previous=btn.textContent;
  btn.disabled=true;btn.textContent='⏳ Gerando imagem...';
  let stage;
  try{
-  renderHivestReport(reportField);
+  renderHivestReport();
   const info=$w('hivestReportInfo').textContent;
   const cards=$w('hivestReportGrid').innerHTML;
   if(!state.wars.length||!state.players.length)throw Error('Os dados da guerra ainda não foram carregados.');
@@ -8716,7 +8711,7 @@ async function downloadHivestReportImage(reportField='TODOS'){
   panel.style.cssText='display:block!important;margin:0;background:#081321;border:1px solid #bc8b36;border-radius:14px;padding:18px';
   const title=document.createElement('div');
   title.style.cssText='font-family:Georgia,serif;font-size:37px;font-weight:900;color:#ffd777;margin:0 0 7px;text-shadow:0 2px 12px #ad782755;border-bottom:1px solid #b48b3744;padding-bottom:10px';
-  title.textContent='⚔️ RELATÓRIO DA GUERRA — '+(reportField==='PRINCIPAL'?'MAINFIELD':reportField==='SECUNDARIO'?'SUBFIELD':'TODOS');
+  title.textContent='⚔️ RELATÓRIO DA GUERRA';
   const subtitle=document.createElement('div');
   subtitle.style.cssText='font-size:14px;color:#b5c8dc;margin-bottom:16px';
   subtitle.textContent=info;
@@ -8737,7 +8732,7 @@ async function downloadHivestReportImage(reportField='TODOS'){
   if(!blob)throw Error('Não foi possível finalizar a imagem PNG.');
   const date=(info.match(/\d{2}-\d{2}-\d{4}/)||[])[0]||'guerra';
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='HIVEST-Report-Guerra-'+date+'-'+(reportField==='PRINCIPAL'?'MAINFIELD':reportField==='SECUNDARIO'?'SUBFIELD':'TODOS')+'.png';
+  const a=document.createElement('a');a.href=url;a.download='HIVEST-Report-Guerra-'+date+'.png';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),30000);
  }catch(err){console.error('[HIVEST Report PNG]',err);alert('Não foi possível gerar o PNG: '+err.message);}
@@ -8875,19 +8870,7 @@ async function init(){
    $w('hivestCompareOpen').addEventListener('click',()=>{const panel=$w('hivestCompare');panel.hidden=!panel.hidden;if(!panel.hidden)renderHivestClassCompare();});
    $w('hivestCompareClose').addEventListener('click',()=>$w('hivestCompare').hidden=true);
    $w('hivestCompareCampo').addEventListener('change',renderHivestClassCompare);
-   $w('hivestReportOpen').addEventListener('click',()=>{
-      const menu=$w('hivestReportChoices');menu.hidden=!menu.hidden;
-      $w('hivestReportOpen').setAttribute('aria-expanded',String(!menu.hidden));
-    });
-    $w('hivestReportChoices').querySelectorAll('[data-report-field]').forEach(button=>button.addEventListener('click',async()=>{
-      const choice=button.dataset.reportField;
-      $w('hivestReportChoices').hidden=true;
-      if(choice==='AMBOS'){
-        await downloadHivestReportImage('PRINCIPAL');
-        await new Promise(resolve=>setTimeout(resolve,400));
-        await downloadHivestReportImage('SECUNDARIO');
-      }else await downloadHivestReportImage(choice);
-    }));
+   $w('hivestReportOpen').addEventListener('click',downloadHivestReportImage);
    $w('hivestReportClose').addEventListener('click',()=>$w('hivestReport').hidden=true);
    const sortHandler=e=>{
      if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;
@@ -10436,42 +10419,5 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </style>
 <style id="hive-unified-v8">#centralGuerra .hive-d1-audit-only{margin:12px 0;border:1px solid #53411e;border-radius:12px;padding:10px 14px;background:#101722}#centralGuerra .hive-d1-audit-only summary{cursor:pointer;color:#ffdb8a;font-size:12px;font-weight:800}#centralGuerra .war-table td details summary{cursor:pointer;color:#ffd777}#centralGuerra .war-table td details pre{font-size:10px;text-align:left}</style>
 <!-- HIVE PCAP IMPORT V16 - PYODIDE SQLITE3 PRELOAD -->
-<style id="hivest-safe-patch">
-#centralGuerra .hivest-report-trigger{position:relative;display:inline-flex}
-#centralGuerra .hivest-report-choices{position:absolute;right:0;top:calc(100% + 6px);z-index:1000;display:flex;flex-direction:column;gap:5px;min-width:170px;background:#101b29;border:1px solid #b38a37;border-radius:8px;padding:7px;box-shadow:0 8px 24px #0009}
-#centralGuerra .hivest-report-choices[hidden]{display:none!important}
-#centralGuerra .hivest-report-choices button{padding:9px;color:#ffe0a0;background:#18283b;border:1px solid #3d5065;border-radius:6px;cursor:pointer}
-#centralGuerra .war-table tbody tr,#centralGuerra .war-table tbody tr:nth-child(even),#centralGuerra .war-table tbody tr:nth-child(odd){background:#090a0c!important}
-#centralGuerra .war-table tbody tr:hover{background:#202328!important}
-</style>
-<style id="hivest-orphan-overlay-guard">
-/* Hidden overlays must never cover the home dashboard. */
-.modal:not(.open),.statRankModal:not(.open),.hive-war-overlay:not(.open),.hive-raw-overlay:not(.open){display:none!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-</style>
-<script id="hivest-orphan-overlay-guard-script">
-(function(){
-  const selectors=[['#modal','.modalCard'],['#statRankModal','.statRankCard'],['#hiveWarPopup','.hive-war-card'],['#hiveRawOverlay','.hive-raw-dialog']];
-  function inspect(){
-    for(const [sel,cardSel] of selectors){
-      const overlay=document.querySelector(sel);
-      if(!overlay || !overlay.classList.contains('open'))continue;
-      const card=overlay.querySelector(cardSel);
-      const visible=card && card.getClientRects().length>0 && getComputedStyle(card).visibility!=='hidden' && getComputedStyle(card).display!=='none' && card.getBoundingClientRect().width>0 && card.getBoundingClientRect().height>0;
-      if(!visible){
-        overlay.classList.remove('open');
-        overlay.setAttribute('aria-hidden','true');
-        console.warn('[HIVEST] Modal sem conteúdo visível foi fechado:',sel);
-      }
-    }
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inspect,350),{once:true});
-  else setTimeout(inspect,350);
-  const observer=new MutationObserver(()=>{requestAnimationFrame(inspect)});
-  function start(){
-    for(const [sel] of selectors){const el=document.querySelector(sel);if(el)observer.observe(el,{attributes:true,attributeFilter:['class']})}
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-})();
-</script>
 </body>
 </html>
