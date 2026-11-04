@@ -3471,6 +3471,69 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
   font-size:7.5px!important;padding:5px 4px!important;
  }
 }
+</style><style id="hivest-war-precise-grid">
+/* Alinhamento uniforme sem colunas elásticas entre chips */
+@media(min-width:1550px){
+ #hpHub #centralGuerra .war-inline-filters.war-filter-split{
+  grid-template-columns: 315px minmax(0,1fr)!important;
+  align-items:stretch!important;
+ }
+ #hpHub #centralGuerra .war-filter-left{
+  padding:13px 14px!important;
+  align-items:center!important;
+ }
+ #hpHub #centralGuerra .war-filter-left .war-war-select label{
+  gap:6px!important;font-size:10px!important;
+ }
+ #hpHub #centralGuerra .war-filter-left .war-war-select select{
+  height:32px!important;min-height:32px!important;font-size:10px!important;
+ }
+ #hpHub #centralGuerra .war-filter-right.war-filter-four{
+  display:grid!important;
+  grid-template-columns:max-content max-content max-content minmax(150px,1fr) auto!important;
+  column-gap:13px!important;row-gap:0!important;
+  padding:13px 14px!important;align-items:center!important;
+ }
+ #hpHub #centralGuerra .war-filter-four>.war-filter-section{
+  min-width:0!important;align-self:center!important;
+  display:flex!important;flex-direction:column!important;
+  justify-content:center!important;padding:0!important;
+  margin:0!important;border:0!important;
+ }
+ #hpHub #centralGuerra .war-filter-four .war-filter-heading{
+  display:block!important;height:14px!important;line-height:14px!important;
+  margin:0 0 6px!important;font-size:10px!important;
+  white-space:nowrap!important;
+ }
+ #hpHub #centralGuerra .war-filter-four .war-chip-group{
+  display:flex!important;flex-wrap:nowrap!important;gap:4px!important;
+  align-items:center!important;min-height:32px!important;
+  margin:0!important;padding:0!important;border:0!important;
+ }
+ #hpHub #centralGuerra .war-filter-four .war-chip{
+  flex:none!important;min-height:30px!important;height:30px!important;
+  padding:0 6px!important;font-size:9px!important;line-height:1!important;
+  letter-spacing:0!important;white-space:nowrap!important;
+ }
+ #hpHub #centralGuerra .war-filter-four .war-filter-classes .war-chip{
+  font-size:8.5px!important;padding:0 5px!important;
+ }
+ #hpHub #centralGuerra .war-filter-four .war-player-section input{
+  box-sizing:border-box!important;height:32px!important;min-height:32px!important;
+  width:100%!important;font-size:10px!important;
+ }
+ #hpHub #centralGuerra .war-filter-four .war-filter-clear{
+  height:32px!important;min-height:32px!important;
+  margin:20px 0 0!important;padding:0 9px!important;
+  font-size:9px!important;align-self:center!important;
+ }
+}
+@media(min-width:1550px) and (max-width:1750px){
+ #hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:285px minmax(0,1fr)!important}
+ #hpHub #centralGuerra .war-filter-right.war-filter-four{column-gap:8px!important;padding:12px 10px!important}
+ #hpHub #centralGuerra .war-filter-four .war-chip{font-size:8px!important;padding:0 5px!important}
+ #hpHub #centralGuerra .war-filter-four .war-filter-classes .war-chip{font-size:7.5px!important;padding:0 4px!important}
+}
 </style></head>
 <body>
 <div class="app">
