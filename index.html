@@ -3097,466 +3097,6 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 #centralGuerra .war-multi-option{display:flex;align-items:center;gap:9px;padding:8px;border-radius:5px;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
 #centralGuerra .war-multi-option:hover{background:#19304a}
 #centralGuerra .war-multi-option input{width:15px;height:15px;min-height:0!important;margin:0;accent-color:#e6b54e;flex:none}
-</style><style id="hivest-war-inline-minimal">
-/* Histórico de Guerra: filtros visíveis, discretos e multisseleção */
-#hpHub #centralGuerra .war-war-select{padding:14px 25px 4px;background:#07111e}
-#hpHub #centralGuerra .war-war-select label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:900;color:#d7c7a5}
-#hpHub #centralGuerra .war-war-select select{width:100%;min-height:42px;background:#0b1724;border:1px solid #53606e;border-radius:8px;color:#fff;padding:8px 12px;font:inherit}
-#hpHub #centralGuerra .war-inline-filters{margin:12px 25px 14px;padding:15px 18px;border:1px solid #58616a;border-radius:13px;background:linear-gradient(155deg,#101a25,#0c131d);color:#e7e9ed}
-#hpHub #centralGuerra .war-inline-top{display:grid;grid-template-columns:minmax(240px,auto) minmax(0,1fr);gap:20px;border-bottom:1px solid #35414d;padding-bottom:13px}
-#hpHub #centralGuerra .war-inline-bottom{display:grid;grid-template-columns:auto minmax(180px,1fr) auto;gap:20px;align-items:end;padding-top:12px}
-#hpHub #centralGuerra .war-filter-section{min-width:0}
-#hpHub #centralGuerra .war-filter-heading{display:block;margin:0 0 9px;color:#e0e3e8;font-weight:900;font-size:12px}
-#hpHub #centralGuerra .war-chip-group{display:flex;flex-wrap:wrap;gap:6px}
-#hpHub #centralGuerra .war-chip{font:inherit;font-size:11px;font-weight:800;line-height:1.25;color:#dce2e9;background:#1b2734;border:1px solid #435261;border-radius:8px;padding:8px 11px;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap}
-#hpHub #centralGuerra .war-chip:hover{background:#2a3949;border-color:#89929b}
-#hpHub #centralGuerra .war-chip.selected{color:#f9dfa2;background:#2b2a25;border-color:#c7a453;box-shadow:inset 0 0 0 1px #94743a30}
-#hpHub #centralGuerra .war-player-section input{box-sizing:border-box;width:100%;height:38px;min-height:38px;border:1px solid #526171;border-radius:8px;background:#111e2b;color:#f5f7fb;padding:8px 12px;font:inherit;font-size:12px}
-#hpHub #centralGuerra .war-filter-clear{height:38px;border:1px solid #69717a;border-radius:8px;background:#1c2732;color:#e9e9e9;padding:0 15px;font:inherit;font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap}
-#hpHub #centralGuerra .war-filter-clear:hover{border-color:#d4b066}
-#hpHub #centralGuerra .war-filter-hidden{display:none!important}
-@media(max-width:1100px){#hpHub #centralGuerra .war-inline-top{grid-template-columns:1fr}#hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr 1fr}#hpHub #centralGuerra .war-filter-clear{justify-self:end}}
-@media(max-width:650px){#hpHub #centralGuerra .war-war-select{padding:10px 12px 2px}#hpHub #centralGuerra .war-inline-filters{margin:9px 12px;padding:12px}#hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr}#hpHub #centralGuerra .war-filter-clear{justify-self:stretch}}
-</style><style id="hivest-war-layout-polish">
-/* Refinamento visual do Histórico de Guerra — somente apresentação */
-#hpHub #centralGuerra .war-war-select{
-  padding:12px 20px 12px!important;
-  margin:12px 16px 0!important;
-  border:1px solid #354456!important;
-  border-bottom:0!important;
-  border-radius:13px 13px 0 0!important;
-  background:#0c1520!important;
-}
-#hpHub #centralGuerra .war-war-select label{
-  max-width:520px!important;gap:7px!important;
-  color:#d2d8df!important;font-size:11px!important;
-}
-#hpHub #centralGuerra .war-war-select select{
-  height:40px!important;min-height:40px!important;
-  border:1px solid #435366!important;border-radius:8px!important;
-  background:#101d2b!important;padding:0 12px!important;
-  font-size:12px!important;font-weight:750!important;
-}
-#hpHub #centralGuerra .war-inline-filters{
-  margin:0 16px 15px!important;padding:16px 20px 18px!important;
-  border:1px solid #354456!important;border-top:1px solid #283849!important;
-  border-radius:0 0 13px 13px!important;
-  background:#0c1520!important;
-  box-shadow:none!important;
-}
-#hpHub #centralGuerra .war-inline-top{
-  grid-template-columns:minmax(260px,24%) minmax(0,1fr)!important;
-  column-gap:24px!important;align-items:start!important;
-  padding-bottom:17px!important;
-  border-bottom:1px solid #29394a!important;
-}
-#hpHub #centralGuerra .war-inline-bottom{
-  grid-template-columns:minmax(260px,24%) minmax(220px,1fr) auto!important;
-  gap:24px!important;padding-top:15px!important;align-items:end!important;
-}
-#hpHub #centralGuerra .war-filter-heading{
-  margin-bottom:9px!important;color:#d5dbe4!important;
-  font-size:12px!important;font-weight:800!important;
-}
-#hpHub #centralGuerra .war-chip-group{gap:7px!important;align-items:center}
-#hpHub #centralGuerra .war-chip{
-  min-height:33px!important;padding:7px 11px!important;
-  border:1px solid #3a4b5d!important;border-radius:8px!important;
-  background:#172330!important;color:#dce3eb!important;
-  font-size:11px!important;font-weight:750!important;
-  box-shadow:none!important;
-}
-#hpHub #centralGuerra .war-chip:hover{background:#233448!important;border-color:#63788b!important}
-#hpHub #centralGuerra .war-chip.selected{
-  background:#24241f!important;color:#ffe09a!important;
-  border-color:#d6aa48!important;box-shadow:inset 0 0 0 1px #c3943420!important;
-}
-#hpHub #centralGuerra .war-player-section input{
-  height:38px!important;min-height:38px!important;
-  border:1px solid #46596c!important;background:#111e2b!important;
-  border-radius:8px!important;padding:0 13px!important;
-  font-size:12px!important;
-}
-#hpHub #centralGuerra .war-filter-clear{
-  height:38px!important;padding:0 15px!important;
-  background:#182431!important;border:1px solid #536172!important;
-  color:#e6e9ed!important;border-radius:8px!important;
-}
-@media(max-width:1250px){
- #hpHub #centralGuerra .war-inline-top{grid-template-columns:1fr!important;row-gap:16px!important}
- #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr 1.5fr auto!important;gap:14px!important}
-}
-@media(max-width:780px){
- #hpHub #centralGuerra .war-war-select{margin:9px 10px 0!important;padding:12px!important}
- #hpHub #centralGuerra .war-inline-filters{margin:0 10px 12px!important;padding:14px 12px!important}
- #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr!important;gap:15px!important}
- #hpHub #centralGuerra .war-filter-clear{justify-self:stretch!important}
-}
-</style><style id="hivest-war-unified-compact">
-/* Um único quadro, três faixas compactas: guerra/guilda, classes, campo/jogador */
-#hpHub #centralGuerra .war-inline-filters{
-  margin:12px 16px 15px!important;
-  padding:15px 18px!important;
-  border:1px solid #3b4b5b!important;
-  border-radius:12px!important;
-  background:#0d1722!important;
-  box-shadow:none!important;
-}
-#hpHub #centralGuerra .war-inline-top{
-  display:grid!important;
-  grid-template-columns:minmax(290px,36%) minmax(0,1fr)!important;
-  gap:20px!important;
-  align-items:end!important;
-  padding:0 0 12px!important;
-  border-bottom:1px solid #2c3b4b!important;
-}
-#hpHub #centralGuerra .war-war-select{
-  padding:0!important;margin:0!important;
-  background:transparent!important;border:0!important;
-  border-radius:0!important;min-width:0!important;
-}
-#hpHub #centralGuerra .war-war-select label{
-  display:flex!important;flex-direction:column!important;
-  gap:6px!important;max-width:none!important;
-  color:#d9dee7!important;font-size:11px!important;
-  font-weight:800!important;
-}
-#hpHub #centralGuerra .war-war-select select{
-  width:100%!important;height:35px!important;min-height:35px!important;
-  padding:0 11px!important;border:1px solid #435469!important;
-  border-radius:7px!important;background:#142231!important;
-  color:#f1f3f8!important;font-size:11px!important;font-weight:700!important;
-}
-#hpHub #centralGuerra .war-filter-heading{
-  margin:0 0 7px!important;color:#d9dee7!important;
-  font-size:11px!important;font-weight:800!important;line-height:1.2!important;
-}
-#hpHub #centralGuerra .war-filter-classes{
-  padding:12px 0!important;
-  border-bottom:1px solid #2c3b4b!important;
-}
-#hpHub #centralGuerra .war-inline-bottom{
-  display:grid!important;
-  grid-template-columns:minmax(260px,30%) minmax(0,1fr) auto!important;
-  align-items:end!important;gap:18px!important;
-  padding:12px 0 0!important;
-}
-#hpHub #centralGuerra .war-chip-group{gap:5px!important}
-#hpHub #centralGuerra .war-chip{
-  padding:6px 9px!important;min-height:30px!important;
-  border-radius:6px!important;font-size:10px!important;
-  line-height:1.15!important;font-weight:750!important;
-  background:#182533!important;border:1px solid #3d4d5f!important;
-  color:#dce3eb!important;box-shadow:none!important;
-}
-#hpHub #centralGuerra .war-chip.selected{
-  background:#28271f!important;color:#ffdc87!important;
-  border-color:#bd933d!important;
-}
-#hpHub #centralGuerra .war-player-section input{
-  width:100%!important;height:34px!important;min-height:34px!important;
-  border-radius:7px!important;padding:0 11px!important;
-  background:#142231!important;border:1px solid #435469!important;
-  font-size:11px!important;
-}
-#hpHub #centralGuerra .war-filter-clear{
-  height:34px!important;min-height:34px!important;
-  padding:0 12px!important;border-radius:7px!important;
-  background:#1b2937!important;border:1px solid #4a5a6b!important;
-  color:#e8e9ec!important;font-size:10px!important;
-}
-@media(max-width:950px){
- #hpHub #centralGuerra .war-inline-top{grid-template-columns:1fr!important;gap:13px!important}
- #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr 1fr!important;gap:12px!important}
- #hpHub #centralGuerra .war-filter-clear{grid-column:1/-1!important;justify-self:end!important}
-}
-@media(max-width:600px){
- #hpHub #centralGuerra .war-inline-filters{margin:9px 8px 12px!important;padding:12px!important}
- #hpHub #centralGuerra .war-inline-bottom{grid-template-columns:1fr!important}
- #hpHub #centralGuerra .war-filter-clear{grid-column:auto!important;justify-self:stretch!important}
-}
-</style><style id="hivest-war-side-by-side-layout">
-/* Guerra em coluna própria à esquerda, demais filtros à direita */
-#hpHub #centralGuerra .war-inline-filters.war-filter-split{
- display:grid!important;grid-template-columns:minmax(220px,24%) minmax(0,1fr)!important;
- align-items:stretch!important;gap:0!important;
- margin:12px 16px 15px!important;padding:0!important;
- border:1px solid #3c4c5d!important;border-radius:11px!important;
- background:#0d1722!important;overflow:hidden!important;
-}
-#hpHub #centralGuerra .war-filter-left{
- display:flex!important;align-items:center!important;
- padding:17px 18px!important;border-right:1px solid #334355!important;
- background:#111c29!important;min-width:0!important;
-}
-#hpHub #centralGuerra .war-filter-left .war-war-select{
- display:block!important;width:100%!important;margin:0!important;padding:0!important;
- border:0!important;background:transparent!important;
-}
-#hpHub #centralGuerra .war-filter-left .war-war-select label{width:100%!important;max-width:none!important;display:flex!important;flex-direction:column!important;gap:9px!important;font-size:11px!important}
-#hpHub #centralGuerra .war-filter-left .war-war-select select{
- width:100%!important;min-width:0!important;max-width:none!important;
- height:39px!important;min-height:39px!important;font-size:11px!important;
- background:#172536!important;border:1px solid #4a5c70!important;border-radius:7px!important;
-}
-#hpHub #centralGuerra .war-filter-right{min-width:0!important;padding:13px 17px!important;display:flex!important;flex-direction:column!important;gap:0!important}
-#hpHub #centralGuerra .war-filter-right>.war-filter-section:first-child{padding:0 0 10px!important;border-bottom:1px solid #2b3b4a!important}
-#hpHub #centralGuerra .war-filter-right>.war-filter-classes{padding:10px 0!important;border-bottom:1px solid #2b3b4a!important}
-#hpHub #centralGuerra .war-filter-right .war-inline-bottom{
- display:grid!important;grid-template-columns:minmax(175px,27%) minmax(0,1fr) auto!important;
- gap:14px!important;align-items:end!important;padding:10px 0 0!important;
-}
-#hpHub #centralGuerra .war-filter-right .war-filter-heading{font-size:10px!important;margin:0 0 7px!important}
-#hpHub #centralGuerra .war-filter-right .war-chip{min-height:28px!important;padding:5px 8px!important;font-size:10px!important}
-#hpHub #centralGuerra .war-filter-right .war-chip-group{gap:5px!important}
-#hpHub #centralGuerra .war-filter-right .war-player-section input{height:32px!important;min-height:32px!important}
-#hpHub #centralGuerra .war-filter-right .war-filter-clear{height:32px!important;min-height:32px!important}
-@media(max-width:1000px){
- #hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:minmax(190px,28%) minmax(0,1fr)!important}
- #hpHub #centralGuerra .war-filter-right .war-inline-bottom{grid-template-columns:1fr!important;gap:10px!important}
- #hpHub #centralGuerra .war-filter-right .war-filter-clear{justify-self:end!important}
-}
-@media(max-width:680px){
- #hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:1fr!important;margin:9px 8px 12px!important}
- #hpHub #centralGuerra .war-filter-left{border-right:0!important;border-bottom:1px solid #334355!important;padding:12px!important}
- #hpHub #centralGuerra .war-filter-right{padding:12px!important}
- #hpHub #centralGuerra .war-filter-right .war-filter-clear{justify-self:stretch!important}
-}
-</style><style id="hivest-war-four-column-filters">
-/* Quadro Guerra à esquerda + quatro filtros alinhados em colunas à direita */
-#hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:minmax(240px,22%) minmax(0,1fr)!important;overflow:visible!important;min-height:100px!important}
-#hpHub #centralGuerra .war-filter-left{padding:14px 16px!important;border-radius:10px 0 0 10px!important}
-#hpHub #centralGuerra .war-filter-right.war-filter-four{display:grid!important;grid-template-columns:minmax(135px,1fr) minmax(160px,1.15fr) minmax(160px,1.05fr) minmax(180px,1.5fr) auto!important;align-items:center!important;gap:12px!important;padding:14px 16px!important}
-#hpHub #centralGuerra .war-filter-four>.war-filter-section{min-width:0!important;padding:0!important;border:0!important;align-self:center!important}
-#hpHub #centralGuerra .war-filter-four .war-filter-heading{font-size:10px!important;margin-bottom:8px!important;color:#d8e0e9!important}
-#hpHub #centralGuerra .war-filter-four .war-chip-group{display:flex!important;gap:4px!important;flex-wrap:wrap!important}
-#hpHub #centralGuerra .war-filter-four .war-chip{font-size:9px!important;min-height:29px!important;padding:6px 7px!important;border-radius:6px!important}
-#hpHub #centralGuerra .war-filter-four .war-player-section input{height:35px!important;min-height:35px!important;width:100%!important;font-size:11px!important}
-#hpHub #centralGuerra .war-filter-four .war-filter-clear{align-self:end!important;margin:0 0 1px!important;height:35px!important;white-space:nowrap!important;font-size:10px!important}
-#hpHub #centralGuerra .war-class-picker{position:relative!important;min-width:0!important}
-#hpHub #centralGuerra .war-class-picker>summary{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:7px!important;list-style:none!important;cursor:pointer!important;height:35px!important;padding:0 10px!important;border:1px solid #46586b!important;border-radius:7px!important;background:#162433!important;color:#e7edf5!important;font-size:11px!important;font-weight:700!important;white-space:nowrap!important}
-#hpHub #centralGuerra .war-class-picker>summary::-webkit-details-marker{display:none!important}
-#hpHub #centralGuerra .war-class-picker[open]>summary{border-color:#c59c4a!important}
-#hpHub #centralGuerra .war-picker-arrow{color:#e7bd65!important}
-#hpHub #centralGuerra .war-class-options{position:absolute!important;z-index:500!important;left:0!important;top:calc(100% + 5px)!important;min-width:220px!important;width:max-content!important;max-width:320px!important;padding:10px!important;background:#0d1722!important;border:1px solid #9a793c!important;border-radius:9px!important;box-shadow:0 15px 30px #000a!important}
-#hpHub #centralGuerra .war-class-options .war-chip-group{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
-#hpHub #centralGuerra .war-class-options .war-chip{justify-content:center!important}
-@media(max-width:1450px){#hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:end!important}#hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:2!important;justify-self:end!important}}
-@media(max-width:780px){#hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:1fr!important}#hpHub #centralGuerra .war-filter-left{border-right:0!important;border-bottom:1px solid #334355!important}#hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:1fr 1fr!important}}
-@media(max-width:460px){#hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:1fr!important}#hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:auto!important;justify-self:stretch!important}}
-</style><style id="hivest-war-class-inline-fix">
-/* Classes diretamente visíveis, selecionáveis e sem dropdown. */
-#hpHub #centralGuerra .war-filter-right.war-filter-four{
- grid-template-columns:minmax(120px,.8fr) minmax(380px,3.1fr) minmax(170px,1.15fr) minmax(180px,1.4fr) auto!important;
- align-items:center!important;gap:12px!important;
-}
-#hpHub #centralGuerra .war-filter-four .war-class-inline{
- display:flex!important;flex-wrap:wrap!important;align-content:center!important;
- gap:5px!important;max-width:100%!important;
-}
-#hpHub #centralGuerra .war-filter-four .war-class-inline .war-chip{
- font-size:9px!important;line-height:1.15!important;
- padding:6px 7px!important;min-height:28px!important;
- white-space:nowrap!important;
-}
-@media(max-width:1450px){
- #hpHub #centralGuerra .war-filter-right.war-filter-four{
-  grid-template-columns:minmax(140px,1fr) minmax(0,3fr)!important;
-  align-items:start!important;
- }
- #hpHub #centralGuerra .war-filter-four>.war-filter-classes{grid-column:2!important}
- #hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:2!important}
-}
-@media(max-width:780px){
- #hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:1fr!important}
- #hpHub #centralGuerra .war-filter-four>.war-filter-classes,
- #hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:1!important}
-}
-</style><style id="hivest-war-class-single-row">
-/* Prioriza todas as classes na mesma linha, com fonte e espaçamento compactos. */
-@media (min-width:1600px){
- #hpHub #centralGuerra .war-filter-right.war-filter-four{
-  grid-template-columns: minmax(115px,125px) minmax(0,1fr) minmax(160px,180px) minmax(160px,190px) auto!important;
-  gap:8px!important;align-items:center!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-class-inline{
-  display:flex!important;flex-wrap:nowrap!important;gap:3px!important;
-  align-items:center!important;min-width:0!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-class-inline .war-chip{
-  font-size:8px!important;font-weight:750!important;
-  padding:5px 5px!important;min-height:27px!important;
-  letter-spacing:-.15px!important;white-space:nowrap!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-guild .war-chip,
- #hpHub #centralGuerra .war-filter-four .war-filter-field .war-chip{
-  font-size:9px!important;padding:5px 6px!important;min-height:27px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-chip-group{gap:3px!important}
- #hpHub #centralGuerra .war-filter-four .war-filter-clear{font-size:9px!important;padding:0 8px!important}
-}
-@media (min-width:1451px) and (max-width:1599px){
- #hpHub #centralGuerra .war-filter-right.war-filter-four{
-  grid-template-columns:minmax(105px,120px) minmax(0,1fr) minmax(150px,170px) minmax(155px,180px) auto!important;
-  gap:7px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-class-inline{gap:3px!important}
- #hpHub #centralGuerra .war-filter-four .war-class-inline .war-chip{font-size:8px!important;padding:5px 5px!important;min-height:27px!important}
-}
-</style><style id="hivest-war-final-alignment">
-/* Painel alinhado: elimina espaços vazios e mantém os cinco controles nivelados. */
-@media(min-width:1650px){
- #hpHub #centralGuerra .war-inline-filters.war-filter-split{
-  grid-template-columns: minmax(260px,17%) minmax(0,1fr)!important;
-  min-height:0!important;
- }
- #hpHub #centralGuerra .war-filter-left{
-  display:flex!important;align-items:center!important;
-  padding:12px 14px!important;
- }
- #hpHub #centralGuerra .war-filter-left .war-war-select{width:100%!important}
- #hpHub #centralGuerra .war-filter-right.war-filter-four{
-  display:grid!important;
-  grid-template-columns: 168px minmax(0,1fr) 188px 205px 72px!important;
-  column-gap:10px!important;row-gap:0!important;
-  padding:12px 14px!important;align-items:end!important;
- }
- #hpHub #centralGuerra .war-filter-four>.war-filter-section{
-  align-self:end!important;min-width:0!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-heading{
-  height:14px!important;margin:0 0 6px!important;
-  font-size:10px!important;line-height:14px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-chip-group{
-  display:flex!important;flex-wrap:nowrap!important;gap:3px!important;
-  min-height:30px!important;align-items:center!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-chip{
-  padding:5px 5px!important;min-height:28px!important;
-  font-size:8px!important;line-height:1!important;
-  letter-spacing:-.12px!important;white-space:nowrap!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-guild .war-chip{
-  padding:5px 6px!important;font-size:9px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-classes .war-chip{
-  font-size:8px!important;padding:5px 5px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-field .war-chip{
-  font-size:9px!important;padding:5px 6px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-player-section input{
-  height:30px!important;min-height:30px!important;
-  font-size:10px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-clear{
-  height:30px!important;min-height:30px!important;
-  align-self:end!important;font-size:9px!important;
-  padding:0 7px!important;
- }
- #hpHub #centralGuerra .war-filter-left select{
-  height:32px!important;min-height:32px!important;
- }
-}
-@media(min-width:1650px) and (max-width:1800px){
- #hpHub #centralGuerra .war-inline-filters.war-filter-split{
-  grid-template-columns:minmax(250px,16%) minmax(0,1fr)!important;
- }
- #hpHub #centralGuerra .war-filter-right.war-filter-four{
-  grid-template-columns:160px minmax(0,1fr) 178px 175px 65px!important;
-  column-gap:7px!important;padding-left:10px!important;padding-right:10px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-classes .war-chip{
-  font-size:7.5px!important;padding:5px 4px!important;
- }
-}
-</style><style id="hivest-war-precise-grid">
-/* Alinhamento uniforme sem colunas elásticas entre chips */
-@media(min-width:1550px){
- #hpHub #centralGuerra .war-inline-filters.war-filter-split{
-  grid-template-columns: 315px minmax(0,1fr)!important;
-  align-items:stretch!important;
- }
- #hpHub #centralGuerra .war-filter-left{
-  padding:13px 14px!important;
-  align-items:center!important;
- }
- #hpHub #centralGuerra .war-filter-left .war-war-select label{
-  gap:6px!important;font-size:10px!important;
- }
- #hpHub #centralGuerra .war-filter-left .war-war-select select{
-  height:32px!important;min-height:32px!important;font-size:10px!important;
- }
- #hpHub #centralGuerra .war-filter-right.war-filter-four{
-  display:grid!important;
-  grid-template-columns:max-content max-content max-content minmax(150px,1fr) auto!important;
-  column-gap:13px!important;row-gap:0!important;
-  padding:13px 14px!important;align-items:center!important;
- }
- #hpHub #centralGuerra .war-filter-four>.war-filter-section{
-  min-width:0!important;align-self:center!important;
-  display:flex!important;flex-direction:column!important;
-  justify-content:center!important;padding:0!important;
-  margin:0!important;border:0!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-heading{
-  display:block!important;height:14px!important;line-height:14px!important;
-  margin:0 0 6px!important;font-size:10px!important;
-  white-space:nowrap!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-chip-group{
-  display:flex!important;flex-wrap:nowrap!important;gap:4px!important;
-  align-items:center!important;min-height:32px!important;
-  margin:0!important;padding:0!important;border:0!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-chip{
-  flex:none!important;min-height:30px!important;height:30px!important;
-  padding:0 6px!important;font-size:9px!important;line-height:1!important;
-  letter-spacing:0!important;white-space:nowrap!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-classes .war-chip{
-  font-size:8.5px!important;padding:0 5px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-player-section input{
-  box-sizing:border-box!important;height:32px!important;min-height:32px!important;
-  width:100%!important;font-size:10px!important;
- }
- #hpHub #centralGuerra .war-filter-four .war-filter-clear{
-  height:32px!important;min-height:32px!important;
-  margin:20px 0 0!important;padding:0 9px!important;
-  font-size:9px!important;align-self:center!important;
- }
-}
-@media(min-width:1550px) and (max-width:1750px){
- #hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:285px minmax(0,1fr)!important}
- #hpHub #centralGuerra .war-filter-right.war-filter-four{column-gap:8px!important;padding:12px 10px!important}
- #hpHub #centralGuerra .war-filter-four .war-chip{font-size:8px!important;padding:0 5px!important}
- #hpHub #centralGuerra .war-filter-four .war-filter-classes .war-chip{font-size:7.5px!important;padding:0 4px!important}
-}
-</style><style id="hivest-war-guild-line-fix">
-/* Remove o traço residual do grupo Guilda e nivela com Classe/Campo. */
-#hpHub #centralGuerra .war-filter-right.war-filter-four .war-filter-guild,
-#hpHub #centralGuerra .war-filter-right.war-filter-four .war-filter-guild .war-chip-group,
-#hpHub #centralGuerra .war-filter-right.war-filter-four #warGuildChips{
- border:0!important;border-bottom:0!important;box-shadow:none!important;
- padding-bottom:0!important;margin-bottom:0!important;
-}
-#hpHub #centralGuerra .war-filter-right.war-filter-four .war-filter-guild{
- align-self:center!important;justify-content:center!important;
-}
-#hpHub #centralGuerra .war-filter-right.war-filter-four #warGuildChips{
- min-height:32px!important;align-items:center!important;
-}
-#hpHub #centralGuerra .war-filter-right.war-filter-four .war-filter-guild .war-filter-heading{
- height:14px!important;line-height:14px!important;margin:0 0 6px!important;
-}
-</style><style id="hivest-report-field-choice-css">
-#centralGuerra .hivest-report-trigger{position:relative;display:inline-flex}
-#centralGuerra .hivest-report-choices{position:absolute;top:calc(100% + 7px);right:0;z-index:120;width:245px;padding:7px;display:grid;gap:5px;background:#0c1826;border:1px solid #a88035;border-radius:10px;box-shadow:0 12px 30px #0009}
-#centralGuerra .hivest-report-choices[hidden]{display:none!important}
-#centralGuerra .hivest-report-choices button{width:100%;text-align:left;background:#142337;border:1px solid #354d68;color:#f4e2b5;border-radius:7px;padding:10px;font-size:12px;font-weight:800;cursor:pointer}
-#centralGuerra .hivest-report-choices button:hover{background:#1c3552;border-color:#bd933d}
 </style></head>
 <body>
 <div class="app">
@@ -8433,12 +7973,7 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  <div id="hivePcapStatus" class="hive-pcap-status" role="status" aria-live="polite"></div>
  <div id="hivePcapPreview" hidden><div id="hivePcapSummary" class="hive-pcap-summary"></div><div class="hive-pcap-controls"><button id="hivePcapConfirm" type="button">✓ Confirmar e gravar no D1</button><button id="hivePcapCancel" type="button" class="hive-pcap-secondary">Cancelar</button></div></div>
  </section>
- <div class="hivest-report-actions"><button type="button" id="hivestCompareOpen">⚔️ Comparar Classes</button><div class="hivest-report-trigger"><button type="button" id="hivestReportOpen" aria-expanded="false" aria-controls="hivestReportChoices">📊 Relatório da Guerra</button>
-<div id="hivestReportChoices" class="hivest-report-choices" hidden>
-<button type="button" data-hivest-report-field="PRINCIPAL">🛡️ Gerar MAINFIELD</button>
-<button type="button" data-hivest-report-field="SECUNDARIO">🛡️ Gerar SUBFIELD</button>
-<button type="button" data-hivest-report-field="AMBOS">🖼️ Gerar os dois PNGs</button>
-</div></div></div>
+ <div class="hivest-report-actions"><button type="button" id="hivestCompareOpen">⚔️ Comparar Classes</button><button type="button" id="hivestReportOpen">📊 Relatório da Guerra</button></div>
  <section id="hivestCompare" class="hivest-class-compare" hidden>
   <div class="hivest-compare-head"><div><h3>⚔️ Comparativo de Classes</h3><p id="hivestCompareInfo">Composição das guildas na guerra selecionada</p></div><button type="button" id="hivestCompareClose">✕ Fechar</button></div>
   <div class="hivest-compare-controls"><label>Campo<select id="hivestCompareCampo"><option value="TODOS">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO" selected>Secundário</option></select></label><span>Quantidade de jogadores e Power médio por classe</span></div>
@@ -8446,19 +7981,12 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
   <p class="hivest-compare-note">Power médio = soma do Power dos jogadores com Power válido ÷ quantidade desses jogadores. O filtro considera os dois lados da guerra, independentemente dos filtros da tabela principal.</p>
  </section>
  <section id="hivestReport" class="hivest-report" hidden><div class="hivest-report-head"><div><h3>📊 Relatório da Guerra</h3><p id="hivestReportInfo">Dados da guerra selecionada · HIVEST</p></div><button type="button" id="hivestReportClose">✕ Fechar</button></div><div id="hivestReportGrid" class="hivest-report-grid"></div><p class="hivest-report-foot">Rankings dos jogadores HIVEST na guerra selecionada. Registros sem estatística disponível não entram no respectivo ranking.</p></section>
- <div class="war-inline-filters war-filter-split" aria-label="Filtros da guerra">
-  <div class="war-filter-left">
-   <div class="war-war-select"><label>⚔ Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label></div>
-  </div>
-  <div class="war-filter-right war-filter-four">
-   <div class="war-filter-section war-filter-guild"><div class="war-filter-heading">♢ Guilda</div><div id="warGuildChips" class="war-chip-group"></div></div>
-   <div class="war-filter-section war-filter-classes"><div class="war-filter-heading">♙ Classe</div><div id="warJobChips" class="war-chip-group war-class-inline" aria-label="Seleção múltipla de classes"></div></div>
-   <div class="war-filter-section war-filter-field"><div class="war-filter-heading">⚑ Campo</div><div id="warCampoChips" class="war-chip-group"></div></div>
-   <div class="war-filter-section war-player-section"><label class="war-filter-heading" for="warPlayer">♟ Jogador</label><input id="warPlayer" type="search" placeholder="Buscar personagem..."></div>
-   <button type="button" id="warClearAll" class="war-filter-clear">↺ Limpar</button>
-  </div>
- </div>
- <div class="war-filter-hidden" aria-hidden="true"><select id="warGuild"><option value="">Todas as guildas</option></select><select id="warJob"><option value="">Todas as classes</option></select><select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></div>
+ <div class="war-filters"><label>Guerra<select id="warFilter"><option value="">Selecione uma guerra</option></select></label><label>Guilda<select id="warGuild"><option value="">Todas as guildas</option></select></label><label>Classe<div class="war-multi" id="warJobMulti">
+<button type="button" id="warJobMultiBtn" class="war-multi-btn" aria-expanded="false" aria-controls="warJobMultiMenu">Todas as classes <span class="war-multi-chevron">▾</span></button>
+<div class="war-multi-menu" id="warJobMultiMenu" hidden>
+<div class="war-multi-actions"><button type="button" id="warJobSelectAll">Todas</button><button type="button" id="warJobClear">Limpar seleção</button></div>
+<div class="war-multi-options" id="warJobOptions"></div>
+</div></div></label><select id="warJob" hidden aria-hidden="true"><option value="">Todas as classes</option></select><label>Campo<select id="warCampo"><option value="">Todos os campos</option><option value="PRINCIPAL">Principal</option><option value="SECUNDARIO">Secundário</option></select></label><label>Jogador<input id="warPlayer" placeholder="Buscar personagem"></label></div>
  <div id="warStats" class="war-stats" hidden></div>
  <div id="warChooseHint" class="war-choose-hint"><span class="hive-war-hint-icon" aria-hidden="true">⚔</span><div><strong>Escolha uma das guerras acima para visualizar os dados.</strong><small>Selecione os filtros para explorar batalhas, participantes e estatísticas.</small></div></div>
  <div class="war-results-title" id="warResultsTitle" hidden><div><strong>⚔️ Jogadores da Guerra</strong><span>Ordene pelos cabeçalhos e deslize horizontalmente para ver os detalhes.</span></div><span class="war-results-count" id="warResultsCount"></span></div>
@@ -8904,40 +8432,40 @@ function updateGuildFilter(){
  const w=$w('warFilter').value;
  const selectedWar=state.wars.find(r=>warId(r)===w);
  const allowed=w===HIVE_AVG?['Hivest']:selectedWar?[key(selectedWar,'Guilda_1','guilda1','guild_a'),key(selectedWar,'Guilda_2','guilda2','guild_b')].map(x=>String(x||'').trim()).filter(Boolean):[];
- populate('warGuild',allowed,'Todas as guildas'); warChipsRefresh();
+ populate('warGuild',allowed,'Todas as guildas');
 }
-const warSelectedJobs=new Set(),warSelectedGuilds=new Set(),warSelectedCampos=new Set();
-function warMakeChips(targetId,values,selected,allText,change){
- const root=$w(targetId);if(!root)return;
- root.replaceChildren();
- const add=(text,value,active)=>{
-  const b=document.createElement('button');b.type='button';b.className='war-chip'+(active?' selected':'');
-  b.setAttribute('aria-pressed',String(active));b.textContent=(active?'✓  ':'')+text;
-  b.addEventListener('click',()=>{if(value===null)selected.clear();else if(selected.has(value))selected.delete(value);else selected.add(value);change();});
-  root.append(b);
- };
- add(allText,null,selected.size===0);
- values.forEach(v=>add(v.label??v,v.value??v,selected.has(v.value??v)));
+const warSelectedJobs=new Set();
+function warJobSummary(){
+ const btn=$w('warJobMultiBtn');
+ if(!btn)return;
+ const names=[...warSelectedJobs];
+ const label=names.length===0?'Todas as classes':names.length===1?names[0]:`${names.length} classes selecionadas`;
+ btn.innerHTML=`<span class="war-multi-label" title="${escw(label)}">${escw(label)}</span><span class="war-multi-chevron">▾</span>`;
+ btn.title=names.length?names.join(', '):'Todas as classes';
 }
-function warChipsRefresh(){
- const guilds=[...$w('warGuild').options].filter(o=>o.value).map(o=>({label:o.text,value:o.value}));
- const jobs=[...$w('warJob').options].filter(o=>o.value).map(o=>({label:o.text,value:o.value}));
- const campos=[...$w('warCampo').options].filter(o=>o.value).map(o=>({label:o.text,value:o.value}));
- for(const [set,values] of [[warSelectedGuilds,guilds],[warSelectedJobs,jobs],[warSelectedCampos,campos]]){
-  const allowed=new Set(values.map(v=>v.value));for(const x of [...set])if(!allowed.has(x))set.delete(x);
+function warJobOptionsRefresh(){
+ const select=$w('warJob'),target=$w('warJobOptions');
+ if(!select||!target)return;
+ const available=[...select.options].map(o=>o.value).filter(Boolean);
+ for(const name of [...warSelectedJobs])if(!available.includes(name))warSelectedJobs.delete(name);
+ target.replaceChildren();
+ for(const name of available){
+  const item=document.createElement('label');item.className='war-multi-option';
+  const check=document.createElement('input');check.type='checkbox';check.value=name;check.checked=warSelectedJobs.has(name);
+  check.addEventListener('change',()=>{if(check.checked)warSelectedJobs.add(name);else warSelectedJobs.delete(name);warJobSummary();render();});
+  const text=document.createElement('span');text.textContent=name;
+  item.append(check,text);target.append(item);
  }
- const refresh=()=>{warChipsRefresh();render();};
- warMakeChips('warGuildChips',guilds,warSelectedGuilds,'Todas',refresh);
- warMakeChips('warJobChips',jobs,warSelectedJobs,'Todas',refresh);
- warMakeChips('warCampoChips',campos,warSelectedCampos,'Todos',refresh);
+ warJobSummary();
 }
-function warJobOptionsRefresh(){warChipsRefresh();}
 function warJobMultiInit(){
- $w('warClearAll').addEventListener('click',()=>{
-  warSelectedJobs.clear();warSelectedGuilds.clear();warSelectedCampos.clear();
-  $w('warPlayer').value='';warChipsRefresh();render();
- });
- warChipsRefresh();
+ const btn=$w('warJobMultiBtn'),menu=$w('warJobMultiMenu');
+ if(!btn||!menu)return;
+ btn.addEventListener('click',()=>{menu.hidden=!menu.hidden;btn.setAttribute('aria-expanded',String(!menu.hidden));});
+ document.addEventListener('click',e=>{if(!$w('warJobMulti').contains(e.target)){menu.hidden=true;btn.setAttribute('aria-expanded','false');}});
+ $w('warJobSelectAll').addEventListener('click',()=>{warSelectedJobs.clear();warJobOptionsRefresh();render();});
+ $w('warJobClear').addEventListener('click',()=>{warSelectedJobs.clear();warJobOptionsRefresh();render();});
+ warJobSummary();
 }
 function updateJobFilter(){
  const selected=$w('warFilter').value;
@@ -9031,13 +8559,13 @@ function render(){
    $w('warNotice').textContent=`${state.wars.length} guerra(s) registrada(s) · ${state.players.length} registros de jogadores no histórico`;
    return;
  }
- const q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
+ const g=$w('warGuild').value,c=$w('warCampo').value,q=$w('warPlayer').value.trim().toLocaleLowerCase('pt-BR');
  if(w===HIVE_AVG){
   $w('warNotice').textContent=`${state.wars.length} guerra(s) importada(s) · media por personagem da Hivest (inclui HIVE antiga).`;
  }
  const source=w===HIVE_AVG?averageRows():state.players.filter(r=>warId(r)===w);
  updateColumns(w);
- const rows=sortRows(source.filter(r=>(!warSelectedGuilds.size||(w===HIVE_AVG?isHive(r):warSelectedGuilds.has(guild(r))))&&(!warSelectedJobs.size||warSelectedJobs.has(job(r)))&&(!warSelectedCampos.size||warSelectedCampos.has(String(key(r,'Campo')||'').trim().toUpperCase()))&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
+ const rows=sortRows(source.filter(r=>(!g||(w===HIVE_AVG?isHive(r):guild(r)===g))&&(!warSelectedJobs.size||warSelectedJobs.has(job(r)))&&(!c||String(key(r,'Campo')||'').trim().toUpperCase()===c)&&(!q||String(player(r)).toLocaleLowerCase('pt-BR').includes(q))));
  const total=k=>rows.reduce((sum,r)=>sum+num(key(r,k)),0);
  $w('warStats').innerHTML=[['⚔️','Guerras',w===HIVE_AVG?state.wars.length:'1','war-stat-purple'],['👥','Jogadores',rows.length,'war-stat-blue'],['🔥',w===HIVE_AVG?'Dano médio / jogador':'Dano causado',fmt(w===HIVE_AVG?(rows.length?total('Dano_Causado')/rows.length:0):total('Dano_Causado')),'war-stat-red'],['✚',w===HIVE_AVG?'Cura média / jogador':'Cura',fmt(w===HIVE_AVG?(rows.length?total('Cura')/rows.length:0):total('Cura')),'war-stat-green']].map(([ic,t,v,cls])=>`<div class="war-stat ${cls}"><span class="war-stat-icon">${ic}</span><div><strong>${v}</strong><small>${escw(t)}</small></div></div>`).join('');
  $w('warRows').innerHTML=rows.map((r,i)=>`<tr data-war-rank="${i+1}">${activeColumns(w).map(k=>{
@@ -9126,7 +8654,7 @@ function renderHivestClassCompare(){
  foot.innerHTML=`<tr><td>Total / média geral</td><td>${a.count}</td><td>${b.count}</td><td>${fmtPower(a.average)}</td><td>${fmtPower(b.average)}</td></tr>`;
  $w('hivestCompareInfo').textContent=warLabel(war)+' · '+(campo==='TODOS'?'Todos os campos':campo==='PRINCIPAL'?'Somente principal':'Somente secundário');
 }
-function renderHivestReport(reportField="TODOS"){
+function renderHivestReport(){
  const target=$w('hivestReportGrid');
  const sorted=[...state.wars].sort((a,b)=>{
   const date=w=>String(key(w,'Data_Guerra','data','war_date','started_at')||'');
@@ -9135,13 +8663,8 @@ function renderHivestReport(reportField="TODOS"){
  const selectedId=$w('warFilter').value;
  const war=selectedId===HIVE_AVG?sorted[0]:state.wars.find(r=>warId(r)===selectedId);
  if(!war){target.textContent='Selecione uma guerra válida para gerar o relatório.';return;}
- const rows=state.players.filter(r=>{
-  if(warId(r)!==warId(war)||!isHive(r))return false;
-  if(reportField==="TODOS")return true;
-  const field=String(key(r,'Campo')||'').trim().toLocaleUpperCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  return reportField==="PRINCIPAL"?["PRINCIPAL","MAINFIELD","MAIN FIELD"].includes(field):["SECUNDARIO","SUBFIELD","SUB FIELD"].includes(field);
- });
- $w('hivestReportInfo').textContent=warLabel(war)+' · '+rows.length+' jogadores HIVEST'+(reportField==='TODOS'?'':' · '+(reportField==='PRINCIPAL'?'MAINFIELD':'SUBFIELD'));
+ const rows=state.players.filter(r=>warId(r)===warId(war)&&isHive(r));
+ $w('hivestReportInfo').textContent=warLabel(war)+' · '+rows.length+' jogadores HIVEST';
  const metrics=[['🔥','Top 10 Dano Causado','Dano_Causado',false],['💚','Top 10 Cura','Cura',false],['✨','Top 10 Ressurreições','Recursos',false],['🤝','Top 10 Assistências','Assistencias',false],['👹','Top 10 Monstros Eliminados','Moedas',false]];
  target.innerHTML=metrics.map(([icon,title,field,ascending])=>{
   const ranked=rows.filter(r=>key(r,field)!==null&&key(r,field)!==undefined&&key(r,field)!==''&&Number.isFinite(num(key(r,field))))
@@ -9150,10 +8673,14 @@ function renderHivestReport(reportField="TODOS"){
   return `<article class="hivest-report-card"><h4>${icon} ${title}</h4><div class="hivest-report-list">${ranked.length?ranked.map((r,i)=>`<div class="hivest-report-item"><span class="hivest-report-rank">${i+1}º</span><div class="hivest-report-person"><strong>${escw(player(r))}</strong><small>${escw(job(r))}</small><div class="hivest-report-bar"><i style="width:${Math.max(0,Math.min(100,num(key(r,field))/max*100))}%"></i></div></div><b>${escw(warDisplayNumber(field,key(r,field)))}</b></div>`).join(''):'<p class="hivest-report-empty">Sem dados disponíveis para este indicador.</p>'}</div></article>`;
  }).join('');
 }
-async function downloadHivestReportImage(reportField){
+async function downloadHivestReportImage(){
+ const btn=$w('hivestReportOpen');
+ if(btn.disabled)return;
+ const previous=btn.textContent;
+ btn.disabled=true;btn.textContent='⏳ Gerando imagem...';
  let stage;
  try{
-  renderHivestReport(reportField);
+  renderHivestReport();
   const info=$w('hivestReportInfo').textContent;
   const cards=$w('hivestReportGrid').innerHTML;
   if(!state.wars.length||!state.players.length)throw Error('Os dados da guerra ainda não foram carregados.');
@@ -9184,7 +8711,7 @@ async function downloadHivestReportImage(reportField){
   panel.style.cssText='display:block!important;margin:0;background:#081321;border:1px solid #bc8b36;border-radius:14px;padding:18px';
   const title=document.createElement('div');
   title.style.cssText='font-family:Georgia,serif;font-size:37px;font-weight:900;color:#ffd777;margin:0 0 7px;text-shadow:0 2px 12px #ad782755;border-bottom:1px solid #b48b3744;padding-bottom:10px';
-  title.textContent='⚔️ RELATÓRIO DA GUERRA — '+(reportField==='PRINCIPAL'?'MAINFIELD':'SUBFIELD');
+  title.textContent='⚔️ RELATÓRIO DA GUERRA';
   const subtitle=document.createElement('div');
   subtitle.style.cssText='font-size:14px;color:#b5c8dc;margin-bottom:16px';
   subtitle.textContent=info;
@@ -9197,7 +8724,7 @@ async function downloadHivestReportImage(reportField){
   panel.append(title,subtitle,grid);
   const foot=document.createElement('p');
   foot.style.cssText='font-size:11px;color:#9faec2;margin:16px 0 0';
-  foot.textContent='HIVEST • Central de Guerra | Rankings exclusivos do '+(reportField==='PRINCIPAL'?'MAINFIELD':'SUBFIELD')+'.';
+  foot.textContent='HIVEST • Central de Guerra | Rankings dos jogadores HIVEST na guerra selecionada.';
   panel.appendChild(foot);stage.appendChild(panel);document.body.appendChild(stage);
   await document.fonts.ready;
   const canvas=await window.html2canvas(stage,{backgroundColor:'#07101e',scale:1.5,useCORS:true,allowTaint:false,logging:false,width:1600,windowWidth:1700,scrollX:0,scrollY:0});
@@ -9205,26 +8732,11 @@ async function downloadHivestReportImage(reportField){
   if(!blob)throw Error('Não foi possível finalizar a imagem PNG.');
   const date=(info.match(/\d{2}-\d{2}-\d{4}/)||[])[0]||'guerra';
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='HIVEST-Report-Guerra-'+date+'-'+(reportField==='PRINCIPAL'?'MAINFIELD':'SUBFIELD')+'.png';
+  const a=document.createElement('a');a.href=url;a.download='HIVEST-Report-Guerra-'+date+'.png';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),30000);
- }finally{if(stage)stage.remove();}
-}
-async function runHivestReportExport(choice){
- const btn=$w('hivestReportOpen');
- if(btn.disabled)return;
- const previous=btn.textContent;
- btn.disabled=true;btn.textContent='⏳ Gerando imagem...';
- $w('hivestReportChoices').hidden=true;
- btn.setAttribute('aria-expanded','false');
- try{
-  for(const field of choice==='AMBOS'?['PRINCIPAL','SECUNDARIO']:[choice]){
-   await downloadHivestReportImage(field);
-   // Permite ao navegador processar o primeiro download antes do segundo.
-   if(choice==='AMBOS')await new Promise(resolve=>setTimeout(resolve,350));
-  }
  }catch(err){console.error('[HIVEST Report PNG]',err);alert('Não foi possível gerar o PNG: '+err.message);}
- finally{btn.disabled=false;btn.textContent=previous;renderHivestReport();}
+ finally{if(stage)stage.remove();btn.disabled=false;btn.textContent=previous;}
 }
 async function load(){
  $w('warNotice').textContent='Carregando dados protegidos...';
@@ -9352,26 +8864,13 @@ async function init(){
    warJobMultiInit();
    // Called ONLY after a user clicks Central de Guerra and passes Staff auth.
    $w('centralGuerra').hidden=false;
-   ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){warSelectedGuilds.clear();warSelectedJobs.clear();warSelectedCampos.clear();updateGuildFilter();updateJobFilter();}render();renderHivestClassCompare();}));
+   ['warFilter','warGuild','warJob','warCampo'].forEach(id=>$w(id).addEventListener('change',()=>{if(id==='warFilter'){updateGuildFilter();updateJobFilter();}render();renderHivestClassCompare();}));
    $w('warPlayer').addEventListener('input',render);
    $w('warReload').addEventListener('click',load);
    $w('hivestCompareOpen').addEventListener('click',()=>{const panel=$w('hivestCompare');panel.hidden=!panel.hidden;if(!panel.hidden)renderHivestClassCompare();});
    $w('hivestCompareClose').addEventListener('click',()=>$w('hivestCompare').hidden=true);
    $w('hivestCompareCampo').addEventListener('change',renderHivestClassCompare);
-   $w('hivestReportOpen').addEventListener('click',()=>{
-     const menu=$w('hivestReportChoices');
-     menu.hidden=!menu.hidden;
-     $w('hivestReportOpen').setAttribute('aria-expanded',String(!menu.hidden));
-    });
-    $w('hivestReportChoices').querySelectorAll('[data-hivest-report-field]').forEach(button=>{
-     button.addEventListener('click',()=>runHivestReportExport(button.dataset.hivestReportField));
-    });
-    document.addEventListener('click',event=>{
-     if(!event.target.closest('.hivest-report-trigger')){
-      $w('hivestReportChoices').hidden=true;
-      $w('hivestReportOpen').setAttribute('aria-expanded','false');
-     }
-    });
+   $w('hivestReportOpen').addEventListener('click',downloadHivestReportImage);
    $w('hivestReportClose').addEventListener('click',()=>$w('hivestReport').hidden=true);
    const sortHandler=e=>{
      if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;
@@ -10920,19 +10419,5 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </style>
 <style id="hive-unified-v8">#centralGuerra .hive-d1-audit-only{margin:12px 0;border:1px solid #53411e;border-radius:12px;padding:10px 14px;background:#101722}#centralGuerra .hive-d1-audit-only summary{cursor:pointer;color:#ffdb8a;font-size:12px;font-weight:800}#centralGuerra .war-table td details summary{cursor:pointer;color:#ffd777}#centralGuerra .war-table td details pre{font-size:10px;text-align:left}</style>
 <!-- HIVE PCAP IMPORT V16 - PYODIDE SQLITE3 PRELOAD -->
-
-<style id="hivest-war-rows-uniform-black">
-/* Histórico de Guerra: todas as linhas com fundo preto uniforme. */
-html body #hpHub #centralGuerra .war-table tbody tr,
-html body #hpHub #centralGuerra .war-table tbody tr:nth-child(odd),
-html body #hpHub #centralGuerra .war-table tbody tr:nth-child(even),
-html body #hpHub #centralGuerra .war-table tbody tr:nth-of-type(odd),
-html body #hpHub #centralGuerra .war-table tbody tr:nth-of-type(even){
- background:#080a0c!important;
-}
-html body #hpHub #centralGuerra .war-table tbody tr:hover{
- background:#1a2027!important;
-}
-</style>
 </body>
 </html>
