@@ -10443,5 +10443,35 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #centralGuerra .hivest-report-choices button{padding:9px;color:#ffe0a0;background:#18283b;border:1px solid #3d5065;border-radius:6px;cursor:pointer}
 #centralGuerra .war-table tbody tr,#centralGuerra .war-table tbody tr:nth-child(even),#centralGuerra .war-table tbody tr:nth-child(odd){background:#090a0c!important}
 #centralGuerra .war-table tbody tr:hover{background:#202328!important}
-</style></body>
+</style>
+<style id="hivest-orphan-overlay-guard">
+/* Hidden overlays must never cover the home dashboard. */
+.modal:not(.open),.statRankModal:not(.open),.hive-war-overlay:not(.open),.hive-raw-overlay:not(.open){display:none!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+</style>
+<script id="hivest-orphan-overlay-guard-script">
+(function(){
+  const selectors=[['#modal','.modalCard'],['#statRankModal','.statRankCard'],['#hiveWarPopup','.hive-war-card'],['#hiveRawOverlay','.hive-raw-dialog']];
+  function inspect(){
+    for(const [sel,cardSel] of selectors){
+      const overlay=document.querySelector(sel);
+      if(!overlay || !overlay.classList.contains('open'))continue;
+      const card=overlay.querySelector(cardSel);
+      const visible=card && card.getClientRects().length>0 && getComputedStyle(card).visibility!=='hidden' && getComputedStyle(card).display!=='none' && card.getBoundingClientRect().width>0 && card.getBoundingClientRect().height>0;
+      if(!visible){
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden','true');
+        console.warn('[HIVEST] Modal sem conteúdo visível foi fechado:',sel);
+      }
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inspect,350),{once:true});
+  else setTimeout(inspect,350);
+  const observer=new MutationObserver(()=>{requestAnimationFrame(inspect)});
+  function start(){
+    for(const [sel] of selectors){const el=document.querySelector(sel);if(el)observer.observe(el,{attributes:true,attributeFilter:['class']})}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+</body>
 </html>
