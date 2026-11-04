@@ -3344,6 +3344,34 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.17)}
 @media(max-width:1450px){#hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:end!important}#hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:2!important;justify-self:end!important}}
 @media(max-width:780px){#hpHub #centralGuerra .war-inline-filters.war-filter-split{grid-template-columns:1fr!important}#hpHub #centralGuerra .war-filter-left{border-right:0!important;border-bottom:1px solid #334355!important}#hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:1fr 1fr!important}}
 @media(max-width:460px){#hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:1fr!important}#hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:auto!important;justify-self:stretch!important}}
+</style><style id="hivest-war-class-inline-fix">
+/* Classes diretamente visíveis, selecionáveis e sem dropdown. */
+#hpHub #centralGuerra .war-filter-right.war-filter-four{
+ grid-template-columns:minmax(120px,.8fr) minmax(380px,3.1fr) minmax(170px,1.15fr) minmax(180px,1.4fr) auto!important;
+ align-items:center!important;gap:12px!important;
+}
+#hpHub #centralGuerra .war-filter-four .war-class-inline{
+ display:flex!important;flex-wrap:wrap!important;align-content:center!important;
+ gap:5px!important;max-width:100%!important;
+}
+#hpHub #centralGuerra .war-filter-four .war-class-inline .war-chip{
+ font-size:9px!important;line-height:1.15!important;
+ padding:6px 7px!important;min-height:28px!important;
+ white-space:nowrap!important;
+}
+@media(max-width:1450px){
+ #hpHub #centralGuerra .war-filter-right.war-filter-four{
+  grid-template-columns:minmax(140px,1fr) minmax(0,3fr)!important;
+  align-items:start!important;
+ }
+ #hpHub #centralGuerra .war-filter-four>.war-filter-classes{grid-column:2!important}
+ #hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:2!important}
+}
+@media(max-width:780px){
+ #hpHub #centralGuerra .war-filter-right.war-filter-four{grid-template-columns:1fr!important}
+ #hpHub #centralGuerra .war-filter-four>.war-filter-classes,
+ #hpHub #centralGuerra .war-filter-four .war-filter-clear{grid-column:1!important}
+}
 </style></head>
 <body>
 <div class="app">
@@ -8234,7 +8262,7 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
   </div>
   <div class="war-filter-right war-filter-four">
    <div class="war-filter-section war-filter-guild"><div class="war-filter-heading">♢ Guilda</div><div id="warGuildChips" class="war-chip-group"></div></div>
-   <div class="war-filter-section war-filter-classes"><div class="war-filter-heading">♙ Classe</div><details class="war-class-picker"><summary>Selecionar classes <span class="war-picker-arrow">▾</span></summary><div class="war-class-options"><div id="warJobChips" class="war-chip-group"></div></div></details></div>
+   <div class="war-filter-section war-filter-classes"><div class="war-filter-heading">♙ Classe</div><div id="warJobChips" class="war-chip-group war-class-inline" aria-label="Seleção múltipla de classes"></div></div>
    <div class="war-filter-section war-filter-field"><div class="war-filter-heading">⚑ Campo</div><div id="warCampoChips" class="war-chip-group"></div></div>
    <div class="war-filter-section war-player-section"><label class="war-filter-heading" for="warPlayer">♟ Jogador</label><input id="warPlayer" type="search" placeholder="Buscar personagem..."></div>
    <button type="button" id="warClearAll" class="war-filter-clear">↺ Limpar</button>
