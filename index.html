@@ -4246,7 +4246,7 @@ function hiveNovaArteClasse(job){
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=hiveNovaArteClasse(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage(m.Job)};$('#modal').classList.add('open');hivePowerPlayer=m;hiveRenderPowerHistory()}
 function closeModal(){$('#modal').classList.remove('open')}
-async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(window.hosSetWar)window.hosSetWar(d.war);if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
+async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(window.hosSetWar)window.hosSetWar(d.war);window.hosLiveData=d;window.hosLiveDataAt=Date.now();if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});refresh();setInterval(refresh,REFRESH_MS);
 
 
@@ -8303,6 +8303,17 @@ document.getElementById('hivePowerFilters')?.addEventListener('click',e=>{const 
  mask-image:linear-gradient(270deg,#000 0%,#000 44%,transparent 100%)!important;
 }
 </style>
+<script id="hos-wars-cache">
+window.hosWarsFetch=(function(){var p=null,at=0;return function(force){
+ if(!force&&p&&Date.now()-at<5*60*1000)return p;
+ at=Date.now();
+ p=fetch('/api/wars?limit=100&include_players=1&_='+Date.now(),{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.text().then(function(t){
+   var ok=r.ok,status=r.status;if(!ok)p=null;
+   return {ok:ok,status:status,json:function(){return Promise.resolve(JSON.parse(t))}};
+ })}).catch(function(e){p=null;throw e});
+ return p;
+}})();
+</script>
 <script id="war-central-script">
 (()=>{
 'use strict';
@@ -8773,7 +8784,7 @@ async function load(){
  try{
    // Fonte exclusiva da Central de Guerra: Cloudflare D1.
    // /api/war (singular) consulta a antiga planilha e não contém as importações do extrator.
-   const r=await fetch('/api/wars?limit=100&include_players=1&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
+   const r=window.hosWarsFetch?await window.hosWarsFetch(true):await fetch('/api/wars?limit=100&include_players=1&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
    const data=await r.json();
    if(!r.ok||!data.ok||!Array.isArray(data.wars))throw Error(data.error||'Falha ao consultar guerras no D1 (HTTP '+r.status+')');
    state.wars=data.wars;
@@ -9301,7 +9312,7 @@ const hpHistoricalAliases=new Map([['bruxo','Bruxo†']]);
 const hpCanonicalHistoricalName=name=>hpHistoricalAliases.get(norm(name))||String(name??'').trim();
 async function loadAverages(){
  // Mesma fonte da HIVEST MÉDIA: D1 com jogadores em uma consulta autenticada.
- const response=await fetch('/api/wars?limit=100&include_players=1&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
+ const response=window.hosWarsFetch?await window.hosWarsFetch(false):await fetch('/api/wars?limit=100&include_players=1&_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
  if(!response.ok)throw Error('Falha ao consultar guerras D1 (HTTP '+response.status+').');
  const data=await response.json();
  if(!data.ok||!Array.isArray(data.wars))throw Error(data.error||'Histórico D1 indisponível.');
@@ -9516,9 +9527,12 @@ async function init(){
   $('hpTabPlantel').addEventListener('click',async()=>{
    if(!ready){$('hpStatus').textContent='Carregando membros e médias de guerra...';
     try{
-     const [authAgain,res]=await Promise.all([fetch('/auth/staff',{credentials:'same-origin',cache:'no-store'}),fetch('/api/data',{credentials:'same-origin',cache:'no-store'})]);
-     if(!authAgain.ok)throw Error('Acesso Staff não autorizado.');if(!res.ok)throw Error('Falha ao consultar MEMBROS.');
-     const payload=await res.json();if(!payload.ok||!Array.isArray(payload.members))throw Error('Aba MEMBROS indisponível.');
+     // Acesso Staff já foi validado ao abrir a Central (e o Worker valida de novo em cada API).
+     // MEMBROS: reaproveita o que o dashboard acabou de carregar; só busca se não houver.
+     const cached=window.hosLiveData&&Array.isArray(window.hosLiveData.members)&&window.hosLiveData.members.length&&(Date.now()-(window.hosLiveDataAt||0)<10*60*1000)?window.hosLiveData:null;
+     let payload=cached;
+     if(!payload){const res=await fetch('/api/data',{credentials:'same-origin',cache:'no-store'});if(res.status===401||res.status===403)throw Error('Acesso Staff não autorizado.');if(!res.ok)throw Error('Falha ao consultar MEMBROS.');payload=await res.json();}
+     if(!payload.ok&&!cached||!Array.isArray(payload.members))throw Error('Aba MEMBROS indisponível.');
      const map=new Map();for(const m of payload.members){const id=idOf(m);if(id&&!map.has(id))map.set(id,m)}members=[...map.values()];
      // Complementa somente Power com a fonte já carregada no dashboard.
      const dashboardRows=Array.isArray(window.hiveMembers)?window.hiveMembers:[];
@@ -9532,9 +9546,13 @@ async function init(){
      const jobs=[...new Set(members.map(jobOf))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
      $('hpJobFilters').innerHTML=[{name:'Todas',value:''},...jobs.map(j=>({name:j,value:j}))].map(({name,value})=>`<button type="button" class="hp-job-chip" data-hp-job="${esc(value)}" aria-pressed="false">${esc(name)} <span class="hp-job-count">0</span></button>`).join('');
      $('hpPt').replaceChildren();for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1),String(i)));
-     formation=blank();updateWarControls();await fetchSharedFormation(activeWar);
-     try{await loadAverages();$('hpStatus').textContent='Médias HIVEST carregadas.'}catch(err){$('hpStatus').textContent=err.message+' Os jogadores continuam disponíveis.'}
-     ready=true;
+     formation=blank();updateWarControls();
+     syncBlocked=true;ready=true;openHub('plantel');$('hpStatus').textContent='Carregando formação e médias de guerra...';
+     const [fRes,aRes]=await Promise.allSettled([fetchSharedFormation(activeWar),loadAverages()]);
+     if(fRes.status==='rejected')$('hpStatus').textContent=fRes.reason?.message||'Não foi possível carregar o plantel compartilhado.';
+     else if(aRes.status==='rejected')$('hpStatus').textContent=(aRes.reason?.message||'Médias indisponíveis.')+' Os jogadores continuam disponíveis.';
+     else $('hpStatus').textContent='Médias HIVEST carregadas.';
+     render();return;
     }catch(err){$('hpStatus').textContent=err.message;openHub('plantel');return}
    }
    openHub('plantel');
@@ -11090,25 +11108,27 @@ html body #hpHub #centralGuerra .hosd-actions #warReload{width:38px!important;pa
 html body #hpHub #centralGuerra .hosd-actions #warReload:hover,html body #hpHub #centralGuerra .hosd-actions #hivestCompareOpen:hover,html body #hpHub #centralGuerra .hosd-actions #hivestReportOpen:hover{border-color:var(--hos-accent)!important;color:var(--hos-accent)!important}
 html body #hpHub #centralGuerra .hosd-actions .hivest-report-choices{right:0!important;left:auto!important;z-index:70!important}
 
-.hosd-score{display:grid;grid-template-columns:1fr 200px 1fr;min-height:150px;border-radius:18px;overflow:hidden;border:1px solid var(--hos-line)}
+.hosd-score{position:relative;isolation:isolate;display:grid;grid-template-columns:1fr 200px 1fr;min-height:150px;border-radius:18px;overflow:hidden;border:1px solid var(--hos-line);background:#0b0f16}
 .hosd-score[hidden]{display:none}
-.hosd-side{position:relative;display:flex;align-items:center;gap:22px;padding:18px 32px;background-size:cover;background-position:center;isolation:isolate}
+.hosd-score:before,.hosd-score:after{content:"";position:absolute;top:0;bottom:0;z-index:-2;background-size:cover;background-repeat:no-repeat}
+.hosd-score:before{left:0;width:62%;background-image:var(--hos-flag-gold);background-position:center;-webkit-mask-image:linear-gradient(90deg,#000 70%,transparent);mask-image:linear-gradient(90deg,#000 70%,transparent)}
+.hosd-score:after{right:0;width:62%;background-image:var(--hos-flag-blue);background-position:center;-webkit-mask-image:linear-gradient(270deg,#000 70%,transparent);mask-image:linear-gradient(270deg,#000 70%,transparent)}
+.hosd-side{position:relative;display:flex;align-items:center;gap:22px;padding:18px 32px;isolation:isolate}
 .hosd-side:before{content:"";position:absolute;inset:0;z-index:-1}
-.hosd-us{justify-content:flex-end;background-image:var(--hos-flag-gold);background-color:#1a1408}
-.hosd-us:before{background:linear-gradient(90deg,rgba(7,9,13,.94),rgba(7,9,13,.55))}
-.hosd-them{background-image:var(--hos-flag-blue);background-color:#08162a}
-.hosd-them:before{background:linear-gradient(270deg,rgba(7,9,13,.94),rgba(7,9,13,.55))}
+.hosd-us{justify-content:flex-end}
+.hosd-us:before{background:linear-gradient(90deg,rgba(7,9,13,.92),rgba(7,9,13,.45))}
+.hosd-them:before{background:linear-gradient(270deg,rgba(7,9,13,.92),rgba(7,9,13,.45))}
 .hosd-sname{display:flex;flex-direction:column;gap:4px;min-width:0}
 .hosd-us .hosd-sname{text-align:right}
 .hosd-sname b{font:700 30px var(--hos-head);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hosd-us .hosd-sname b{color:var(--hos-accent)}.hosd-them .hosd-sname b{color:var(--hos-cyan)}
 .hosd-sname small{font:500 11px var(--hos-mono);color:var(--hos-muted)}
 .hosd-side strong{font:700 clamp(40px,4.4vw,64px)/1 var(--hos-head);color:#fff}
-.hosd-mid{background:var(--hos-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px}
-.hosd-mid>span{font:700 20px var(--hos-head);color:#5B6676}
+.hosd-mid{background:radial-gradient(ellipse at center,rgba(7,9,13,.72),rgba(7,9,13,.45) 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px}
+.hosd-mid>span{font:700 22px var(--hos-head);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
 .hosd-diff{font:700 13px var(--hos-mono);color:var(--hos-muted)}
 .hosd-diff.win{color:#34E3A0}.hosd-diff.loss{color:#FF8A8A}
-.hosd-mode{font:500 10px var(--hos-mono);color:var(--hos-dim)}
+.hosd-mode{font:500 10px var(--hos-mono);color:var(--hos-muted)}
 
 #hosdBody{margin:0 clamp(12px,2vw,28px);display:flex;flex-direction:column;gap:14px}
 #hosdBody[hidden]{display:none}
@@ -11194,7 +11214,9 @@ html body #hpHub #centralGuerra .hosd .hosd-more:hover{border-color:var(--hos-ac
   .hosd-us .hosd-sname{text-align:left}
   .hosd-us{flex-direction:row}
   .hosd-them{flex-direction:row-reverse}
-  .hosd-them:before,.hosd-us:before{background:rgba(7,9,13,.75)}
+  .hosd-them:before,.hosd-us:before{background:rgba(7,9,13,.7)}
+  .hosd-score:before{width:100%;height:55%;bottom:auto;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+  .hosd-score:after{width:100%;height:55%;top:auto;-webkit-mask-image:linear-gradient(0deg,#000 70%,transparent);mask-image:linear-gradient(0deg,#000 70%,transparent)}
   .hosd-sname b{font-size:22px}
   .hosd-mid{flex-direction:row;padding:8px}
   .hosd-duel{grid-template-columns:1fr;padding:12px 14px}
