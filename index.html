@@ -9446,6 +9446,7 @@ async function hpDrawExport(){
 }
 async function hpExportImage(){
  try{
+  if(activeWar==='vigrid'&&window.hosExportVigrid){$('hpStatus').textContent='Gerando imagens do Vigrid (Main e Sub)...';const n=await window.hosExportVigrid({formation,members,idOf,nameOf,jobOf,download:hpDownload});$('hpStatus').textContent=n+' imagens PNG geradas: Main Field e Sub Field.';return}
   $('hpStatus').textContent='Gerando imagem do plantel...';
   const canvas=await hpDrawExport();
   const blob=await new Promise(resolve=>{if(canvas.toBlob)canvas.toBlob(resolve,'image/png');else fetch(canvas.toDataURL('image/png')).then(r=>r.blob()).then(resolve).catch(()=>resolve(null))});
@@ -11197,6 +11198,118 @@ html body #hivePlantelPanel #hpPts .hp-field-section:before,html body #hivePlant
     var s=tabs.querySelectorAll('[data-hpb] span'); if(s[0])s[0].textContent=info.main+'/40'; if(s[1])s[1].textContent=info.sub+'/40';
     tabs.hidden=!!info.unified; sync();
   };
+
+  /* ---------- Exportação Vigrid's Avenge (Main e Sub em PNGs separados) ---------- */
+  var VG_CLS=[
+    [/doram|invocador|summoner/,function(j){return /mag|magic|magico/.test(j)?['DORAM MAG','#B78CFF','Doram Mágico']:(/phy|fis|fisico/.test(j)?['DORAM PHY','#FF9B57','Doram Físico']:['DORAM','#B78CFF','Doram'])}],
+    [/\bhw\b|high wizard|wizard|bruxo|mago/,['HW','#3EC5FF','HW']],[/bio|creator|criador|alchem/,['BIO','#34E3A0','Bio']],
+    [/bard|bardo|minstrel|menestrel/,['BARD','#FFD166','Music']],[/music|dancer|cigana|gypsy|clown|palhaco|odalisca/,['MUSIC','#FFD166','Music']],
+    [/priest|sacerdote/,['PRIEST','#FF7A9C','Priest']],[/sniper|hunter|cacador|atirador/,['SNIPER','#FFB627','Sniper']],
+    [/gunslinger|justiceiro/,['GUNSL.','#9BE15D','Gunslinger']],[/professor|sage|scholar/,['PROF.','#E8EDF4','Professor']],
+    [/paladin|paladino|crusader|templario/,['PAL.','#7C8CFF','Paladin']],[/champion|campeao|monk|monge/,['CHAMP.','#FF8A65','Champion']],
+    [/lord knight|cavaleiro/,['LK','#FF8A65','Lord Knight']],[/ws|whitesmith|ferreiro|blacksmith/,['WS','#C9A27A','WS']]
+  ];
+  function vgClass(job){var j=nrm(job);for(var i=0;i<VG_CLS.length;i++){if(VG_CLS[i][0].test(j)){var v=VG_CLS[i][1];return typeof v==='function'?v(j):v}}var u=String(job||'—').toUpperCase().slice(0,10);return [u,'#E8EDF4',job||'—']}
+  function vgIsStaff(m){var k=Object.keys(m||{}).find(function(x){return nrm(x).replace(/[^a-z]/g,'')==='staff'});if(!k)return false;var v=nrm(m[k]);return ['sim','s','x','1','true','yes','staff','✓','✔'].indexOf(v)>=0}
+  function vgImg(src){return new Promise(function(res){if(!src)return res(null);var im=new Image();im.onload=function(){res(im)};im.onerror=function(){res(null)};im.src=src})}
+  function vgFlag(name){var v=getComputedStyle(document.documentElement).getPropertyValue(name)||'';var m=v.match(/url\(["']?(data:[^"')]+)/);return m?m[1]:''}
+  window.hosExportVigrid=async function(o){
+    try{await Promise.all(['700 40px "Chakra Petch"','700 18px Inter','800 12px Inter','700 12px "JetBrains Mono"','500 12px Inter'].map(function(f){return document.fonts.load(f)}))}catch(e){}
+    var byId=new Map(o.members.map(function(m){return [o.idOf(m),m]}));
+    var flags=await Promise.all([vgImg(vgFlag('--hos-flag-gold')),vgImg(vgFlag('--hos-flag-blue'))]);
+    var artCache={};
+    async function art(job,name){var a=artFor(job,name);if(!a.src)return null;if(!(a.src in artCache))artCache[a.src]=await vgImg(a.src);return artCache[a.src]}
+    var who='';try{who=(typeof authUser!=='undefined'&&authUser)?(authUser.name||authUser.username||''):''}catch(e){}
+    var now=new Date(),stamp=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    var war=window.hosNextWarInfo;
+    var count=0;
+    for(var fi=0;fi<2;fi++){
+      var field=fi?'sub':'main', pts=o.formation[field], base=fi?9:1;
+      var S=2,W=1600,H=900,cv=document.createElement('canvas');cv.width=W*S;cv.height=H*S;
+      var c=cv.getContext('2d');c.scale(S,S);
+      var rr=function(x,y,w,h,r){c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h)};
+      var hex=function(x,y,w,h){c.beginPath();c.moveTo(x+w/2,y);c.lineTo(x+w,y+h*.25);c.lineTo(x+w,y+h*.75);c.lineTo(x+w/2,y+h);c.lineTo(x,y+h*.75);c.lineTo(x,y+h*.25);c.closePath()};
+      var txt=function(s,x,y,font,color,align,ls){c.font=font;c.fillStyle=color;c.textAlign=align||'left';c.textBaseline='middle';try{c.letterSpacing=ls||'0px'}catch(e){}c.fillText(s,x,y);try{c.letterSpacing='0px'}catch(e){}};
+      var tw=function(s,font,ls){c.font=font;try{c.letterSpacing=ls||'0px'}catch(e){}var w=c.measureText(s).width;try{c.letterSpacing='0px'}catch(e){}return w};
+      // fundo + colmeia
+      c.fillStyle='#07090D';c.fillRect(0,0,W,H);
+      c.strokeStyle='rgba(255,255,255,.035)';c.lineWidth=1;
+      for(var gy=-96;gy<H;gy+=96)for(var gx=0;gx<W;gx+=56){c.beginPath();c.moveTo(gx+28,gy+64);c.lineTo(gx+28,gy+96);c.moveTo(gx+28,gy+64);c.lineTo(gx,gy+48);c.lineTo(gx,gy+16);c.lineTo(gx+28,gy);c.lineTo(gx+56,gy+16);c.lineTo(gx+56,gy+48);c.closePath();c.stroke()}
+      // cabeçalho
+      var HH=96;
+      if(flags[0])c.drawImage(flags[0],0,0,W/2,HH);if(flags[1])c.drawImage(flags[1],W/2,0,W/2,HH);
+      var hg=c.createLinearGradient(0,0,W,0);hg.addColorStop(0,'rgba(7,9,13,.3)');hg.addColorStop(.24,'rgba(7,9,13,.93)');hg.addColorStop(.76,'rgba(7,9,13,.93)');hg.addColorStop(1,'rgba(7,9,13,.3)');c.fillStyle=hg;c.fillRect(0,0,W,HH);
+      c.fillStyle='#FFB627';c.fillRect(0,HH-2,W,2);
+      // logo
+      c.save();c.translate(28,22);c.scale(46/34,52/38);c.strokeStyle='#FFB627';c.lineWidth=2;c.beginPath();c.moveTo(17,1);c.lineTo(33,10);c.lineTo(33,28);c.lineTo(17,37);c.lineTo(1,28);c.lineTo(1,10);c.closePath();c.stroke();c.fillStyle='#FFB627';c.beginPath();c.moveTo(17,10);c.lineTo(25,14.5);c.lineTo(25,23.5);c.lineTo(17,28);c.lineTo(9,23.5);c.lineTo(9,14.5);c.closePath();c.fill();c.restore();
+      txt('HIVEST',86,40,'700 28px "Chakra Petch", sans-serif','#E8EDF4','left','2px');
+      txt('PLANTEL DE GUERRA',86,64,'500 11px "JetBrains Mono", monospace','#AEB8C6','left','1.8px');
+      txt("VIGRID'S AVENGE",W/2,36,'700 40px "Chakra Petch", sans-serif','#FFB627','center','2px');
+      var filled=pts.flat().filter(Boolean).length, fname=fi?'SUB FIELD':'MAIN FIELD', fcol=fi?'#3EC5FF':'#FFB627';
+      var t1=fname, t2=filled+'/40 JOGADORES', f1='700 12px "JetBrains Mono", monospace', f2='500 12px "JetBrains Mono", monospace';
+      var w1=tw(t1,f1,'1.7px')+20, w2=tw(t2,f2,'1.4px'), sx=W/2-(w1+8+w2)/2;
+      c.fillStyle=fcol;rr(sx,62,w1,22,6);c.fill();txt(t1,sx+w1/2,73,f1,'#07090D','center','1.7px');txt(t2,sx+w1+8,73,f2,'#AEB8C6','left','1.4px');
+      if(war){
+        var bx=W-28-300;c.fillStyle='rgba(14,19,27,.85)';rr(bx,16,300,64,12);c.fill();c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=1;rr(bx+.5,16.5,299,63,12);c.stroke();
+        txt('PRÓXIMA GUERRA',W-42,30,'500 10px "JetBrains Mono", monospace','#8A97A8','right','1.4px');
+        var en=war.enemy, fe='700 16px Inter, sans-serif', ew=tw(en,fe), vs='vs ', vw=tw(vs,'500 16px Inter, sans-serif'), hw=tw('HIVEST ',fe);
+        txt(en,W-42,49,fe,'#3EC5FF','right');txt(vs,W-42-ew,49,'500 16px Inter, sans-serif','#8A97A8','right');txt('HIVEST ',W-42-ew-vw,49,fe,'#E8EDF4','right');
+        var dt=war.date.charAt(0).toUpperCase()+war.date.slice(1)+' · '+war.time;txt(dt,W-42,68,'500 13px Inter, sans-serif','#AEB8C6','right');
+      }
+      // grupos
+      var G=[['RAID 1','#3EC5FF','62,197,255',[0,1,2]],['RAID 2','#FFB627','255,182,39',[3,4,5]],['OBJETIVO','#FF7A9C','255,107,107',[6,7]]];
+      var gy0=HH+12,gh=(H-40-gy0-20)/3;
+      for(var gi=0;gi<3;gi++){
+        var g=G[gi],y=gy0+gi*(gh+10),x=20,w=W-40;
+        c.fillStyle='rgba('+g[2]+',.025)';rr(x,y,w,gh,14);c.fill();
+        c.save();rr(x,y,w,gh,14);c.clip();c.fillStyle='rgba('+g[2]+',.13)';c.fillRect(x,y,w,30);c.restore();
+        c.strokeStyle='rgba('+g[2]+',.38)';c.lineWidth=1;rr(x+.5,y+.5,w-1,gh-1,14);c.stroke();c.beginPath();c.moveTo(x,y+30.5);c.lineTo(x+w,y+30.5);c.stroke();
+        c.fillStyle=g[1];c.beginPath();c.arc(x+17,y+15,3,0,7);c.fill();
+        txt(g[0],x+w/2,y+16,'700 18px "Chakra Petch", sans-serif',g[1],'center','2.8px');
+        var gc=g[3].reduce(function(t,p){return t+pts[p].filter(Boolean).length},0);
+        txt(gc+'/'+(g[3].length*5),x+w-14,y+16,'500 11px "JetBrains Mono", monospace','#AEB8C6','right');
+        var n=g[3].length,cw=(w-16-8*(n-1))/n,cy=y+38,ch=gh-46;
+        for(var k=0;k<n;k++){
+          var p=g[3][k],cx=x+8+k*(cw+8),slots=pts[p],ms=slots.map(function(id){return id?(byId.get(id)||{Personagem:id}):null}),pf=ms.filter(Boolean).length;
+          c.fillStyle='#0B1018';rr(cx,cy,cw,ch,10);c.fill();
+          c.save();rr(cx,cy,cw,ch,10);c.clip();c.fillStyle='rgba(255,255,255,.025)';c.fillRect(cx,cy,cw,28);c.restore();
+          c.strokeStyle='rgba(255,255,255,.08)';rr(cx+.5,cy+.5,cw-1,ch-1,10);c.stroke();c.beginPath();c.moveTo(cx,cy+28.5);c.lineTo(cx+cw,cy+28.5);c.strokeStyle='rgba(255,255,255,.07)';c.stroke();
+          ms.forEach(function(m,i){c.fillStyle=m?vgClass(o.jobOf(m))[1]:'rgba(255,255,255,.12)';c.beginPath();c.arc(cx+14+i*10,cy+14,3.5,0,7);c.fill()});
+          txt('P'+(base+p),cx+cw/2,cy+15,'700 17px "Chakra Petch", sans-serif','#E8EDF4','center');
+          txt(pf+'/5',cx+cw-10,cy+15,'700 11px "JetBrains Mono", monospace',pf===5?'#34E3A0':'#AEB8C6','right');
+          var ry0=cy+28+(ch-28-5*33)/2;
+          for(var i=0;i<5;i++){
+            var m=ms[i],ry=ry0+i*33+16.5;
+            if(!m){var vw2=26+9+tw('VAGA','700 12px "JetBrains Mono", monospace','1.7px'),vx=cx+cw/2-vw2/2;hex(vx,ry-14.5,26,29);c.fillStyle='rgba(255,255,255,.06)';c.fill();txt('VAGA',vx+35,ry,'700 12px "JetBrains Mono", monospace','#5B6676','left','1.7px');continue}
+            var nm=o.nameOf(m),cl=vgClass(o.jobOf(m)),st=vgIsStaff(m);
+            var fN='700 18px Inter, sans-serif',fC='800 11.5px Inter, sans-serif',fS='700 9px "JetBrains Mono", monospace';
+            var nw=tw(nm,fN),cwid=tw(cl[0],fC,'.5px'),sw=st?tw('STAFF',fS,'.7px')+10:0;
+            var total=26+9+nw+9+cwid+(st?9+sw:0),rx=cx+cw/2-total/2;
+            hex(rx,ry-14.5,26,29);c.fillStyle=cl[1];c.fill();
+            var im=await art(o.jobOf(m),nm);
+            c.save();hex(rx+2,ry-12.5,22,25);c.clip();if(im){var sc=Math.max(22/im.width,25/im.height),dw=im.width*sc,dh=im.height*sc;c.drawImage(im,rx+2+(22-dw)/2,ry-12.5-(dh-25)*.15,dw,dh)}else{c.fillStyle='#141B25';c.fill()}c.restore();
+            txt(nm,rx+35,ry+1,fN,'#F4F6FA','left');
+            txt(cl[0],rx+35+nw+9,ry+1.5,fC,cl[1],'left','.5px');
+            if(st){var sx2=rx+35+nw+9+cwid+9;c.fillStyle='#FFB627';rr(sx2,ry-8,sw,16,4);c.fill();txt('STAFF',sx2+sw/2,ry+.5,fS,'#07090D','center','.7px')}
+          }
+        }
+      }
+      // rodapé
+      var comp={};pts.flat().filter(Boolean).forEach(function(id){var m=byId.get(id)||{};var cl=vgClass(o.jobOf(m));comp[cl[2]]=comp[cl[2]]||{n:0,c:cl[1]};comp[cl[2]].n++});
+      var fx=28,fy=H-20;
+      Object.keys(comp).sort(function(a,b){return comp[b].n-comp[a].n}).forEach(function(k){
+        c.fillStyle=comp[k].c;rr(fx,fy-4.5,9,9,3);c.fill();
+        txt(k,fx+15,fy,'500 12px Inter, sans-serif','#8A97A8','left');var kw=tw(k,'500 12px Inter, sans-serif');
+        txt(String(comp[k].n),fx+15+kw+5,fy,'700 12px "JetBrains Mono", monospace','#E8EDF4','left');fx+=15+kw+5+tw(String(comp[k].n),'700 12px "JetBrains Mono", monospace')+16;
+      });
+      txt('Gerado em '+stamp+(who?' por '+who:'')+' · hive-rooc.com.br',W-28,fy,'500 12px Inter, sans-serif','#8A97A8','right');
+      var blob=await new Promise(function(res){cv.toBlob(res,'image/png')});
+      if(!blob)throw Error('Falha ao criar a imagem PNG.');
+      o.download(blob,'HIVEST_Vigrid_'+(fi?'Sub':'Main')+'_Field_'+now.toISOString().slice(0,10)+'.png');count++;
+      if(!fi)await new Promise(function(r){setTimeout(r,400)});
+    }
+    return count;
+  };
   /* ---------- próxima guerra (aba WAR) ---------- */
   var BR_OFFSET_H=3, KEEP_MS=3*60*60*1000;
   function pick(row){var keys=Object.keys(row||{});for(var i=1;i<arguments.length;i++){var want=arguments[i];var k=keys.find(function(x){return nrm(x).replace(/[^a-z]/g,'').indexOf(want)>=0});if(k&&String(row[k]).trim()!=='')return String(row[k]).trim()}return ''}
@@ -11231,8 +11344,9 @@ html body #hivePlantelPanel #hpPts .hp-field-section:before,html body #hivePlant
       else if(!parsed.length){empty.textContent='Aba WAR encontrada, mas não consegui ler as linhas. Use os cabeçalhos Adversario | Data | Hora (ex.: Valhalla | 21/11/2026 | 20:00).';console.warn('HIVE OS · aba WAR recebida:',rows)}
       else empty.textContent='Nenhuma guerra agendada. A última cadastrada já passou.';
     }
-    body.hidden=!next;empty.hidden=!!next;if(!next)return;
+    body.hidden=!next;empty.hidden=!!next;if(!next){window.hosNextWarInfo=null;return}
     var tz={timeZone:'America/Sao_Paulo'};
+    window.hosNextWarInfo={enemy:next.enemy,date:next.when.toLocaleDateString('pt-BR',Object.assign({weekday:'long'},tz))+', '+next.when.toLocaleDateString('pt-BR',Object.assign({day:'2-digit',month:'2-digit'},tz)),time:next.when.toLocaleTimeString('pt-BR',Object.assign({hour:'2-digit',minute:'2-digit'},tz))};
     $('#hosWarEnemy').textContent=next.enemy;
     $('#hosWarDate').textContent=next.when.toLocaleDateString('pt-BR',Object.assign({weekday:'long'},tz))+', '+next.when.toLocaleDateString('pt-BR',Object.assign({day:'2-digit',month:'2-digit'},tz));
     $('#hosWarTime').textContent=next.when.toLocaleTimeString('pt-BR',Object.assign({hour:'2-digit',minute:'2-digit'},tz));
