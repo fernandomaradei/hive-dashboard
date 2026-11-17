@@ -9091,7 +9091,7 @@ function updateWarControls(){
  target.innerHTML=unified?'<option value="main">OVERRUN · PT 1–8</option><option value="sub">OVERRUN · PT 9–16</option>':'<option value="main">Main Field</option><option value="sub">Sub Field</option>';
  target.value=previous==='sub'?'sub':'main';
  $('hpPt').replaceChildren();
- for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1+(unified&&target.value==='sub'?8:0)),String(i)));
+ for(let i=0;i<8;i++)$('hpPt').add(new Option('PT '+(i+1+(target.value==='sub'?8:0)),String(i)));
  $('hpPt').value='0';
 }
 
@@ -9235,7 +9235,7 @@ function render(){
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
 
  const unified=!!WAR_MODES[activeWar].unified,grouped=!!WAR_MODES[activeWar].grouped;
- const ptHtml=(f,p)=>{const pt=formation[f][p],n=p+1+(unified&&f==='sub'?8:0),role=grouped?hpMainPtRole(p):'';
+ const ptHtml=(f,p)=>{const pt=formation[f][p],n=p+1+(f==='sub'?8:0),role=grouped?hpMainPtRole(p):'';
   const ms=pt.filter(Boolean).map(id=>byId.get(id)||{Personagem:id});
   const filled=ms.length,sum=ms.reduce((t,m)=>t+(hpPowerFromMember(m)||0),0);
   const has=re=>ms.some(m=>re.test(norm(jobOf(m))));
@@ -9262,7 +9262,7 @@ function render(){
   $('hpPts').innerHTML=['main','sub'].map(f=>{
    const c=formation[f].flat().filter(Boolean).length;
    const body=grouped
-    ?`<div class="hpb-lanes">${LANES.map(l=>`<div class="hpb-lane" style="--lc:${l[1]}"><div class="hpb-lane-head"><b>${l[0]}</b><span>${l[2]}</span></div><small class="hpb-lane-desc">${l[3]}</small>${l[4].map(p=>ptHtml(f,p)).join('')}</div>`).join('')}</div>`
+    ?`<div class="hpb-lanes">${LANES.map(l=>`<div class="hpb-lane" style="--lc:${l[1]}"><div class="hpb-lane-head"><b>${l[0]}</b><span>${f==='sub'?'PT '+l[4].map(p=>p+9).filter((v,i,a)=>i===0||i===a.length-1).join('–'):l[2]}</span></div><small class="hpb-lane-desc">${l[3]}</small>${l[4].map(p=>ptHtml(f,p)).join('')}</div>`).join('')}</div>`
     :`<div class="hpb-grid">${formation[f].map((_,p)=>ptHtml(f,p)).join('')}</div>`;
    return `<section class="hp-field-section" data-hpb-field="${f}">${fieldHead(f==='main'?'Main Field':'Sub Field',c,40,'8 PTs · 5 jogadores cada')}${body}</section>`;
   }).join('');
@@ -9433,7 +9433,7 @@ async function hpDrawExport(){
    const col=p%4,row=Math.floor(p/4),x=58+pad+col*(cw+gap),top=y+87+row*(ch+15);
    rect(x,top,cw,ch,'#0a1625',13);
    c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(x+1,top+1,cw-2,ch-2);
-   label('PT '+(p+1+(activeWar==='overrun'&&fld==='sub'?8:0)),x+17,top+33,24,accent,'bold');
+   label('PT '+(p+1+(fld==='sub'?8:0)),x+17,top+33,24,accent,'bold');
    {
      const role=WAR_MODES[activeWar].grouped?hpMainPtRole(p):'';
     const roleColor=role==='MID'?'#f2c16b':role==='FLEX'?'#7fc8f5':role==='ROAMING'?'#78e4bd':'#d9a4fb';
@@ -11063,6 +11063,29 @@ html body #hivePlantelPanel .hp-top .hp-actions,html body #hivePlantelPanel .hpb
 html body #hivePlantelPanel .hpb-menu-list{z-index:1000!important}
 html body #hivePlantelPanel .hp-main,html body #hivePlantelPanel .hpb-bar2{position:relative;z-index:1}
 
+/* prévia da exportação Vigrid */
+#hosVgPrev{position:fixed;inset:0;z-index:2147483000;background:rgba(3,5,8,.78);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;font-family:var(--hos-body);color:var(--hos-text)}
+#hosVgPrev *{box-sizing:border-box}
+#hosVgPrev .hvp-box{width:min(1100px,100%);max-height:100%;overflow:auto;background:var(--hos-panel);border:1px solid var(--hos-line2);border-radius:18px;padding:18px 20px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+#hosVgPrev .hvp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#hosVgPrev .hvp-head small{display:block;font:600 10px var(--hos-mono);letter-spacing:.14em;color:var(--hos-accent)}
+#hosVgPrev .hvp-head b{font:700 20px var(--hos-head)}
+#hosVgPrev .hvp-note{margin:6px 0 14px;color:var(--hos-muted);font-size:13px}
+#hosVgPrev .hvp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#hosVgPrev figure{margin:0;background:var(--hos-bg);border:1px solid var(--hos-line);border-radius:12px;overflow:hidden}
+#hosVgPrev figure img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+#hosVgPrev figcaption{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px}
+#hosVgPrev figcaption span{display:flex;flex-direction:column;min-width:0}
+#hosVgPrev figcaption small{font:500 11px var(--hos-mono);color:var(--hos-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hosVgPrev button{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--hos-line2);background:var(--hos-panel2);color:var(--hos-text);font:600 13px var(--hos-body);cursor:pointer}
+#hosVgPrev button:hover{border-color:var(--hos-accent);color:var(--hos-accent)}
+#hosVgPrev .hvp-x{width:36px;padding:0}
+#hosVgPrev .hvp-dl,#hosVgPrev .hvp-ok{background:var(--hos-accent);border-color:var(--hos-accent);color:#07090D}
+#hosVgPrev .hvp-dl:hover,#hosVgPrev .hvp-ok:hover{filter:brightness(1.1);color:#07090D}
+#hosVgPrev .hvp-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+#hosVgPrev button:focus-visible{outline:2px solid var(--hos-accent);outline-offset:2px}
+@media(max-width:700px){#hosVgPrev .hvp-grid{grid-template-columns:1fr}}
+
 /* ===== Central de Guerra · Duelo de times ===== */
 html body #hpHub #centralGuerra.hosd-on .war-heading,
 html body #hpHub #centralGuerra.hosd-on .hosd-gone,
@@ -11546,6 +11569,24 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
   window.hosIsStaff=vgIsStaff;
   function vgImg(src){return new Promise(function(res){if(!src)return res(null);var im=new Image();im.onload=function(){res(im)};im.onerror=function(){res(null)};im.src=src})}
   function vgFlag(name){var v=getComputedStyle(document.documentElement).getPropertyValue(name)||'';var m=v.match(/url\(["']?(data:[^"')]+)/);return m?m[1]:''}
+  function vgPreview(files,download){
+    var old=document.getElementById('hosVgPrev');if(old)old.remove();
+    var urls=files.map(function(f){return URL.createObjectURL(f.blob)});
+    var ov=document.createElement('div');ov.id='hosVgPrev';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Imagens exportadas');
+    ov.innerHTML='<div class="hvp-box"><div class="hvp-head"><div><small>EXPORTAÇÃO VIGRID</small><b>2 imagens geradas</b></div><button type="button" class="hvp-x" aria-label="Fechar">✕</button></div>'+
+      '<p class="hvp-note">Os dois arquivos já foram baixados. Se o navegador bloquear algum, baixe por aqui.</p><div class="hvp-grid">'+
+      files.map(function(f,i){return '<figure><img src="'+urls[i]+'" alt="Prévia '+f.label+'"><figcaption><span><b>'+f.label+'</b><small>'+f.filled+'/40 jogadores · '+f.name+'</small></span><button type="button" class="hvp-dl" data-i="'+i+'">Baixar</button></figcaption></figure>'}).join('')+
+      '</div><div class="hvp-foot"><button type="button" class="hvp-all">Baixar as 2 de novo</button><button type="button" class="hvp-ok">Fechar</button></div></div>';
+    var close=function(){ov.remove();setTimeout(function(){urls.forEach(URL.revokeObjectURL)},1000);document.removeEventListener('keydown',esc)};
+    var esc=function(e){if(e.key==='Escape')close()};
+    ov.addEventListener('click',function(e){
+      if(e.target===ov||e.target.closest('.hvp-x,.hvp-ok'))return close();
+      var d=e.target.closest('.hvp-dl');if(d){var f=files[+d.dataset.i];download(f.blob,f.name);return}
+      if(e.target.closest('.hvp-all')){download(files[0].blob,files[0].name);setTimeout(function(){download(files[1].blob,files[1].name)},900)}
+    });
+    document.addEventListener('keydown',esc);
+    document.body.appendChild(ov);ov.querySelector('.hvp-ok').focus();
+  }
   window.hosExportVigrid=async function(o){
     try{await Promise.all(['700 40px "Chakra Petch"','700 18px Inter','800 12px Inter','700 12px "JetBrains Mono"','500 12px Inter'].map(function(f){return document.fonts.load(f)}))}catch(e){}
     var byId=new Map(o.members.map(function(m){return [o.idOf(m),m]}));
@@ -11555,7 +11596,7 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
     var who='';try{who=(typeof authUser!=='undefined'&&authUser)?(authUser.name||authUser.username||''):''}catch(e){}
     var now=new Date(),stamp=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     var war=window.hosNextWarInfo;
-    var count=0;
+    var count=0,files=[];
     for(var fi=0;fi<2;fi++){
       var field=fi?'sub':'main', pts=o.formation[field], base=fi?9:1;
       var S=2,W=1600,H=900,cv=document.createElement('canvas');cv.width=W*S;cv.height=H*S;
@@ -11638,9 +11679,12 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
       txt('Gerado em '+stamp+(who?' por '+who:'')+' · hive-rooc.com.br',W-28,fy,'500 12px Inter, sans-serif','#8A97A8','right');
       var blob=await new Promise(function(res){cv.toBlob(res,'image/png')});
       if(!blob)throw Error('Falha ao criar a imagem PNG.');
-      o.download(blob,'HIVEST_Vigrid_'+(fi?'Sub':'Main')+'_Field_'+now.toISOString().slice(0,10)+'.png');count++;
-      if(!fi)await new Promise(function(r){setTimeout(r,400)});
+      var fnm='HIVEST_Vigrid_'+(fi?'Sub':'Main')+'_Field_'+now.toISOString().slice(0,10)+'.png';
+      files.push({blob:blob,name:fnm,label:fi?'Sub Field':'Main Field',filled:filled});
+      o.download(blob,fnm);count++;
+      if(!fi)await new Promise(function(r){setTimeout(r,900)});
     }
+    vgPreview(files,o.download);
     return count;
   };
   /* ---------- próxima guerra (aba WAR) ---------- */
