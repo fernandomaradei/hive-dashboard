@@ -9077,6 +9077,8 @@ function hpbSetGroups(mode,g){const pick=v=>hpbFieldOk(v)?hpbClone(v):(hpbFromLe
 function hpbEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function hpbGroupSel(f,p){const G=hpbGroups('vigrid')[f],v=G.pt[p];return `<select class="hpb-gsel" data-hpb-group="${f}:${p}" aria-label="Grupo da PT ${hpbPtNum(f,p)}" title="Mover esta PT para outro grupo">${G.list.map(g=>`<option value="${g.id}"${g.id===v?' selected':''}>${hpbEsc(g.name||'Sem nome')}</option>`).join('')}</select>`}
 function hpbPtNum(f,p){const base=f==='sub'?8:0;if(activeWar!=='vigrid')return p+1+base;const G=hpbGroups('vigrid')[f];const order=[];G.list.forEach(g=>G.pt.forEach((v,i)=>{if(v===g.id)order.push(i)}));const k=order.indexOf(p);return (k<0?p:k)+1+base}
+// D1 grava datetime('now') em UTC sem fuso ("2026-11-17 14:46:56"): tratar como UTC e mostrar no horário local.
+function hpbDate(v){if(v==null||v==='')return new Date(NaN);let t=String(v).trim();if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/.test(t))t=t.replace(' ','T')+'Z';return new Date(t)}
 window.hosVgGroupsFor=hpbGroups;window.hosVgPtNum=(f,p)=>{const G=hpbGroups('vigrid')[f];const order=[];G.list.forEach(g=>G.pt.forEach((v,i)=>{if(v===g.id)order.push(i)}));const k=order.indexOf(p);return (k<0?p:k)+1+(f==='sub'?8:0)};
 const storageKey=()=>STORAGE_PREFIX+activeWar;
 const warName=()=>WAR_MODES[activeWar].name;
@@ -9093,7 +9095,7 @@ async function fetchSharedFormation(mode){
  if(mode===activeWar){
   formation=sanitize(payload.formation);
   syncBlocked=false;render();
-  $('hpStatus').textContent=payload.updatedBy?'Formação compartilhada · última alteração por '+payload.updatedBy+(payload.updatedAt?' em '+new Date(payload.updatedAt).toLocaleString('pt-BR'):''):'Formação compartilhada ainda vazia nesta modalidade.';
+  $('hpStatus').textContent=payload.updatedBy?'Formação compartilhada · última alteração por '+payload.updatedBy+(payload.updatedAt?' em '+hpbDate(payload.updatedAt).toLocaleString('pt-BR'):''):'Formação compartilhada ainda vazia nesta modalidade.';
  }
  return payload;
 }
@@ -9190,7 +9192,7 @@ function save(){
    throw Error(data.error||'Erro ao salvar no servidor');
   }
   formationVersions[mode]=data.version;
-  if(activeWar===mode)$('hpStatus').textContent='✓ Formação compartilhada salva · '+data.updatedBy+' · '+new Date(data.updatedAt).toLocaleString('pt-BR');
+  if(activeWar===mode)$('hpStatus').textContent='✓ Formação compartilhada salva · '+data.updatedBy+' · '+hpbDate(data.updatedAt).toLocaleString('pt-BR');
  }).catch(err=>{syncBlocked=true;$('hpStatus').textContent='ERRO AO SALVAR: '+err.message+' · Atualize antes de editar novamente.';console.error('[HIVE Plantel]',err)});
 }
 function meanText(id){const a=averages.get(id);if(!a)return '<span class="hp-hint">Sem histórico de guerra</span>';return `Média HIVE · ${a.games} guerra${a.games===1?'':'s'}<br>Dano <b>${fmt(a.damage)}</b> · Recebido <b>${fmt(a.taken)}</b><br>Cura <b>${fmt(a.heal)}</b> · K/A/D <b>${a.kills.toFixed(1).replace('.',',')}/${a.assists.toFixed(1).replace('.',',')}/${a.deaths.toFixed(1).replace('.',',')}</b>`}
@@ -9636,7 +9638,7 @@ async function hpbSync(){
   if(!r.ok||!d.ok||mode!==activeWar||dragged||selected)return;
   if((d.version||0)!==formationVersions[mode]){
    formationVersions[mode]=d.version||0;formation=sanitize(d.formation);hpbSetGroups(mode,d.formation&&d.formation.groups);syncBlocked=false;render();
-   $('hpStatus').textContent='↻ Atualizado com a alteração de '+(d.updatedBy||'outro Staff')+(d.updatedAt?' · '+new Date(d.updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'');
+   $('hpStatus').textContent='↻ Atualizado com a alteração de '+(d.updatedBy||'outro Staff')+(d.updatedAt?' · '+hpbDate(d.updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'');
   }
  }catch(e){}finally{hpbSyncing=false}
 }
