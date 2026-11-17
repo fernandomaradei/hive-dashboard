@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<script id="hos-boot">document.documentElement.classList.add('hos-boot');setTimeout(function(){document.documentElement.classList.remove('hos-boot')},5000);</script>
+<script id="hos-boot">document.documentElement.classList.add('hos-boot');document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){document.documentElement.classList.remove('hos-boot')},4000)});</script>
 <style id="hos-boot-css">html.hos-boot,html.hos-boot body{background:#07090D!important}html.hos-boot body{visibility:hidden!important;opacity:0!important}
 html.hos-boot:before{content:"HIVEST";visibility:visible;position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;font:700 28px/1 "Chakra Petch",Inter,system-ui,sans-serif;letter-spacing:.3em;color:#FFB627;background:#07090D;animation:hosPulse 1.2s ease-in-out infinite}
 @keyframes hosPulse{50%{opacity:.35}}</style>
@@ -3346,10 +3346,11 @@ async function loadAuthUser(){
 
 async function loadLiveData(){
   const endpoint=`${AUTH_WORKER}/api/data?_=${Date.now()}`;
-  const r=await fetch(endpoint,{
+  let r=await fetch(endpoint,{
     cache:'no-store',
     credentials:'same-origin'
   });
+  if(r.status===401||r.status===403){await new Promise(ok=>setTimeout(ok,1500));r=await fetch(endpoint,{cache:'no-store',credentials:'same-origin'});}
   if(r.status===401||r.status===403){
     location.replace(AUTH_WORKER+'/auth/login');
     throw new Error('Sessão HIVE expirada ou sem permissão.');
@@ -4261,8 +4262,8 @@ function hiveNovaArteClasse(job){
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=hiveNovaArteClasse(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage(m.Job)};$('#modal').classList.add('open');hivePowerPlayer=m;hiveRenderPowerHistory()}
 function closeModal(){$('#modal').classList.remove('open')}
-async function refresh(){try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(window.hosSetWar)window.hosSetWar(d.war);window.hosLiveData=d;window.hosLiveDataAt=Date.now();if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
-$('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});refresh();setInterval(refresh,REFRESH_MS);
+let hosLastSig='';async function refresh(force){if(!force&&document.hidden&&hosLastSig)return;try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(window.hosSetWar)window.hosSetWar(d.war);const hosSig=JSON.stringify([d.members,d.history,d.war]);if(hosSig===hosLastSig&&!force){window.hosLiveData=d;window.hosLiveDataAt=Date.now();return}hosLastSig=hosSig;try{localStorage.setItem('hiveLiveCache',JSON.stringify({at:Date.now(),d}))}catch(e){}window.hosLiveData=d;window.hosLiveDataAt=Date.now();if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
+$('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});try{const c=JSON.parse(localStorage.getItem('hiveLiveCache')||'null');if(c&&c.d&&Date.now()-c.at<6*3600*1000&&c.d.members?.length){members=c.d.members;window.hiveMembers=members;if(Array.isArray(c.d.history))history=c.d.history;window.hosLiveData=c.d;window.hosLiveDataAt=0;if(window.hosSetWar)try{window.hosSetWar(c.d.war)}catch(e){}render()}}catch(e){}refresh();setInterval(refresh,REFRESH_MS);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-(window.hosLiveDataAt||0)>REFRESH_MS)refresh()});
 
 
 
@@ -8344,9 +8345,11 @@ const loadCurrentMembers=async()=>{
  state.membersError='';
  try{
   // Same source as the Montagem de Plantel: /api/data -> MEMBROS.
-  const response=await fetch('/api/data?_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
+  const live=window.hosLiveData&&Array.isArray(window.hosLiveData.members)&&window.hosLiveData.members.length&&Date.now()-(window.hosLiveDataAt||0)<5*60*1000?window.hosLiveData:null;
+  let payload=live;
+  if(!payload){const response=await fetch('/api/data?_='+Date.now(),{credentials:'same-origin',cache:'no-store'});
   if(!response.ok)throw Error('HTTP '+response.status+' ao consultar MEMBROS');
-  const payload=await response.json();
+  payload=await response.json();}
   if(!payload?.ok||!Array.isArray(payload.members))throw Error('A aba MEMBROS não retornou uma lista válida');
   const ids=new Set(payload.members.map(m=>normalizeMemberName(m.Personagem??m.personagem??m.Nick??'')).filter(Boolean));
   if(!ids.size)throw Error('A aba MEMBROS está vazia; verifique a integração');
