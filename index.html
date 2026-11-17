@@ -9065,21 +9065,34 @@ const LEGACY_STORAGE='hive_plantel_staff_v1';
 const WAR_MODES={vale:{name:'Vale of Clash',grouped:true},stellar:{name:'Stellar Clash',grouped:false},vigrid:{name:'Vigrid Avenge',grouped:false},overrun:{name:'OVERRUN',grouped:false,unified:true}};
 const STORAGE_PREFIX='hive_plantel_staff_war_v2_';
 let activeWar='vigrid';
-// HIVE OS: grupos livres do Vigrid (criar, renomear, cor, ordem, excluir) salvos junto da formação para toda a staff.
+// HIVE OS: grupos livres em todas as modalidades (criar, renomear, cor, ordem, excluir), salvos junto da formação para toda a staff.
 const HPB_COLORS=['#3EC5FF','#FFB627','#FF7A9C','#34E3A0','#B78CFF','#FF9F5A','#9BE15D','#E8EDF4'];
-const HPB_GDEF=()=>({list:[{id:'g1',name:'RAID 1',color:'#3EC5FF'},{id:'g2',name:'RAID 2',color:'#FFB627'},{id:'g3',name:'OBJETIVO',color:'#FF7A9C'}],pt:['g1','g1','g1','g2','g2','g2','g3','g3']});
+const HPB_DEFS={
+ vigrid:()=>({list:[{id:'g1',name:'RAID 1',color:'#3EC5FF'},{id:'g2',name:'RAID 2',color:'#FFB627'},{id:'g3',name:'OBJETIVO',color:'#FF7A9C'}],pt:['g1','g1','g1','g2','g2','g2','g3','g3']}),
+ vale:()=>({list:[{id:'g1',name:'MID',color:'#FFB627'},{id:'g2',name:'FLEX',color:'#3EC5FF'},{id:'g3',name:'ROAMING',color:'#34E3A0'},{id:'g4',name:'RAT',color:'#B78CFF'}],pt:['g1','g1','g1','g2','g2','g3','g3','g4']}),
+ stellar:()=>({list:[{id:'g1',name:'GRUPO 1',color:'#3EC5FF'}],pt:Array(8).fill('g1')}),
+ overrun:()=>({list:[{id:'g1',name:'OVERRUN',color:'#FF9F5A'}],pt:Array(8).fill('g1')})
+};
+const HPB_GDEF=mode=>(HPB_DEFS[mode]||HPB_DEFS.stellar)();
 const hpbGroupStore={};
 function hpbFieldOk(x){if(!x||!Array.isArray(x.list)||!x.list.length||x.list.length>10||!Array.isArray(x.pt)||x.pt.length!==8)return false;const ids=new Set();for(const g of x.list){if(!g||typeof g.id!=='string'||!/^[A-Za-z0-9_-]{1,20}$/.test(g.id)||ids.has(g.id)||typeof g.name!=='string'||g.name.length>40||typeof g.color!=='string'||!/^#[0-9A-Fa-f]{6}$/.test(g.color))return false;ids.add(g.id)}return x.pt.every(v=>ids.has(v))}
-function hpbFromLegacy(a){if(!Array.isArray(a)||a.length!==8)return null;const d=HPB_GDEF(),m={r1:'g1',r2:'g2',obj:'g3'};if(!a.every(v=>m[v]))return null;d.pt=a.map(v=>m[v]);return d}
+function hpbFromLegacy(a){if(!Array.isArray(a)||a.length!==8)return null;const d=HPB_DEFS.vigrid(),m={r1:'g1',r2:'g2',obj:'g3'};if(!a.every(v=>m[v]))return null;d.pt=a.map(v=>m[v]);return d}
 function hpbClone(x){return JSON.parse(JSON.stringify(x))}
-function hpbGroups(mode){return hpbGroupStore[mode]||(hpbGroupStore[mode]={main:HPB_GDEF(),sub:HPB_GDEF()})}
-function hpbSetGroups(mode,g){const pick=v=>hpbFieldOk(v)?hpbClone(v):(hpbFromLegacy(v)||HPB_GDEF());hpbGroupStore[mode]={main:pick(g&&g.main),sub:pick(g&&g.sub)}}
+function hpbIsUnified(mode){return !!(WAR_MODES[mode]&&WAR_MODES[mode].unified)}
+function hpbShare(mode,G){if(hpbIsUnified(mode)){const ids=new Set(G.main.list.map(g=>g.id));G.sub.list=G.main.list;G.sub.pt=G.sub.pt.map(v=>ids.has(v)?v:G.main.list[0].id)}return G}
+function hpbGroups(mode){return hpbGroupStore[mode]||(hpbGroupStore[mode]=hpbShare(mode,{main:HPB_GDEF(mode),sub:HPB_GDEF(mode)}))}
+function hpbSetGroups(mode,g){const pick=v=>hpbFieldOk(v)?hpbClone(v):((mode==='vigrid'&&hpbFromLegacy(v))||HPB_GDEF(mode));hpbGroupStore[mode]=hpbShare(mode,{main:pick(g&&g.main),sub:pick(g&&g.sub)})}
+// campo virtual: 'all' = Overrun (16 PTs: main 0–7 + sub 0–7)
+function hpbView(mode,f){const G=hpbGroups(mode);return f==='all'?{list:G.main.list,pt:G.main.pt.concat(G.sub.pt)}:G[f]}
+function hpbSplit(f,k){return f==='all'?(k<8?['main',k]:['sub',k-8]):[f,k]}
+function hpbOrder(mode,f){const V=hpbView(mode,f),o=[];V.list.forEach(g=>V.pt.forEach((v,i)=>{if(v===g.id)o.push(i)}));return o}
+function hpbPtNum(f,p){const mode=activeWar;if(hpbIsUnified(mode)){const k=hpbOrder(mode,'all').indexOf((f==='sub'?8:0)+p);return (k<0?(f==='sub'?8:0)+p:k)+1}const k=hpbOrder(mode,f).indexOf(p);return (k<0?p:k)+1+(f==='sub'?8:0)}
 function hpbEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function hpbGroupSel(f,p){const G=hpbGroups('vigrid')[f],v=G.pt[p];return `<select class="hpb-gsel" data-hpb-group="${f}:${p}" aria-label="Grupo da PT ${hpbPtNum(f,p)}" title="Mover esta PT para outro grupo">${G.list.map(g=>`<option value="${g.id}"${g.id===v?' selected':''}>${hpbEsc(g.name||'Sem nome')}</option>`).join('')}</select>`}
-function hpbPtNum(f,p){const base=f==='sub'?8:0;if(activeWar!=='vigrid')return p+1+base;const G=hpbGroups('vigrid')[f];const order=[];G.list.forEach(g=>G.pt.forEach((v,i)=>{if(v===g.id)order.push(i)}));const k=order.indexOf(p);return (k<0?p:k)+1+base}
+function hpbGroupSel(f,p){const G=hpbGroups(activeWar)[f],v=G.pt[p];return `<select class="hpb-gsel" data-hpb-group="${f}:${p}" aria-label="Grupo da PT ${hpbPtNum(f,p)}" title="Mover esta PT para outro grupo">${G.list.map(g=>`<option value="${g.id}"${g.id===v?' selected':''}>${hpbEsc(g.name||'Sem nome')}</option>`).join('')}</select>`}
 // D1 grava datetime('now') em UTC sem fuso ("2026-11-17 14:46:56"): tratar como UTC e mostrar no horário local.
 function hpbDate(v){if(v==null||v==='')return new Date(NaN);let t=String(v).trim();if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/.test(t))t=t.replace(' ','T')+'Z';return new Date(t)}
-window.hosVgGroupsFor=hpbGroups;window.hosVgPtNum=(f,p)=>{const G=hpbGroups('vigrid')[f];const order=[];G.list.forEach(g=>G.pt.forEach((v,i)=>{if(v===g.id)order.push(i)}));const k=order.indexOf(p);return (k<0?p:k)+1+(f==='sub'?8:0)};
+const HPB_TITLES={vale:['VALE OF CLASH','Vale'],stellar:['STELLAR CLASH','Stellar'],vigrid:["VIGRID'S AVENGE",'Vigrid'],overrun:['OVERRUN','Overrun']};
+window.hosVgGroupsFor=m=>hpbGroups(m);window.hosVgPtNum=(f,p)=>hpbPtNum(f,p);
 const storageKey=()=>STORAGE_PREFIX+activeWar;
 const warName=()=>WAR_MODES[activeWar].name;
 const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
@@ -9182,7 +9195,7 @@ const valid=f=>f&&['main','sub'].every(k=>Array.isArray(f[k])&&f[k].length===8&&
 function sanitize(f){const result=blank(),seen=new Set(),allowed=new Set(members.map(idOf));if(!valid(f))return result;for(const k of ['main','sub'])for(let p=0;p<8;p++)for(let i=0;i<5;i++){const id=norm(f[k][p][i]);if(id&&allowed.has(id)&&!seen.has(id)){result[k][p][i]=id;seen.add(id)}}return result}
 function save(){
  if(syncBlocked){$('hpStatus').textContent='Sem conexão com a formação compartilhada. Atualize a página antes de editar.';return}
- const mode=activeWar, snapshot=JSON.parse(JSON.stringify(formation));if(mode==='vigrid')snapshot.groups=hpbClone(hpbGroups(mode));
+ const mode=activeWar, snapshot=JSON.parse(JSON.stringify(formation));snapshot.groups=hpbClone(hpbGroups(mode));
  $('hpStatus').textContent='Salvando formação para todos os Staffs...';
  saveQueue=saveQueue.then(async()=>{
   const response=await fetch(plantelEndpoint(mode),{method:'PUT',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({formation:snapshot,version:formationVersions[mode]})});
@@ -9265,7 +9278,7 @@ function render(){
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
 
  const unified=!!WAR_MODES[activeWar].unified,grouped=!!WAR_MODES[activeWar].grouped;
- const ptHtml=(f,p)=>{const pt=formation[f][p],n=(unified?p+1+(f==='sub'?8:0):hpbPtNum(f,p)),role=grouped?hpMainPtRole(p):'';
+ const ptHtml=(f,p)=>{const pt=formation[f][p],n=hpbPtNum(f,p),role=grouped?hpMainPtRole(p):'';
   const ms=pt.filter(Boolean).map(id=>byId.get(id)||{Personagem:id});
   const filled=ms.length,sum=ms.reduce((t,m)=>t+(hpPowerFromMember(m)||0),0);
   const has=re=>ms.some(m=>re.test(norm(jobOf(m))));
@@ -9275,7 +9288,7 @@ function render(){
   if(filled===5)tags.push('<span class="hpb-tag ok">Completa</span>');
   if(!filled)tags.push('<span class="hpb-tag">Vazia</span>');
   return `<div class="hp-pt hpb-pt ${role?'hp-pt-role-'+role.toLowerCase():''} ${filled===5?'hpb-full':''}">
-   <div class="hpb-pt-head"><b>PT ${n}</b>${activeWar==='vigrid'&&!unified?hpbGroupSel(f,p):''}<span>${filled?hpbPw(sum):'—'} · <em>${filled}/5</em></span></div>
+   <div class="hpb-pt-head"><b>PT ${n}</b>${hpbGroupSel(f,p)}<span>${filled?hpbPw(sum):'—'} · <em>${filled}/5</em></span></div>
    <div class="hpb-slots">${pt.map((id,i)=>{
      if(!id)return `<div class="hp-slot hpb-slot" data-slot="${f}:${p}:${i}" draggable="false" title="Vaga ${i+1} · solte um jogador aqui"><span class="hpb-hex hpb-empty">+</span><small>vaga ${i+1}</small></div>`;
      const m=byId.get(id)||{Personagem:id},art=hpbArt(jobOf(m),nameOf(m));
@@ -9285,23 +9298,21 @@ function render(){
   </div>`};
  const legend='<div class="hp-role-legend"><span class="hp-role-tag hp-role-mid">MID <small>PT 1–3</small></span><span class="hp-role-tag hp-role-flex">FLEX <small>PT 4–5</small></span><span class="hp-role-tag hp-role-roaming">ROAMING <small>PT 6–7</small></span><span class="hp-role-tag hp-role-rat">RAT <small>PT 8</small></span></div>';
  const LANES=[['MID','#FFB627','PT 1–3','Centro do mapa',[0,1,2]],['FLEX','#3EC5FF','PT 4–5','Reforço onde a luta pender',[3,4]],['ROAMING','#34E3A0','PT 6–7','Rotação e cobertura',[5,6]],['RAT','#B78CFF','PT 8','Infiltração',[7]]];
- const hpbVgBody=f=>{const G=hpbGroups('vigrid')[f],n=G.list.length;return `<div class="hpb-vgroups">${G.list.map((g,gi)=>{const ps=G.pt.map((v,p)=>v===g.id?p:-1).filter(p=>p>=0);const c=ps.reduce((t,p)=>t+formation[f][p].filter(Boolean).length,0);return `<div class="hpb-vgroup" style="--lc:${g.color}"><div class="hpb-vgroup-head">
+ const hpbVgBody=f=>{const V=hpbView(activeWar,f),n=V.list.length;return `<div class="hpb-vgroups">${V.list.map((g,gi)=>{const ks=V.pt.map((v,k)=>v===g.id?k:-1).filter(k=>k>=0);const ps=ks.map(k=>hpbSplit(f,k));const c=ps.reduce((t,[ff,pp])=>t+formation[ff][pp].filter(Boolean).length,0);return `<div class="hpb-vgroup" style="--lc:${g.color}"><div class="hpb-vgroup-head">
   <button type="button" class="hpb-gbtn hpb-gcolor" data-hpb-gact="color" data-f="${f}" data-g="${g.id}" title="Trocar a cor do grupo" aria-label="Trocar a cor do grupo ${hpbEsc(g.name)}"><i></i></button>
   <input class="hpb-gname" data-hpb-gname="${f}:${g.id}" value="${hpbEsc(g.name)}" maxlength="40" placeholder="Nome do grupo" aria-label="Nome do grupo" title="Clique para renomear">
-  <span>${ps.length?ps.map(p=>'PT '+hpbPtNum(f,p)).join(' · '):'Nenhuma PT · use o seletor no topo de uma PT para trazê-la para cá'}</span><em>${c}/${ps.length*5}</em>
+  <span>${ps.length?ps.map(([ff,pp])=>'PT '+hpbPtNum(ff,pp)).join(' · '):'Nenhuma PT · use o seletor no topo de uma PT para trazê-la para cá'}</span><em>${c}/${ps.length*5}</em>
   <button type="button" class="hpb-gbtn" data-hpb-gact="up" data-f="${f}" data-g="${g.id}" ${gi===0?'disabled':''} title="Subir grupo" aria-label="Subir grupo">↑</button>
   <button type="button" class="hpb-gbtn" data-hpb-gact="down" data-f="${f}" data-g="${g.id}" ${gi===n-1?'disabled':''} title="Descer grupo" aria-label="Descer grupo">↓</button>
   <button type="button" class="hpb-gbtn hpb-gdel" data-hpb-gact="del" data-f="${f}" data-g="${g.id}" ${n<=1?'disabled':''} title="Excluir grupo (as PTs vão para o primeiro grupo)" aria-label="Excluir grupo">✕</button>
- </div>${ps.length?`<div class="hpb-grid">${ps.map(p=>ptHtml(f,p)).join('')}</div>`:''}</div>`}).join('')}<button type="button" class="hpb-gadd" data-hpb-gact="add" data-f="${f}"${n>=10?' disabled':''}>+ Novo grupo</button></div>`};
+ </div>${ps.length?`<div class="hpb-grid">${ps.map(([ff,pp])=>ptHtml(ff,pp)).join('')}</div>`:''}</div>`}).join('')}<button type="button" class="hpb-gadd" data-hpb-gact="add" data-f="${f}"${n>=10?' disabled':''}>+ Novo grupo</button></div>`};
  const fieldHead=(label,count,total,sub)=>`<div class="hp-field-title hpb-field-title"><strong>${label}</strong><div class="hp-field-summary"><b>${count}/${total}</b><div class="hp-field-meter"><span style="width:${count/total*100}%"></span></div><small>${sub}</small></div></div>`;
  if(unified){
-  $('hpPts').innerHTML=`<section class="hp-field-section hp-field-overrun">${fieldHead('OVERRUN · campo único',assigned.size,80,'16 PTs · 5 jogadores cada')}<div class="hpb-grid">${['main','sub'].flatMap(f=>formation[f].map((_,p)=>ptHtml(f,p))).join('')}</div></section>`;
+  $('hpPts').innerHTML=`<section class="hp-field-section hp-field-overrun">${fieldHead('OVERRUN · campo único',assigned.size,80,'16 PTs · 5 jogadores cada')}${hpbVgBody('all')}</section>`;
  }else{
   $('hpPts').innerHTML=['main','sub'].map(f=>{
    const c=formation[f].flat().filter(Boolean).length;
-   const body=grouped
-    ?`<div class="hpb-lanes">${LANES.map(l=>`<div class="hpb-lane" style="--lc:${l[1]}"><div class="hpb-lane-head"><b>${l[0]}</b><span>${f==='sub'?'PT '+l[4].map(p=>p+9).filter((v,i,a)=>i===0||i===a.length-1).join('–'):l[2]}</span></div><small class="hpb-lane-desc">${l[3]}</small>${l[4].map(p=>ptHtml(f,p)).join('')}</div>`).join('')}</div>`
-    :(activeWar==='vigrid'?hpbVgBody(f):`<div class="hpb-grid">${formation[f].map((_,p)=>ptHtml(f,p)).join('')}</div>`);
+   const body=hpbVgBody(f);
    return `<section class="hp-field-section" data-hpb-field="${f}">${fieldHead(f==='main'?'Main Field':'Sub Field',c,40,'8 PTs · 5 jogadores cada')}${body}</section>`;
   }).join('');
  }
@@ -9471,7 +9482,7 @@ async function hpDrawExport(){
    const col=p%4,row=Math.floor(p/4),x=58+pad+col*(cw+gap),top=y+87+row*(ch+15);
    rect(x,top,cw,ch,'#0a1625',13);
    c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(x+1,top+1,cw-2,ch-2);
-   label('PT '+(activeWar==='vigrid'?hpbPtNum(fld,p):p+1+(fld==='sub'?8:0)),x+17,top+33,24,accent,'bold');
+   label('PT '+hpbPtNum(fld,p),x+17,top+33,24,accent,'bold');
    {
      const role=WAR_MODES[activeWar].grouped?hpMainPtRole(p):'';
     const roleColor=role==='MID'?'#f2c16b':role==='FLEX'?'#7fc8f5':role==='ROAMING'?'#78e4bd':'#d9a4fb';
@@ -9497,7 +9508,7 @@ async function hpDrawExport(){
 }
 async function hpExportImage(){
  try{
-  if(activeWar==='vigrid'&&window.hosExportVigrid){$('hpStatus').textContent='Gerando imagens do Vigrid (Main e Sub)...';const n=await window.hosExportVigrid({formation,members,idOf,nameOf,jobOf,download:hpDownload});$('hpStatus').textContent=n+' imagens PNG geradas: Main Field e Sub Field.';return}
+  if(window.hosExportVigrid){const T=HPB_TITLES[activeWar]||HPB_TITLES.vigrid,uni=hpbIsUnified(activeWar);$('hpStatus').textContent='Gerando imagens do '+T[1]+'...';const n=await window.hosExportVigrid({formation,members,idOf,nameOf,jobOf,download:hpDownload,title:T[0],fileTag:T[1],fields:uni?['all']:['main','sub'],groupsFor:f=>hpbView(activeWar,f),ptNum:(f,p)=>f==='all'?hpbPtNum(p<8?'main':'sub',p%8):hpbPtNum(f,p)});$('hpStatus').textContent=n===1?'1 imagem PNG gerada.':n+' imagens PNG geradas: Main Field e Sub Field.';return}
   $('hpStatus').textContent='Gerando imagem do plantel...';
   const canvas=await hpDrawExport();
   const blob=await new Promise(resolve=>{if(canvas.toBlob)canvas.toBlob(resolve,'image/png');else fetch(canvas.toDataURL('image/png')).then(r=>r.blob()).then(resolve).catch(()=>resolve(null))});
@@ -9644,24 +9655,24 @@ async function hpbSync(){
 }
 setInterval(hpbSync,30000);
 function hpbGroupsChanged(){save();render()}
-function hpbCanEdit(){if(activeWar!=='vigrid')return false;if(syncBlocked){$('hpStatus').textContent='Sem conexão com a formação compartilhada. Atualize a página antes de editar.';render();return false}return true}
+function hpbCanEdit(){if(syncBlocked){$('hpStatus').textContent='Sem conexão com a formação compartilhada. Atualize a página antes de editar.';render();return false}return true}
 $('hpPts').addEventListener('change',e=>{
  const s=e.target.closest('[data-hpb-group]');
- if(s){if(!hpbCanEdit())return;const [f,p]=s.dataset.hpbGroup.split(':');hpbGroups('vigrid')[f].pt[+p]=s.value;hpbGroupsChanged();return}
+ if(s){if(!hpbCanEdit())return;const [f,p]=s.dataset.hpbGroup.split(':');hpbGroups(activeWar)[f].pt[+p]=s.value;hpbGroupsChanged();return}
  const nm=e.target.closest('[data-hpb-gname]');
- if(nm){if(!hpbCanEdit())return;const [f,id]=nm.dataset.hpbGname.split(':');const g=hpbGroups('vigrid')[f].list.find(x=>x.id===id);const v=nm.value.trim().slice(0,40)||'SEM NOME';if(g&&g.name!==v){g.name=v;hpbGroupsChanged()}}
+ if(nm){if(!hpbCanEdit())return;const [f,id]=nm.dataset.hpbGname.split(':');const g=hpbView(activeWar,f).list.find(x=>x.id===id);const v=nm.value.trim().slice(0,40)||'SEM NOME';if(g&&g.name!==v){g.name=v;hpbGroupsChanged()}}
 });
 $('hpPts').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-hpb-gname]'))e.target.blur()});
 $('hpPts').addEventListener('click',e=>{
  const b=e.target.closest('[data-hpb-gact]');if(!b||b.disabled)return;
  e.stopPropagation();if(!hpbCanEdit())return;
- const f=b.dataset.f,G=hpbGroups('vigrid')[f],i=G.list.findIndex(x=>x.id===b.dataset.g),act=b.dataset.hpbGact;
- if(act==='add'){if(G.list.length>=10)return;let k=1;while(G.list.some(x=>x.id==='g'+k))k++;const used=G.list.map(x=>x.color);G.list.push({id:'g'+k,name:'GRUPO '+(G.list.length+1),color:HPB_COLORS.find(c=>!used.includes(c))||HPB_COLORS[G.list.length%HPB_COLORS.length]});hpbGroupsChanged();setTimeout(()=>{const el=document.querySelector('[data-hpb-gname="'+f+':g'+k+'"]');if(el){el.focus();el.select()}},50);return}
+ const f=b.dataset.f,GG=hpbGroups(activeWar),fields=f==='all'?['main','sub']:[f],list=(f==='all'?GG.main:GG[f]).list,i=list.findIndex(x=>x.id===b.dataset.g),act=b.dataset.hpbGact;
+ if(act==='add'){if(list.length>=10)return;let k=1;while(list.some(x=>x.id==='g'+k))k++;const used=list.map(x=>x.color);list.push({id:'g'+k,name:'GRUPO '+(list.length+1),color:HPB_COLORS.find(c=>!used.includes(c))||HPB_COLORS[list.length%HPB_COLORS.length]});hpbGroupsChanged();setTimeout(()=>{const el=document.querySelector('[data-hpb-gname="'+f+':g'+k+'"]');if(el){el.focus();el.select()}},50);return}
  if(i<0)return;
- if(act==='color'){const c=HPB_COLORS.indexOf(G.list[i].color);G.list[i].color=HPB_COLORS[(c+1)%HPB_COLORS.length]}
- else if(act==='up'&&i>0){[G.list[i-1],G.list[i]]=[G.list[i],G.list[i-1]]}
- else if(act==='down'&&i<G.list.length-1){[G.list[i+1],G.list[i]]=[G.list[i],G.list[i+1]]}
- else if(act==='del'&&G.list.length>1){const gone=G.list[i];if(G.pt.includes(gone.id)&&!confirm('Excluir o grupo "'+gone.name+'"? As PTs dele vão para o primeiro grupo.'))return;G.list.splice(i,1);G.pt=G.pt.map(v=>v===gone.id?G.list[0].id:v)}
+ if(act==='color'){const c=HPB_COLORS.indexOf(list[i].color);list[i].color=HPB_COLORS[(c+1)%HPB_COLORS.length]}
+ else if(act==='up'&&i>0){[list[i-1],list[i]]=[list[i],list[i-1]]}
+ else if(act==='down'&&i<list.length-1){[list[i+1],list[i]]=[list[i],list[i+1]]}
+ else if(act==='del'&&list.length>1){const gone=list[i];if(fields.some(ff=>GG[ff].pt.includes(gone.id))&&!confirm('Excluir o grupo "'+gone.name+'"? As PTs dele vão para o primeiro grupo.'))return;list.splice(i,1);fields.forEach(ff=>{GG[ff].pt=GG[ff].pt.map(v=>v===gone.id?list[0].id:v)})}
  else return;
  hpbGroupsChanged();
 },true);
@@ -11215,6 +11226,7 @@ html body #hivePlantelPanel .hpb-status #hpStatus{white-space:normal!important;o
 /* selo de power no avatar (somente na montagem) */
 html body #hivePlantelPanel .hpb-slot{position:relative}
 html body #hivePlantelPanel .hpb-pwb{position:absolute;top:-6px;left:calc(50% + 8px);z-index:2;font:700 10px/1.35 var(--hos-mono);font-style:normal;color:#FFB627;background:#07090D;border:1px solid rgba(255,182,39,.55);padding:0 5px;border-radius:6px;white-space:nowrap;pointer-events:none}
+#hosVgPrev .hvp-grid:has(>figure:only-child){grid-template-columns:minmax(0,760px);justify-content:center}
 
 /* ===== Central de Guerra · Duelo de times ===== */
 html body #hpHub #centralGuerra.hosd-on .war-heading,
@@ -11778,16 +11790,16 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
     var old=document.getElementById('hosVgPrev');if(old)old.remove();
     var urls=files.map(function(f){return URL.createObjectURL(f.blob)});
     var ov=document.createElement('div');ov.id='hosVgPrev';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Imagens exportadas');
-    ov.innerHTML='<div class="hvp-box"><div class="hvp-head"><div><small>EXPORTAÇÃO VIGRID</small><b>2 imagens geradas</b></div><button type="button" class="hvp-x" aria-label="Fechar">✕</button></div>'+
-      '<p class="hvp-note">Os dois arquivos já foram baixados. Se o navegador bloquear algum, baixe por aqui.</p><div class="hvp-grid">'+
-      files.map(function(f,i){return '<figure><img src="'+urls[i]+'" alt="Prévia '+f.label+'"><figcaption><span><b>'+f.label+'</b><small>'+f.filled+'/40 jogadores · '+f.name+'</small></span><button type="button" class="hvp-dl" data-i="'+i+'">Baixar</button></figcaption></figure>'}).join('')+
-      '</div><div class="hvp-foot"><button type="button" class="hvp-all">Baixar as 2 de novo</button><button type="button" class="hvp-ok">Fechar</button></div></div>';
+    ov.innerHTML='<div class="hvp-box"><div class="hvp-head"><div><small>EXPORTAÇÃO '+(files.title||'VIGRID')+'</small><b>'+files.length+(files.length===1?' imagem gerada':' imagens geradas')+'</b></div><button type="button" class="hvp-x" aria-label="Fechar">✕</button></div>'+
+      '<p class="hvp-note">'+(files.length>1?'Os arquivos já foram baixados.':'O arquivo já foi baixado.')+' Se o navegador bloquear algum, baixe por aqui.</p><div class="hvp-grid">'+
+      files.map(function(f,i){return '<figure><img src="'+urls[i]+'" alt="Prévia '+f.label+'"><figcaption><span><b>'+f.label+'</b><small>'+f.filled+'/'+(f.cap||40)+' jogadores · '+f.name+'</small></span><button type="button" class="hvp-dl" data-i="'+i+'">Baixar</button></figcaption></figure>'}).join('')+
+      '</div><div class="hvp-foot"><button type="button" class="hvp-all">'+(files.length>1?'Baixar as '+files.length+' de novo':'Baixar de novo')+'</button><button type="button" class="hvp-ok">Fechar</button></div></div>';
     var close=function(){ov.remove();setTimeout(function(){urls.forEach(URL.revokeObjectURL)},1000);document.removeEventListener('keydown',esc)};
     var esc=function(e){if(e.key==='Escape')close()};
     ov.addEventListener('click',function(e){
       if(e.target===ov||e.target.closest('.hvp-x,.hvp-ok'))return close();
       var d=e.target.closest('.hvp-dl');if(d){var f=files[+d.dataset.i];download(f.blob,f.name);return}
-      if(e.target.closest('.hvp-all')){download(files[0].blob,files[0].name);setTimeout(function(){download(files[1].blob,files[1].name)},900)}
+      if(e.target.closest('.hvp-all')){files.forEach(function(f,k){setTimeout(function(){download(f.blob,f.name)},k*900)})}
     });
     document.addEventListener('keydown',esc);
     document.body.appendChild(ov);ov.querySelector('.hvp-ok').focus();
@@ -11802,10 +11814,14 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
     var now=new Date(),stamp=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     var war=window.hosNextWarInfo;
     var count=0,files=[];
-    for(var fi=0;fi<2;fi++){
-      var field=fi?'sub':'main', pts=o.formation[field], base=fi?9:1;
-      var nG=3;try{var GD0=window.hosVgGroupsFor&&window.hosVgGroupsFor('vigrid')[field];if(GD0&&GD0.list)nG=GD0.list.filter(function(g){return GD0.pt.indexOf(g.id)>=0}).length||1}catch(e){}
-      var S=2,W=1600,H=900+Math.max(0,nG-3)*280,cv=document.createElement('canvas');cv.width=W*S;cv.height=H*S;
+    var FL=o.fields||['main','sub'];
+    var gfor=o.groupsFor||function(f){return window.hosVgGroupsFor?window.hosVgGroupsFor('vigrid')[f]:null};
+    var pnum=o.ptNum||function(f,p){return window.hosVgPtNum?window.hosVgPtNum(f,p):p+1+(f==='sub'?8:0)};
+    for(var fi=0;fi<FL.length;fi++){
+      var field=FL[fi], pts=field==='all'?o.formation.main.concat(o.formation.sub):o.formation[field], base=field==='sub'?9:1;
+      var GD=null;try{GD=gfor(field)}catch(e){}
+      var nU=3;if(GD&&GD.list){nU=0;GD.list.forEach(function(g){var c0=GD.pt.filter(function(v){return v===g.id}).length;if(c0)nU+=Math.ceil(c0/4)});nU=nU||1}
+      var S=2,W=1600,H=900+Math.max(0,nU-3)*280,cv=document.createElement('canvas');cv.width=W*S;cv.height=H*S;
       var c=cv.getContext('2d');c.scale(S,S);
       var rr=function(x,y,w,h,r){c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h)};
       var hex=function(x,y,w,h){c.beginPath();c.moveTo(x+w/2,y);c.lineTo(x+w,y+h*.25);c.lineTo(x+w,y+h*.75);c.lineTo(x+w/2,y+h);c.lineTo(x,y+h*.75);c.lineTo(x,y+h*.25);c.closePath()};
@@ -11824,9 +11840,9 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
       c.save();c.translate(28,22);c.scale(46/34,52/38);c.strokeStyle='#FFB627';c.lineWidth=2;c.beginPath();c.moveTo(17,1);c.lineTo(33,10);c.lineTo(33,28);c.lineTo(17,37);c.lineTo(1,28);c.lineTo(1,10);c.closePath();c.stroke();c.fillStyle='#FFB627';c.beginPath();c.moveTo(17,10);c.lineTo(25,14.5);c.lineTo(25,23.5);c.lineTo(17,28);c.lineTo(9,23.5);c.lineTo(9,14.5);c.closePath();c.fill();c.restore();
       txt('HIVEST',86,40,'700 28px "Chakra Petch", sans-serif','#E8EDF4','left','2px');
       txt('PLANTEL DE GUERRA',86,64,'500 11px "JetBrains Mono", monospace','#AEB8C6','left','1.8px');
-      txt("VIGRID'S AVENGE",W/2,36,'700 40px "Chakra Petch", sans-serif','#FFB627','center','2px');
-      var filled=pts.flat().filter(Boolean).length, fname=fi?'SUB FIELD':'MAIN FIELD', fcol=fi?'#3EC5FF':'#FFB627';
-      var t1=fname, t2=filled+'/40 JOGADORES', f1='700 12px "JetBrains Mono", monospace', f2='500 12px "JetBrains Mono", monospace';
+      txt(o.title||"VIGRID'S AVENGE",W/2,36,'700 40px "Chakra Petch", sans-serif','#FFB627','center','2px');
+      var filled=pts.flat().filter(Boolean).length, fname=field==='sub'?'SUB FIELD':field==='all'?'CAMPO ÚNICO':'MAIN FIELD', fcol=field==='sub'?'#3EC5FF':'#FFB627';
+      var t1=fname, t2=filled+'/'+(pts.length*5)+' JOGADORES', f1='700 12px "JetBrains Mono", monospace', f2='500 12px "JetBrains Mono", monospace';
       var w1=tw(t1,f1,'1.7px')+20, w2=tw(t2,f2,'1.4px'), sx=W/2-(w1+8+w2)/2;
       c.fillStyle=fcol;rr(sx,62,w1,22,6);c.fill();txt(t1,sx+w1/2,73,f1,'#07090D','center','1.7px');txt(t2,sx+w1+8,73,f2,'#AEB8C6','left','1.4px');
       if(war){
@@ -11838,12 +11854,12 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
       }
       // grupos
       var G=[['RAID 1','#3EC5FF','62,197,255',[0,1,2]],['RAID 2','#FFB627','255,182,39',[3,4,5]],['OBJETIVO','#FF7A9C','255,107,107',[6,7]]];
-      try{var GD=window.hosVgGroupsFor&&window.hosVgGroupsFor('vigrid')[field];
-        if(GD&&GD.list&&GD.pt){G=GD.list.map(function(g){var h=g.color.replace('#','');var rgb=[0,2,4].map(function(i){return parseInt(h.substr(i,2),16)}).join(',');return [String(g.name||'').toUpperCase(),g.color,rgb,GD.pt.map(function(v,pi){return v===g.id?pi:-1}).filter(function(pi){return pi>=0})]})}}catch(e){}
+      try{if(GD&&GD.list&&GD.pt){G=GD.list.map(function(g){var h=g.color.replace('#','');var rgb=[0,2,4].map(function(i){return parseInt(h.substr(i,2),16)}).join(',');return [String(g.name||'').toUpperCase(),g.color,rgb,GD.pt.map(function(v,pi){return v===g.id?pi:-1}).filter(function(pi){return pi>=0})]})}}catch(e){}
       G=G.filter(function(g){return g[3].length});
-      var gy0=HH+12,gh=(H-40-gy0-20-10*(G.length-3))/G.length;
+      var gy0=HH+12,avail=H-40-gy0-20+20-10*(G.length-1),units=G.reduce(function(t,g){return t+Math.ceil(g[3].length/4)},0)||1;
+      var unitH=(avail-38*G.length-8)/units, gyc=gy0;
       for(var gi=0;gi<G.length;gi++){
-        var g=G[gi],y=gy0+gi*(gh+10),x=20,w=W-40;
+        var g=G[gi],rowsG=Math.ceil(g[3].length/4),gh=38+rowsG*unitH+(8/G.length),y=gyc,x=20,w=W-40;gyc+=gh+10;
         c.fillStyle='rgba('+g[2]+',.025)';rr(x,y,w,gh,14);c.fill();
         c.save();rr(x,y,w,gh,14);c.clip();c.fillStyle='rgba('+g[2]+',.13)';c.fillRect(x,y,w,30);c.restore();
         c.strokeStyle='rgba('+g[2]+',.38)';c.lineWidth=1;rr(x+.5,y+.5,w-1,gh-1,14);c.stroke();c.beginPath();c.moveTo(x,y+30.5);c.lineTo(x+w,y+30.5);c.stroke();
@@ -11851,14 +11867,15 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
         txt(g[0],x+w/2,y+16,'700 18px "Chakra Petch", sans-serif',g[1],'center','2.8px');
         var gc=g[3].reduce(function(t,p){return t+pts[p].filter(Boolean).length},0);
         txt(gc+'/'+(g[3].length*5),x+w-14,y+16,'500 11px "JetBrains Mono", monospace','#AEB8C6','right');
-        var n=g[3].length,cw=(w-16-8*(n-1))/n,cy=y+38,ch=gh-46;
+        var n=g[3].length,perRow=Math.min(4,n),cw=(w-16-8*(perRow-1))/perRow,ch=unitH-8;
         for(var k=0;k<n;k++){
-          var p=g[3][k],cx=x+8+k*(cw+8),slots=pts[p],ms=slots.map(function(id){return id?(byId.get(id)||{Personagem:id}):null}),pf=ms.filter(Boolean).length;
+          var rowK=Math.floor(k/4),inRow=Math.min(4,n-rowK*4),cwK=(w-16-8*(inRow-1))/inRow,cy=y+38+rowK*unitH;cw=cwK;
+          var p=g[3][k],cx=x+8+(k%4)*(cw+8),slots=pts[p],ms=slots.map(function(id){return id?(byId.get(id)||{Personagem:id}):null}),pf=ms.filter(Boolean).length;
           c.fillStyle='#0B1018';rr(cx,cy,cw,ch,10);c.fill();
           c.save();rr(cx,cy,cw,ch,10);c.clip();c.fillStyle='rgba(255,255,255,.025)';c.fillRect(cx,cy,cw,28);c.restore();
           c.strokeStyle='rgba(255,255,255,.08)';rr(cx+.5,cy+.5,cw-1,ch-1,10);c.stroke();c.beginPath();c.moveTo(cx,cy+28.5);c.lineTo(cx+cw,cy+28.5);c.strokeStyle='rgba(255,255,255,.07)';c.stroke();
           ms.forEach(function(m,i){c.fillStyle=m?vgClass(o.jobOf(m))[1]:'rgba(255,255,255,.12)';c.beginPath();c.arc(cx+14+i*10,cy+14,3.5,0,7);c.fill()});
-          txt('P'+(window.hosVgPtNum?window.hosVgPtNum(field,p):base+p),cx+cw/2,cy+15,'700 17px "Chakra Petch", sans-serif','#E8EDF4','center');
+          txt('P'+pnum(field,p),cx+cw/2,cy+15,'700 17px "Chakra Petch", sans-serif','#E8EDF4','center');
           txt(pf+'/5',cx+cw-10,cy+15,'700 11px "JetBrains Mono", monospace',pf===5?'#34E3A0':'#AEB8C6','right');
           var ry0=cy+28+(ch-28-5*33)/2;
           for(var i=0;i<5;i++){
@@ -11888,12 +11905,13 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
       txt('Gerado em '+stamp+(who?' por '+who:'')+' · hive-rooc.com.br',W-28,fy,'500 12px Inter, sans-serif','#8A97A8','right');
       var blob=await new Promise(function(res){cv.toBlob(res,'image/png')});
       if(!blob)throw Error('Falha ao criar a imagem PNG.');
-      var fnm='HIVEST_Vigrid_'+(fi?'Sub':'Main')+'_Field_'+now.toISOString().slice(0,10)+'.png';
-      files.push({blob:blob,name:fnm,label:fi?'Sub Field':'Main Field',filled:filled});
+      var flab=field==='sub'?'Sub Field':field==='all'?'Campo único':'Main Field';
+      var fnm='HIVEST_'+(o.fileTag||'Vigrid')+'_'+(field==='sub'?'Sub_Field':field==='all'?'Campo_Unico':'Main_Field')+'_'+now.toISOString().slice(0,10)+'.png';
+      files.push({blob:blob,name:fnm,label:flab,filled:filled,cap:pts.length*5});
       o.download(blob,fnm);count++;
-      if(!fi)await new Promise(function(r){setTimeout(r,900)});
+      if(fi<FL.length-1)await new Promise(function(r){setTimeout(r,900)});
     }
-    vgPreview(files,o.download);
+    files.title=(o.title||'VIGRID').replace(/'S AVENGE/,'');vgPreview(files,o.download);
     return count;
   };
   /* ---------- próxima guerra (aba WAR) ---------- */
