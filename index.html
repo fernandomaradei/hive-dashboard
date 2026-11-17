@@ -9075,8 +9075,9 @@ function hpbClone(x){return JSON.parse(JSON.stringify(x))}
 function hpbGroups(mode){return hpbGroupStore[mode]||(hpbGroupStore[mode]={main:HPB_GDEF(),sub:HPB_GDEF()})}
 function hpbSetGroups(mode,g){const pick=v=>hpbFieldOk(v)?hpbClone(v):(hpbFromLegacy(v)||HPB_GDEF());hpbGroupStore[mode]={main:pick(g&&g.main),sub:pick(g&&g.sub)}}
 function hpbEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function hpbGroupSel(f,p){const G=hpbGroups('vigrid')[f],v=G.pt[p];return `<select class="hpb-gsel" data-hpb-group="${f}:${p}" aria-label="Grupo da PT ${p+1+(f==='sub'?8:0)}" title="Mover esta PT para outro grupo">${G.list.map(g=>`<option value="${g.id}"${g.id===v?' selected':''}>${hpbEsc(g.name||'Sem nome')}</option>`).join('')}</select>`}
-window.hosVgGroupsFor=hpbGroups;
+function hpbGroupSel(f,p){const G=hpbGroups('vigrid')[f],v=G.pt[p];return `<select class="hpb-gsel" data-hpb-group="${f}:${p}" aria-label="Grupo da PT ${hpbPtNum(f,p)}" title="Mover esta PT para outro grupo">${G.list.map(g=>`<option value="${g.id}"${g.id===v?' selected':''}>${hpbEsc(g.name||'Sem nome')}</option>`).join('')}</select>`}
+function hpbPtNum(f,p){const base=f==='sub'?8:0;if(activeWar!=='vigrid')return p+1+base;const G=hpbGroups('vigrid')[f];const order=[];G.list.forEach(g=>G.pt.forEach((v,i)=>{if(v===g.id)order.push(i)}));const k=order.indexOf(p);return (k<0?p:k)+1+base}
+window.hosVgGroupsFor=hpbGroups;window.hosVgPtNum=(f,p)=>{const G=hpbGroups('vigrid')[f];const order=[];G.list.forEach(g=>G.pt.forEach((v,i)=>{if(v===g.id)order.push(i)}));const k=order.indexOf(p);return (k<0?p:k)+1+(f==='sub'?8:0)};
 const storageKey=()=>STORAGE_PREFIX+activeWar;
 const warName=()=>WAR_MODES[activeWar].name;
 const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
@@ -9262,7 +9263,7 @@ function render(){
  }).join('')||'<p class="hp-note">Nenhum jogador disponível com estes filtros.</p>';
 
  const unified=!!WAR_MODES[activeWar].unified,grouped=!!WAR_MODES[activeWar].grouped;
- const ptHtml=(f,p)=>{const pt=formation[f][p],n=p+1+(f==='sub'?8:0),role=grouped?hpMainPtRole(p):'';
+ const ptHtml=(f,p)=>{const pt=formation[f][p],n=(unified?p+1+(f==='sub'?8:0):hpbPtNum(f,p)),role=grouped?hpMainPtRole(p):'';
   const ms=pt.filter(Boolean).map(id=>byId.get(id)||{Personagem:id});
   const filled=ms.length,sum=ms.reduce((t,m)=>t+(hpPowerFromMember(m)||0),0);
   const has=re=>ms.some(m=>re.test(norm(jobOf(m))));
@@ -9285,7 +9286,7 @@ function render(){
  const hpbVgBody=f=>{const G=hpbGroups('vigrid')[f],n=G.list.length;return `<div class="hpb-vgroups">${G.list.map((g,gi)=>{const ps=G.pt.map((v,p)=>v===g.id?p:-1).filter(p=>p>=0);const c=ps.reduce((t,p)=>t+formation[f][p].filter(Boolean).length,0);return `<div class="hpb-vgroup" style="--lc:${g.color}"><div class="hpb-vgroup-head">
   <button type="button" class="hpb-gbtn hpb-gcolor" data-hpb-gact="color" data-f="${f}" data-g="${g.id}" title="Trocar a cor do grupo" aria-label="Trocar a cor do grupo ${hpbEsc(g.name)}"><i></i></button>
   <input class="hpb-gname" data-hpb-gname="${f}:${g.id}" value="${hpbEsc(g.name)}" maxlength="40" placeholder="Nome do grupo" aria-label="Nome do grupo" title="Clique para renomear">
-  <span>${ps.length?ps.map(p=>'PT '+(p+1+(f==='sub'?8:0))).join(' · '):'Nenhuma PT · use o seletor no topo de uma PT para trazê-la para cá'}</span><em>${c}/${ps.length*5}</em>
+  <span>${ps.length?ps.map(p=>'PT '+hpbPtNum(f,p)).join(' · '):'Nenhuma PT · use o seletor no topo de uma PT para trazê-la para cá'}</span><em>${c}/${ps.length*5}</em>
   <button type="button" class="hpb-gbtn" data-hpb-gact="up" data-f="${f}" data-g="${g.id}" ${gi===0?'disabled':''} title="Subir grupo" aria-label="Subir grupo">↑</button>
   <button type="button" class="hpb-gbtn" data-hpb-gact="down" data-f="${f}" data-g="${g.id}" ${gi===n-1?'disabled':''} title="Descer grupo" aria-label="Descer grupo">↓</button>
   <button type="button" class="hpb-gbtn hpb-gdel" data-hpb-gact="del" data-f="${f}" data-g="${g.id}" ${n<=1?'disabled':''} title="Excluir grupo (as PTs vão para o primeiro grupo)" aria-label="Excluir grupo">✕</button>
@@ -9468,7 +9469,7 @@ async function hpDrawExport(){
    const col=p%4,row=Math.floor(p/4),x=58+pad+col*(cw+gap),top=y+87+row*(ch+15);
    rect(x,top,cw,ch,'#0a1625',13);
    c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(x+1,top+1,cw-2,ch-2);
-   label('PT '+(p+1+(fld==='sub'?8:0)),x+17,top+33,24,accent,'bold');
+   label('PT '+(activeWar==='vigrid'?hpbPtNum(fld,p):p+1+(fld==='sub'?8:0)),x+17,top+33,24,accent,'bold');
    {
      const role=WAR_MODES[activeWar].grouped?hpMainPtRole(p):'';
     const roleColor=role==='MID'?'#f2c16b':role==='FLEX'?'#7fc8f5':role==='ROAMING'?'#78e4bd':'#d9a4fb';
@@ -11852,7 +11853,7 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
           c.save();rr(cx,cy,cw,ch,10);c.clip();c.fillStyle='rgba(255,255,255,.025)';c.fillRect(cx,cy,cw,28);c.restore();
           c.strokeStyle='rgba(255,255,255,.08)';rr(cx+.5,cy+.5,cw-1,ch-1,10);c.stroke();c.beginPath();c.moveTo(cx,cy+28.5);c.lineTo(cx+cw,cy+28.5);c.strokeStyle='rgba(255,255,255,.07)';c.stroke();
           ms.forEach(function(m,i){c.fillStyle=m?vgClass(o.jobOf(m))[1]:'rgba(255,255,255,.12)';c.beginPath();c.arc(cx+14+i*10,cy+14,3.5,0,7);c.fill()});
-          txt('P'+(base+p),cx+cw/2,cy+15,'700 17px "Chakra Petch", sans-serif','#E8EDF4','center');
+          txt('P'+(window.hosVgPtNum?window.hosVgPtNum(field,p):base+p),cx+cw/2,cy+15,'700 17px "Chakra Petch", sans-serif','#E8EDF4','center');
           txt(pf+'/5',cx+cw-10,cy+15,'700 11px "JetBrains Mono", monospace',pf===5?'#34E3A0':'#AEB8C6','right');
           var ry0=cy+28+(ch-28-5*33)/2;
           for(var i=0;i<5;i++){
