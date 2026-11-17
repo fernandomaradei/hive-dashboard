@@ -9268,7 +9268,7 @@ function render(){
   const has=re=>ms.some(m=>re.test(norm(jobOf(m))));
   const tags=[];
   if(filled>=2&&!has(/priest|sacerdote/))tags.push('<span class="hpb-tag warn">Sem Priest</span>');
-  else if(filled>=2&&!has(/music|bard|menestrel|dancer|cigana/))tags.push('<span class="hpb-tag warn">Sem MUSIC</span>');
+  if(filled>=2&&!has(/music|bard|menestrel|dancer|cigana/))tags.push('<span class="hpb-tag warn">Sem MUSIC</span>');
   if(filled===5)tags.push('<span class="hpb-tag ok">Completa</span>');
   if(!filled)tags.push('<span class="hpb-tag">Vazia</span>');
   return `<div class="hp-pt hpb-pt ${role?'hp-pt-role-'+role.toLowerCase():''} ${filled===5?'hpb-full':''}">
