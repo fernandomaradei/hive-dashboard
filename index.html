@@ -9129,7 +9129,7 @@ const blank=()=>({main:Array.from({length:8},()=>Array(5).fill(null)),sub:Array.
 let formation=blank(),members=[],averages=new Map(),field='main',ready=false,selected=null,dragged=null,warMoved=false,jobFilter='',sortKey='damage',sortDir=-1;
 const idOf=m=>norm(m.Personagem||m.personagem||m.Nick||'');
 const nameOf=m=>String(m.Personagem||m.personagem||m.Nick||'').trim();
-const jobOf=m=>String(m.Job||m.Classe||'—');
+const jobOf=m=>{if(!m)return '—';const k=Object.keys(m).find(x=>x.toLowerCase().replace(/[^a-z]/g,'')==='jobwar');const w=k&&String(m[k]==null?'':m[k]).trim();return String(w||m.Job||m.Classe||'—')};
 const stat=(m,...keys)=>{for(const k of keys)if(m[k]!==undefined&&m[k]!==null&&m[k]!=='')return m[k];return ''};
 
 // O Power é sempre lido da aba MEMBROS via /api/data, nunca do histórico de guerra.
@@ -9279,7 +9279,7 @@ function render(){
    <div class="hpb-slots">${pt.map((id,i)=>{
      if(!id)return `<div class="hp-slot hpb-slot" data-slot="${f}:${p}:${i}" draggable="false" title="Vaga ${i+1} · solte um jogador aqui"><span class="hpb-hex hpb-empty">+</span><small>vaga ${i+1}</small></div>`;
      const m=byId.get(id)||{Personagem:id},art=hpbArt(jobOf(m),nameOf(m));
-     return `<div class="hp-slot hp-filled hpb-slot" data-slot="${f}:${p}:${i}" draggable="true" style="--c:${art.color}" title="${esc(nameOf(m))} · ${esc(jobOf(m))} · ${hpbPw(hpPowerFromMember(m))}"><span class="hpb-hex"><img src="${art.src}" alt=""></span><span class="hpb-sname">${esc(nameOf(m))}</span><span class="hpb-scls">${esc(jobOf(m))}</span>${window.hosIsStaff&&window.hosIsStaff(m)?'<em class="hpb-staff">STAFF</em>':''}<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador" aria-label="Liberar ${esc(nameOf(m))}">✕</button></div>`;
+     return `<div class="hp-slot hp-filled hpb-slot" data-slot="${f}:${p}:${i}" draggable="true" style="--c:${art.color}" title="${esc(nameOf(m))} · ${esc(jobOf(m))} · ${hpbPw(hpPowerFromMember(m))}"><span class="hpb-hex"><img src="${art.src}" alt=""></span>${hpPowerFromMember(m)>0?`<em class="hpb-pwb" title="Power atual">${hpbPw(hpPowerFromMember(m))}</em>`:''}<span class="hpb-sname">${esc(nameOf(m))}</span><span class="hpb-scls">${esc(jobOf(m))}</span>${window.hosIsStaff&&window.hosIsStaff(m)?'<em class="hpb-staff">STAFF</em>':''}<button type="button" data-remove="${f}:${p}:${i}" title="Liberar jogador" aria-label="Liberar ${esc(nameOf(m))}">✕</button></div>`;
    }).join('')}</div>
    <div class="hpb-tags">${tags.join('')}</div>
   </div>`};
@@ -11212,6 +11212,9 @@ html body #hivePlantelPanel select.hpb-gsel option{background:#0E131B;color:#E8E
 html body #hivePlantelPanel .hp-top .hp-brand{flex:1 1 auto!important;min-width:0!important;max-width:none!important}
 html body #hivePlantelPanel .hpb-status{flex:1 1 auto!important;min-width:0!important;overflow:visible!important}
 html body #hivePlantelPanel .hpb-status #hpStatus{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.35!important;overflow-wrap:anywhere}
+/* selo de power no avatar (somente na montagem) */
+html body #hivePlantelPanel .hpb-slot{position:relative}
+html body #hivePlantelPanel .hpb-pwb{position:absolute;top:-6px;left:calc(50% + 8px);z-index:2;font:700 10px/1.35 var(--hos-mono);font-style:normal;color:#FFB627;background:#07090D;border:1px solid rgba(255,182,39,.55);padding:0 5px;border-radius:6px;white-space:nowrap;pointer-events:none}
 
 /* ===== Central de Guerra · Duelo de times ===== */
 html body #hpHub #centralGuerra.hosd-on .war-heading,
@@ -11763,7 +11766,7 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
     [/bard|bardo|minstrel|menestrel/,['BARD','#FFD166','Music']],[/music|dancer|cigana|gypsy|clown|palhaco|odalisca/,['MUSIC','#FFD166','Music']],
     [/priest|sacerdote/,['PRIEST','#FF7A9C','Priest']],[/sniper|hunter|cacador|atirador/,['SNIPER','#FFB627','Sniper']],
     [/gunslinger|justiceiro/,['GUNSL.','#9BE15D','Gunslinger']],[/professor|sage|scholar/,['PROF.','#E8EDF4','Professor']],
-    [/paladin|paladino|crusader|templario/,['PAL.','#7C8CFF','Paladin']],[/champion|campeao|monk|monge/,['CHAMP.','#FF8A65','Champion']],
+    [/paladin|paladino|crusader|templario/,['PAL.','#7C8CFF','Paladin']],[/champion|campeao/,['CHAMP.','#FF8A65','Champion']],[/monk|monge/,['MONK','#FF8A65','Monk']],
     [/lord knight|cavaleiro/,['LK','#FF8A65','Lord Knight']],[/ws|whitesmith|ferreiro|blacksmith/,['WS','#C9A27A','WS']]
   ];
   function vgClass(job){var j=nrm(job);for(var i=0;i<VG_CLS.length;i++){if(VG_CLS[i][0].test(j)){var v=VG_CLS[i][1];return typeof v==='function'?v(j):v}}var u=String(job||'—').toUpperCase().slice(0,10);return [u,'#E8EDF4',job||'—']}
