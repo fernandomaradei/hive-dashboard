@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<script id="hos-boot">document.documentElement.classList.add('hos-boot');setTimeout(function(){document.documentElement.classList.remove('hos-boot')},5000);</script>
+<style id="hos-boot-css">html.hos-boot,html.hos-boot body{background:#07090D!important}html.hos-boot body{visibility:hidden!important;opacity:0!important}
+html.hos-boot:before{content:"HIVEST";visibility:visible;position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;font:700 28px/1 "Chakra Petch",Inter,system-ui,sans-serif;letter-spacing:.3em;color:#FFB627;background:#07090D;animation:hosPulse 1.2s ease-in-out infinite}
+@keyframes hosPulse{50%{opacity:.35}}</style>
+
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#0b0906"/>
@@ -11737,7 +11742,7 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
       wrapped.__hos=true; window.render=wrapped;
     }
   }
-  function init(){buildLayout();hook();try{decorate()}catch(e){}window.hosSetWar();['modal','statRankModal','hiveRawOverlay','hiveWarPopup','hpHub','hivePlantelPanel'].forEach(watchOverlay)}
+  function init(){try{buildLayout();hook();try{decorate()}catch(e){}window.hosSetWar();['modal','statRankModal','hiveRawOverlay','hiveWarPopup','hpHub','hivePlantelPanel'].forEach(watchOverlay)}finally{requestAnimationFrame(function(){requestAnimationFrame(function(){document.documentElement.classList.remove('hos-boot')})})}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 
