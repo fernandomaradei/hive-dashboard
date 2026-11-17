@@ -9064,7 +9064,14 @@ const num=x=>{if(typeof x==='number')return x;let v=String(x??'').trim().replace
 const LEGACY_STORAGE='hive_plantel_staff_v1';
 const WAR_MODES={vale:{name:'Vale of Clash',grouped:true},stellar:{name:'Stellar Clash',grouped:false},vigrid:{name:'Vigrid Avenge',grouped:false},overrun:{name:'OVERRUN',grouped:false,unified:true}};
 const STORAGE_PREFIX='hive_plantel_staff_war_v2_';
-let activeWar='vale';
+let activeWar='vigrid';
+// HIVE OS: grupos do Vigrid (Raid 1 / Raid 2 / Objetivo) definidos pela staff e salvos junto da formação.
+const HPB_GDEF=()=>['r1','r1','r1','r2','r2','r2','obj','obj'];
+const hpbGroupStore={};
+function hpbGroups(mode){return hpbGroupStore[mode]||(hpbGroupStore[mode]={main:HPB_GDEF(),sub:HPB_GDEF()})}
+function hpbSetGroups(mode,g){const ok=a=>Array.isArray(a)&&a.length===8&&a.every(v=>v==='r1'||v==='r2'||v==='obj');hpbGroupStore[mode]={main:g&&ok(g.main)?g.main.slice():HPB_GDEF(),sub:g&&ok(g.sub)?g.sub.slice():HPB_GDEF()}}
+function hpbGroupSel(f,p){const v=hpbGroups('vigrid')[f][p];return `<select class="hpb-gsel" data-hpb-group="${f}:${p}" aria-label="Grupo da PT ${p+1+(f==='sub'?8:0)}" title="Mover esta PT para outro grupo">${[['r1','Raid 1'],['r2','Raid 2'],['obj','Objetivo']].map(o=>`<option value="${o[0]}"${o[0]===v?' selected':''}>${o[1]}</option>`).join('')}</select>`}
+window.hosVgGroupsFor=hpbGroups;
 const storageKey=()=>STORAGE_PREFIX+activeWar;
 const warName=()=>WAR_MODES[activeWar].name;
 const hpMainPtRole=p=>p<3?'MID':p<5?'FLEX':p<7?'ROAMING':'RAT';
@@ -9076,7 +9083,7 @@ async function fetchSharedFormation(mode){
  const response=await fetch(plantelEndpoint(mode),{credentials:'same-origin',cache:'no-store'});
  const payload=await response.json().catch(()=>({}));
  if(!response.ok||!payload.ok)throw Error(payload.error||'Não foi possível carregar o plantel compartilhado.');
- formationVersions[mode]=payload.version||0;
+ formationVersions[mode]=payload.version||0;hpbSetGroups(mode,payload.formation&&payload.formation.groups);
  if(mode===activeWar){
   formation=sanitize(payload.formation);
   syncBlocked=false;render();
@@ -9167,7 +9174,7 @@ const valid=f=>f&&['main','sub'].every(k=>Array.isArray(f[k])&&f[k].length===8&&
 function sanitize(f){const result=blank(),seen=new Set(),allowed=new Set(members.map(idOf));if(!valid(f))return result;for(const k of ['main','sub'])for(let p=0;p<8;p++)for(let i=0;i<5;i++){const id=norm(f[k][p][i]);if(id&&allowed.has(id)&&!seen.has(id)){result[k][p][i]=id;seen.add(id)}}return result}
 function save(){
  if(syncBlocked){$('hpStatus').textContent='Sem conexão com a formação compartilhada. Atualize a página antes de editar.';return}
- const mode=activeWar, snapshot=JSON.parse(JSON.stringify(formation));
+ const mode=activeWar, snapshot=JSON.parse(JSON.stringify(formation));if(mode==='vigrid')snapshot.groups=hpbGroups(mode);
  $('hpStatus').textContent='Salvando formação para todos os Staffs...';
  saveQueue=saveQueue.then(async()=>{
   const response=await fetch(plantelEndpoint(mode),{method:'PUT',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({formation:snapshot,version:formationVersions[mode]})});
@@ -9260,7 +9267,7 @@ function render(){
   if(filled===5)tags.push('<span class="hpb-tag ok">Completa</span>');
   if(!filled)tags.push('<span class="hpb-tag">Vazia</span>');
   return `<div class="hp-pt hpb-pt ${role?'hp-pt-role-'+role.toLowerCase():''} ${filled===5?'hpb-full':''}">
-   <div class="hpb-pt-head"><b>PT ${n}</b><span>${filled?hpbPw(sum):'—'} · <em>${filled}/5</em></span></div>
+   <div class="hpb-pt-head"><b>PT ${n}</b>${activeWar==='vigrid'&&!unified?hpbGroupSel(f,p):''}<span>${filled?hpbPw(sum):'—'} · <em>${filled}/5</em></span></div>
    <div class="hpb-slots">${pt.map((id,i)=>{
      if(!id)return `<div class="hp-slot hpb-slot" data-slot="${f}:${p}:${i}" draggable="false" title="Vaga ${i+1} · solte um jogador aqui"><span class="hpb-hex hpb-empty">+</span><small>vaga ${i+1}</small></div>`;
      const m=byId.get(id)||{Personagem:id},art=hpbArt(jobOf(m),nameOf(m));
@@ -9270,6 +9277,8 @@ function render(){
   </div>`};
  const legend='<div class="hp-role-legend"><span class="hp-role-tag hp-role-mid">MID <small>PT 1–3</small></span><span class="hp-role-tag hp-role-flex">FLEX <small>PT 4–5</small></span><span class="hp-role-tag hp-role-roaming">ROAMING <small>PT 6–7</small></span><span class="hp-role-tag hp-role-rat">RAT <small>PT 8</small></span></div>';
  const LANES=[['MID','#FFB627','PT 1–3','Centro do mapa',[0,1,2]],['FLEX','#3EC5FF','PT 4–5','Reforço onde a luta pender',[3,4]],['ROAMING','#34E3A0','PT 6–7','Rotação e cobertura',[5,6]],['RAT','#B78CFF','PT 8','Infiltração',[7]]];
+ const VGG=[['r1','RAID 1','#3EC5FF'],['r2','RAID 2','#FFB627'],['obj','OBJETIVO','#FF7A9C']];
+ const hpbVgBody=f=>{const gs=hpbGroups('vigrid')[f];return `<div class="hpb-vgroups">${VGG.map(g=>{const ps=gs.map((v,p)=>v===g[0]?p:-1).filter(p=>p>=0);const c=ps.reduce((t,p)=>t+formation[f][p].filter(Boolean).length,0);return `<div class="hpb-vgroup" style="--lc:${g[2]}"><div class="hpb-vgroup-head"><i></i><b>${g[1]}</b><span>${ps.length?ps.map(p=>'PT '+(p+1+(f==='sub'?8:0))).join(' · '):'Nenhuma PT neste grupo · use o seletor no topo de uma PT para trazê-la para cá'}</span><em>${c}/${ps.length*5}</em></div>${ps.length?`<div class="hpb-grid">${ps.map(p=>ptHtml(f,p)).join('')}</div>`:''}</div>`}).join('')}</div>`};
  const fieldHead=(label,count,total,sub)=>`<div class="hp-field-title hpb-field-title"><strong>${label}</strong><div class="hp-field-summary"><b>${count}/${total}</b><div class="hp-field-meter"><span style="width:${count/total*100}%"></span></div><small>${sub}</small></div></div>`;
  if(unified){
   $('hpPts').innerHTML=`<section class="hp-field-section hp-field-overrun">${fieldHead('OVERRUN · campo único',assigned.size,80,'16 PTs · 5 jogadores cada')}<div class="hpb-grid">${['main','sub'].flatMap(f=>formation[f].map((_,p)=>ptHtml(f,p))).join('')}</div></section>`;
@@ -9278,7 +9287,7 @@ function render(){
    const c=formation[f].flat().filter(Boolean).length;
    const body=grouped
     ?`<div class="hpb-lanes">${LANES.map(l=>`<div class="hpb-lane" style="--lc:${l[1]}"><div class="hpb-lane-head"><b>${l[0]}</b><span>${f==='sub'?'PT '+l[4].map(p=>p+9).filter((v,i,a)=>i===0||i===a.length-1).join('–'):l[2]}</span></div><small class="hpb-lane-desc">${l[3]}</small>${l[4].map(p=>ptHtml(f,p)).join('')}</div>`).join('')}</div>`
-    :`<div class="hpb-grid">${formation[f].map((_,p)=>ptHtml(f,p)).join('')}</div>`;
+    :(activeWar==='vigrid'?hpbVgBody(f):`<div class="hpb-grid">${formation[f].map((_,p)=>ptHtml(f,p)).join('')}</div>`);
    return `<section class="hp-field-section" data-hpb-field="${f}">${fieldHead(f==='main'?'Main Field':'Sub Field',c,40,'8 PTs · 5 jogadores cada')}${body}</section>`;
   }).join('');
  }
@@ -9614,12 +9623,13 @@ async function hpbSync(){
   const d=await r.json().catch(()=>({}));
   if(!r.ok||!d.ok||mode!==activeWar||dragged||selected)return;
   if((d.version||0)!==formationVersions[mode]){
-   formationVersions[mode]=d.version||0;formation=sanitize(d.formation);syncBlocked=false;render();
+   formationVersions[mode]=d.version||0;formation=sanitize(d.formation);hpbSetGroups(mode,d.formation&&d.formation.groups);syncBlocked=false;render();
    $('hpStatus').textContent='↻ Atualizado com a alteração de '+(d.updatedBy||'outro Staff')+(d.updatedAt?' · '+new Date(d.updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'');
   }
  }catch(e){}finally{hpbSyncing=false}
 }
 setInterval(hpbSync,30000);
+$('hpPts').addEventListener('change',e=>{const s=e.target.closest('[data-hpb-group]');if(!s||activeWar!=='vigrid')return;if(syncBlocked){$('hpStatus').textContent='Sem conexão com a formação compartilhada. Atualize a página antes de editar.';render();return}const [f,p]=s.dataset.hpbGroup.split(':');hpbGroups('vigrid')[f][+p]=s.value;save();render()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)hpbSync()});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
@@ -11138,6 +11148,20 @@ html body #hivePlantelPanel .hp-main,html body #hivePlantelPanel .hpb-bar2{posit
   html body #hivePlantelPanel .hpb-grid{grid-template-columns:repeat(auto-fill,minmax(350px,1fr))!important}
   html body #hivePlantelPanel .hpb-lanes{grid-template-columns:repeat(auto-fit,minmax(350px,1fr))!important}
 }
+/* Vigrid: grupos Raid 1 / Raid 2 / Objetivo dinâmicos */
+html body #hivePlantelPanel .hpb-vgroups{display:flex;flex-direction:column;gap:14px}
+html body #hivePlantelPanel .hpb-vgroup{border:1px solid color-mix(in srgb,var(--lc) 40%,transparent);background:color-mix(in srgb,var(--lc) 4%,transparent);border-radius:16px;padding:0 12px 12px}
+html body #hivePlantelPanel .hpb-vgroup-head{display:flex;align-items:center;gap:12px;margin:0 -12px 12px;padding:10px 16px;border-bottom:1px solid color-mix(in srgb,var(--lc) 35%,transparent);background:color-mix(in srgb,var(--lc) 12%,transparent);border-radius:15px 15px 0 0}
+html body #hivePlantelPanel .hpb-vgroup-head i{width:8px;height:8px;border-radius:50%;background:var(--lc);flex:none}
+html body #hivePlantelPanel .hpb-vgroup-head b{font:700 16px var(--hos-head);letter-spacing:.18em;color:var(--lc)}
+html body #hivePlantelPanel .hpb-vgroup-head span{flex:1;font:500 11px var(--hos-mono);color:var(--hos-dim)}
+html body #hivePlantelPanel .hpb-vgroup-head em{font:700 12px var(--hos-mono);font-style:normal;color:var(--hos-muted)}
+html body #hivePlantelPanel .hpb-vgroup>.hpb-grid{margin:0!important}
+html body #hivePlantelPanel .hpb-pt-head{display:flex!important;align-items:center!important;gap:8px!important}
+html body #hivePlantelPanel .hpb-pt-head>span{margin-left:auto}
+html body #hivePlantelPanel select.hpb-gsel{height:26px!important;min-height:0!important;width:auto!important;padding:0 22px 0 8px!important;border-radius:7px!important;border:1px solid var(--hos-line2)!important;background:#141B25 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23AEB8C6'/%3E%3C/svg%3E") no-repeat right 7px center!important;-webkit-appearance:none;appearance:none;color:var(--hos-text)!important;font:600 11px var(--hos-body)!important;cursor:pointer;box-shadow:none!important}
+html body #hivePlantelPanel select.hpb-gsel:hover{border-color:var(--hos-accent)!important}
+html body #hivePlantelPanel select.hpb-gsel option{background:#0E131B;color:#E8EDF4}
 
 /* ===== Central de Guerra · Duelo de times ===== */
 html body #hpHub #centralGuerra.hosd-on .war-heading,
@@ -11760,8 +11784,10 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
       }
       // grupos
       var G=[['RAID 1','#3EC5FF','62,197,255',[0,1,2]],['RAID 2','#FFB627','255,182,39',[3,4,5]],['OBJETIVO','#FF7A9C','255,107,107',[6,7]]];
-      var gy0=HH+12,gh=(H-40-gy0-20)/3;
-      for(var gi=0;gi<3;gi++){
+      try{var GD=window.hosVgGroupsFor&&window.hosVgGroupsFor('vigrid')[field];if(GD&&GD.length===8){G.forEach(function(g){g[3]=[]});GD.forEach(function(k,pi){G[k==='r2'?1:k==='obj'?2:0][3].push(pi)})}}catch(e){}
+      G=G.filter(function(g){return g[3].length});
+      var gy0=HH+12,gh=(H-40-gy0-20-10*(G.length-3))/G.length;
+      for(var gi=0;gi<G.length;gi++){
         var g=G[gi],y=gy0+gi*(gh+10),x=20,w=W-40;
         c.fillStyle='rgba('+g[2]+',.025)';rr(x,y,w,gh,14);c.fill();
         c.save();rr(x,y,w,gh,14);c.clip();c.fillStyle='rgba('+g[2]+',.13)';c.fillRect(x,y,w,30);c.restore();
