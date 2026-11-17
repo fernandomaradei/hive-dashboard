@@ -11205,6 +11205,10 @@ html body #hivePlantelPanel select.hpb-gsel{max-width:130px!important;height:26p
 html body #hivePlantelPanel select.hpb-gsel:hover{border-color:var(--hos-accent)!important}
 html body #hivePlantelPanel select.hpb-gsel option{background:#0E131B;color:#E8EDF4}
 @media(max-width:700px){html body #hivePlantelPanel .hpb-vgroup-head{flex-wrap:wrap}html body #hivePlantelPanel .hpb-vgroup-head span{order:5;flex-basis:100%}html body #hivePlantelPanel input.hpb-gname{flex:1;width:auto!important}}
+/* status do plantel: mensagem completa (quebra em até 2 linhas em vez de cortar) */
+html body #hivePlantelPanel .hp-top .hp-brand{flex:1 1 auto!important;min-width:0!important;max-width:none!important}
+html body #hivePlantelPanel .hpb-status{flex:1 1 auto!important;min-width:0!important;overflow:visible!important}
+html body #hivePlantelPanel .hpb-status #hpStatus{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.35!important;overflow-wrap:anywhere}
 
 /* ===== Central de Guerra · Duelo de times ===== */
 html body #hpHub #centralGuerra.hosd-on .war-heading,
