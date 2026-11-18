@@ -8864,7 +8864,7 @@ async function load(){
              ID_Personagem:v('character_id'),
              ID_Guilda:v('guild_id'),
              ID_Job:v('job_id'),
-             Campo:v('battlefield'),
+             Campo:((Number(extras&&extras['C:8'])||0)>0&&String(v('battlefield')||'').toUpperCase().indexOf('SECUND')===0)?'PRINCIPAL':v('battlefield'),
              Tipo_Stats:v('stats_type'),
              Tempo_Segundos:v('duration_seconds'),
              Dano_Power:ex('damage_per_power'),
