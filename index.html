@@ -8871,7 +8871,7 @@ async function load(){
              JSON_PCAP:v('raw_stats_json'),
              Personagem:v('character_name','player_name','name')||'',
              Guilda:v('guild_name')||'',
-             Job:v('job_name','class_name')||'',
+             Job:(function(j,id){var F={3202:'Monk',5102:'Assassin Cross',5202:'Stalker',6102:'Whitesmith'};return (F[id]&&(!j||/identificad/i.test(j)))?F[id]:(j||'')})(v('job_name','class_name'),Number(v('job_id'))),
              Power:v('power'),
              KDA:ex('kda'),
              Participacao:ex('participation_ratio','participation','participacao','part'),
@@ -11631,6 +11631,33 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 #hosdBody .hwb-hr>b:nth-of-type(1){text-align:right}
 #hosdBody .hwb-hr>b.us{color:var(--hos-accent)}#hosdBody .hwb-hr>b.them{color:#4CC2FF}
 @media(max-width:640px){#hosdBody .hwb-hr{grid-template-columns:1fr 1fr;row-gap:4px}#hosdBody .hwb-hr>span:first-child{grid-column:1/-1}#hosdBody .hwb-hr .hwb-split{grid-column:1/-1;order:3}}
+/* ===== Por campo · V7 (os dois campos na tela) ===== */
+#hosdBody .hwb-campos{display:block!important}
+#hosdBody .hwb-fs{margin-bottom:22px;--fc:#FFB627}
+#hosdBody .hwb-fs.s{--fc:#5FE0C8}
+#hosdBody .hwb-fsh{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--fc)}
+#hosdBody .hwb-fsh>b{font:700 22px var(--hos-head);color:var(--fc)}
+#hosdBody .hwb-fsh .hwb-badge{margin-left:auto}
+#hosdBody .hwb-fs.s .hwb-badge.us{background:#5FE0C8}
+#hosdBody .hwb-kpis{display:grid;gap:10px;margin-bottom:12px}
+#hosdBody .hwb-kpi{background:var(--hos-panel);border:1px solid var(--hos-line);border-radius:14px;padding:14px}
+#hosdBody .hwb-kpi>small{display:block;font:700 10.5px var(--hos-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--hos-dim)}
+#hosdBody .hwb-kpi>b{display:block;font:700 28px var(--hos-head);color:var(--fc);margin:4px 0 2px;white-space:nowrap}
+#hosdBody .hwb-kpi>div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font:500 12px var(--hos-mono);color:var(--hos-dim)}
+#hosdBody .hwb-kpi>div span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hosdBody .hwb-kpi i{font-style:normal;font-weight:700;font-size:11.5px;white-space:nowrap}
+#hosdBody .hwb-kpi i.up{color:var(--hos-green)}#hosdBody .hwb-kpi i.down{color:#FF7A7A}
+#hosdBody .hwb-tcs{display:grid;gap:12px}
+#hosdBody .hwb-tc{padding:16px}
+#hosdBody .hwb-first{display:flex;align-items:center;gap:12px;margin:12px 0 6px;padding:12px;border-radius:12px;background:color-mix(in srgb,var(--c) 9%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent)}
+#hosdBody .hwb-av.big{width:50px;height:56px}
+#hosdBody .hwb-first .hwb-nm b{font-size:16px}
+#hosdBody .hwb-1{display:block;font:700 10px var(--hos-mono);letter-spacing:.08em;color:var(--c)}
+#hosdBody .hwb-first .hwb-job{display:block;font-size:12px}
+#hosdBody .hwb-fv{margin-left:auto;font:700 22px var(--hos-head);color:var(--c);white-space:nowrap}
+#hosdBody .hwb-tc .hwb-li{grid-template-columns:auto auto minmax(0,1fr) auto}
+@media(max-width:1100px){#hosdBody .hwb-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}#hosdBody .hwb-tcs{grid-template-columns:1fr!important}}
+@media(max-width:640px){#hosdBody .hwb-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}#hosdBody .hwb-kpi>b{font-size:22px}#hosdBody .hwb-fsh .hwb-badge{margin-left:0}}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12620,13 +12647,29 @@ html body .hos-top{will-change:auto}
     /* --- campos --- */
     var cmpRow=function(lbl,a,b,fa,fb,low){var wa=low?a<b:a>b,tt=(a+b)||1;return '<div class="hwb-cr"><b class="'+(wa?'us':'')+'">'+fa+'</b><span class="hwb-split"><i style="width:'+(a/tt*100)+'%"></i></span><b class="'+(!wa&&a!==b?'them':'')+'">'+fb+'</b></div><small class="hwb-crl">'+lbl+'</small>'};
     var dest=function(L,key,fmt){var X=L.filter(function(r){return (n(r[key])||0)>0}).sort(function(a,b){return (n(b[key])||0)-(n(a[key])||0)}).slice(0,4);return X.map(function(r){return '<div class="hwb-li">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+esc(k(r,'Job')||'')+'</small></span><b class="hwb-v us">'+fmt(n(r[key]))+'</b></div>'}).join('')||'<p class="hwb-empty">'+(key==='Horn'?'Ninguém segurou o horn neste campo.':'Ninguém neste campo.')+'</p>'};
-    var fcol=function(title,F){
-      if(F.st==='none')return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b></div><p class="hwb-empty">Sem jogadores registrados neste campo.</p></div>';
-      var badge=F.st==='us'?'<span class="hwb-badge us">'+esc(us.toUpperCase())+' dominou</span>':F.st==='them'?'<span class="hwb-badge them">'+esc(them.toUpperCase())+' dominou</span>':'<span class="hwb-badge eq">Equilibrado</span>';
-      return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b>'+badge+'</div><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+(hasHorn?' · <span class="hwb-hornchip">Horn '+secs(F.hh)+' × '+secs(F.hb)+'</span>':'')+'</small>'+
-        cmpRow('DANO',F.dh,F.db,big(F.dh),big(F.db))+cmpRow('KILLS',F.kh,F.kb,nf(F.kh),nf(F.kb))+cmpRow('MORTES',F.mh,F.mb,nf(F.mh),nf(F.mb),true)+(hasHorn?cmpRow('TEMPO DE HORN (S)',F.hh,F.hb,nf(Math.round(F.hh||0)),nf(Math.round(F.hb||0))):'')+
-        '<div class="hwb-dest"><div><small class="hwb-kick">Destaques '+esc(us)+' · Dano</small>'+dest(F.h,'Dano_Causado',big)+'</div>'+(hasHorn?'<div><small class="hwb-kick">Destaques '+esc(us)+' · Tempo de horn</small>'+dest(F.h,'Horn',function(v){return nf(v)+' s'})+'</div>':'')+'</div></div>'};
-    body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP)+fcol('Campo Secundário',FS);
+    var fcol=function(title,F,cls){
+      if(F.st==='none')return '<section class="hwb-fs '+cls+'"><div class="hwb-fsh"><b>'+title+'</b></div><p class="hwb-empty hwb-panel" style="padding:16px">Sem jogadores registrados neste campo.</p></section>';
+      var mh=S2(F.h,'Moedas'),mb=S2(F.b,'Moedas');
+      var M=[['Dano',F.dh,F.db,big,false],['Kills',F.kh,F.kb,function(v){return nf(v)},false],['Mortes',F.mh,F.mb,function(v){return nf(v)},true]];
+      if(hasHorn)M.push(['Tempo de horn',F.hh,F.hb,function(v){return nf(Math.round(v||0))+' s'},false]);
+      M.push(['Monstros',mh,mb,function(v){return nf(v)},false]);
+      var wins=0,loss=0;
+      var kp=M.map(function(m){var a=m[1]||0,b=m[2]||0,w=m[4]?a<b:a>b,l=m[4]?a>b:a<b;if(w)wins++;if(l)loss++;
+        var p=b?((a-b)/b*100)*(m[4]?-1:1):NaN;
+        return '<div class="hwb-kpi"><small>'+m[0]+'</small><b>'+esc(m[3](a))+'</b><div><span>'+esc(them)+' '+esc(m[3](b))+'</span>'+(Number.isFinite(p)&&a!==b?'<i class="'+(w?'up':'down')+'">'+(w?'▲':'▼')+' '+nf(Math.abs(p),0)+'%</i>':'')+'</div></div>'}).join('');
+      var badge=wins>loss?'<span class="hwb-badge us">'+esc(us.toUpperCase())+' dominou · '+wins+' de '+M.length+'</span>':loss>wins?'<span class="hwb-badge them">'+esc(them.toUpperCase())+' dominou · '+loss+' de '+M.length+'</span>':'<span class="hwb-badge eq">Equilibrado</span>';
+      var top=function(lbl,key,fmt,col){var X=F.h.filter(function(r){return (n(r[key])||0)>0}).sort(function(a,b){return (n(b[key])||0)-(n(a[key])||0)}).slice(0,4);
+        if(!X.length)return '<div class="hwb-panel hwb-tc" style="--c:'+col+'"><small class="hwb-kick" style="color:'+col+'">Destaques · '+lbl+'</small><p class="hwb-empty">Ninguém pontuou neste campo.</p></div>';
+        var r=X[0];
+        return '<div class="hwb-panel hwb-tc" style="--c:'+col+'"><small class="hwb-kick" style="color:'+col+'">Destaques · '+lbl+'</small>'+
+          '<div class="hwb-first">'+hart(r).replace('class="hwb-av"','class="hwb-av big"')+'<span class="hwb-nm"><small class="hwb-1">1º LUGAR</small><b>'+esc(name(r))+'</b>'+jtag(r)+'</span><b class="hwb-fv">'+esc(fmt(n(r[key])))+'</b></div>'+
+          X.slice(1).map(function(x,i){return '<div class="hwb-li"><span class="hwb-pos">'+(i+2)+'</span>'+hart(x)+'<span class="hwb-nm"><b>'+esc(name(x))+'</b></span><b class="hwb-v" style="color:'+col+'">'+esc(fmt(n(x[key])))+'</b></div>'}).join('')+'</div>'};
+      var cols=[top('Dano','Dano_Causado',big,'#FFB627')];
+      if(hasHorn)cols.push(top('Tempo de horn','Horn',function(v){return nf(v)+' s'},'#5FE0C8'));
+      cols.push(top('Monstros','Moedas',function(v){return nf(v)},'#C79BFF'));
+      return '<section class="hwb-fs '+cls+'"><div class="hwb-fsh"><b>'+title+'</b><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+'</small>'+badge+'</div>'+
+        '<div class="hwb-kpis" style="grid-template-columns:repeat('+M.length+',minmax(0,1fr))">'+kp+'</div><div class="hwb-tcs" style="grid-template-columns:repeat('+cols.length+',minmax(0,1fr))">'+cols.join('')+'</div></section>'};
+    body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP,'p')+fcol('Campo Secundário',FS,'s');
     /* --- rankings (tabela) --- */
     var on=function(c,v,attr,label){return '<button type="button" class="hwb-sg'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
     var jobs=[];H.concat(B).forEach(function(r){var j=String(k(r,'Job')||'');if(!unknownJob(j)&&jobs.indexOf(j)<0)jobs.push(j)});jobs.sort(function(a,b){return a.localeCompare(b,'pt-BR')});
