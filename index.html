@@ -11454,6 +11454,111 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button[aria-pressed="true
 html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:normal;font-size:10px}
 @media(max-width:760px){.hosd-sorthead small{display:none}}
 
+/* ===== Central de Guerra · Boletim + Por campo + Rankings + Notas ===== */
+#hosdBody .hwb-panel{background:var(--hos-panel);border:1px solid var(--hos-line);border-radius:16px}
+#hosdBody .hwb-nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px;margin:0 0 16px;background:rgba(9,12,18,.96);border:1px solid var(--hos-line);border-radius:14px}
+#hosdBody .hwb-nav a{font:600 13px var(--hos-body);color:var(--hos-muted);text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid transparent}
+#hosdBody .hwb-nav a:hover{color:var(--hos-text);border-color:var(--hos-line2)}
+#hosdBody .hwb-nav a.on{background:var(--hos-accent);color:#111}
+#hosdBody .hwb-sp{flex:1}
+#hosdBody .hwb-btn{font:600 13px var(--hos-body);color:var(--hos-text);background:rgba(255,255,255,.04);border:1px solid var(--hos-line2);border-radius:10px;padding:8px 13px;cursor:pointer}
+#hosdBody .hwb-btn:hover{border-color:var(--hos-accent);color:var(--hos-accent)}
+#hosdBody .hwb-sec{margin:0 0 26px;scroll-margin-top:80px}
+#hosdBody .hwb-sh{display:flex;align-items:baseline;gap:12px;margin:0 2px 12px;flex-wrap:wrap}
+#hosdBody .hwb-sh h2{margin:0;font:700 20px var(--hos-head);color:var(--hos-text)}
+#hosdBody .hwb-sh small{color:var(--hos-dim);font-size:12.5px}
+#hosdBody .hwb-sh .hwb-btn{margin-left:auto}
+#hosdBody .hwb-kick{display:block;font:700 10.5px var(--hos-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--hos-accent)}
+#hosdBody .hwb-kick.dim{color:var(--hos-dim)}#hosdBody .hwb-kick.them{color:var(--hos-cyan)}
+#hosdBody .hwb-mono{font:500 12px var(--hos-mono);color:var(--hos-dim)}
+#hosdBody .hwb-gold{color:var(--hos-accent)}#hosdBody .hwb-red{color:#FF7A7A}#hosdBody .hwb-green{color:var(--hos-green)}#hosdBody .hwb-dim{color:var(--hos-dim)}
+#hosdBody .hwb-empty{color:var(--hos-dim);font-size:13px;margin:8px 0;padding:6px 0}
+#hosdBody p.hwb-empty.hwb-panel{padding:24px;text-align:center}
+/* resumo */
+#hosdBody .hwb-resumo{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
+#hosdBody .hwb-sum{padding:20px}
+#hosdBody .hwb-sum p{margin:8px 0 0;font-size:16px;line-height:1.6;color:var(--hos-text)}
+#hosdBody .hwb-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+#hosdBody .hwb-tiles small{display:block;font:700 10.5px var(--hos-mono);letter-spacing:.12em;color:var(--hos-dim);text-transform:uppercase}
+#hosdBody .hwb-tiles b{font:700 24px var(--hos-head)}
+#hosdBody .hwb-alerts{padding:12px 20px}
+#hosdBody .hwb-al{display:grid;grid-template-columns:10px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+#hosdBody .hwb-al:last-child{border-bottom:0}
+#hosdBody .hwb-al i{width:10px;height:10px;border-radius:50%;margin-top:5px}
+#hosdBody .hwb-al i.ok{background:var(--hos-green)}#hosdBody .hwb-al i.warn{background:var(--hos-accent)}#hosdBody .hwb-al i.bad{background:#FF7A7A}
+#hosdBody .hwb-al b{display:block;font-size:14px;color:var(--hos-text)}
+#hosdBody .hwb-al span{display:block;color:var(--hos-muted);font-size:13px;line-height:1.5;margin-top:2px}
+/* campos */
+#hosdBody .hwb-campos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#hosdBody .hwb-field{padding:18px}
+#hosdBody .hwb-fh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+#hosdBody .hwb-fh>b{font:700 21px var(--hos-head)}
+#hosdBody .hwb-badge{font:700 12px var(--hos-mono);padding:5px 10px;border-radius:8px;color:#111}
+#hosdBody .hwb-badge.us{background:var(--hos-accent)}#hosdBody .hwb-badge.them{background:#4CC2FF}#hosdBody .hwb-badge.eq{background:rgba(255,255,255,.1);color:var(--hos-text)}
+#hosdBody .hwb-cr{display:grid;grid-template-columns:90px 1fr 90px;gap:10px;align-items:center;margin-top:12px}
+#hosdBody .hwb-cr>b{font:700 14px var(--hos-mono);color:var(--hos-dim)}
+#hosdBody .hwb-cr>b:first-child{text-align:right}
+#hosdBody .hwb-cr>b.us{color:var(--hos-accent)}#hosdBody .hwb-cr>b.them{color:#4CC2FF}
+#hosdBody .hwb-split{display:block;height:10px;border-radius:5px;background:#4CC2FF;overflow:hidden}
+#hosdBody .hwb-split i{display:block;height:100%;background:var(--hos-accent);border-right:2px solid var(--hos-panel)}
+#hosdBody .hwb-crl{display:block;text-align:center;font:700 10.5px var(--hos-mono);letter-spacing:.14em;color:var(--hos-dim);margin-top:3px}
+#hosdBody .hwb-dest{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+/* linhas com avatar */
+#hosdBody .hwb-li{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+#hosdBody .hwb-dest .hwb-li{grid-template-columns:auto minmax(0,1fr) auto}
+#hosdBody .hwb-pos{font:500 12px var(--hos-mono);color:var(--hos-dim);min-width:18px}
+#hosdBody .hwb-av{width:32px;height:36px;flex:none;padding:2px;box-sizing:border-box;background:var(--hos-line2);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:flex;align-items:center;justify-content:center}
+#hosdBody .hwb-av img{width:100%;height:100%;object-fit:cover;object-position:50% 15%;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+#hosdBody .hwb-av b{font:700 11px var(--hos-mono);color:var(--hos-text)}
+#hosdBody .hwb-nm{min-width:0}
+#hosdBody .hwb-nm b{display:block;font-size:13.5px;color:var(--hos-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hosdBody .hwb-nm small{display:block;font-size:11.5px;color:var(--hos-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hosdBody .hwb-v{font:700 13px var(--hos-mono);white-space:nowrap}
+#hosdBody .hwb-v.us{color:var(--hos-accent)}#hosdBody .hwb-v.them{color:#4CC2FF}
+#hosdBody .hwb-gt{display:block;font:700 10px var(--hos-mono);letter-spacing:.06em}
+#hosdBody .hwb-gt.us{color:var(--hos-accent)}#hosdBody .hwb-gt.them{color:#4CC2FF}
+/* rankings */
+#hosdBody .hwb-rkctl{padding:14px 16px;margin-bottom:12px}
+#hosdBody .hwb-rkh,#hosdBody .hwb-rkf{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#hosdBody .hwb-rkf{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06)}
+#hosdBody .hwb-rkf .hwb-kick{margin:0 2px 0 12px}#hosdBody .hwb-rkf .hwb-kick:first-child{margin-left:0}
+#hosdBody .hwb-stats{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+#hosdBody .hwb-chip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--hos-body);color:var(--hos-muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none}
+#hosdBody .hwb-chip:hover{border-color:var(--hos-accent)}
+#hosdBody .hwb-chip.on{color:#111;background:var(--hos-accent);border-color:var(--hos-accent)}
+#hosdBody .hwb-chip input{margin:0;accent-color:#111;width:13px;height:13px}
+#hosdBody .hwb-rkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;align-items:start;grid-auto-flow:row dense}
+#hosdBody .hwb-board{padding:14px}
+#hosdBody .hwb-board.exp{border-color:var(--c)}
+#hosdBody .hwb-bh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+#hosdBody .hwb-bh b{font:700 16px var(--hos-head);color:var(--c)}
+#hosdBody .hwb-bh small{font:500 10.5px var(--hos-mono);color:var(--hos-dim)}
+#hosdBody .hwb-bf{display:flex;gap:6px;margin-top:10px}
+#hosdBody .hwb-bf .hwb-btn{flex:1;padding:7px 6px;font-size:12px}
+/* notas */
+#hosdBody .hwb-notas{padding:16px}
+#hosdBody .hwb-legend{display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:12.5px;color:var(--hos-muted);margin-bottom:12px}
+#hosdBody .hwb-legend b{font:700 13px var(--hos-head);margin-right:4px}
+#hosdBody .hwb-ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+#hosdBody .hwb-nc{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(255,255,255,.02);min-width:0}
+#hosdBody .hwb-grade{font:700 21px var(--hos-head);width:36px;text-align:center;border:1px solid currentColor;border-radius:9px;flex:none}
+#hosdBody .g-S{color:var(--hos-accent)}#hosdBody .g-A{color:var(--hos-green)}#hosdBody .g-B{color:#4CC2FF}#hosdBody .g-C{color:#FF7A7A}
+#hosdBody .hwb-lista{margin-top:4px}
+#hosdBody .hwb-lista .war-filters{margin:0 0 14px!important}
+@media(max-width:1100px){
+ #hosdBody .hwb-resumo,#hosdBody .hwb-campos{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+ #hosdBody .hwb-nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+ #hosdBody .hwb-nav a{white-space:nowrap;padding:7px 11px}
+ #hosdBody .hwb-nav .hwb-btn{white-space:nowrap}
+ #hosdBody .hwb-tiles{grid-template-columns:repeat(2,1fr)}
+ #hosdBody .hwb-dest{grid-template-columns:1fr}
+ #hosdBody .hwb-cr{grid-template-columns:72px 1fr 72px}
+ #hosdBody .hwb-rkgrid{grid-template-columns:1fr}
+ #hosdBody .hwb-ngrid{grid-template-columns:1fr}
+}
+
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
 .hosAttr *{box-sizing:border-box}
@@ -12228,12 +12333,16 @@ html body .hos-top{will-change:auto}
     var ra=sec.querySelector('.hivest-report-actions');if(ra)acts.appendChild(ra);
     var body=document.createElement('div');body.id='hosdBody';body.className='hosd';
     body.innerHTML=
-      '<section class="hosd-duel" aria-label="Hivest contra adversário"></section>'+
-
-      '<div class="hosd-teams"></div>';
+      '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><a href="#hwbNotas">Notas</a><a href="#hwbLista">Lista completa</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
+      '<section id="hwbResumo" class="hwb-sec"><div class="hwb-sh"><h2>Boletim da guerra</h2><small>resumo escrito a partir dos números + alertas</small></div><div class="hwb-resumo"></div></section>'+
+      '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
+      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>escolha quais status ver; cada caixa expande para mais jogadores</small></div><div class="hwb-rkctl hwb-panel"></div><div class="hwb-rkgrid"></div></section>'+
+      '<section id="hwbNotas" class="hwb-sec"><div class="hwb-sh"><h2>Nota de cada jogador</h2><small></small></div><div class="hwb-notas hwb-panel"></div></section>'+
+      '<section id="hwbLista" class="hwb-sec"><div class="hwb-sh"><h2>Lista completa</h2><small>todos os jogadores com todos os números</small><button type="button" class="hwb-btn" data-hwb-lista aria-expanded="false">Mostrar</button></div><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
     var anchor=$('warResultsTitle');
     sec.insertBefore(body,anchor||null);
     var fl=sec.querySelector('.war-filters');
+    if(fl){body.querySelector('.hwb-filtslot').appendChild(fl);}
     if(fl){var sb=document.createElement('div');sb.className='hosd-sortbar';
       sb.innerHTML='<div class="hosd-sorthead"><span>ORDENAR JOGADORES POR</span><small>Clique de novo no status escolhido para inverter a ordem · clique num jogador para ver todos os números</small></div><div class="hosd-seg" role="group" aria-label="Ordenar jogadores"></div>';
       fl.appendChild(sb);sb.addEventListener('click',function(e){var t=e.target.closest('[data-hosd-sort]');if(!t)return;var ns=t.dataset.hosdSort;if(S.sort===ns)S.dir=-S.dir;else{S.sort=ns;S.dir=TEXT_SORT[ns]?1:-1}draw()})}
@@ -12246,12 +12355,14 @@ html body .hos-top{will-change:auto}
       s.selectedIndex=i;s.dispatchEvent(new Event('change',{bubbles:true}));
     });
     body.addEventListener('click',function(e){
+      if(hwbClick(e))return;
       var t=e.target.closest('[data-hosd-sort],[data-hosd-row],[data-hosd-all]');if(!t)return;
       if(t.dataset.hosdSort){var ns=t.dataset.hosdSort;if(S.sort===ns)S.dir=-S.dir;else{S.sort=ns;S.dir=TEXT_SORT[ns]?1:-1}draw();return}
       if(t.dataset.hosdAll){S.all[t.dataset.hosdAll]=!S.all[t.dataset.hosdAll];draw();return}
       var id=t.dataset.hosdRow;S.open[id]=!S.open[id];
       var row=t.closest('.hosd-row');if(row){row.classList.toggle('open',!!S.open[id]);t.setAttribute('aria-expanded',S.open[id]?'true':'false');var ex=row.querySelector('.hosd-extra');if(ex)ex.hidden=!S.open[id]}
     });
+    body.addEventListener('change',function(e){var c=e.target.closest('[data-hwb-stat]');if(!c)return;var k2=c.getAttribute('data-hwb-stat'),i=R.stats.indexOf(k2);if(c.checked&&i<0)R.stats.push(k2);if(!c.checked&&i>=0)R.stats.splice(i,1);R.save();draw()});
     return sec;
   }
 
@@ -12312,6 +12423,7 @@ html body .hos-top{will-change:auto}
     top.querySelector('.hosd-mode').textContent='Vigrid Avenge';
     body.hidden=false;
 
+    try{hwbRender(ctx,war,t,res,H,B,api,isH,sum)}catch(e){console.warn('[HIVEST boletim]',e)}
     /* cara a cara */
     var M=[['DANO',sum(H,'Dano_Causado'),sum(B,'Dano_Causado'),big,1],['CURA',sum(H,'Cura'),sum(B,'Cura'),big,1],['KILLS',sum(H,'Kills'),sum(B,'Kills'),function(x){return nf(x)},1],
            ['MORTES',sum(H,'Mortes'),sum(B,'Mortes'),function(x){return nf(x)},-1],['KDA MÉDIO',avg(H,'KDA'),avg(B,'KDA'),function(x){return Number.isFinite(x)?nf(x,2):'—'},1],['PARTICIPAÇÃO',avg(H,'Participacao'),avg(B,'Participacao'),pct,1]];
@@ -12361,6 +12473,133 @@ html body .hos-top{will-change:auto}
       if(sorted.length>LIMIT)html+='<button type="button" class="hosd-more" data-hosd-all="'+T.id+'">'+(showAll?'Mostrar só os '+LIMIT+' primeiros':'Ver todos os '+sorted.length+' jogadores')+'</button>';
       return html+'</div>';
     }).join('');
+  }
+
+  /* ================= Boletim · Por campo · Rankings · Notas ================= */
+  var RK_DEFAULT=['Dano_Causado','Kills','Assistencias','KDA','Cura','Dano_Recebido','Participacao','Mortes'];
+  var RK_COLORS={Dano_Causado:'#FFB627',Kills:'#FF8A3D',Assistencias:'#B78CFF',KDA:'#E7D2FF',Cura:'#34E3A0',Dano_Recebido:'#4CC2FF',Participacao:'#5FE0C8',Mortes:'#FF7A7A',Power:'#FFD27A',Merito:'#F2C94C',PP_Vigrid:'#9BE15D',GP:'#7C8CFF',Recursos:'#FF7FB0',Moedas:'#C7A27C',Minutos:'#AEB8C6',Tempo_Segundos:'#AEB8C6',Dano_Power:'#FFB627'};
+  var RK_NOTE={Dano_Recebido:'quem segurou',Mortes:'atenção'};
+  var R={stats:RK_DEFAULT.slice(),guild:'all',campo:'all',per:5,more:{},lista:false,
+    load:function(){try{var x=JSON.parse(localStorage.getItem('hwbRanks')||'null');if(x&&Array.isArray(x.stats)){this.stats=x.stats.filter(function(k){return SORTS.some(function(s){return s[0]===k})});if(x.per)this.per=x.per}}catch(e){}},
+    save:function(){try{localStorage.setItem('hwbRanks',JSON.stringify({stats:this.stats,per:this.per}))}catch(e){}}};
+  R.load();
+  var STAT_LIST=SORTS.filter(function(s){return !TEXT_SORT[s[0]]});
+  function campoOf(r){var c=String(k(r,'Campo')||'').toUpperCase();return c.indexOf('PRINC')===0?'P':c.indexOf('SECUND')===0?'S':''}
+  function isSupport(job){return /priest|sacerd|arceb|music|m[uú]sic|bard|minstrel|menestrel|cantor|dancer|odalisca|gypsy|cigana/i.test(String(job||''))}
+  function pctDiff(a,b){return b?((a-b)/b*100):NaN}
+  function hart(r){var name=String(k(r,'Personagem')||'—'),jobn=String(k(r,'Job')||''),art=(!unknownJob(jobn)&&window.hosArtFor)?window.hosArtFor(jobn,name):null;
+    return '<span class="hwb-av"'+(art&&art.color?' style="background:'+esc(art.color)+'"':'')+'>'+(art&&art.src?'<img src="'+esc(art.src)+'" alt="" loading="lazy">':'<b>'+esc(initials(name))+'</b>')+'</span>'}
+  function gtag(r,isH,t){return isH(r)?'<span class="hwb-gt us">'+esc(String(t.us).toUpperCase())+'</span>':'<span class="hwb-gt them">'+esc(String(t.them).toUpperCase())+'</span>'}
+  function rankPct(list,key,inv){var v=list.map(function(r){var x=n(r[key]);return Number.isFinite(x)?x:0}),sorted=v.slice().sort(function(a,b){return a-b}),N=v.length;
+    return function(r){var x=n(r[key]);x=Number.isFinite(x)?x:0;if(N<2)return .5;var lo=0;while(lo<N&&sorted[lo]<x)lo++;var hi=lo;while(hi<N&&sorted[hi]===x)hi++;var p=((lo+hi-1)/2)/(N-1);return inv?1-p:p}}
+  function grades(H){
+    var P={d:rankPct(H,'Dano_Causado'),k:rankPct(H,'KDA'),p:rankPct(H,'Participacao'),m:rankPct(H,'Mortes',true),c:rankPct(H,'Cura'),a:rankPct(H,'Assistencias')};
+    return H.map(function(r){var sup=isSupport(k(r,'Job')),sc=sup?(.35*P.c(r)+.30*P.a(r)+.25*P.p(r)+.10*P.m(r)):(.45*P.d(r)+.25*P.k(r)+.20*P.p(r)+.10*P.m(r));
+      return {r:r,sc:sc,sup:sup,g:sc>=.8?'S':sc>=.6?'A':sc>=.35?'B':'C'}}).sort(function(a,b){return b.sc-a.sc});
+  }
+  function hwbRender(ctx,war,t,res,H,B,api,isH,sum){
+    var body=$('hosdBody');if(!body)return;
+    var S2=function(a,key){return sum(a,key)},us=String(t.us),them=String(t.them);
+    var dH=S2(H,'Dano_Causado'),dB=S2(B,'Dano_Causado'),kH=S2(H,'Kills'),kB=S2(B,'Kills'),mH=S2(H,'Mortes'),mB=S2(B,'Mortes'),cH=S2(H,'Cura'),cB=S2(B,'Cura');
+    var fmtP=function(v){return Number.isFinite(v)?(v>=0?'+':'−')+nf(Math.abs(v),0)+'%':'—'};
+    /* --- por campo --- */
+    var fieldInfo=function(code){var h=H.filter(function(r){return campoOf(r)===code}),b=B.filter(function(r){return campoOf(r)===code});
+      var dh=S2(h,'Dano_Causado'),db=S2(b,'Dano_Causado'),df=pctDiff(dh,db);
+      return {h:h,b:b,dh:dh,db:db,kh:S2(h,'Kills'),kb:S2(b,'Kills'),mh:S2(h,'Mortes'),mb:S2(b,'Mortes'),st:!h.length&&!b.length?'none':!Number.isFinite(df)?(dh>0?'us':'eq'):df>15?'us':df<-15?'them':'eq'}};
+    var FP=fieldInfo('P'),FS=fieldInfo('S');
+    var fieldTxt=function(name,F){return F.st==='us'?'o '+name+' foi nosso':F.st==='them'?'no '+name+' a '+them+' levou a melhor':F.st==='eq'?'no '+name+' o jogo foi equilibrado':''};
+    /* --- resumo --- */
+    var dd=pctDiff(dH,dB),md=pctDiff(mH,mB),cd=pctDiff(cH,cB),resTxt;
+    if(res.c==='win')resTxt='Vitória por <b class="hwb-gold">'+esc(res.diff)+'</b>.';else if(res.c==='loss')resTxt='Derrota por <b class="hwb-red">'+esc(res.diff.replace('−',''))+'</b>.';else if(res.c==='draw')resTxt='Empate.';else resTxt='Placar ainda não informado.';
+    var parts=[];
+    if(Number.isFinite(dd))parts.push('Causamos <b>'+nf(Math.abs(dd),0)+'% '+(dd>=0?'mais':'menos')+' dano</b>');
+    if(Number.isFinite(md))parts.push('morremos <b>'+nf(Math.abs(md),0)+'% '+(md<=0?'menos':'mais')+'</b>');
+    var txt=resTxt+(parts.length?' '+parts.join(' e ')+' que a '+esc(them)+'.':'');
+    var ft=[fieldTxt('Campo Principal',FP),fieldTxt('Secundário',FS)].filter(Boolean);
+    if(ft.length)txt+=' '+ft.join('; ').replace(/^./,function(c){return c.toUpperCase()})+'.';
+    /* --- alertas --- */
+    var AL=[],name=function(r){return String(k(r,'Personagem')||'—')},big2=function(v){return big(v)};
+    if(Number.isFinite(dd))AL.push(dd>=0?['ok','Dano acima do adversário',big2(dH)+' contra '+big2(dB)+' ('+fmtP(dd)+').']:['bad','Dano abaixo do adversário',big2(dH)+' contra '+big2(dB)+' ('+fmtP(dd)+').']);
+    var topD=H.slice().sort(function(a,b){return (n(b.Dano_Causado)||0)-(n(a.Dano_Causado)||0)}).slice(0,2);
+    if(topD.length===2&&dH>0){var s2=(n(topD[0].Dano_Causado)||0)+(n(topD[1].Dano_Causado)||0);AL.push(['ok','Quem carregou o dano',name(topD[0])+' e '+name(topD[1])+' somaram '+big2(s2)+', '+nf(s2/dH*100,0)+'% do dano da guild.'])}
+    if(cH||cB)AL.push(cH>=cB?['ok','Cura acima do adversário','Curamos '+big2(cH)+' contra '+big2(cB)+' deles.']:['warn','Cura abaixo do adversário','Curamos '+big2(cH)+' contra '+big2(cB)+' deles ('+fmtP(cd)+').']);
+    var deathTop=H.slice().sort(function(a,b){return (n(b.Mortes)||0)-(n(a.Mortes)||0)}).slice(0,3).filter(function(r){return isSupport(k(r,'Job'))&&(n(r.Mortes)||0)>0});
+    if(deathTop.length)AL.push(['warn','Suportes morrendo muito',deathTop.map(function(r){return name(r)+' ('+nf(n(r.Mortes))+')'}).join(' e ')+' estão entre os que mais morreram. Vale rever posicionamento.']);
+    var byJob=function(L){var m={};L.forEach(function(r){var j=String(k(r,'Job')||'');if(unknownJob(j))return;m[j]=m[j]||{n:0,d:0};m[j].n++;m[j].d+=n(r.Dano_Causado)||0});return m};
+    var jH=byJob(H),jB=byJob(B),best=Object.keys(jB).sort(function(a,b){return jB[b].d-jB[a].d})[0];
+    if(best&&jB[best].d>0){
+      if(!jH[best])AL.push(['bad','Sem resposta para '+best,jB[best].n+' '+best+(jB[best].n>1?'s':'')+' deles causaram '+big2(jB[best].d)+'; não tivemos nenhum no plantel.']);
+      else if(jB[best].d>jH[best].d*1.3)AL.push(['warn',best+' deles rendeu mais','Os '+best+' da '+them+' causaram '+big2(jB[best].d)+' contra '+big2(jH[best].d)+' dos nossos.']);
+    }
+    var tile=function(l,v,c){return '<div><small>'+l+'</small><b class="'+(c||'')+'">'+v+'</b></div>'};
+    body.querySelector('.hwb-resumo').innerHTML='<div class="hwb-panel hwb-sum"><small class="hwb-kick">Resumo automático</small><p>'+txt+'</p><div class="hwb-tiles">'+
+      tile('Dano',fmtP(dd),dd>=0?'hwb-gold':'hwb-red')+tile('Kills',nf(kH),kH>=kB?'hwb-gold':'')+tile('Mortes',fmtP(md),md<=0?'hwb-green':'hwb-red')+tile('Cura',fmtP(cd),cd>=0?'hwb-green':'hwb-red')+'</div></div>'+
+      '<div class="hwb-panel hwb-alerts"><small class="hwb-kick dim">Pontos da guerra</small>'+AL.map(function(a){return '<div class="hwb-al"><i class="'+a[0]+'"></i><div><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></div></div>'}).join('')+'</div>';
+    S.boletim={txt:txt.replace(/<[^>]+>/g,''),al:AL,t:t,res:res};
+    /* --- campos --- */
+    var cmpRow=function(lbl,a,b,fa,fb,low){var wa=low?a<b:a>b,tt=(a+b)||1;return '<div class="hwb-cr"><b class="'+(wa?'us':'')+'">'+fa+'</b><span class="hwb-split"><i style="width:'+(a/tt*100)+'%"></i></span><b class="'+(!wa&&a!==b?'them':'')+'">'+fb+'</b></div><small class="hwb-crl">'+lbl+'</small>'};
+    var dest=function(L,cls){return L.slice().sort(function(a,b){return (n(b.Dano_Causado)||0)-(n(a.Dano_Causado)||0)}).slice(0,4).map(function(r){return '<div class="hwb-li">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+esc(k(r,'Job')||'')+'</small></span><b class="hwb-v '+cls+'">'+big(n(r.Dano_Causado))+'</b></div>'}).join('')||'<p class="hwb-empty">Ninguém neste campo.</p>'};
+    var fcol=function(title,F){
+      if(F.st==='none')return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b></div><p class="hwb-empty">Sem jogadores registrados neste campo.</p></div>';
+      var badge=F.st==='us'?'<span class="hwb-badge us">'+esc(us.toUpperCase())+' dominou</span>':F.st==='them'?'<span class="hwb-badge them">'+esc(them.toUpperCase())+' dominou</span>':'<span class="hwb-badge eq">Equilibrado</span>';
+      return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b>'+badge+'</div><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+'</small>'+
+        cmpRow('DANO',F.dh,F.db,big(F.dh),big(F.db))+cmpRow('KILLS',F.kh,F.kb,nf(F.kh),nf(F.kb))+cmpRow('MORTES',F.mh,F.mb,nf(F.mh),nf(F.mb),true)+
+        '<div class="hwb-dest"><div><small class="hwb-kick">Destaques '+esc(us)+'</small>'+dest(F.h,'us')+'</div><div><small class="hwb-kick them">Destaques '+esc(them)+'</small>'+dest(F.b,'them')+'</div></div></div>'};
+    body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP)+fcol('Campo Secundário',FS);
+    /* --- rankings --- */
+    var on=function(c,v,attr,label){return '<button type="button" class="hwb-chip'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
+    body.querySelector('.hwb-rkctl').innerHTML='<div class="hwb-rkh"><small class="hwb-kick dim">Status exibidos</small><span class="hwb-mono">'+R.stats.length+' de '+STAT_LIST.length+'</span><span class="hwb-sp"></span><button type="button" class="hwb-chip" data-hwb-preset="all">Marcar todos</button><button type="button" class="hwb-chip" data-hwb-preset="none">Limpar</button><button type="button" class="hwb-chip" data-hwb-preset="def">Padrão</button></div>'+
+      '<div class="hwb-stats">'+STAT_LIST.map(function(st){var c=R.stats.indexOf(st[0])>=0;return '<label class="hwb-chip'+(c?' on':'')+'"><input type="checkbox" data-hwb-stat="'+st[0]+'"'+(c?' checked':'')+'>'+esc(st[1])+'</label>'}).join('')+'</div>'+
+      '<div class="hwb-rkf"><small class="hwb-kick dim">Guilda</small>'+on(R.guild==='all','all','data-hwb-g','Ambas')+on(R.guild==='us','us','data-hwb-g','Só '+esc(us))+on(R.guild==='them','them','data-hwb-g','Só '+esc(them))+
+      '<small class="hwb-kick dim">Campo</small>'+on(R.campo==='all','all','data-hwb-c','Todos')+on(R.campo==='P','P','data-hwb-c','Principal')+on(R.campo==='S','S','data-hwb-c','Secundário')+
+      '<small class="hwb-kick dim">Jogadores por caixa</small>'+[5,10,20,0].map(function(x){return on(R.per===x,x,'data-hwb-per',x||'Todos')}).join('')+'</div>';
+    var pool=H.concat(B).filter(function(r){return (R.guild==='all'||(R.guild==='us')===isH(r))&&(R.campo==='all'||campoOf(r)===R.campo)});
+    var order=STAT_LIST.filter(function(s){return R.stats.indexOf(s[0])>=0});
+    body.querySelector('.hwb-rkgrid').innerHTML=order.length?order.map(function(st){
+      var key=st[0],col=RK_COLORS[key]||'#FFB627';
+      var L=pool.filter(function(r){return ok(r[key])}).sort(function(a,b){return n(b[key])-n(a[key])});
+      var base=R.per||L.length,extra=R.more[key]||0,cnt=Math.min(L.length,base+extra),exp=cnt>5;
+      var rows=L.slice(0,cnt).map(function(r,i){return '<div class="hwb-li"><span class="hwb-pos">'+(i+1)+'</span>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b>'+gtag(r,isH,t)+'</span><b class="hwb-v" style="color:'+col+'">'+esc(fmtMetric(key,n(r[key])))+'</b></div>'}).join('')||'<p class="hwb-empty">Sem dados.</p>';
+      var foot='';
+      if(L.length>cnt)foot+='<button type="button" class="hwb-btn" data-hwb-more="'+key+'">Ver mais +5</button>';
+      if(extra>0)foot+='<button type="button" class="hwb-btn" data-hwb-less="'+key+'">Mostrar menos</button>';
+      if(L.length>cnt)foot+='<button type="button" class="hwb-btn" data-hwb-allk="'+key+'">Ver todos ('+L.length+')</button>';
+      return '<div class="hwb-panel hwb-board'+(exp?' exp':'')+'" style="--c:'+col+(exp?';grid-row:span '+Math.min(8,Math.ceil(cnt/5.5)):'')+'"><div class="hwb-bh"><b>'+esc(key==='Mortes'?'Mais mortes':st[1])+'</b><small>'+(exp?'top '+cnt:(RK_NOTE[key]||''))+'</small></div>'+rows+(foot?'<div class="hwb-bf">'+foot+'</div>':'')+'</div>';
+    }).join(''):'<p class="hwb-empty hwb-panel">Nenhum status marcado. Escolha acima quais rankings quer ver.</p>';
+    /* --- notas --- */
+    var G=grades(H);S.grades=G;
+    body.querySelector('#hwbNotas .hwb-sh small').textContent=us.toUpperCase()+' · nota relativa aos jogadores da guild nesta guerra';
+    body.querySelector('.hwb-notas').innerHTML='<div class="hwb-legend"><span><b class="g-S">S</b> excelente</span><span><b class="g-A">A</b> muito bom</span><span><b class="g-B">B</b> dentro do esperado</span><span><b class="g-C">C</b> abaixo</span><span class="hwb-dim">DPS: dano, KDA, participação e mortes · Suporte: cura, assistências, participação e mortes</span></div>'+
+      '<div class="hwb-ngrid">'+G.map(function(x){var r=x.r;return '<div class="hwb-nc"><b class="hwb-grade g-'+x.g+'">'+x.g+'</b>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+(x.sup?'Cura '+big(n(r.Cura))+' · Assist. '+(ok(r.Assistencias)?nf(n(r.Assistencias)):'—'):big(n(r.Dano_Causado))+' · KDA '+(ok(r.KDA)?nf(n(r.KDA),2):'—'))+'</small></span></div>'}).join('')+'</div>';
+    /* --- lista --- */
+    var lb=body.querySelector('[data-hwb-lista]');lb.textContent=R.lista?'Esconder':'Mostrar';lb.setAttribute('aria-expanded',R.lista);body.querySelector('.hwb-lista').hidden=!R.lista;
+  }
+  function hwbCopy(){
+    var B=S.boletim;if(!B)return;var t=B.t,G=S.grades||[];
+    var lines=['**HIVEST × '+t.them+'** — '+(B.res.t||'')+(B.res.diff?' ('+B.res.diff+')':''),'',B.txt,''];
+    B.al.forEach(function(a){lines.push((a[0]==='ok'?'✅ ':a[0]==='warn'?'⚠️ ':'❌ ')+a[1]+': '+a[2])});
+    var by=function(g){return G.filter(function(x){return x.g===g}).map(function(x){return k(x.r,'Personagem')}).join(', ')};
+    if(G.length){lines.push('');if(by('S'))lines.push('🏅 Nota S: '+by('S'));if(by('A'))lines.push('Nota A: '+by('A'))}
+    var text=lines.join('\n'),btn=document.querySelector('[data-hwb-copy]');
+    var done=function(){if(btn){var o=btn.textContent;btn.textContent='Copiado ✓';setTimeout(function(){btn.textContent=o},1800)}};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,function(){prompt('Copie o boletim:',text)});else prompt('Copie o boletim:',text);
+  }
+  function hwbClick(e){
+    var a=e.target.closest('.hwb-nav a');
+    if(a){e.preventDefault();var el=document.querySelector(a.getAttribute('href'));if(el){if(a.getAttribute('href')==='#hwbLista'&&!R.lista){R.lista=true;draw()}el.scrollIntoView({behavior:'smooth',block:'start'})}
+      [].forEach.call(document.querySelectorAll('.hwb-nav a'),function(x){x.classList.toggle('on',x===a)});return true}
+    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-more],[data-hwb-less],[data-hwb-allk],[data-hwb-lista]');
+    if(!b)return false;var d=b.dataset;
+    if('hwbCopy' in d){hwbCopy();return true}
+    if(d.hwbPreset){R.stats=d.hwbPreset==='all'?STAT_LIST.map(function(s){return s[0]}):d.hwbPreset==='none'?[]:RK_DEFAULT.slice();R.save()}
+    else if(d.hwbG)R.guild=d.hwbG;
+    else if(d.hwbC)R.campo=d.hwbC;
+    else if(d.hwbPer!==undefined){R.per=+d.hwbPer;R.more={};R.save()}
+    else if(d.hwbMore)R.more[d.hwbMore]=(R.more[d.hwbMore]||0)+5;
+    else if(d.hwbLess)R.more[d.hwbLess]=0;
+    else if(d.hwbAllk)R.more[d.hwbAllk]=9999;
+    else if('hwbLista' in d)R.lista=!R.lista;
+    draw();return true;
   }
 
   window.hosWarDuel=function(ctx){
