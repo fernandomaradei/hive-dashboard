@@ -8880,6 +8880,7 @@ async function load(){
              GP:ex('gp'),
              Recursos:ex('resurrections','ressurreicoes','resurreicoes'),
              Moedas:ex('monsters','monstros'),
+             Horn:(extras&&Object.keys(extras).length)?(Number(extras['C:18'])||0)*5:(p.horn_seconds!=null?Number(p.horn_seconds):null),
              Minutos:ex('minutes_played','min_individual','minutes','minutos','time_played'),
              Titulos:ex('titulos','titles'),
              GuerrasParticipadas:1,
@@ -11478,7 +11479,7 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 #hosdBody .hwb-resumo{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
 #hosdBody .hwb-sum{padding:20px}
 #hosdBody .hwb-sum p{margin:8px 0 0;font-size:16px;line-height:1.6;color:var(--hos-text)}
-#hosdBody .hwb-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+#hosdBody .hwb-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:16px}
 #hosdBody .hwb-tiles small{display:block;font:700 10.5px var(--hos-mono);letter-spacing:.12em;color:var(--hos-dim);text-transform:uppercase}
 #hosdBody .hwb-tiles b{font:700 24px var(--hos-head)}
 #hosdBody .hwb-alerts{padding:12px 20px}
@@ -11623,6 +11624,13 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 #hosdBody .hwb-table tr.hit td{background:rgba(255,182,39,.10)!important}
 @media(min-width:900px){#hosdBody .hwb-table td.hwb-c-p{background:var(--hos-panel)!important}#hosdBody .hwb-table tr.hit td.hwb-c-p{background:#2a2414!important}}
 #hosdBody #hwbLista{display:none!important}
+#hosdBody .hwb-hornchip{color:var(--hos-accent);font-weight:700}
+#hosdBody .hwb-horn{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+#hosdBody .hwb-hr{display:grid;grid-template-columns:130px 80px 1fr 80px;gap:10px;align-items:center;margin-top:10px;font-size:13px;color:var(--hos-muted)}
+#hosdBody .hwb-hr>b{font:700 13px var(--hos-mono);color:var(--hos-dim);white-space:nowrap}
+#hosdBody .hwb-hr>b:nth-of-type(1){text-align:right}
+#hosdBody .hwb-hr>b.us{color:var(--hos-accent)}#hosdBody .hwb-hr>b.them{color:#4CC2FF}
+@media(max-width:640px){#hosdBody .hwb-hr{grid-template-columns:1fr 1fr;row-gap:4px}#hosdBody .hwb-hr>span:first-child{grid-column:1/-1}#hosdBody .hwb-hr .hwb-split{grid-column:1/-1;order:3}}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12314,7 +12322,7 @@ html body .hos-top{will-change:auto}
   var LIMIT=15;
   var SORTS=[['Dano_Causado','Dano causado','DANO CAUSADO'],['Dano_Recebido','Dano recebido','DANO RECEBIDO'],['Cura','Cura','CURA'],['KDA','KDA','KDA'],['Kills','Kills','KILLS'],['Assistencias','Assistências','ASSISTÊNCIAS'],['Mortes','Mortes','MORTES'],
     ['Participacao','Participação','PARTICIPAÇÃO'],['Power','Power','POWER'],['Merito','Mérito','MÉRITO'],['PP_Vigrid','PP Vigrid','PP VIGRID'],['GP','GP','GP'],['Recursos','Ressurreições','RESSURREIÇÕES'],['Moedas','Monstros','MONSTROS'],
-    ['Minutos','Minutos','MINUTOS'],['Tempo_Segundos','Tempo','TEMPO (SEG)'],['Dano_Power','Dano/Power','DANO / POWER'],['Personagem','Nome','DANO CAUSADO'],['Job','Classe','DANO CAUSADO']];
+    ['Horn','Horn (s)','HORN (S)'],['Minutos','Minutos','MINUTOS'],['Tempo_Segundos','Tempo','TEMPO (SEG)'],['Dano_Power','Dano/Power','DANO / POWER'],['Personagem','Nome','DANO CAUSADO'],['Job','Classe','DANO CAUSADO']];
   var TEXT_SORT={Personagem:1,Job:1};
   var DOW=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
 
@@ -12542,12 +12550,12 @@ html body .hos-top{will-change:auto}
   }
 
   /* ================= Boletim · Por campo · Rankings · Notas ================= */
-  var RK_DEFAULT=['Dano_Causado','Kills','Assistencias','KDA','Cura','Dano_Recebido','Participacao','Mortes'];
-  var RK_COLORS={Dano_Causado:'#FFB627',Kills:'#FF8A3D',Assistencias:'#B78CFF',KDA:'#E7D2FF',Cura:'#34E3A0',Dano_Recebido:'#4CC2FF',Participacao:'#5FE0C8',Mortes:'#FF7A7A',Power:'#FFD27A',Merito:'#F2C94C',PP_Vigrid:'#9BE15D',GP:'#7C8CFF',Recursos:'#FF7FB0',Moedas:'#C7A27C',Minutos:'#AEB8C6',Tempo_Segundos:'#AEB8C6',Dano_Power:'#FFB627'};
+  var RK_DEFAULT=['Dano_Causado','Kills','Assistencias','KDA','Cura','Dano_Recebido','Participacao','Mortes','Horn'];
+  var RK_COLORS={Dano_Causado:'#FFB627',Kills:'#FF8A3D',Assistencias:'#B78CFF',KDA:'#E7D2FF',Cura:'#34E3A0',Dano_Recebido:'#4CC2FF',Participacao:'#5FE0C8',Mortes:'#FF7A7A',Power:'#FFD27A',Merito:'#F2C94C',PP_Vigrid:'#9BE15D',GP:'#7C8CFF',Recursos:'#FF7FB0',Moedas:'#C7A27C',Minutos:'#AEB8C6',Horn:'#F2C94C',Tempo_Segundos:'#AEB8C6',Dano_Power:'#FFB627'};
   var RK_NOTE={Dano_Recebido:'quem segurou',Mortes:'atenção'};
   var R={stats:RK_DEFAULT.slice(),guild:'all',campo:'all',per:25,more:{},lista:false,cls:'',sort:'Dano_Causado',dir:-1,cols:false,shown:0,
-    load:function(){try{var x=JSON.parse(localStorage.getItem('hwbRanks')||'null');if(x&&Array.isArray(x.stats)){this.stats=x.stats.filter(function(k){return SORTS.some(function(s){return s[0]===k})});if(x.per&&x.per!==5&&x.per!==10&&x.per!==20)this.per=x.per}}catch(e){}},
-    save:function(){try{localStorage.setItem('hwbRanks',JSON.stringify({stats:this.stats,per:this.per}))}catch(e){}}};
+    load:function(){try{var x=JSON.parse(localStorage.getItem('hwbRanks')||'null');if(x&&Array.isArray(x.stats)){this.stats=x.stats.filter(function(k){return SORTS.some(function(s){return s[0]===k})});if(x.per&&x.per!==5&&x.per!==10&&x.per!==20)this.per=x.per;if(!x.horn&&this.stats.indexOf('Horn')<0){this.stats.push('Horn');this.save()}}}catch(e){}},
+    save:function(){try{localStorage.setItem('hwbRanks',JSON.stringify({stats:this.stats,per:this.per,horn:1}))}catch(e){}}};
   R.load();
   var STAT_LIST=SORTS.filter(function(s){return !TEXT_SORT[s[0]]});
   function campoOf(r){var c=String(k(r,'Campo')||'').toUpperCase();return c.indexOf('PRINC')===0?'P':c.indexOf('SECUND')===0?'S':''}
@@ -12569,10 +12577,12 @@ html body .hos-top{will-change:auto}
     var S2=function(a,key){return sum(a,key)},us=String(t.us),them=String(t.them);
     var dH=S2(H,'Dano_Causado'),dB=S2(B,'Dano_Causado'),kH=S2(H,'Kills'),kB=S2(B,'Kills'),mH=S2(H,'Mortes'),mB=S2(B,'Mortes'),cH=S2(H,'Cura'),cB=S2(B,'Cura');
     var fmtP=function(v){return Number.isFinite(v)?(v>=0?'+':'−')+nf(Math.abs(v),0)+'%':'—'};
+    var hasHorn=H.concat(B).some(function(r){return r.Horn!==null&&r.Horn!==undefined&&r.Horn!==''});
+    var secs=function(v){v=Math.round(v||0);var m=Math.floor(v/60),r=v%60;return nf(v)+' s'+(v>=60?' ('+m+'min'+(r?String(r).padStart(2,'0')+'s':'')+')':'')};
     /* --- por campo --- */
     var fieldInfo=function(code){var h=H.filter(function(r){return campoOf(r)===code}),b=B.filter(function(r){return campoOf(r)===code});
       var dh=S2(h,'Dano_Causado'),db=S2(b,'Dano_Causado'),df=pctDiff(dh,db);
-      return {h:h,b:b,dh:dh,db:db,kh:S2(h,'Kills'),kb:S2(b,'Kills'),mh:S2(h,'Mortes'),mb:S2(b,'Mortes'),st:!h.length&&!b.length?'none':!Number.isFinite(df)?(dh>0?'us':'eq'):df>15?'us':df<-15?'them':'eq'}};
+      return {h:h,b:b,dh:dh,db:db,hh:S2(h,'Horn'),hb:S2(b,'Horn'),kh:S2(h,'Kills'),kb:S2(b,'Kills'),mh:S2(h,'Mortes'),mb:S2(b,'Mortes'),st:!h.length&&!b.length?'none':!Number.isFinite(df)?(dh>0?'us':'eq'):df>15?'us':df<-15?'them':'eq'}};
     var FP=fieldInfo('P'),FS=fieldInfo('S');
     var fieldTxt=function(name,F){return F.st==='us'?'o '+name+' foi nosso':F.st==='them'?'no '+name+' a '+them+' levou a melhor':F.st==='eq'?'no '+name+' o jogo foi equilibrado':''};
     /* --- resumo --- */
@@ -12601,9 +12611,10 @@ html body .hos-top{will-change:auto}
       if(!jH[best])AL.push(['bad','Sem resposta para '+best,jB[best].n+' '+best+(jB[best].n>1?'s':'')+' deles causaram '+big2(jB[best].d)+'; não tivemos nenhum no plantel.']);
       else if(jB[best].d>jH[best].d*1.3)AL.push(['warn',best+' deles rendeu mais','Os '+best+' da '+them+' causaram '+big2(jB[best].d)+' contra '+big2(jH[best].d)+' dos nossos.']);
     }
+    if(hasHorn){[['Principal',FP],['Secundário',FS]].forEach(function(x){var F=x[1];if(F.hh||F.hb){if(F.hh>=F.hb)AL.push(['ok','Horn no '+x[0],'Seguramos o horn por '+secs(F.hh)+' contra '+secs(F.hb)+' da '+them+'.']);else AL.push(['warn','Horn no '+x[0],'A '+them+' segurou o horn por '+secs(F.hb)+' contra '+secs(F.hh)+' nossos.'])}})}
     var tile=function(l,v,c){return '<div><small>'+l+'</small><b class="'+(c||'')+'">'+v+'</b></div>'};
     body.querySelector('.hwb-resumo').innerHTML='<div class="hwb-panel hwb-sum"><small class="hwb-kick">Resumo automático</small><p>'+txt+'</p><div class="hwb-tiles">'+
-      tile('Dano',fmtP(dd),dd>=0?'hwb-gold':'hwb-red')+tile('Kills',nf(kH),kH>=kB?'hwb-gold':'')+tile('Mortes',fmtP(md),md<=0?'hwb-green':'hwb-red')+tile('Cura',fmtP(cd),cd>=0?'hwb-green':'hwb-red')+'</div></div>'+
+      tile('Dano',fmtP(dd),dd>=0?'hwb-gold':'hwb-red')+tile('Kills',nf(kH),kH>=kB?'hwb-gold':'')+tile('Mortes',fmtP(md),md<=0?'hwb-green':'hwb-red')+tile('Cura',fmtP(cd),cd>=0?'hwb-green':'hwb-red')+''+'</div>'+(hasHorn?'<div class="hwb-horn"><small class="hwb-kick">Tempo de horn</small>'+[['Campo Principal',FP],['Campo Secundário',FS]].map(function(x){var F=x[1],tt=(F.hh+F.hb)||1;return '<div class="hwb-hr"><span>'+x[0]+'</span><b class="'+(F.hh>=F.hb?'us':'')+'">'+nf(Math.round(F.hh||0))+' s</b><span class="hwb-split"><i style="width:'+(F.hh/tt*100)+'%"></i></span><b class="'+(F.hb>F.hh?'them':'')+'">'+nf(Math.round(F.hb||0))+' s</b></div>'}).join('')+'</div>':'')+'</div>'+
       '<div class="hwb-panel hwb-alerts"><small class="hwb-kick dim">Pontos da guerra</small>'+AL.map(function(a){return '<div class="hwb-al"><i class="'+a[0]+'"></i><div><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></div></div>'}).join('')+'</div>';
     S.boletim={txt:txt.replace(/<[^>]+>/g,''),al:AL,t:t,res:res};
     /* --- campos --- */
@@ -12612,8 +12623,8 @@ html body .hos-top{will-change:auto}
     var fcol=function(title,F){
       if(F.st==='none')return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b></div><p class="hwb-empty">Sem jogadores registrados neste campo.</p></div>';
       var badge=F.st==='us'?'<span class="hwb-badge us">'+esc(us.toUpperCase())+' dominou</span>':F.st==='them'?'<span class="hwb-badge them">'+esc(them.toUpperCase())+' dominou</span>':'<span class="hwb-badge eq">Equilibrado</span>';
-      return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b>'+badge+'</div><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+'</small>'+
-        cmpRow('DANO',F.dh,F.db,big(F.dh),big(F.db))+cmpRow('KILLS',F.kh,F.kb,nf(F.kh),nf(F.kb))+cmpRow('MORTES',F.mh,F.mb,nf(F.mh),nf(F.mb),true)+
+      return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b>'+badge+'</div><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+(hasHorn?' · <span class="hwb-hornchip">Horn '+secs(F.hh)+' × '+secs(F.hb)+'</span>':'')+'</small>'+
+        cmpRow('DANO',F.dh,F.db,big(F.dh),big(F.db))+cmpRow('KILLS',F.kh,F.kb,nf(F.kh),nf(F.kb))+cmpRow('MORTES',F.mh,F.mb,nf(F.mh),nf(F.mb),true)+(hasHorn?cmpRow('TEMPO DE HORN (S)',F.hh,F.hb,nf(Math.round(F.hh||0)),nf(Math.round(F.hb||0))):'')+
         '<div class="hwb-dest"><div><small class="hwb-kick">Destaques '+esc(us)+'</small>'+dest(F.h,'us')+'</div><div><small class="hwb-kick them">Destaques '+esc(them)+'</small>'+dest(F.b,'them')+'</div></div></div>'};
     body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP)+fcol('Campo Secundário',FS);
     /* --- rankings (tabela) --- */
