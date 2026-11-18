@@ -12333,11 +12333,10 @@ html body .hos-top{will-change:auto}
     var ra=sec.querySelector('.hivest-report-actions');if(ra)acts.appendChild(ra);
     var body=document.createElement('div');body.id='hosdBody';body.className='hosd';
     body.innerHTML=
-      '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><a href="#hwbNotas">Notas</a><a href="#hwbLista">Lista completa</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
+      '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><a href="#hwbLista">Lista completa</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
       '<section id="hwbResumo" class="hwb-sec"><div class="hwb-sh"><h2>Boletim da guerra</h2><small>resumo escrito a partir dos números + alertas</small></div><div class="hwb-resumo"></div></section>'+
       '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
       '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>escolha quais status ver; cada caixa expande para mais jogadores</small></div><div class="hwb-rkctl hwb-panel"></div><div class="hwb-rkgrid"></div></section>'+
-      '<section id="hwbNotas" class="hwb-sec"><div class="hwb-sh"><h2>Nota de cada jogador</h2><small></small></div><div class="hwb-notas hwb-panel"></div></section>'+
       '<section id="hwbLista" class="hwb-sec"><div class="hwb-sh"><h2>Lista completa</h2><small>todos os jogadores com todos os números</small><button type="button" class="hwb-btn" data-hwb-lista aria-expanded="false">Mostrar</button></div><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
     var anchor=$('warResultsTitle');
     sec.insertBefore(body,anchor||null);
@@ -12566,20 +12565,13 @@ html body .hos-top{will-change:auto}
       if(L.length>cnt)foot+='<button type="button" class="hwb-btn" data-hwb-allk="'+key+'">Ver todos ('+L.length+')</button>';
       return '<div class="hwb-panel hwb-board'+(exp?' exp':'')+'" style="--c:'+col+(exp?';grid-row:span '+Math.min(8,Math.ceil(cnt/5.5)):'')+'"><div class="hwb-bh"><b>'+esc(key==='Mortes'?'Mais mortes':st[1])+'</b><small>'+(exp?'top '+cnt:(RK_NOTE[key]||''))+'</small></div>'+rows+(foot?'<div class="hwb-bf">'+foot+'</div>':'')+'</div>';
     }).join(''):'<p class="hwb-empty hwb-panel">Nenhum status marcado. Escolha acima quais rankings quer ver.</p>';
-    /* --- notas --- */
-    var G=grades(H);S.grades=G;
-    body.querySelector('#hwbNotas .hwb-sh small').textContent=us.toUpperCase()+' · nota relativa aos jogadores da guild nesta guerra';
-    body.querySelector('.hwb-notas').innerHTML='<div class="hwb-legend"><span><b class="g-S">S</b> excelente</span><span><b class="g-A">A</b> muito bom</span><span><b class="g-B">B</b> dentro do esperado</span><span><b class="g-C">C</b> abaixo</span><span class="hwb-dim">DPS: dano, KDA, participação e mortes · Suporte: cura, assistências, participação e mortes</span></div>'+
-      '<div class="hwb-ngrid">'+G.map(function(x){var r=x.r;return '<div class="hwb-nc"><b class="hwb-grade g-'+x.g+'">'+x.g+'</b>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+(x.sup?'Cura '+big(n(r.Cura))+' · Assist. '+(ok(r.Assistencias)?nf(n(r.Assistencias)):'—'):big(n(r.Dano_Causado))+' · KDA '+(ok(r.KDA)?nf(n(r.KDA),2):'—'))+'</small></span></div>'}).join('')+'</div>';
     /* --- lista --- */
     var lb=body.querySelector('[data-hwb-lista]');lb.textContent=R.lista?'Esconder':'Mostrar';lb.setAttribute('aria-expanded',R.lista);body.querySelector('.hwb-lista').hidden=!R.lista;
   }
   function hwbCopy(){
-    var B=S.boletim;if(!B)return;var t=B.t,G=S.grades||[];
+    var B=S.boletim;if(!B)return;var t=B.t;
     var lines=['**HIVEST × '+t.them+'** — '+(B.res.t||'')+(B.res.diff?' ('+B.res.diff+')':''),'',B.txt,''];
     B.al.forEach(function(a){lines.push((a[0]==='ok'?'✅ ':a[0]==='warn'?'⚠️ ':'❌ ')+a[1]+': '+a[2])});
-    var by=function(g){return G.filter(function(x){return x.g===g}).map(function(x){return k(x.r,'Personagem')}).join(', ')};
-    if(G.length){lines.push('');if(by('S'))lines.push('🏅 Nota S: '+by('S'));if(by('A'))lines.push('Nota A: '+by('A'))}
     var text=lines.join('\n'),btn=document.querySelector('[data-hwb-copy]');
     var done=function(){if(btn){var o=btn.textContent;btn.textContent='Copiado ✓';setTimeout(function(){btn.textContent=o},1800)}};
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,function(){prompt('Copie o boletim:',text)});else prompt('Copie o boletim:',text);
