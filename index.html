@@ -11558,6 +11558,18 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
  #hosdBody .hwb-rkgrid{grid-template-columns:1fr}
  #hosdBody .hwb-ngrid{grid-template-columns:1fr}
 }
+#hosdBody .hwb-sub{display:flex;align-items:baseline;gap:6px;min-width:0;white-space:nowrap;overflow:hidden}
+#hosdBody .hwb-sub .hwb-gt{display:inline;flex:none}
+#hosdBody .hwb-job{font:600 11px var(--hos-body);overflow:hidden;text-overflow:ellipsis;min-width:0}
+#hosdBody .hwb-sub .hwb-gt+.hwb-job:before{content:'·';color:var(--hos-dim);margin-right:6px}
+#hosdBody .hwb-rksearch{position:relative;margin-bottom:10px}
+#hosdBody .hwb-rksearch svg{position:absolute;left:14px;top:50%;width:18px;height:18px;transform:translateY(-50%);fill:none;stroke:var(--hos-dim);stroke-width:2;stroke-linecap:round;pointer-events:none}
+#hosdBody .hwb-rksearch input{width:100%;box-sizing:border-box;height:46px;padding:0 44px 0 42px;background:var(--hos-panel);border:1px solid var(--hos-line2);border-radius:12px;color:var(--hos-text);font:500 14px var(--hos-body);outline:none}
+#hosdBody .hwb-rksearch input:focus{border-color:var(--hos-accent)}
+#hosdBody .hwb-rksearch input::-webkit-search-cancel-button{display:none}
+#hosdBody .hwb-qx{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:8px;border:0;background:rgba(255,255,255,.06);color:var(--hos-text);cursor:pointer}
+#hosdBody .hwb-hit{background:rgba(255,182,39,.07);border-radius:8px;padding-left:6px;padding-right:6px}
+#hosdBody .hwb-hit .hwb-pos{color:var(--hos-accent);font-weight:700;min-width:28px}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12336,7 +12348,7 @@ html body .hos-top{will-change:auto}
       '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><a href="#hwbLista">Lista completa</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
       '<section id="hwbResumo" class="hwb-sec"><div class="hwb-sh"><h2>Boletim da guerra</h2><small>resumo escrito a partir dos números + alertas</small></div><div class="hwb-resumo"></div></section>'+
       '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
-      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>escolha quais status ver; cada caixa expande para mais jogadores</small></div><div class="hwb-rkctl hwb-panel"></div><div class="hwb-rkgrid"></div></section>'+
+      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>escolha quais status ver; cada caixa expande para mais jogadores</small></div><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador nos rankings…" aria-label="Procurar jogador nos rankings" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl hwb-panel"></div><div class="hwb-rkgrid"></div></section>'+
       '<section id="hwbLista" class="hwb-sec"><div class="hwb-sh"><h2>Lista completa</h2><small>todos os jogadores com todos os números</small><button type="button" class="hwb-btn" data-hwb-lista aria-expanded="false">Mostrar</button></div><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
     var anchor=$('warResultsTitle');
     sec.insertBefore(body,anchor||null);
@@ -12361,6 +12373,8 @@ html body .hos-top{will-change:auto}
       var id=t.dataset.hosdRow;S.open[id]=!S.open[id];
       var row=t.closest('.hosd-row');if(row){row.classList.toggle('open',!!S.open[id]);t.setAttribute('aria-expanded',S.open[id]?'true':'false');var ex=row.querySelector('.hosd-extra');if(ex)ex.hidden=!S.open[id]}
     });
+    var qt=null,qi=body.querySelector('#hwbQ');
+    qi.addEventListener('input',function(){clearTimeout(qt);qt=setTimeout(function(){R.q=qi.value;body.querySelector('[data-hwb-qx]').hidden=!R.q;draw()},120)});
     body.addEventListener('change',function(e){var c=e.target.closest('[data-hwb-stat]');if(!c)return;var k2=c.getAttribute('data-hwb-stat'),i=R.stats.indexOf(k2);if(c.checked&&i<0)R.stats.push(k2);if(!c.checked&&i>=0)R.stats.splice(i,1);R.save();draw()});
     return sec;
   }
@@ -12488,6 +12502,7 @@ html body .hos-top{will-change:auto}
   function pctDiff(a,b){return b?((a-b)/b*100):NaN}
   function hart(r){var name=String(k(r,'Personagem')||'—'),jobn=String(k(r,'Job')||''),art=(!unknownJob(jobn)&&window.hosArtFor)?window.hosArtFor(jobn,name):null;
     return '<span class="hwb-av"'+(art&&art.color?' style="background:'+esc(art.color)+'"':'')+'>'+(art&&art.src?'<img src="'+esc(art.src)+'" alt="" loading="lazy">':'<b>'+esc(initials(name))+'</b>')+'</span>'}
+  function jtag(r){var j=String(k(r,'Job')||'');if(unknownJob(j))return '';var art=window.hosArtFor?window.hosArtFor(j,String(k(r,'Personagem')||'')):null;return '<span class="hwb-job"'+(art&&art.color?' style="color:'+esc(art.color)+'"':'')+'>'+esc(j)+'</span>'}
   function gtag(r,isH,t){return isH(r)?'<span class="hwb-gt us">'+esc(String(t.us).toUpperCase())+'</span>':'<span class="hwb-gt them">'+esc(String(t.them).toUpperCase())+'</span>'}
   function rankPct(list,key,inv){var v=list.map(function(r){var x=n(r[key]);return Number.isFinite(x)?x:0}),sorted=v.slice().sort(function(a,b){return a-b}),N=v.length;
     return function(r){var x=n(r[key]);x=Number.isFinite(x)?x:0;if(N<2)return .5;var lo=0;while(lo<N&&sorted[lo]<x)lo++;var hi=lo;while(hi<N&&sorted[hi]===x)hi++;var p=((lo+hi-1)/2)/(N-1);return inv?1-p:p}}
@@ -12554,11 +12569,17 @@ html body .hos-top{will-change:auto}
       '<small class="hwb-kick dim">Jogadores por caixa</small>'+[5,10,20,0].map(function(x){return on(R.per===x,x,'data-hwb-per',x||'Todos')}).join('')+'</div>';
     var pool=H.concat(B).filter(function(r){return (R.guild==='all'||(R.guild==='us')===isH(r))&&(R.campo==='all'||campoOf(r)===R.campo)});
     var order=STAT_LIST.filter(function(s){return R.stats.indexOf(s[0])>=0});
+    var norm=function(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')},qn=norm(R.q||'').trim();
     body.querySelector('.hwb-rkgrid').innerHTML=order.length?order.map(function(st){
       var key=st[0],col=RK_COLORS[key]||'#FFB627';
       var L=pool.filter(function(r){return ok(r[key])}).sort(function(a,b){return n(b[key])-n(a[key])});
       var base=R.per||L.length,extra=R.more[key]||0,cnt=Math.min(L.length,base+extra),exp=cnt>5;
-      var rows=L.slice(0,cnt).map(function(r,i){return '<div class="hwb-li"><span class="hwb-pos">'+(i+1)+'</span>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b>'+gtag(r,isH,t)+'</span><b class="hwb-v" style="color:'+col+'">'+esc(fmtMetric(key,n(r[key])))+'</b></div>'}).join('')||'<p class="hwb-empty">Sem dados.</p>';
+      if(qn){
+        var hits=[];L.forEach(function(r,i){if(norm(name(r)).indexOf(qn)>=0)hits.push([r,i])});
+        var hr=hits.slice(0,8).map(function(h){var r=h[0];return '<div class="hwb-li hwb-hit"><span class="hwb-pos">'+(h[1]+1)+'º</span>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><span class="hwb-sub">'+gtag(r,isH,t)+jtag(r)+'</span></span><b class="hwb-v" style="color:'+col+'">'+esc(fmtMetric(key,n(r[key])))+'</b></div>'}).join('')||'<p class="hwb-empty">Não aparece neste ranking.</p>';
+        return '<div class="hwb-panel hwb-board" style="--c:'+col+'"><div class="hwb-bh"><b>'+esc(key==='Mortes'?'Mais mortes':st[1])+'</b><small>posição de '+L.length+'</small></div>'+hr+'</div>';
+      }
+      var rows=L.slice(0,cnt).map(function(r,i){return '<div class="hwb-li"><span class="hwb-pos">'+(i+1)+'</span>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><span class="hwb-sub">'+gtag(r,isH,t)+jtag(r)+'</span></span><b class="hwb-v" style="color:'+col+'">'+esc(fmtMetric(key,n(r[key])))+'</b></div>'}).join('')||'<p class="hwb-empty">Sem dados.</p>';
       var foot='';
       if(L.length>cnt)foot+='<button type="button" class="hwb-btn" data-hwb-more="'+key+'">Ver mais +5</button>';
       if(extra>0)foot+='<button type="button" class="hwb-btn" data-hwb-less="'+key+'">Mostrar menos</button>';
@@ -12580,7 +12601,7 @@ html body .hos-top{will-change:auto}
     var a=e.target.closest('.hwb-nav a');
     if(a){e.preventDefault();var el=document.querySelector(a.getAttribute('href'));if(el){if(a.getAttribute('href')==='#hwbLista'&&!R.lista){R.lista=true;draw()}el.scrollIntoView({behavior:'smooth',block:'start'})}
       [].forEach.call(document.querySelectorAll('.hwb-nav a'),function(x){x.classList.toggle('on',x===a)});return true}
-    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-more],[data-hwb-less],[data-hwb-allk],[data-hwb-lista]');
+    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-more],[data-hwb-less],[data-hwb-allk],[data-hwb-lista],[data-hwb-qx]');
     if(!b)return false;var d=b.dataset;
     if('hwbCopy' in d){hwbCopy();return true}
     if(d.hwbPreset){R.stats=d.hwbPreset==='all'?STAT_LIST.map(function(s){return s[0]}):d.hwbPreset==='none'?[]:RK_DEFAULT.slice();R.save()}
@@ -12591,6 +12612,7 @@ html body .hos-top{will-change:auto}
     else if(d.hwbLess)R.more[d.hwbLess]=0;
     else if(d.hwbAllk)R.more[d.hwbAllk]=9999;
     else if('hwbLista' in d)R.lista=!R.lista;
+    else if('hwbQx' in d){R.q='';var qi=document.getElementById('hwbQ');if(qi){qi.value='';qi.focus()}b.hidden=true}
     draw();return true;
   }
 
