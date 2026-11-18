@@ -12619,13 +12619,13 @@ html body .hos-top{will-change:auto}
     S.boletim={txt:txt.replace(/<[^>]+>/g,''),al:AL,t:t,res:res};
     /* --- campos --- */
     var cmpRow=function(lbl,a,b,fa,fb,low){var wa=low?a<b:a>b,tt=(a+b)||1;return '<div class="hwb-cr"><b class="'+(wa?'us':'')+'">'+fa+'</b><span class="hwb-split"><i style="width:'+(a/tt*100)+'%"></i></span><b class="'+(!wa&&a!==b?'them':'')+'">'+fb+'</b></div><small class="hwb-crl">'+lbl+'</small>'};
-    var dest=function(L,cls){return L.slice().sort(function(a,b){return (n(b.Dano_Causado)||0)-(n(a.Dano_Causado)||0)}).slice(0,4).map(function(r){return '<div class="hwb-li">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+esc(k(r,'Job')||'')+'</small></span><b class="hwb-v '+cls+'">'+big(n(r.Dano_Causado))+'</b></div>'}).join('')||'<p class="hwb-empty">Ninguém neste campo.</p>'};
+    var dest=function(L,key,fmt){var X=L.filter(function(r){return (n(r[key])||0)>0}).sort(function(a,b){return (n(b[key])||0)-(n(a[key])||0)}).slice(0,4);return X.map(function(r){return '<div class="hwb-li">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+esc(k(r,'Job')||'')+'</small></span><b class="hwb-v us">'+fmt(n(r[key]))+'</b></div>'}).join('')||'<p class="hwb-empty">'+(key==='Horn'?'Ninguém segurou o horn neste campo.':'Ninguém neste campo.')+'</p>'};
     var fcol=function(title,F){
       if(F.st==='none')return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b></div><p class="hwb-empty">Sem jogadores registrados neste campo.</p></div>';
       var badge=F.st==='us'?'<span class="hwb-badge us">'+esc(us.toUpperCase())+' dominou</span>':F.st==='them'?'<span class="hwb-badge them">'+esc(them.toUpperCase())+' dominou</span>':'<span class="hwb-badge eq">Equilibrado</span>';
       return '<div class="hwb-panel hwb-field"><div class="hwb-fh"><b>'+title+'</b>'+badge+'</div><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+(hasHorn?' · <span class="hwb-hornchip">Horn '+secs(F.hh)+' × '+secs(F.hb)+'</span>':'')+'</small>'+
         cmpRow('DANO',F.dh,F.db,big(F.dh),big(F.db))+cmpRow('KILLS',F.kh,F.kb,nf(F.kh),nf(F.kb))+cmpRow('MORTES',F.mh,F.mb,nf(F.mh),nf(F.mb),true)+(hasHorn?cmpRow('TEMPO DE HORN (S)',F.hh,F.hb,nf(Math.round(F.hh||0)),nf(Math.round(F.hb||0))):'')+
-        '<div class="hwb-dest"><div><small class="hwb-kick">Destaques '+esc(us)+'</small>'+dest(F.h,'us')+'</div><div><small class="hwb-kick them">Destaques '+esc(them)+'</small>'+dest(F.b,'them')+'</div></div></div>'};
+        '<div class="hwb-dest"><div><small class="hwb-kick">Destaques '+esc(us)+' · Dano</small>'+dest(F.h,'Dano_Causado',big)+'</div>'+(hasHorn?'<div><small class="hwb-kick">Destaques '+esc(us)+' · Tempo de horn</small>'+dest(F.h,'Horn',function(v){return nf(v)+' s'})+'</div>':'')+'</div></div>'};
     body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP)+fcol('Campo Secundário',FS);
     /* --- rankings (tabela) --- */
     var on=function(c,v,attr,label){return '<button type="button" class="hwb-sg'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
