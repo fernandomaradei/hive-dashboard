@@ -11622,6 +11622,7 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 #hosdBody .hwb-table tbody tr:hover td{background:rgba(255,255,255,.03)!important}
 #hosdBody .hwb-table tr.hit td{background:rgba(255,182,39,.10)!important}
 @media(min-width:900px){#hosdBody .hwb-table td.hwb-c-p{background:var(--hos-panel)!important}#hosdBody .hwb-table tr.hit td.hwb-c-p{background:#2a2414!important}}
+#hosdBody #hwbLista{display:none!important}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12397,11 +12398,11 @@ html body .hos-top{will-change:auto}
     var ra=sec.querySelector('.hivest-report-actions');if(ra)acts.appendChild(ra);
     var body=document.createElement('div');body.id='hosdBody';body.className='hosd';
     body.innerHTML=
-      '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><a href="#hwbLista">Lista completa</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
+      '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
       '<section id="hwbResumo" class="hwb-sec"><div class="hwb-sh"><h2>Boletim da guerra</h2><small>resumo escrito a partir dos números + alertas</small></div><div class="hwb-resumo"></div></section>'+
       '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
-      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>uma linha por jogador · clique no título da coluna para ordenar · o selo é a posição naquele status</small></div><div class="hwb-tbar hwb-panel"><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador…" aria-label="Procurar jogador" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl"></div></div><div class="hwb-tbl hwb-panel"></div></section>'+
-      '<section id="hwbLista" class="hwb-sec"><div class="hwb-sh"><h2>Lista completa</h2><small>todos os jogadores com todos os números</small><button type="button" class="hwb-btn" data-hwb-lista aria-expanded="false">Mostrar</button></div><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
+      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>uma linha por jogador · clique no título da coluna para ordenar · filtre um campo para ver as posições</small></div><div class="hwb-tbar hwb-panel"><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador…" aria-label="Procurar jogador" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl"></div></div><div class="hwb-tbl hwb-panel"></div></section>'+
+      '<section id="hwbLista" class="hwb-sec" hidden><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
     var anchor=$('warResultsTitle');
     sec.insertBefore(body,anchor||null);
     var fl=sec.querySelector('.war-filters');
@@ -12639,15 +12640,15 @@ html body .hos-top{will-change:auto}
     var arrow=function(key){return key===sk?'<i aria-hidden="true">'+(R.dir<0?' ▼':' ▲')+'</i>':''};
     var th='<th class="hwb-c-n">#</th><th class="hwb-c-p"><button type="button" data-hwb-sort="Personagem">JOGADOR'+arrow('Personagem')+'</button></th><th class="hwb-c-f">CAMPO</th>'+
       cols.map(function(st){return '<th class="hwb-num'+(st[0]===sk?' on':'')+'"><button type="button" data-hwb-sort="'+st[0]+'">'+esc(st[2])+arrow(st[0])+'</button></th>'}).join('');
-    var badge=function(key,rk){if(!rk)return '';var c=rk<=3?(key==='Mortes'?'bad':'m'+rk):'';return '<span class="hwb-rk '+c+'">'+rk+'º</span>'};
+    var showRk=R.campo!=='all';
+    var badge=function(key,rk){if(!rk||!showRk)return '';var c=rk<=3?(key==='Mortes'?'bad':'m'+rk):'';return '<span class="hwb-rk '+c+'">'+rk+'º</span>'};
     var tb=vis.map(function(x){var r=x[0],cf=campoOf(r),hit=qn&&norm(name(r)).indexOf(qn)>=0;
       return '<tr'+(hit?' class="hit"':'')+'><td class="hwb-c-n">'+x[1]+'</td><td class="hwb-c-p"><div class="hwb-who">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><span class="hwb-sub">'+gtag(r,isH,t)+jtag(r)+'</span></span></div></td><td class="hwb-c-f">'+(cf==='P'?'Principal':cf==='S'?'Secundário':'—')+'</td>'+
         cols.map(function(st){var key=st[0],v=n(r[key]);return '<td class="hwb-num'+(key===sk?' on':'')+'">'+(Number.isFinite(v)?esc(fmtMetric(key,v))+badge(key,rankOf[key].get(r)):'—')+'</td>'}).join('')+'</tr>'}).join('');
-    var foot='<div class="hwb-tfoot"><span>Mostrando '+vis.length+' de '+rowsAll.length+(rowsAll.length!==H.length+B.length?' (de '+(H.length+B.length)+' na guerra)':'')+' · ouro/prata/bronze = top 3 do status'+(R.stats.indexOf('Mortes')>=0?' · em Mortes o top 3 fica vermelho':'')+'</span>'+(vis.length<rowsAll.length?'<button type="button" class="hwb-btn" data-hwb-showmore>Mostrar mais '+Math.min(R.per||25,rowsAll.length-vis.length)+'</button>':'')+'</div>';
+    var foot='<div class="hwb-tfoot"><span>Mostrando '+vis.length+' de '+rowsAll.length+(rowsAll.length!==H.length+B.length?' (de '+(H.length+B.length)+' na guerra)':'')+(showRk?' · selo = posição no '+(R.campo==='P'?'Campo Principal':'Campo Secundário')+' (ouro/prata/bronze = top 3'+(R.stats.indexOf('Mortes')>=0?'; em Mortes, vermelho':'')+')':' · filtre um campo para ver a posição em cada status')+'</span>'+(vis.length<rowsAll.length?'<button type="button" class="hwb-btn" data-hwb-showmore>Mostrar mais '+Math.min(R.per||25,rowsAll.length-vis.length)+'</button>':'')+'</div>';
     body.querySelector('.hwb-tbl').innerHTML=(cols.length?'':'<p class="hwb-empty" style="padding:16px">Nenhuma coluna de status marcada. Use “Colunas” para escolher.</p>')+
       '<div class="hwb-tscroll"><table class="hwb-table"><thead><tr>'+th+'</tr></thead><tbody>'+(tb||'<tr><td colspan="'+(3+cols.length)+'" class="hwb-empty" style="padding:18px">Nenhum jogador encontrado'+(qn?' para “'+esc(R.q)+'”':'')+'.</td></tr>')+'</tbody></table></div>'+foot;
-    /* --- lista --- */
-    var lb=body.querySelector('[data-hwb-lista]');lb.textContent=R.lista?'Esconder':'Mostrar';lb.setAttribute('aria-expanded',R.lista);body.querySelector('.hwb-lista').hidden=!R.lista;
+
   }
   function hwbCopy(){
     var B=S.boletim;if(!B)return;var t=B.t;
