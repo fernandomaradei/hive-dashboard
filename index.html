@@ -11570,6 +11570,58 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 #hosdBody .hwb-qx{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:8px;border:0;background:rgba(255,255,255,.06);color:var(--hos-text);cursor:pointer}
 #hosdBody .hwb-hit{background:rgba(255,182,39,.07);border-radius:8px;padding-left:6px;padding-right:6px}
 #hosdBody .hwb-hit .hwb-pos{color:var(--hos-accent);font-weight:700;min-width:28px}
+/* ===== Rankings em tabela (R1) ===== */
+#hosdBody .hwb-tbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px;margin-bottom:12px;position:relative;z-index:4}
+#hosdBody .hwb-tbar .hwb-rksearch{flex:1 1 260px;margin:0}
+#hosdBody .hwb-tbar .hwb-rksearch input{height:40px;background:var(--hos-bg)}
+#hosdBody .hwb-rkctl{display:contents}
+#hosdBody .hwb-seg{display:flex;align-items:center;gap:8px}
+#hosdBody .hwb-seg>span{display:flex;background:var(--hos-bg);border:1px solid var(--hos-line2);border-radius:10px;padding:3px}
+#hosdBody .hwb-sg{all:unset;cursor:pointer;font:600 12.5px var(--hos-body);color:var(--hos-muted);padding:7px 11px;border-radius:7px;white-space:nowrap}
+#hosdBody .hwb-sg:hover{color:var(--hos-text)}
+#hosdBody .hwb-sg.on{background:var(--hos-accent);color:#111}
+#hosdBody .hwb-sg:focus-visible{outline:2px solid var(--hos-accent);outline-offset:1px}
+#hosdBody .hwb-dd{display:inline-flex;align-items:center;gap:8px;height:40px;box-sizing:border-box;padding:0 12px;background:var(--hos-bg);border:1px solid var(--hos-line2);border-radius:10px;color:var(--hos-text);font:600 13px var(--hos-body);cursor:pointer}
+#hosdBody .hwb-dd small{color:var(--hos-dim);font-weight:500;font-size:12px}
+#hosdBody .hwb-dd select{background:transparent;border:0;color:var(--hos-text);font:600 13px var(--hos-body);outline:none;cursor:pointer;max-width:170px}
+#hosdBody .hwb-dd select option{background:#10141b}
+#hosdBody .hwb-colwrap{position:relative}
+#hosdBody .hwb-pop{position:absolute;right:0;top:calc(100% + 8px);width:380px;max-width:86vw;background:#121925;border:1px solid var(--hos-line2);border-radius:14px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.55);z-index:20}
+#hosdBody .hwb-poph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+#hosdBody .hwb-poph span{display:flex;gap:6px}
+#hosdBody .hwb-popg{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}
+#hosdBody .hwb-popg label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--hos-text);padding:5px 2px;cursor:pointer}
+#hosdBody .hwb-popg input{accent-color:var(--hos-accent);width:15px;height:15px;margin:0}
+#hosdBody .hwb-tbl{overflow:hidden}
+#hosdBody .hwb-tscroll{overflow-x:auto}
+#hosdBody .hwb-table{width:100%;border-collapse:collapse;font-size:13px}
+#hosdBody .hwb-table th{position:sticky;top:0;background:#111722;text-align:left;font:700 10.5px var(--hos-mono);letter-spacing:.1em;color:var(--hos-dim);padding:0;border-bottom:1px solid var(--hos-line2);white-space:nowrap}
+#hosdBody .hwb-table th button{all:unset;cursor:pointer;display:block;padding:11px 12px}
+#hosdBody .hwb-table th button:hover{color:var(--hos-text)}
+#hosdBody .hwb-table th button:focus-visible{outline:2px solid var(--hos-accent);outline-offset:-2px}
+#hosdBody .hwb-table th:not(:has(button)){padding:11px 12px}
+#hosdBody .hwb-table th.on{color:var(--hos-accent);background:#16191b}
+#hosdBody .hwb-table th.hwb-num button{text-align:right}
+#hosdBody .hwb-table td{padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap;vertical-align:middle}
+#hosdBody .hwb-table tbody tr:hover td{background:rgba(255,255,255,.025)}
+#hosdBody .hwb-table tr.hit td{background:rgba(255,182,39,.09)}
+#hosdBody .hwb-table td.on{background:rgba(255,182,39,.05)}
+#hosdBody .hwb-c-n{color:var(--hos-dim);font:500 12px var(--hos-mono);width:34px}
+#hosdBody .hwb-c-f{color:var(--hos-dim);font-size:12px}
+#hosdBody .hwb-c-p{min-width:210px}
+#hosdBody .hwb-who{display:flex;align-items:center;gap:10px;min-width:0}
+#hosdBody .hwb-num{text-align:right;font:600 13px var(--hos-mono);color:var(--hos-text)}
+#hosdBody .hwb-rk{display:inline-block;margin-left:7px;min-width:28px;text-align:center;font:700 10px var(--hos-mono);padding:2px 5px;border-radius:5px;color:var(--hos-dim);background:rgba(255,255,255,.06)}
+#hosdBody .hwb-rk.m1{color:#111;background:#FFB627}#hosdBody .hwb-rk.m2{color:#111;background:#D7DEE8}#hosdBody .hwb-rk.m3{color:#111;background:#E39A5B}
+#hosdBody .hwb-rk.bad{color:#111;background:#FF7A7A}
+#hosdBody .hwb-tfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;color:var(--hos-dim);font-size:12.5px}
+@media(min-width:900px){#hosdBody .hwb-table td.hwb-c-p,#hosdBody .hwb-table th.hwb-c-p{position:sticky;left:0;background:var(--hos-panel);z-index:1}#hosdBody .hwb-table th.hwb-c-p{background:#111722;z-index:2}}
+@media(max-width:640px){#hosdBody .hwb-tbar{padding:10px}#hosdBody .hwb-seg{flex-wrap:wrap}#hosdBody .hwb-pop{right:auto;left:0}#hosdBody .hwb-popg{grid-template-columns:1fr}}
+#hosdBody .hwb-table td,#hosdBody .hwb-table tr{background:transparent!important;box-shadow:none!important}
+#hosdBody .hwb-table td.on{background:rgba(255,182,39,.05)!important}
+#hosdBody .hwb-table tbody tr:hover td{background:rgba(255,255,255,.03)!important}
+#hosdBody .hwb-table tr.hit td{background:rgba(255,182,39,.10)!important}
+@media(min-width:900px){#hosdBody .hwb-table td.hwb-c-p{background:var(--hos-panel)!important}#hosdBody .hwb-table tr.hit td.hwb-c-p{background:#2a2414!important}}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12348,7 +12400,7 @@ html body .hos-top{will-change:auto}
       '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><a href="#hwbLista">Lista completa</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
       '<section id="hwbResumo" class="hwb-sec"><div class="hwb-sh"><h2>Boletim da guerra</h2><small>resumo escrito a partir dos números + alertas</small></div><div class="hwb-resumo"></div></section>'+
       '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
-      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>escolha quais status ver; cada caixa expande para mais jogadores</small></div><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador nos rankings…" aria-label="Procurar jogador nos rankings" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl hwb-panel"></div><div class="hwb-rkgrid"></div></section>'+
+      '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>uma linha por jogador · clique no título da coluna para ordenar · o selo é a posição naquele status</small></div><div class="hwb-tbar hwb-panel"><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador…" aria-label="Procurar jogador" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl"></div></div><div class="hwb-tbl hwb-panel"></div></section>'+
       '<section id="hwbLista" class="hwb-sec"><div class="hwb-sh"><h2>Lista completa</h2><small>todos os jogadores com todos os números</small><button type="button" class="hwb-btn" data-hwb-lista aria-expanded="false">Mostrar</button></div><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
     var anchor=$('warResultsTitle');
     sec.insertBefore(body,anchor||null);
@@ -12375,7 +12427,7 @@ html body .hos-top{will-change:auto}
     });
     var qt=null,qi=body.querySelector('#hwbQ');
     qi.addEventListener('input',function(){clearTimeout(qt);qt=setTimeout(function(){R.q=qi.value;body.querySelector('[data-hwb-qx]').hidden=!R.q;draw()},120)});
-    body.addEventListener('change',function(e){var c=e.target.closest('[data-hwb-stat]');if(!c)return;var k2=c.getAttribute('data-hwb-stat'),i=R.stats.indexOf(k2);if(c.checked&&i<0)R.stats.push(k2);if(!c.checked&&i>=0)R.stats.splice(i,1);R.save();draw()});
+    body.addEventListener('change',function(e){var cs=e.target.closest('[data-hwb-cls]');if(cs){R.cls=cs.value;R.shown=0;draw();return}var c=e.target.closest('[data-hwb-stat]');if(!c)return;var k2=c.getAttribute('data-hwb-stat'),i=R.stats.indexOf(k2);if(c.checked&&i<0)R.stats.push(k2);if(!c.checked&&i>=0)R.stats.splice(i,1);R.save();draw()});
     return sec;
   }
 
@@ -12492,8 +12544,8 @@ html body .hos-top{will-change:auto}
   var RK_DEFAULT=['Dano_Causado','Kills','Assistencias','KDA','Cura','Dano_Recebido','Participacao','Mortes'];
   var RK_COLORS={Dano_Causado:'#FFB627',Kills:'#FF8A3D',Assistencias:'#B78CFF',KDA:'#E7D2FF',Cura:'#34E3A0',Dano_Recebido:'#4CC2FF',Participacao:'#5FE0C8',Mortes:'#FF7A7A',Power:'#FFD27A',Merito:'#F2C94C',PP_Vigrid:'#9BE15D',GP:'#7C8CFF',Recursos:'#FF7FB0',Moedas:'#C7A27C',Minutos:'#AEB8C6',Tempo_Segundos:'#AEB8C6',Dano_Power:'#FFB627'};
   var RK_NOTE={Dano_Recebido:'quem segurou',Mortes:'atenção'};
-  var R={stats:RK_DEFAULT.slice(),guild:'all',campo:'all',per:5,more:{},lista:false,
-    load:function(){try{var x=JSON.parse(localStorage.getItem('hwbRanks')||'null');if(x&&Array.isArray(x.stats)){this.stats=x.stats.filter(function(k){return SORTS.some(function(s){return s[0]===k})});if(x.per)this.per=x.per}}catch(e){}},
+  var R={stats:RK_DEFAULT.slice(),guild:'all',campo:'all',per:25,more:{},lista:false,cls:'',sort:'Dano_Causado',dir:-1,cols:false,shown:0,
+    load:function(){try{var x=JSON.parse(localStorage.getItem('hwbRanks')||'null');if(x&&Array.isArray(x.stats)){this.stats=x.stats.filter(function(k){return SORTS.some(function(s){return s[0]===k})});if(x.per&&x.per!==5&&x.per!==10&&x.per!==20)this.per=x.per}}catch(e){}},
     save:function(){try{localStorage.setItem('hwbRanks',JSON.stringify({stats:this.stats,per:this.per}))}catch(e){}}};
   R.load();
   var STAT_LIST=SORTS.filter(function(s){return !TEXT_SORT[s[0]]});
@@ -12529,8 +12581,11 @@ html body .hos-top{will-change:auto}
     if(Number.isFinite(dd))parts.push('Causamos <b>'+nf(Math.abs(dd),0)+'% '+(dd>=0?'mais':'menos')+' dano</b>');
     if(Number.isFinite(md))parts.push('morremos <b>'+nf(Math.abs(md),0)+'% '+(md<=0?'menos':'mais')+'</b>');
     var txt=resTxt+(parts.length?' '+parts.join(' e ')+' que a '+esc(them)+'.':'');
-    var ft=[fieldTxt('Campo Principal',FP),fieldTxt('Secundário',FS)].filter(Boolean);
-    if(ft.length)txt+=' '+ft.join('; ').replace(/^./,function(c){return c.toUpperCase()})+'.';
+    if(FP.st===FS.st&&FP.st==='us')txt+=' Dominamos os dois campos.';
+    else if(FP.st===FS.st&&FP.st==='them')txt+=' A '+esc(them)+' levou a melhor nos dois campos.';
+    else if(FP.st===FS.st&&FP.st==='eq')txt+=' Os dois campos foram equilibrados.';
+    else{var ft=[fieldTxt('Campo Principal',FP),fieldTxt('Secundário',FS)].filter(Boolean);
+    if(ft.length)txt+=' '+ft.join('; ').replace(/^./,function(c){return c.toUpperCase()})+'.';}
     /* --- alertas --- */
     var AL=[],name=function(r){return String(k(r,'Personagem')||'—')},big2=function(v){return big(v)};
     if(Number.isFinite(dd))AL.push(dd>=0?['ok','Dano acima do adversário',big2(dH)+' contra '+big2(dB)+' ('+fmtP(dd)+').']:['bad','Dano abaixo do adversário',big2(dH)+' contra '+big2(dB)+' ('+fmtP(dd)+').']);
@@ -12560,32 +12615,37 @@ html body .hos-top{will-change:auto}
         cmpRow('DANO',F.dh,F.db,big(F.dh),big(F.db))+cmpRow('KILLS',F.kh,F.kb,nf(F.kh),nf(F.kb))+cmpRow('MORTES',F.mh,F.mb,nf(F.mh),nf(F.mb),true)+
         '<div class="hwb-dest"><div><small class="hwb-kick">Destaques '+esc(us)+'</small>'+dest(F.h,'us')+'</div><div><small class="hwb-kick them">Destaques '+esc(them)+'</small>'+dest(F.b,'them')+'</div></div></div>'};
     body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP)+fcol('Campo Secundário',FS);
-    /* --- rankings --- */
-    var on=function(c,v,attr,label){return '<button type="button" class="hwb-chip'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
-    body.querySelector('.hwb-rkctl').innerHTML='<div class="hwb-rkh"><small class="hwb-kick dim">Status exibidos</small><span class="hwb-mono">'+R.stats.length+' de '+STAT_LIST.length+'</span><span class="hwb-sp"></span><button type="button" class="hwb-chip" data-hwb-preset="all">Marcar todos</button><button type="button" class="hwb-chip" data-hwb-preset="none">Limpar</button><button type="button" class="hwb-chip" data-hwb-preset="def">Padrão</button></div>'+
-      '<div class="hwb-stats">'+STAT_LIST.map(function(st){var c=R.stats.indexOf(st[0])>=0;return '<label class="hwb-chip'+(c?' on':'')+'"><input type="checkbox" data-hwb-stat="'+st[0]+'"'+(c?' checked':'')+'>'+esc(st[1])+'</label>'}).join('')+'</div>'+
-      '<div class="hwb-rkf"><small class="hwb-kick dim">Guilda</small>'+on(R.guild==='all','all','data-hwb-g','Ambas')+on(R.guild==='us','us','data-hwb-g','Só '+esc(us))+on(R.guild==='them','them','data-hwb-g','Só '+esc(them))+
-      '<small class="hwb-kick dim">Campo</small>'+on(R.campo==='all','all','data-hwb-c','Todos')+on(R.campo==='P','P','data-hwb-c','Principal')+on(R.campo==='S','S','data-hwb-c','Secundário')+
-      '<small class="hwb-kick dim">Jogadores por caixa</small>'+[5,10,20,0].map(function(x){return on(R.per===x,x,'data-hwb-per',x||'Todos')}).join('')+'</div>';
-    var pool=H.concat(B).filter(function(r){return (R.guild==='all'||(R.guild==='us')===isH(r))&&(R.campo==='all'||campoOf(r)===R.campo)});
-    var order=STAT_LIST.filter(function(s){return R.stats.indexOf(s[0])>=0});
-    var norm=function(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')},qn=norm(R.q||'').trim();
-    body.querySelector('.hwb-rkgrid').innerHTML=order.length?order.map(function(st){
-      var key=st[0],col=RK_COLORS[key]||'#FFB627';
-      var L=pool.filter(function(r){return ok(r[key])}).sort(function(a,b){return n(b[key])-n(a[key])});
-      var base=R.per||L.length,extra=R.more[key]||0,cnt=Math.min(L.length,base+extra),exp=cnt>5;
-      if(qn){
-        var hits=[];L.forEach(function(r,i){if(norm(name(r)).indexOf(qn)>=0)hits.push([r,i])});
-        var hr=hits.slice(0,8).map(function(h){var r=h[0];return '<div class="hwb-li hwb-hit"><span class="hwb-pos">'+(h[1]+1)+'º</span>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><span class="hwb-sub">'+gtag(r,isH,t)+jtag(r)+'</span></span><b class="hwb-v" style="color:'+col+'">'+esc(fmtMetric(key,n(r[key])))+'</b></div>'}).join('')||'<p class="hwb-empty">Não aparece neste ranking.</p>';
-        return '<div class="hwb-panel hwb-board" style="--c:'+col+'"><div class="hwb-bh"><b>'+esc(key==='Mortes'?'Mais mortes':st[1])+'</b><small>posição de '+L.length+'</small></div>'+hr+'</div>';
-      }
-      var rows=L.slice(0,cnt).map(function(r,i){return '<div class="hwb-li"><span class="hwb-pos">'+(i+1)+'</span>'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><span class="hwb-sub">'+gtag(r,isH,t)+jtag(r)+'</span></span><b class="hwb-v" style="color:'+col+'">'+esc(fmtMetric(key,n(r[key])))+'</b></div>'}).join('')||'<p class="hwb-empty">Sem dados.</p>';
-      var foot='';
-      if(L.length>cnt)foot+='<button type="button" class="hwb-btn" data-hwb-more="'+key+'">Ver mais +5</button>';
-      if(extra>0)foot+='<button type="button" class="hwb-btn" data-hwb-less="'+key+'">Mostrar menos</button>';
-      if(L.length>cnt)foot+='<button type="button" class="hwb-btn" data-hwb-allk="'+key+'">Ver todos ('+L.length+')</button>';
-      return '<div class="hwb-panel hwb-board'+(exp?' exp':'')+'" style="--c:'+col+(exp?';grid-row:span '+Math.min(8,Math.ceil(cnt/5.5)):'')+'"><div class="hwb-bh"><b>'+esc(key==='Mortes'?'Mais mortes':st[1])+'</b><small>'+(exp?'top '+cnt:(RK_NOTE[key]||''))+'</small></div>'+rows+(foot?'<div class="hwb-bf">'+foot+'</div>':'')+'</div>';
-    }).join(''):'<p class="hwb-empty hwb-panel">Nenhum status marcado. Escolha acima quais rankings quer ver.</p>';
+    /* --- rankings (tabela) --- */
+    var on=function(c,v,attr,label){return '<button type="button" class="hwb-sg'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
+    var jobs=[];H.concat(B).forEach(function(r){var j=String(k(r,'Job')||'');if(!unknownJob(j)&&jobs.indexOf(j)<0)jobs.push(j)});jobs.sort(function(a,b){return a.localeCompare(b,'pt-BR')});
+    if(R.cls&&jobs.indexOf(R.cls)<0)R.cls='';
+    body.querySelector('.hwb-rkctl').innerHTML=
+      '<div class="hwb-seg"><small class="hwb-kick dim">Guilda</small><span>'+on(R.guild==='all','all','data-hwb-g','Ambas')+on(R.guild==='us','us','data-hwb-g',esc(us))+on(R.guild==='them','them','data-hwb-g',esc(them))+'</span></div>'+
+      '<div class="hwb-seg"><small class="hwb-kick dim">Campo</small><span>'+on(R.campo==='all','all','data-hwb-c','Todos')+on(R.campo==='P','P','data-hwb-c','Principal')+on(R.campo==='S','S','data-hwb-c','Secundário')+'</span></div>'+
+      '<label class="hwb-dd"><small>Classe</small><select data-hwb-cls aria-label="Filtrar por classe"><option value="">Todas</option>'+jobs.map(function(j){return '<option'+(j===R.cls?' selected':'')+'>'+esc(j)+'</option>'}).join('')+'</select></label>'+
+      '<div class="hwb-colwrap"><button type="button" class="hwb-dd" data-hwb-cols aria-expanded="'+R.cols+'"><small>Colunas</small><b>'+R.stats.length+' status</b><span aria-hidden="true">▾</span></button>'+
+      (R.cols?'<div class="hwb-pop" role="dialog" aria-label="Escolher colunas"><div class="hwb-poph"><small class="hwb-kick dim">Colunas de status</small><span><button type="button" class="hwb-chip" data-hwb-preset="all">Todos</button><button type="button" class="hwb-chip" data-hwb-preset="def">Padrão</button></span></div><div class="hwb-popg">'+
+        STAT_LIST.map(function(st){var c=R.stats.indexOf(st[0])>=0;return '<label><input type="checkbox" data-hwb-stat="'+st[0]+'"'+(c?' checked':'')+'>'+esc(st[1])+'</label>'}).join('')+'</div></div>':'')+'</div>'+
+      '<div class="hwb-seg"><small class="hwb-kick dim">Mostrar</small><span>'+[25,50,100,0].map(function(x){return on(R.per===x,x,'data-hwb-per',x||'Todos')}).join('')+'</span></div>';
+    var pool=H.concat(B).filter(function(r){return (R.guild==='all'||(R.guild==='us')===isH(r))&&(R.campo==='all'||campoOf(r)===R.campo)&&(!R.cls||String(k(r,'Job'))===R.cls)});
+    var cols=STAT_LIST.filter(function(s){return R.stats.indexOf(s[0])>=0});
+    var rankOf={};cols.forEach(function(st){var key=st[0],L=pool.filter(function(r){return ok(r[key])}).sort(function(a,b){return n(b[key])-n(a[key])}),m=new Map();L.forEach(function(r,i){m.set(r,i+1)});rankOf[key]=m});
+    var sk=R.sort;if(sk!=='Personagem'&&!cols.some(function(c){return c[0]===sk}))sk=cols.length?cols[0][0]:'Personagem';
+    var sorted=pool.slice().sort(sk==='Personagem'?function(a,b){return R.dir*String(name(a)).localeCompare(String(name(b)),'pt-BR',{sensitivity:'base'})}:function(a,b){var x=n(a[sk]),y=n(b[sk]);if(!Number.isFinite(x))return 1;if(!Number.isFinite(y))return -1;return R.dir*(x-y)});
+    var norm=function(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')},qn=norm(R.q||'').trim();
+    var rowsAll=sorted.map(function(r,i){return [r,i+1]});
+    if(qn)rowsAll=rowsAll.filter(function(x){return norm(name(x[0])).indexOf(qn)>=0});
+    var lim=R.per?R.per+(R.shown||0):rowsAll.length,vis=rowsAll.slice(0,lim);
+    var arrow=function(key){return key===sk?'<i aria-hidden="true">'+(R.dir<0?' ▼':' ▲')+'</i>':''};
+    var th='<th class="hwb-c-n">#</th><th class="hwb-c-p"><button type="button" data-hwb-sort="Personagem">JOGADOR'+arrow('Personagem')+'</button></th><th class="hwb-c-f">CAMPO</th>'+
+      cols.map(function(st){return '<th class="hwb-num'+(st[0]===sk?' on':'')+'"><button type="button" data-hwb-sort="'+st[0]+'">'+esc(st[2])+arrow(st[0])+'</button></th>'}).join('');
+    var badge=function(key,rk){if(!rk)return '';var c=rk<=3?(key==='Mortes'?'bad':'m'+rk):'';return '<span class="hwb-rk '+c+'">'+rk+'º</span>'};
+    var tb=vis.map(function(x){var r=x[0],cf=campoOf(r),hit=qn&&norm(name(r)).indexOf(qn)>=0;
+      return '<tr'+(hit?' class="hit"':'')+'><td class="hwb-c-n">'+x[1]+'</td><td class="hwb-c-p"><div class="hwb-who">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><span class="hwb-sub">'+gtag(r,isH,t)+jtag(r)+'</span></span></div></td><td class="hwb-c-f">'+(cf==='P'?'Principal':cf==='S'?'Secundário':'—')+'</td>'+
+        cols.map(function(st){var key=st[0],v=n(r[key]);return '<td class="hwb-num'+(key===sk?' on':'')+'">'+(Number.isFinite(v)?esc(fmtMetric(key,v))+badge(key,rankOf[key].get(r)):'—')+'</td>'}).join('')+'</tr>'}).join('');
+    var foot='<div class="hwb-tfoot"><span>Mostrando '+vis.length+' de '+rowsAll.length+(rowsAll.length!==H.length+B.length?' (de '+(H.length+B.length)+' na guerra)':'')+' · ouro/prata/bronze = top 3 do status'+(R.stats.indexOf('Mortes')>=0?' · em Mortes o top 3 fica vermelho':'')+'</span>'+(vis.length<rowsAll.length?'<button type="button" class="hwb-btn" data-hwb-showmore>Mostrar mais '+Math.min(R.per||25,rowsAll.length-vis.length)+'</button>':'')+'</div>';
+    body.querySelector('.hwb-tbl').innerHTML=(cols.length?'':'<p class="hwb-empty" style="padding:16px">Nenhuma coluna de status marcada. Use “Colunas” para escolher.</p>')+
+      '<div class="hwb-tscroll"><table class="hwb-table"><thead><tr>'+th+'</tr></thead><tbody>'+(tb||'<tr><td colspan="'+(3+cols.length)+'" class="hwb-empty" style="padding:18px">Nenhum jogador encontrado'+(qn?' para “'+esc(R.q)+'”':'')+'.</td></tr>')+'</tbody></table></div>'+foot;
     /* --- lista --- */
     var lb=body.querySelector('[data-hwb-lista]');lb.textContent=R.lista?'Esconder':'Mostrar';lb.setAttribute('aria-expanded',R.lista);body.querySelector('.hwb-lista').hidden=!R.lista;
   }
@@ -12601,16 +12661,17 @@ html body .hos-top{will-change:auto}
     var a=e.target.closest('.hwb-nav a');
     if(a){e.preventDefault();var el=document.querySelector(a.getAttribute('href'));if(el){if(a.getAttribute('href')==='#hwbLista'&&!R.lista){R.lista=true;draw()}el.scrollIntoView({behavior:'smooth',block:'start'})}
       [].forEach.call(document.querySelectorAll('.hwb-nav a'),function(x){x.classList.toggle('on',x===a)});return true}
-    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-more],[data-hwb-less],[data-hwb-allk],[data-hwb-lista],[data-hwb-qx]');
+    if(R.cols&&!e.target.closest('.hwb-colwrap')){R.cols=false;draw()}
+    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-lista],[data-hwb-qx],[data-hwb-cols],[data-hwb-sort],[data-hwb-showmore]');
     if(!b)return false;var d=b.dataset;
     if('hwbCopy' in d){hwbCopy();return true}
     if(d.hwbPreset){R.stats=d.hwbPreset==='all'?STAT_LIST.map(function(s){return s[0]}):d.hwbPreset==='none'?[]:RK_DEFAULT.slice();R.save()}
-    else if(d.hwbG)R.guild=d.hwbG;
-    else if(d.hwbC)R.campo=d.hwbC;
-    else if(d.hwbPer!==undefined){R.per=+d.hwbPer;R.more={};R.save()}
-    else if(d.hwbMore)R.more[d.hwbMore]=(R.more[d.hwbMore]||0)+5;
-    else if(d.hwbLess)R.more[d.hwbLess]=0;
-    else if(d.hwbAllk)R.more[d.hwbAllk]=9999;
+    else if(d.hwbG){R.guild=d.hwbG;R.shown=0}
+    else if(d.hwbC){R.campo=d.hwbC;R.shown=0}
+    else if(d.hwbPer!==undefined){R.per=+d.hwbPer;R.shown=0;R.save()}
+    else if('hwbCols' in d)R.cols=!R.cols;
+    else if(d.hwbSort){if(R.sort===d.hwbSort)R.dir=-R.dir;else{R.sort=d.hwbSort;R.dir=d.hwbSort==='Personagem'?1:-1}}
+    else if('hwbShowmore' in d)R.shown=(R.shown||0)+(R.per||25);
     else if('hwbLista' in d)R.lista=!R.lista;
     else if('hwbQx' in d){R.q='';var qi=document.getElementById('hwbQ');if(qi){qi.value='';qi.focus()}b.hidden=true}
     draw();return true;
