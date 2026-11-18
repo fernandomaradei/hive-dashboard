@@ -8879,7 +8879,7 @@ async function load(){
              PP_Vigrid:ex('pp_vigrid','vigrid_pp'),
              GP:ex('gp'),
              Recursos:ex('resurrections','ressurreicoes','resurreicoes'),
-             Moedas:ex('monsters','monstros'),
+             Moedas:(extras&&Object.keys(extras).length&&extras['C:0']!==undefined)?['C:20','C:23','C:51','C:65','C:66'].reduce(function(t,c){return t+(Number(extras[c])||0)},0):ex('monsters','monstros'),
              Horn:(extras&&Object.keys(extras).length)?(Number(extras['C:18'])||0)*5:(p.horn_seconds!=null?Number(p.horn_seconds):null),
              Minutos:ex('minutes_played','min_individual','minutes','minutos','time_played'),
              Titulos:ex('titulos','titles'),
