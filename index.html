@@ -8871,7 +8871,7 @@ async function load(){
              JSON_PCAP:v('raw_stats_json'),
              Personagem:v('character_name','player_name','name')||'',
              Guilda:v('guild_name')||'',
-             Job:(function(j,id){var F={3202:'Monk',5102:'Assassin Cross',5202:'Stalker',6102:'Whitesmith'};return (F[id]&&(!j||/identificad/i.test(j)))?F[id]:(j||'')})(v('job_name','class_name'),Number(v('job_id'))),
+             Job:(function(j,id){var F={3202:'Champion',5102:'Assassin Cross',5202:'Stalker',6102:'Whitesmith'};return (F[id]&&(!j||/identificad|^monk$/i.test(j)))?F[id]:(j||'')})(v('job_name','class_name'),Number(v('job_id'))),
              Power:v('power'),
              KDA:ex('kda'),
              Participacao:ex('participation_ratio','participation','participacao','part'),
