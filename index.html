@@ -4155,7 +4155,7 @@ function renderRankExplanation(m,target='#mRankExplain'){
  let hosHtml='';
  if(window.hosAttrPanel){try{
    const artKey=hivestRankingArtKey(rankGroup,job);
-   hosHtml=window.hosAttrPanel({name:m.Personagem,job,role,rankGroup,kind:final.kind,score:Math.round(final.score),formula,art:hivestRankingArts[artKey]||'',
+   hosHtml=window.hosAttrPanel({name:m.Personagem,upd:String(m['Última Atualização']||''),job,role,rankGroup,kind:final.kind,score:Math.round(final.score),formula,art:hivestRankingArts[artKey]||'',
      items:displayItems.map(x=>{const d=rankMetricDiagnosis(x),ref=rankReferencePeer(pool,x.label);
        return {label:x.label,p:x.p,weight:x.weight,cls:d.cls,tag:d.tag,cur:rankExactSheetValue(m,x.label,x.value),refVal:rankExactSheetValue(ref.member,x.label,x.targetValue),refName:ref.name,
          pctRef:x.targetNum>0?Math.max(0,Math.min(100,Math.round((x.currentNum/x.targetNum)*100))):x.p,isRef:x.targetNum>0&&x.currentNum>=x.targetNum,
@@ -4263,7 +4263,7 @@ function hiveNovaArteClasse(job){
 
 function openPlayer(enc,context=''){const name=decodeURIComponent(enc),m=members.find(x=>x.Personagem===name);if(!m)return;$('#mName').textContent=m.Personagem;$('#mMeta').textContent=(m.Job||'—')+' • Discord: '+(m.Discord||'—')+' • Power '+fmtInt(m['Power Atual'],'Power Atual');const keys=['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PDMG','MDMG','PDMG.R','MDMG.R','PVP DMG RED','PVP DMG INC','DMG RED MED','DMG INC MED','DMG RED HUMAN','DMG INC HUMAN'];const intKeys=new Set(['Power Atual','HP','ATK','MATK','PDEF','MDEF','CRIT RES','CRIT RATE','CRIT DMG','IGNORE PDEF','IGNORE MDEF','PVP DMG RED','PVP DMG INC']);$('#mStats').innerHTML=keys.map(k=>`<div class="mini"><div class="statIcon">${statIcon(k)}</div><span>${esc(k)}</span><b>${['PDMG.R','MDMG.R'].includes(k)?rankAvgFormat(k,metricValue(m[k],k)):(intKeys.has(k)?fmtInt(m[k],k):fmt(m[k]))}</b></div>`).join('');renderRankExplanation(m);$('#mClassName').textContent=m.Job||'Classe';const pres=classPresentation(m.Job);$('#mClassQuote').textContent=pres.quote;const fam=classFamily(m.Job);$('#mClassRail').innerHTML=['Swordsman','Archer','Merchant','Acolyte','Thief','Mage','Doram','Gunslinger','Music'].map(x=>`<div class="${x===fam?'active':''}"><i>${classFamilyIcon(x)}</i>${x}</div>`).join('');$('#mRadarPoly').setAttribute('points',radarPoints(m.Job));const ci=$('#mClassImage');ci.dataset.blended='1';ci.onload=null;ci.src=hiveNovaArteClasse(m.Job);ci.onerror=()=>{ci.onerror=null;ci.src=classImage(m.Job)};$('#modal').classList.add('open');hivePowerPlayer=m;hiveRenderPowerHistory()}
 function closeModal(){$('#modal').classList.remove('open')}
-let hosLastSig='';async function refresh(force){if(!force&&document.hidden&&hosLastSig)return;try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(window.hosSetWar)window.hosSetWar(d.war);const hosSig=JSON.stringify([d.members,d.history,d.war]);if(hosSig===hosLastSig&&!force){window.hosLiveData=d;window.hosLiveDataAt=Date.now();return}hosLastSig=hosSig;try{localStorage.setItem('hiveLiveCache',JSON.stringify({at:Date.now(),d}))}catch(e){}window.hosLiveData=d;window.hosLiveDataAt=Date.now();if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
+let hosLastSig='';async function refresh(force){if(!force&&document.hidden&&hosLastSig)return;try{if(!authUser)await loadAuthUser();const d=await loadLiveData();if(window.hosSetWar)window.hosSetWar(d.war);const hosSig=JSON.stringify([d.members,d.history,d.war]);if(hosSig===hosLastSig&&!force){window.hosLiveData=d;window.hosLiveDataAt=Date.now();return}hosLastSig=hosSig;try{localStorage.setItem('hiveLiveCache',JSON.stringify({at:Date.now(),d}))}catch(e){}setTimeout(function(){try{hosRecordScores()}catch(e){console.warn('[HIVEST evolução]',e)}},2500);window.hosLiveData=d;window.hosLiveDataAt=Date.now();if(d.members?.length){members=d.members;window.hiveMembers=members;}if(Array.isArray(d.history)&&d.history.length)history=d.history;sessionStorage.setItem('hiveLive',JSON.stringify({members,history}));render();releaseAuthGuard()}catch(e){console.error('Falha ao atualizar dados:',e);if(document.documentElement.classList.contains('hive-auth-pending')){location.replace(AUTH_WORKER+'/auth/login');return}const saved=JSON.parse(sessionStorage.getItem('hiveLive')||'null');members=saved?.members?.length?saved.members:FALLBACK.members;history=saved?.history||[];render()}}
 $('#search').addEventListener('input',render);$('#toggleRank').onclick=()=>{$('#fullRanking').classList.toggle('open');$('#fullRanking').scrollIntoView({behavior:'smooth'})};$('#featOpen').onclick=()=>window.featured&&openPlayer(encodeURIComponent(window.featured.Personagem));$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});$('#statRankModal')?.addEventListener('click',e=>{if(e.target.id==='statRankModal')closeStatRank()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#statRankModal').classList.contains('open'))closeStatRank();else closeModal()}});try{const c=JSON.parse(localStorage.getItem('hiveLiveCache')||'null');if(c&&c.d&&Date.now()-c.at<6*3600*1000&&c.d.members?.length){members=c.d.members;window.hiveMembers=members;if(Array.isArray(c.d.history))history=c.d.history;window.hosLiveData=c.d;window.hosLiveDataAt=0;if(window.hosSetWar)try{window.hosSetWar(c.d.war)}catch(e){}render()}}catch(e){}refresh();setInterval(refresh,REFRESH_MS);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-(window.hosLiveDataAt||0)>REFRESH_MS)refresh()});
 
 
@@ -4697,6 +4697,23 @@ function approvedDoramPhysicalScore(m,pool){
        + .06*pctRank(intNum(m['CRIT RES'],'CRIT RES'),d.CRITRES)
        + .02*pctRank(intNum(m['PVP DMG RED'],'PVP DMG RED'),d.PVPRED)
        + .02*pctRank(intNum(m.HP,'HP'),d.HP);
+}
+function hosRecordScores(){
+  if(!Array.isArray(members)||!members.length)return;
+  const skip={'Personagem':1,'Job':1,'Power Anterior':1,'Evolução':1,'Última Atualização':1,'Discord':1};
+  const groups={};members.forEach(m=>{const g=classRankingGroup(m);(groups[g]=groups[g]||[]).push(m)});
+  const snaps=[];
+  members.forEach(m=>{try{
+    const u=String(m['Última Atualização']||'').trim();if(!u)return;
+    const f=classTop3Score(m,groups[classRankingGroup(m)]);if(!f||!Number.isFinite(f.score))return;
+    const a={};Object.keys(m).forEach(k=>{if(!skip[k]&&m[k]!==''&&m[k]!=null&&String(m[k]).length<24)a[k]=m[k]});
+    snaps.push({c:String(m.Personagem||''),u,s:Math.max(0,Math.min(100,Math.round(f.score))),a});
+  }catch(e){}});
+  if(!snaps.length)return;
+  const sig=snaps.map(x=>x.c+'|'+x.u).join(';');let h=0;for(let i=0;i<sig.length;i++)h=(h*31+sig.charCodeAt(i))|0;
+  try{if(sessionStorage.getItem('hosEvoSig')===String(h))return;}catch(e){}
+  fetch('/api/attr-history',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({snapshots:snaps})})
+    .then(r=>{if(r.ok){try{sessionStorage.setItem('hosEvoSig',String(h))}catch(e){}}}).catch(()=>{});
 }
 function classTop3Score(member, pool){
   const role=classRole(member.Job);
@@ -11733,6 +11750,21 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
   .hosAttr .ha-val{grid-area:vl}
   .hosAttr .ha-row>.ha-pill{grid-area:pl;justify-self:start}
 }
+/* evolução da nota */
+.hosAttr .ha-leftcol{display:flex;flex-direction:column;gap:14px;min-width:0}
+.hosAttr .ha-evo{background:var(--hos-panel,#0E131B);border:1px solid var(--hos-line,rgba(255,255,255,.08));border-radius:16px;padding:14px 16px}
+.hosAttr .ha-evo-h{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px;flex-wrap:wrap}
+.hosAttr .ha-evo-n{font:700 28px var(--hos-head,'Chakra Petch',sans-serif);color:#34E3A0}
+.hosAttr .ha-evo-d{font:700 12px var(--hos-mono,monospace)}
+.hosAttr .ha-evo-d.up{color:#34E3A0}.hosAttr .ha-evo-d.down{color:#FF8A7A}.hosAttr .ha-evo-d.eq{color:var(--hos-dim,#8A97A8)}
+.hosAttr .ha-evo-svg{width:100%;height:auto;display:block;margin-top:4px}
+.hosAttr .ha-evo-l2{display:block;margin:12px 0 4px}
+.hosAttr .ha-evo-r{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12.5px}
+.hosAttr .ha-evo-r b{font:700 12px var(--hos-mono,monospace);white-space:nowrap}
+.hosAttr .ha-evo-r b.up{color:#34E3A0}.hosAttr .ha-evo-r b.down{color:#FF8A7A}
+.hosAttr .ha-evo-empty{margin:8px 0 0;font-size:12.5px;color:var(--hos-dim,#8A97A8);line-height:1.5}
+@media(max-width:1180px){.hosAttr .ha-evo{max-width:520px}}
+.hosAttr .ha-evo-n.down{color:#FF8A7A}
 
 #hosLog{position:fixed;inset:0;z-index:2147483000;background:rgba(3,5,8,.78);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;font-family:var(--hos-body);color:var(--hos-text)}
 #hosLog *{box-sizing:border-box}
@@ -12837,11 +12869,57 @@ html body .hos-top{will-change:auto}
 
     return '<section class="rankExplain hosAttr" aria-label="Seus atributos avaliados">'+
       '<header class="ha-head"><div><span class="ha-kick">'+esc(o.kind||'')+' · comparado com '+esc(cls)+'</span><h3>Seus atributos avaliados</h3></div></header>'+
-      '<div class="ha-grid">'+left+
+      '<div class="ha-grid"><div class="ha-leftcol">'+left+
+        '<div class="ha-evo" data-hos-evo="'+esc(name)+'" data-score="'+o.score+'" data-upd="'+esc(o.upd||'')+'" data-labels="'+esc(items.map(function(x){return x.label}).join('|'))+'"><span class="ha-lbl">EVOLUÇÃO DA SUA NOTA</span><p class="ha-evo-empty">Carregando histórico…</p></div></div>'+
         '<div class="ha-list"><div class="ha-cols" aria-hidden="true"><span></span><span>ATRIBUTO</span><span>VOCÊ · REFERÊNCIA HIVEST</span><span>NOTA NA CLASSE</span><span>SITUAÇÃO</span></div>'+rows+
         '<p class="ha-foot">'+esc(o.formula||'')+' · Clique num atributo para ver o ranking da classe.</p></div>'+
-      '</div></section>';
+      '</div></section>'+(setTimeout(hosEvoFill,0),'');
   };
+
+  /* ===== Evolução da nota ===== */
+  var EVO={};
+  function numOf(v){if(v==null)return NaN;var t=String(v).trim().replace('%','').replace(/\s/g,'');var k=/k$/i.test(t);t=t.replace(/k$/i,'');if(t.indexOf(',')>=0)t=t.replace(/\./g,'').replace(',','.');var n=parseFloat(t);return k?n*1000:n}
+  function dm(u){var m=String(u||'').match(/^(\d{1,2})\/(\d{1,2})/);return m?(m[1].padStart(2,'0')+'/'+m[2].padStart(2,'0')):''}
+  function keyFor(label){return label==='Power'?'Power Atual':label}
+  function hosEvoFill(){
+    [].forEach.call(document.querySelectorAll('.ha-evo[data-hos-evo]:not([data-done])'),function(box){
+      box.setAttribute('data-done','1');
+      var name=box.getAttribute('data-hos-evo');
+      var go=function(list){try{drawEvo(box,list)}catch(e){console.warn('[HIVEST evolução]',e)}};
+      if(EVO[name]&&Date.now()-EVO[name].t<60000)return go(EVO[name].h);
+      fetch('/api/attr-history?c='+encodeURIComponent(name),{credentials:'same-origin',cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var h=d&&d.ok&&Array.isArray(d.history)?d.history:[];EVO[name]={t:Date.now(),h:h};go(h)}).catch(function(){go([])});
+    });
+  }
+  function drawEvo(box,hist){
+    var cur=+box.getAttribute('data-score'),upd=box.getAttribute('data-upd')||'',labels=(box.getAttribute('data-labels')||'').split('|').filter(Boolean);
+    var pts=hist.map(function(h){return {u:h.u,s:+h.s,a:h.a||{}}});
+    if(!pts.length||pts[pts.length-1].u!==upd)pts.push({u:upd,s:cur,a:null,now:true});
+    else pts[pts.length-1].s=cur;
+    pts=pts.slice(-10);
+    var last=pts[pts.length-1],prev=pts.length>1?pts[pts.length-2]:null;
+    var dl=prev?cur-prev.s:0;var head='<span class="ha-lbl">EVOLUÇÃO DA SUA NOTA</span><div class="ha-evo-h"><b class="ha-evo-n'+(dl<0?' down':'')+'">'+cur+'</b>'+
+      (prev?(function(d){return '<span class="ha-evo-d '+(d>0?'up':d<0?'down':'eq')+'">'+(d>0?'▲ +'+d:d<0?'▼ '+d:'= 0')+' desde '+esc(dm(prev.u)||'a última')+'</span>'})(cur-prev.s):'<span class="ha-evo-d eq">primeiro registro</span>')+'</div>';
+    var svg='';
+    if(pts.length>1){
+      var W=260,H=120,mn=Math.min.apply(null,pts.map(function(p){return p.s})),mx=Math.max.apply(null,pts.map(function(p){return p.s}));
+      if(mx-mn<10){var c=(mx+mn)/2;mn=c-5;mx=c+5}
+      var X=function(i){return 14+i*(W-28)/(pts.length-1)},Y=function(v){return H-20-(v-mn)/(mx-mn)*(H-36)};
+      var line=pts.map(function(p,i){return X(i).toFixed(0)+','+Y(p.s).toFixed(0)}).join(' ');
+      svg='<svg class="ha-evo-svg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Nota nas últimas '+pts.length+' atualizações"><polyline points="'+line+'" fill="none" stroke="#34E3A0" stroke-width="2.5" stroke-linejoin="round"/>'+
+        pts.map(function(p,i){return '<circle cx="'+X(i).toFixed(0)+'" cy="'+Y(p.s).toFixed(0)+'" r="'+(i===pts.length-1?4:2.5)+'" fill="#34E3A0"><title>'+esc(dm(p.u))+': '+p.s+'</title></circle>'}).join('')+
+        '<text x="'+X(0)+'" y="'+(H-3)+'" font-size="9" fill="#8A97A8" font-family="JetBrains Mono,monospace">'+esc(dm(pts[0].u))+'</text><text x="'+X(pts.length-1)+'" y="'+(H-3)+'" font-size="9" fill="#8A97A8" font-family="JetBrains Mono,monospace" text-anchor="end">'+esc(dm(last.u))+'</text></svg>';
+    }
+    var changes='';
+    var A=hist.length?hist[hist.length-1].a:null,Bp=hist.length>1?hist[hist.length-2].a:null;
+    if(hist.length&&hist[hist.length-1].u!==upd){Bp=A;A=null;var me=(window.hiveMembers||[]).find(function(m){return String(m.Personagem)===box.getAttribute('data-hos-evo')});if(me)A=me}
+    if(A&&Bp){
+      var ch=[];labels.forEach(function(l){var k2=keyFor(l),x=A[k2],y=Bp[k2];if(x==null||y==null||String(x)===String(y))return;var nx=numOf(x),ny=numOf(y);ch.push({l:l,from:y,to:x,up:nx>ny,d:Math.abs((nx-ny)/(Math.abs(ny)||1))})});
+      ch.sort(function(a,b){return b.d-a.d});
+      changes='<span class="ha-lbl ha-evo-l2">O QUE MUDOU NA ÚLTIMA ATUALIZAÇÃO</span>'+(ch.length?ch.slice(0,5).map(function(c){return '<div class="ha-evo-r"><span>'+esc(c.l)+'</span><b class="'+(c.up?'up':'down')+'">'+esc(c.from)+' → '+esc(c.to)+'</b></div>'}).join(''):'<p class="ha-evo-empty">Nenhum atributo avaliado mudou.</p>');
+    }
+    var note=pts.length<2?'<p class="ha-evo-empty">O histórico começa a ser registrado agora. A cada atualização de status, a nova nota aparece aqui.</p>':'';
+    box.innerHTML=head+svg+note+changes;
+  }
 })();
 
 /* ===== HIVEST · Log do plantel ===== */
