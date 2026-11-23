@@ -3629,8 +3629,8 @@ async function copyUpdatePending(){
 }
 
 function render(){
- const sorted=topPower(),total=members.reduce((s,m)=>s+intNum(m['Power Atual'],'Power Atual'),0),hosAct=members.filter(m=>intNum(m['Power Atual'],'Power Atual')>0),avg=hosAct.length?Math.round(total/hosAct.length):0,classes=new Set(members.map(m=>m.Job).filter(Boolean)).size,top=sorted[0]||{};
- const k=[['👥','MEMBROS',hosAct.length,'Aventureiros'],['⚔️','POWER TOTAL',fmtInt(total),'Força da guild'],['♛','MÉDIA DE POWER',fmtInt(avg),'Média atual'],['📈','TOP POWER',fmtInt(top['Power Atual'],'Power Atual'),top.Personagem||'—'],['👥','CLASSES',classes,'Classes ativas'],['📋','DADOS','AO VIVO','Sync']];
+ const sorted=topPower(),total=members.reduce((s,m)=>s+intNum(m['Power Atual'],'Power Atual'),0),avg=members.length?Math.round(total/members.length):0,classes=new Set(members.map(m=>m.Job).filter(Boolean)).size,top=sorted[0]||{};
+ const k=[['👥','MEMBROS',members.length,'Aventureiros'],['⚔️','POWER TOTAL',fmtInt(total),'Força da guild'],['♛','MÉDIA DE POWER',fmtInt(avg),'Média atual'],['📈','TOP POWER',fmtInt(top['Power Atual'],'Power Atual'),top.Personagem||'—'],['👥','CLASSES',classes,'Classes ativas'],['📋','DADOS','AO VIVO','Sync']];
  $('#kpis').innerHTML=k.map((x,i)=>`<div class="kpi"><div class="kico">${x[0]}</div><div><div class="klabel">${x[1]}</div><div class="kvalue ${i===0||i===5?'gold':''}">${x[2]}</div><div class="khint">${esc(x[3])}</div></div></div>`).join('');
  const q=norm($('#search').value), view=sorted.filter(m=>!q||norm(m.Personagem).includes(q)||norm(m.Job).includes(q)||norm(m.Discord).includes(q));
  $('#top10').innerHTML=view.slice(0,10).map((m,i)=>`<tr onclick="openPlayer('${encodeURIComponent(m.Personagem)}')"><td class="rnum">${i===0?'👑':i+1}</td><td class="rname">${esc(m.Personagem)}</td><td class="rjob">${esc(m.Job||'—')}</td><td class="rpower">${fmtInt(m['Power Atual'],'Power Atual')}</td></tr>`).join('')||'<tr><td colspan="4">Nenhum personagem encontrado.</td></tr>';
@@ -12009,7 +12009,7 @@ html body .hos-top{will-change:auto}
   function decorate(){
     var ms=getMembers();
     var total=ms.reduce(function(s,m){return s+num(m['Power Atual'],'Power Atual')},0);
-    var t=$('#hosTotal'),c=$('#hosCount'); if(t)t.textContent=ms.length?fmt(total):'—'; var act=ms.filter(function(m){return String(m.Personagem||'').trim()&&num(m['Power Atual'],'Power Atual')>0}).length;if(c)c.textContent=act||'—';
+    var t=$('#hosTotal'),c=$('#hosCount'); if(t)t.textContent=ms.length?fmt(total):'—'; var act=ms.filter(function(m){return String(m.Personagem||'').trim()}).length;if(c)c.textContent=act||'—';
     // Top 10: avatar em hexágono + cor da classe
     document.querySelectorAll('#top10 tr').forEach(function(tr){
       var name=tr.querySelector('.rname'), job=tr.querySelector('.rjob'); if(!name||!job||name.querySelector('.hos-who'))return;
