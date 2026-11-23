@@ -11766,6 +11766,33 @@ html body .hosAttr .ha-row:focus-visible{outline:2px solid var(--hos-accent);out
 @media(max-width:1180px){.hosAttr .ha-evo{max-width:520px}}
 .hosAttr .ha-evo-n.down{color:#FF8A7A}
 
+/* ===== tabela limpa (proposta 1) ===== */
+.hosAttr .ha-t1list{gap:0;background:#111823;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:4px 6px;overflow:hidden}
+.hosAttr .ha-cols.ha-t1,html body .hosAttr .ha-row.ha-t1{grid-template-columns:minmax(130px,1.1fr) minmax(130px,1fr) minmax(120px,1.6fr) 54px 150px;gap:18px}
+.hosAttr .ha-cols.ha-t1{padding:12px 14px 10px;border-bottom:1px solid rgba(255,255,255,.12);font:700 11px var(--hos-mono);letter-spacing:.12em;color:#A3AFBF}
+.hosAttr .ha-cols.ha-t1 span:last-child{text-align:left}.hosAttr .ha-cols.ha-t1 .ha-r{text-align:right}
+html body .hosAttr .ha-row.ha-t1{padding:13px 14px;border:0;border-bottom:1px solid rgba(255,255,255,.06);border-radius:0;background:transparent}
+html body .hosAttr .ha-row.ha-t1:nth-of-type(odd){background:rgba(255,255,255,.025)}
+html body .hosAttr .ha-row.ha-t1:last-of-type{border-bottom:0}
+html body .hosAttr .ha-row.ha-t1:hover{background:rgba(255,182,39,.07)}
+.hosAttr .ha-t1 .ha-nm b{font-size:15px;color:#F4F6FA}
+.hosAttr .ha-t1 .ha-nm small{font:500 12px var(--hos-body);color:#A3AFBF}
+.hosAttr .ha-t1 .ha-val{display:block;font:500 13px var(--hos-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hosAttr .ha-t1 .ha-val b{font-size:15px;color:#F4F6FA}
+.hosAttr .ha-t1 .ha-val i{font-style:normal;color:#A3AFBF}
+.hosAttr .ha-t1 .ha-sbar{height:10px;border-radius:5px;background:rgba(255,255,255,.08)}
+.hosAttr .ha-t1 .ha-sbar i{border-radius:5px}
+.hosAttr .ha-t1 .ha-n{font:700 22px var(--hos-head);text-align:right}
+.hosAttr .ha-t1 .ha-st{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#E8EDF4;white-space:nowrap}
+.hosAttr .ha-t1 .ha-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.hosAttr .ha-t1foot .ha-foot{margin:10px 4px 0}
+@media(max-width:760px){
+  .hosAttr .ha-cols.ha-t1{display:none}
+  html body .hosAttr .ha-row.ha-t1{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nm n" "vl st" "bar bar";gap:6px 12px;padding:12px}
+  .hosAttr .ha-t1 .ha-nm{grid-area:nm}.hosAttr .ha-t1 .ha-n{grid-area:n}.hosAttr .ha-t1 .ha-val{grid-area:vl}.hosAttr .ha-t1 .ha-st{grid-area:st;justify-self:end}
+  .hosAttr .ha-t1 .ha-sbar{grid-area:bar;display:block}
+}
+
 #hosLog{position:fixed;inset:0;z-index:2147483000;background:rgba(3,5,8,.78);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;font-family:var(--hos-body);color:var(--hos-text)}
 #hosLog *{box-sizing:border-box}
 #hosLog .hlg-box{width:min(1200px,100%);height:min(86vh,900px);display:flex;flex-direction:column;background:var(--hos-panel);border:1px solid var(--hos-line2);border-radius:18px;padding:18px 20px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
@@ -12893,12 +12920,12 @@ html body .hos-top{will-change:auto}
 
     var rows=items.map(function(x){
       var s=band(x.p);
-      return '<button type="button" class="ha-row" onclick="'+esc(x.click)+'" title="Ver ranking de '+esc(x.label)+' da classe">'+
-        '<span class="ha-ic ha-bg-'+s.k+'">'+x.icon+'</span>'+
-        '<span class="ha-nm"><b>'+esc(x.label)+'</b><small>peso '+pctTxt(x.weight)+' · ref. '+esc(x.refName||'—')+'</small></span>'+
-        '<span class="ha-val"><span><b>'+esc(x.cur)+'</b> <i>de</i> <em>'+esc(x.refVal)+'</em> <small>· '+x.pctRef+'%</small></span><span class="ha-rbar"><i style="width:'+x.pctRef+'%"></i></span></span>'+
-        '<span class="ha-perf"><span class="ha-sbar"><i class="ha-fill-'+s.k+'" style="width:'+x.p+'%"></i></span><b class="ha-'+s.k+'">'+x.p+'</b></span>'+
-        '<span class="ha-pill ha-'+s.k+'">'+s.t+'</span>'+
+      return '<button type="button" class="ha-row ha-t1" onclick="'+esc(x.click)+'" title="Ver ranking de '+esc(x.label)+' da classe · referência: '+esc(x.refName||'—')+'">'+
+        '<span class="ha-nm"><b>'+esc(x.label)+'</b><small>peso '+pctTxt(x.weight)+'</small></span>'+
+        '<span class="ha-val"><b>'+esc(x.cur)+'</b> <i>de '+esc(x.refVal)+'</i></span>'+
+        '<span class="ha-sbar"><i class="ha-fill-'+s.k+'" style="width:'+x.p+'%"></i></span>'+
+        '<b class="ha-n ha-'+s.k+'">'+x.p+'</b>'+
+        '<span class="ha-st"><i class="ha-dot ha-fill-'+s.k+'"></i>'+s.t+'</span>'+
       '</button>';
     }).join('');
 
@@ -12906,8 +12933,8 @@ html body .hos-top{will-change:auto}
       '<header class="ha-head"><div><span class="ha-kick">'+esc(o.kind||'')+' · comparado com '+esc(cls)+'</span><h3>Seus atributos avaliados</h3></div></header>'+
       '<div class="ha-grid"><div class="ha-leftcol">'+left+
         '<div class="ha-evo" data-hos-evo="'+esc(name)+'" data-score="'+o.score+'" data-upd="'+esc(o.upd||'')+'" data-labels="'+esc(items.map(function(x){return x.label}).join('|'))+'"><span class="ha-lbl">EVOLUÇÃO DA SUA NOTA</span><p class="ha-evo-empty">Carregando histórico…</p></div></div>'+
-        '<div class="ha-list"><div class="ha-cols" aria-hidden="true"><span></span><span>ATRIBUTO</span><span>VOCÊ · REFERÊNCIA HIVEST</span><span>NOTA NA CLASSE</span><span>SITUAÇÃO</span></div>'+rows+
-        '<p class="ha-foot">'+esc(o.formula||'')+' · Clique num atributo para ver o ranking da classe.</p></div>'+
+        '<div class="ha-rcol" style="min-width:0"><div class="ha-list ha-t1list"><div class="ha-cols ha-t1" aria-hidden="true"><span>ATRIBUTO</span><span>VOCÊ / REFERÊNCIA</span><span>NOTA NA CLASSE</span><span class="ha-r">NOTA</span><span>SITUAÇÃO</span></div>'+rows+'</div><div class="ha-t1foot">'+
+        '<p class="ha-foot">'+esc(o.formula||'')+' · Clique num atributo para ver o ranking da classe.</p></div></div>'+
       '</div></section>'+(setTimeout(hosEvoFill,0),'');
   };
 
