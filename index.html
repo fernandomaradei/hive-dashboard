@@ -11733,6 +11733,27 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 .hosd-bar.is-stuck{position:fixed;top:0;z-index:60;box-sizing:border-box;padding:10px 14px;background:rgba(10,13,18,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,182,39,.35);border-top:0;border-radius:0 0 14px 14px;box-shadow:0 12px 30px rgba(0,0,0,.55)}
 @media(max-width:760px){.hwb-tg{display:none}.hwb-colh{padding:14px}}
 @media(max-width:760px){.hosd-bar.is-stuck{padding:8px 10px}.hosd-bar.is-stuck .hosd-title,.hosd-bar.is-stuck .hosd-actions{display:none!important}}
+/* ===== visual 1: faixa lateral + ícone + resumo corrido ===== */
+#hwbResumo.hwb-col{border-left:4px solid #FFB627}
+#hwbComp.hwb-col{border-left:4px solid #6FB6FF}
+.hwb-ic{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+#hwbResumo .hwb-ic{background:rgba(255,182,39,.15);color:#FFB627}
+#hwbComp .hwb-ic{background:rgba(111,182,255,.15);color:#6FB6FF}
+.hwb-colh h2{margin-right:6px}
+.hwb-cp{padding:0;border:0;background:transparent;border-radius:0;font-size:13px}
+.hwb-cp+.hwb-cp::before{content:"·";margin-right:8px;color:#5B6676}
+.hwb-cpills{gap:8px;align-items:center}
+#hwbComp .hivest-compare-table{border-collapse:collapse}
+#hwbComp .hivest-compare-table thead th{background:transparent!important;font:700 10.5px 'JetBrains Mono',monospace!important;letter-spacing:.1em;text-transform:uppercase;color:#A3AFBF!important;border-bottom:1px solid rgba(255,255,255,.1)!important;padding:10px 12px!important}
+#hwbComp .hivest-compare-table thead th.hivest-compare-hive{color:#FFB627!important}
+#hwbComp .hivest-compare-table thead th.hivest-compare-opponent{color:#6FB6FF!important}
+#hwbComp .hivest-compare-table tbody tr:nth-child(even) td{background:rgba(255,255,255,.02)!important}
+#hwbComp .hivest-compare-table tbody td{padding:7px 12px!important;border-bottom:1px solid rgba(255,255,255,.05)!important}
+.hwb-ccl{display:inline-flex;align-items:center;gap:10px}
+.hwb-cav{width:26px;height:29px;flex:none;padding:1.5px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.hwb-cav img{width:100%;height:100%;object-fit:cover;object-position:50% 15%;display:block;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.hwb-cav i{font:700 10px Inter,sans-serif;font-style:normal;color:#C3CCD8}
+@media(max-width:760px){.hwb-ic{display:none}}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12588,7 +12609,7 @@ html body .hos-top{will-change:auto}
     var body=document.createElement('div');body.id='hosdBody';body.className='hosd';
     body.innerHTML=
       '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbComp">Classes</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
-      '<section id="hwbResumo" class="hwb-sec hwb-col">'+'<button type="button" class="hwb-colh" data-hwb-tog="bol" aria-expanded="true"><h2>Boletim da guerra</h2><small class="hwb-colsub">resumo escrito a partir dos números + alertas</small><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button>'+'<div class="hwb-colb hwb-resumo"></div></section>'+'<section id="hwbComp" class="hwb-sec hwb-col">'+'<button type="button" class="hwb-colh" data-hwb-tog="comp" aria-expanded="false"><h2>Comparativo de Classes</h2><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button>'+'<div class="hwb-colb hwb-compbox"></div></section>'+
+      '<section id="hwbResumo" class="hwb-sec hwb-col">'+'<button type="button" class="hwb-colh" data-hwb-tog="bol" aria-expanded="true"><span class="hwb-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16M4 10h16M4 15h10M4 20h7"/></svg></span><h2>Boletim da guerra</h2><small class="hwb-colsub">resumo escrito a partir dos números + alertas</small><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button>'+'<div class="hwb-colb hwb-resumo"></div></section>'+'<section id="hwbComp" class="hwb-sec hwb-col">'+'<button type="button" class="hwb-colh" data-hwb-tog="comp" aria-expanded="false"><span class="hwb-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 4v16M17 4v16M3 8h8M13 16h8"/></svg></span><h2>Comparativo de Classes</h2><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button>'+'<div class="hwb-colb hwb-compbox"></div></section>'+
       '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
       '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>uma linha por jogador · clique no título da coluna para ordenar · filtre um campo para ver as posições</small></div><div class="hwb-tbar hwb-panel"><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador…" aria-label="Procurar jogador" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl"></div></div><div class="hwb-tbl hwb-panel"></div></section>'+
       '<section id="hwbLista" class="hwb-sec" hidden><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
@@ -12643,6 +12664,7 @@ html body .hos-top{will-change:auto}
   function addDiff(){
     var tb=document.getElementById('hivestCompareBody'),th=document.getElementById('hivestCompareThead');if(!tb)return;
     var hr=th&&th.querySelector('tr');if(hr&&hr.children.length===5){var x=document.createElement('th');x.textContent='Diferença';hr.insertBefore(x,hr.children[3])}
+    [].forEach.call(tb.querySelectorAll('tr'),function(tr){var c0=tr.children[0];if(c0&&tr.children.length>=5&&!c0.querySelector('.hwb-cav')){var nm=c0.textContent.trim(),a=null;try{a=(window.hosArtFor&&!/n[aã]o identificad|desconhecid|informad/i.test(nm))?hosArtFor(nm,''):null}catch(e){}var ini=nm.split(/\s+/).map(function(w){return w.charAt(0)}).join('').slice(0,2).toUpperCase();c0.innerHTML='<span class="hwb-ccl"><span class="hwb-cav" style="background:'+(a&&a.src?(a.color||'#3A4250'):'#3A4250')+'">'+(a&&a.src?'<img src="'+a.src+'" alt="" loading="lazy">':'<i>'+ini+'</i>')+'</span>'+nm.replace(/</g,'&lt;')+'</span>'}});
     [].forEach.call(tb.querySelectorAll('tr'),function(tr){if(tr.children.length!==5)return;var a=n(tr.children[1].textContent),b=n(tr.children[2].textContent),d=(a||0)-(b||0),td=document.createElement('td');td.innerHTML=d>0?'<span class="hwb-dif up">+'+d+'</span>':d<0?'<span class="hwb-dif dn">'+d+'</span>':'<span class="hwb-dif">=</span>';tr.insertBefore(td,tr.children[3])});
     var tf=document.getElementById('hivestCompareFoot');if(tf)[].forEach.call(tf.querySelectorAll('tr'),function(tr){if(tr.children.length===5)tr.insertBefore(document.createElement('td'),tr.children[3])});
   }
