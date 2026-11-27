@@ -12761,7 +12761,8 @@ html body .hos-top{will-change:auto}
       '<div class="hwb-panel hwb-alerts"><small class="hwb-kick dim">Pontos da guerra</small>'+AL.map(function(a){return '<div class="hwb-al"><i class="'+a[0]+'"></i><div><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></div></div>'}).join('')+'</div>';
     /* --- presença: quem não jogou + menos tempo em campo --- */
     try{
-      var nk=function(x){return String(x||'').normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'')};
+      var HG={'а':'a','в':'b','е':'e','ё':'e','к':'k','м':'m','н':'h','о':'o','р':'p','с':'c','т':'t','у':'y','х':'x','і':'i','ї':'i','ј':'j','ѕ':'s','ԁ':'d','ԛ':'q','ԝ':'w','һ':'h','α':'a','β':'b','ε':'e','η':'n','ι':'i','κ':'k','ν':'v','ο':'o','ρ':'p','τ':'t','υ':'u','χ':'x','ω':'w','ϲ':'c','ς':'s','ɑ':'a','ɡ':'g','ı':'i','ℓ':'l'};
+      var nk=function(x){return String(x||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\x00-\x7f]/g,function(c){return HG[c]||''}).replace(/[^a-z0-9]/g,'')};
       var roster=(window.hiveMembers||[]).filter(function(m){return String(m&&m.Personagem||'').trim()});
       var played={};H.forEach(function(r){played[nk(name(r))]=1});
       var absent=roster.filter(function(m){return !played[nk(m.Personagem)]}).sort(function(a,b){return String(a.Personagem).localeCompare(String(b.Personagem),'pt-BR')});
