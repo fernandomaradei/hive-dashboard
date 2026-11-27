@@ -11766,6 +11766,10 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 #centralGuerra #hosdBody .hwb-tg{font:400 12.5px Inter,sans-serif!important;color:#A3AFBF!important}
 #centralGuerra #hosdBody .hwb-chev{border:1px solid rgba(255,255,255,.14)!important;background:transparent!important}
 #centralGuerra #hosdBody .hwb-colb{border-top:1px solid rgba(255,255,255,.08)!important;background:transparent!important}
+/* filtro de classe com várias escolhas (igual a Colunas) */
+.hwb-clswrap{position:relative}
+.hwb-clswrap .hwb-pop{width:300px;max-height:420px;overflow:auto}
+.hwb-clswrap .hwb-dd b{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12637,6 +12641,8 @@ html body .hos-top{will-change:auto}
     var cmp=$('hivestCompare');if(cmp){body.querySelector('.hwb-compbox').appendChild(cmp);cmp.hidden=false;cmp.classList.add('hwb-cmp-in');
       setTimeout(function(){var cc=$('hivestCompareCampo');if(cc)cc.dispatchEvent(new Event('change'))},0);
       var tb=$('hivestCompareBody');if(tb&&window.MutationObserver)new MutationObserver(function(){addDiff()}).observe(tb,{childList:true});}
+    document.addEventListener('click',function(e){if(!e.target||!e.target.closest)return;var c1=R.clsOpen&&!e.target.closest('.hwb-clswrap'),c2=R.cols&&!e.target.closest('.hwb-colwrap');if((c1||c2)&&!body.contains(e.target)){if(c1)R.clsOpen=false;if(c2)R.cols=false;draw()}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&(R.clsOpen||R.cols)){R.clsOpen=false;R.cols=false;draw()}});
     /* seções recolhíveis (lembra a escolha) */
     var colSet=function(key,open){var b=body.querySelector('[data-hwb-tog="'+key+'"]');if(!b)return;var sec2=b.closest('.hwb-col');sec2.classList.toggle('is-closed',!open);b.setAttribute('aria-expanded',open?'true':'false');b.querySelector('.hwb-tg').textContent=open?'Esconder':(key==='comp'?'Ver tabela':'Ver boletim');try{localStorage.setItem('hwbCol_'+key,open?'1':'0')}catch(e){}};
     var colGet=function(key,def){try{var v=localStorage.getItem('hwbCol_'+key);if(v!==null)return v==='1'}catch(e){}return def};
@@ -12669,7 +12675,7 @@ html body .hos-top{will-change:auto}
     });
     var qt=null,qi=body.querySelector('#hwbQ');
     qi.addEventListener('input',function(){clearTimeout(qt);qt=setTimeout(function(){R.q=qi.value;body.querySelector('[data-hwb-qx]').hidden=!R.q;draw()},120)});
-    body.addEventListener('change',function(e){var cs=e.target.closest('[data-hwb-cls]');if(cs){R.cls=cs.value;R.shown=0;draw();return}var c=e.target.closest('[data-hwb-stat]');if(!c)return;var k2=c.getAttribute('data-hwb-stat'),i=R.stats.indexOf(k2);if(c.checked&&i<0)R.stats.push(k2);if(!c.checked&&i>=0)R.stats.splice(i,1);R.save();draw()});
+    body.addEventListener('change',function(e){var ck=e.target.closest('[data-hwb-clsck]');if(ck){var jn=ck.getAttribute('data-hwb-clsck'),all=[].map.call(body.querySelectorAll('[data-hwb-clsck]'),function(x){return x.getAttribute('data-hwb-clsck')}),cur=R.cls?R.cls.slice():all.slice(),ix=cur.indexOf(jn);if(ck.checked&&ix<0)cur.push(jn);if(!ck.checked&&ix>=0)cur.splice(ix,1);R.cls=cur.length===all.length?null:cur;R.shown=0;draw();return}var c=e.target.closest('[data-hwb-stat]');if(!c)return;var k2=c.getAttribute('data-hwb-stat'),i=R.stats.indexOf(k2);if(c.checked&&i<0)R.stats.push(k2);if(!c.checked&&i>=0)R.stats.splice(i,1);R.save();draw()});
     return sec;
   }
 
@@ -12793,7 +12799,7 @@ html body .hos-top{will-change:auto}
   var RK_DEFAULT=['Dano_Causado','Kills','Assistencias','KDA','Cura','Dano_Recebido','Participacao','Mortes','Horn'];
   var RK_COLORS={Dano_Causado:'#FFB627',Kills:'#FF8A3D',Assistencias:'#B78CFF',KDA:'#E7D2FF',Cura:'#34E3A0',Dano_Recebido:'#4CC2FF',Participacao:'#5FE0C8',Mortes:'#FF7A7A',Power:'#FFD27A',Merito:'#F2C94C',PP_Vigrid:'#9BE15D',GP:'#7C8CFF',Recursos:'#FF7FB0',Moedas:'#C7A27C',Minutos:'#AEB8C6',Horn:'#F2C94C',Tempo_Segundos:'#AEB8C6',Dano_Power:'#FFB627'};
   var RK_NOTE={Dano_Recebido:'quem segurou',Mortes:'atenção'};
-  var R={stats:RK_DEFAULT.slice(),guild:'all',campo:'all',per:25,more:{},lista:false,cls:'',sort:'Dano_Causado',dir:-1,cols:false,shown:0,
+  var R={stats:RK_DEFAULT.slice(),guild:'all',campo:'all',per:25,more:{},lista:false,cls:null,clsOpen:false,sort:'Dano_Causado',dir:-1,cols:false,shown:0,
     load:function(){try{var x=JSON.parse(localStorage.getItem('hwbRanks')||'null');if(x&&Array.isArray(x.stats)){this.stats=x.stats.filter(function(k){return SORTS.some(function(s){return s[0]===k})});if(x.per&&x.per!==5&&x.per!==10&&x.per!==20)this.per=x.per;if(!x.horn&&this.stats.indexOf('Horn')<0){this.stats.push('Horn');this.save()}}}catch(e){}},
     save:function(){try{localStorage.setItem('hwbRanks',JSON.stringify({stats:this.stats,per:this.per,horn:1}))}catch(e){}}};
   R.load();
@@ -12978,16 +12984,17 @@ html body .hos-top{will-change:auto}
     /* --- rankings (tabela) --- */
     var on=function(c,v,attr,label){return '<button type="button" class="hwb-sg'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
     var jobs=[];H.concat(B).forEach(function(r){var j=String(k(r,'Job')||'');if(!unknownJob(j)&&jobs.indexOf(j)<0)jobs.push(j)});jobs.sort(function(a,b){return a.localeCompare(b,'pt-BR')});
-    if(R.cls&&jobs.indexOf(R.cls)<0)R.cls='';
+    if(!Array.isArray(R.cls))R.cls=null;else{R.cls=R.cls.filter(function(j){return jobs.indexOf(j)>=0});if(R.cls.length===jobs.length)R.cls=null}
+    var clsEff=R.cls||jobs,clsLbl=!R.cls?'Todas':R.cls.length===0?'Nenhuma':R.cls.length===1?esc(R.cls[0]):R.cls.length+' classes';
     body.querySelector('.hwb-rkctl').innerHTML=
       '<div class="hwb-seg"><small class="hwb-kick dim">Guilda</small><span>'+on(R.guild==='all','all','data-hwb-g','Ambas')+on(R.guild==='us','us','data-hwb-g',esc(us))+on(R.guild==='them','them','data-hwb-g',esc(them))+'</span></div>'+
       '<div class="hwb-seg"><small class="hwb-kick dim">Campo</small><span>'+on(R.campo==='all','all','data-hwb-c','Todos')+on(R.campo==='P','P','data-hwb-c','Principal')+on(R.campo==='S','S','data-hwb-c','Secundário')+'</span></div>'+
-      '<label class="hwb-dd"><small>Classe</small><select data-hwb-cls aria-label="Filtrar por classe"><option value="">Todas</option>'+jobs.map(function(j){return '<option'+(j===R.cls?' selected':'')+'>'+esc(j)+'</option>'}).join('')+'</select></label>'+
+      '<div class="hwb-clswrap"><button type="button" class="hwb-dd" data-hwb-clsbtn aria-expanded="'+R.clsOpen+'"><small>Classe</small><b>'+clsLbl+'</b><span aria-hidden="true">▾</span></button>'+(R.clsOpen?'<div class="hwb-pop" role="dialog" aria-label="Escolher classes"><div class="hwb-poph"><small class="hwb-kick dim">Classes</small><span><button type="button" class="hwb-chip" data-hwb-clsp="all">Todas</button><button type="button" class="hwb-chip" data-hwb-clsp="none">Limpar</button></span></div><div class="hwb-popg">'+jobs.map(function(j){return '<label><input type="checkbox" data-hwb-clsck="'+esc(j)+'"'+(clsEff.indexOf(j)>=0?' checked':'')+'>'+esc(j)+'</label>'}).join('')+'</div></div>':'')+'</div>'+
       '<div class="hwb-colwrap"><button type="button" class="hwb-dd" data-hwb-cols aria-expanded="'+R.cols+'"><small>Colunas</small><b>'+R.stats.length+' status</b><span aria-hidden="true">▾</span></button>'+
       (R.cols?'<div class="hwb-pop" role="dialog" aria-label="Escolher colunas"><div class="hwb-poph"><small class="hwb-kick dim">Colunas de status</small><span><button type="button" class="hwb-chip" data-hwb-preset="all">Todos</button><button type="button" class="hwb-chip" data-hwb-preset="def">Padrão</button></span></div><div class="hwb-popg">'+
         STAT_LIST.map(function(st){var c=R.stats.indexOf(st[0])>=0;return '<label><input type="checkbox" data-hwb-stat="'+st[0]+'"'+(c?' checked':'')+'>'+esc(st[1])+'</label>'}).join('')+'</div></div>':'')+'</div>'+
       '<div class="hwb-seg"><small class="hwb-kick dim">Mostrar</small><span>'+[25,50,100,0].map(function(x){return on(R.per===x,x,'data-hwb-per',x||'Todos')}).join('')+'</span></div>';
-    var pool=H.concat(B).filter(function(r){return (R.guild==='all'||(R.guild==='us')===isH(r))&&(R.campo==='all'||campoOf(r)===R.campo)&&(!R.cls||String(k(r,'Job'))===R.cls)});
+    var pool=H.concat(B).filter(function(r){return (R.guild==='all'||(R.guild==='us')===isH(r))&&(R.campo==='all'||campoOf(r)===R.campo)&&(!R.cls||R.cls.indexOf(String(k(r,'Job')))>=0)});
     var cols=STAT_LIST.filter(function(s){return R.stats.indexOf(s[0])>=0});
     var rankOf={};cols.forEach(function(st){var key=st[0],L=pool.filter(function(r){return ok(r[key])}).sort(function(a,b){return n(b[key])-n(a[key])}),m=new Map();L.forEach(function(r,i){m.set(r,i+1)});rankOf[key]=m});
     var sk=R.sort;if(sk!=='Personagem'&&!cols.some(function(c){return c[0]===sk}))sk=cols.length?cols[0][0]:'Personagem';
@@ -13022,14 +13029,17 @@ html body .hos-top{will-change:auto}
     if(a){e.preventDefault();var el=document.querySelector(a.getAttribute('href'));if(el){if(a.getAttribute('href')==='#hwbLista'&&!R.lista){R.lista=true;draw()}el.scrollIntoView({behavior:'smooth',block:'start'})}
       [].forEach.call(document.querySelectorAll('.hwb-nav a'),function(x){x.classList.toggle('on',x===a)});return true}
     if(R.cols&&!e.target.closest('.hwb-colwrap')){R.cols=false;draw()}
-    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-lista],[data-hwb-qx],[data-hwb-cols],[data-hwb-sort],[data-hwb-showmore]');
+    if(R.clsOpen&&!e.target.closest('.hwb-clswrap')){R.clsOpen=false;draw()}
+    var b=e.target.closest('[data-hwb-copy],[data-hwb-preset],[data-hwb-g],[data-hwb-c],[data-hwb-per],[data-hwb-lista],[data-hwb-qx],[data-hwb-cols],[data-hwb-clsbtn],[data-hwb-clsp],[data-hwb-sort],[data-hwb-showmore]');
     if(!b)return false;var d=b.dataset;
     if('hwbCopy' in d){hwbCopy();return true}
     if(d.hwbPreset){R.stats=d.hwbPreset==='all'?STAT_LIST.map(function(s){return s[0]}):d.hwbPreset==='none'?[]:RK_DEFAULT.slice();R.save()}
     else if(d.hwbG){R.guild=d.hwbG;R.shown=0}
     else if(d.hwbC){R.campo=d.hwbC;R.shown=0}
     else if(d.hwbPer!==undefined){R.per=+d.hwbPer;R.shown=0;R.save()}
-    else if('hwbCols' in d)R.cols=!R.cols;
+    else if('hwbCols' in d){R.cols=!R.cols;R.clsOpen=false}
+    else if('hwbClsbtn' in d){R.clsOpen=!R.clsOpen;R.cols=false}
+    else if(d.hwbClsp){R.cls=d.hwbClsp==='all'?null:[];R.shown=0}
     else if(d.hwbSort){if(R.sort===d.hwbSort)R.dir=-R.dir;else{R.sort=d.hwbSort;R.dir=d.hwbSort==='Personagem'?1:-1}}
     else if('hwbShowmore' in d)R.shown=(R.shown||0)+(R.per||25);
     else if('hwbLista' in d)R.lista=!R.lista;
