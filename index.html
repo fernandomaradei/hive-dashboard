@@ -11679,6 +11679,25 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 @media(max-width:1100px){#hosdBody .hwb-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}#hosdBody .hwb-tcs{grid-template-columns:1fr!important}}
 @media(max-width:640px){#hosdBody .hwb-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}#hosdBody .hwb-kpi>b{font-size:22px}#hosdBody .hwb-fsh .hwb-badge{margin-left:0}}
 
+/* ===== presença (não jogaram + menos tempo) ===== */
+.hwb-pres{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:28px;text-align:left!important;padding:20px 22px!important}
+.hwb-pcol{min-width:0}
+.hwb-pres .hwb-kick{margin:0}.hwb-pres .hwb-kick em{font-style:normal;margin-left:6px;padding:2px 8px;border-radius:999px;background:rgba(255,182,39,.16);color:var(--hos-accent)}
+.hwb-psub{display:block;margin:6px 0 12px;font-size:12.5px;color:#A3AFBF}
+.hwb-pok{margin:6px 0 0;font-size:13.5px;color:#9BE7C4}
+.hwb-abs{display:flex;flex-wrap:wrap;gap:8px;max-height:260px;overflow:auto}
+.hwb-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.hwb-chip b{font-size:13px;font-weight:600;color:#E8EDF4}.hwb-chip small{font-size:11px;color:#A3AFBF}
+.hwb-pav{width:24px;height:26px;flex:none;padding:1.5px;box-sizing:border-box;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.hwb-pav img{width:100%;height:100%;object-fit:cover;object-position:50% 15%;display:block;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.hwb-lt{display:grid;grid-template-columns:24px minmax(0,1.3fr) minmax(60px,1fr) 70px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.hwb-lt:last-child{border-bottom:0}
+.hwb-ln{min-width:0}.hwb-ln b{display:block;font-size:13.5px;color:#E8EDF4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hwb-ln small{display:block;font-size:11px;color:#A3AFBF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hwb-lb{height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}.hwb-lb i{display:block;height:100%;border-radius:4px;background:#5FE0C8}
+.hwb-lm{font:700 13px var(--hos-mono);text-align:right;color:#E8EDF4}
+.hwb-lt.is-low .hwb-lb i{background:#FF8A7A}.hwb-lt.is-low .hwb-lm{color:#FF8A7A}
+@media(max-width:760px){.hwb-pres{grid-template-columns:1fr;gap:18px}}
+
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
 .hosAttr *{box-sizing:border-box}
@@ -12740,6 +12759,29 @@ html body .hos-top{will-change:auto}
     body.querySelector('.hwb-resumo').innerHTML='<div class="hwb-panel hwb-sum"><small class="hwb-kick">Resumo automático</small><p>'+txt+'</p><div class="hwb-tiles">'+
       tile('Dano',fmtP(dd),dd>=0?'hwb-gold':'hwb-red')+tile('Kills',nf(kH),kH>=kB?'hwb-gold':'')+tile('Mortes',fmtP(md),md<=0?'hwb-green':'hwb-red')+tile('Cura',fmtP(cd),cd>=0?'hwb-green':'hwb-red')+''+'</div>'+(hasHorn?'<div class="hwb-horn"><small class="hwb-kick">Tempo de horn</small>'+[['Campo Principal',FP],['Campo Secundário',FS]].map(function(x){var F=x[1],tt=(F.hh+F.hb)||1;return '<div class="hwb-hr"><span>'+x[0]+'</span><b class="'+(F.hh>=F.hb?'us':'')+'">'+nf(Math.round(F.hh||0))+' s</b><span class="hwb-split"><i style="width:'+(F.hh/tt*100)+'%"></i></span><b class="'+(F.hb>F.hh?'them':'')+'">'+nf(Math.round(F.hb||0))+' s</b></div>'}).join('')+'</div>':'')+'</div>'+
       '<div class="hwb-panel hwb-alerts"><small class="hwb-kick dim">Pontos da guerra</small>'+AL.map(function(a){return '<div class="hwb-al"><i class="'+a[0]+'"></i><div><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></div></div>'}).join('')+'</div>';
+    /* --- presença: quem não jogou + menos tempo em campo --- */
+    try{
+      var nk=function(x){return String(x||'').normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'')};
+      var roster=(window.hiveMembers||[]).filter(function(m){return String(m&&m.Personagem||'').trim()});
+      var played={};H.forEach(function(r){played[nk(name(r))]=1});
+      var absent=roster.filter(function(m){return !played[nk(m.Personagem)]}).sort(function(a,b){return String(a.Personagem).localeCompare(String(b.Personagem),'pt-BR')});
+      var mins=H.map(function(r){return {r:r,m:n(r.Minutos)}}).filter(function(x){return Number.isFinite(x.m)&&x.m>0});
+      var full=mins.length?Math.max.apply(null,mins.map(function(x){return x.m})):20;
+      var ref=Math.max(1,Math.min(full,25));
+      var low=mins.slice().sort(function(a,b){return a.m-b.m}).slice(0,10);
+      var lim=ref*.75,lowN=mins.filter(function(x){return x.m<lim}).length;
+      var fm=function(v){var t=Math.round(v*60),mm=Math.floor(t/60),ss=t%60;return mm+'min'+(ss?String(ss).padStart(2,'0')+'s':'')};
+      var art=function(job){try{return window.hosArtFor?hosArtFor(String(job||''),''):null}catch(e){return null}};
+      var av=function(job){var a=art(job);return '<span class="hwb-pav" style="background:'+esc(a&&a.color||'#3a4250')+'">'+(a&&a.src?'<img src="'+esc(a.src)+'" alt="" loading="lazy">':'')+'</span>'};
+      var absHtml=roster.length?(absent.length?'<div class="hwb-abs">'+absent.map(function(m){return '<span class="hwb-chip">'+av(m.Job)+'<b>'+esc(m.Personagem)+'</b><small>'+esc(m.Job||'—')+'</small></span>'}).join('')+'</div>':'<p class="hwb-pok">Todos os '+nf(roster.length)+' membros da planilha jogaram esta guerra.</p>'):'<p class="hwb-pok">Lista de membros ainda não carregada.</p>';
+      var lowHtml=low.length?low.map(function(x){var pc=Math.min(100,x.m/ref*100),bad=x.m<lim;return '<div class="hwb-lt'+(bad?' is-low':'')+'">'+av(k(x.r,'Job'))+'<span class="hwb-ln"><b>'+esc(name(x.r))+'</b><small>'+esc(k(x.r,'Job')||'—')+' · '+(campoOf(x.r)==='S'?'Secundário':'Principal')+'</small></span><span class="hwb-lb"><i style="width:'+pc.toFixed(0)+'%"></i></span><b class="hwb-lm">'+fm(x.m)+'</b></div>'}).join(''):'<p class="hwb-pok">Sem dados de minutos nesta guerra.</p>';
+      body.querySelector('.hwb-resumo').insertAdjacentHTML('beforeend','<div class="hwb-panel hwb-pres">'+
+        '<div class="hwb-pcol"><small class="hwb-kick">Não jogaram <em>'+nf(absent.length)+'</em></small><span class="hwb-psub">Membros da planilha que não aparecem nesta guerra.</span>'+absHtml+'</div>'+
+        '<div class="hwb-pcol"><small class="hwb-kick">Menos tempo em campo</small><span class="hwb-psub">Partida de ~'+fm(ref)+' (maior tempo registrado). Em vermelho: abaixo de '+fm(lim)+'.</span>'+lowHtml+'</div></div>');
+      if(absent.length)AL.push(['warn','Ausências',nf(absent.length)+' membro'+(absent.length>1?'s':'')+' da planilha não jogaram esta guerra.']);
+      if(lowN)AL.push(['warn','Pouco tempo em campo',nf(lowN)+' jogador'+(lowN>1?'es ficaram':' ficou')+' menos de '+fm(lim)+' na partida.']);
+      if(absent.length||lowN){var alBox=body.querySelector('.hwb-alerts');if(alBox)alBox.insertAdjacentHTML('beforeend',AL.slice(-((absent.length?1:0)+(lowN?1:0))).map(function(a){return '<div class="hwb-al"><i class="'+a[0]+'"></i><div><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></div></div>'}).join(''))}
+    }catch(e){console.warn('[HIVEST presença]',e)}
     S.boletim={txt:txt.replace(/<[^>]+>/g,''),al:AL,t:t,res:res};
     /* --- campos --- */
     var cmpRow=function(lbl,a,b,fa,fb,low){var wa=low?a<b:a>b,tt=(a+b)||1;return '<div class="hwb-cr"><b class="'+(wa?'us':'')+'">'+fa+'</b><span class="hwb-split"><i style="width:'+(a/tt*100)+'%"></i></span><b class="'+(!wa&&a!==b?'them':'')+'">'+fb+'</b></div><small class="hwb-crl">'+lbl+'</small>'};
