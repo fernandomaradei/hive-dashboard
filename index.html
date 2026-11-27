@@ -12154,7 +12154,7 @@ html body .hos-top{will-change:auto}
 .tyr-nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .tyr-nav i{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,.22);overflow:hidden}
 .tyr-nav i b{display:block;height:100%;width:100%;background:#FFB627;transform-origin:left;transform:scaleX(0)}
-.tyr-nav button.on i b{animation:tyrPg var(--tyr-d,3000ms) linear forwards}
+.tyr-nav button.on i b{animation:tyrPg var(--tyr-d,4000ms) linear forwards}
 #inicio.tyr.paused .tyr-nav button.on i b{animation-play-state:paused}
 @keyframes tyrPg{to{transform:scaleX(1)}}
 @media(max-width:1180px){.tyr-nav span{display:none}.tyr-nav button{width:40px!important}.tyr-s1 h2{font-size:68px}.tyr-cd b{font-size:84px;min-width:96px}.tyr-card b{font-size:24px}.tyr-node b{font-size:18px}.tyr-nav button{width:96px}}
@@ -13488,7 +13488,7 @@ window.HOS_TYR_IMG={"glob": "data:image/webp;base64,UklGRvpQAQBXRUJQVlA4IO5QAQDw
   window.hosTyrActive=function(){return ON&&!!IMG.glob&&Date.now()<END};
   if(!window.hosTyrActive())return;
   var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var DUR=RM?6000:3000,tries=0;
+  var DUR=RM?6000:4000,tries=0;
   var HEX=function(s,c){return '<svg width="'+s+'" height="'+Math.round(s*38/34)+'" viewBox="0 0 34 38" aria-hidden="true"><path d="M17 1 L33 10 L33 28 L17 37 L1 28 L1 10 Z" fill="none" stroke="'+c+'" stroke-width="2.4"/><path d="M17 10 L25 14.5 L25 23.5 L17 28 L9 23.5 L9 14.5 Z" fill="'+c+'"/></svg>'};
   function state(){
     var n=Date.now(),cur=PH.length-1;
