@@ -12054,14 +12054,14 @@ html body .hos-top{will-change:auto}
 #inicio.hosb .hos-hero-bg,#inicio.hosb .hos-mosaic{display:none!important}
 #inicio.hosb{background:#07090D!important;min-height:360px!important}
 .hosb-sl{position:absolute;inset:0;z-index:0;pointer-events:none}
-.hosb-s{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+.hosb-s{position:absolute;inset:0;opacity:0;transition:opacity .7s ease}
 .hosb-s.on{opacity:1}
 .hosb-s img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.05);will-change:transform}
-.hosb-s.on img{animation:hosbKb 10s linear forwards}
+.hosb-s.on img{animation:hosbKb 7s linear forwards}
 @keyframes hosbKb{from{transform:scale(1.05)}to{transform:scale(1.14) translateX(-1.5%)}}
 .hosb-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(7,9,13,.96) 0,rgba(7,9,13,.86) 500px,rgba(7,9,13,.3) 760px,rgba(7,9,13,0) 980px),linear-gradient(0deg,rgba(7,9,13,.5),rgba(7,9,13,0) 38%);box-shadow:inset 0 0 140px rgba(0,0,0,.55)}
 .hosb-tr{position:absolute;right:28px;top:28px;bottom:28px;display:flex;gap:8px;z-index:3}
-.hosb-t{position:relative;width:52px;height:100%;padding:0;margin:0;border-radius:12px;overflow:hidden;transform:skewX(-8deg);border:2px solid rgba(255,255,255,.25);background:#07090D;cursor:pointer;transition:width .6s cubic-bezier(.65,0,.25,1),border-color .4s;flex:none}
+.hosb-t{position:relative;width:52px;height:100%;padding:0;margin:0;border-radius:12px;overflow:hidden;transform:skewX(-8deg);border:2px solid rgba(255,255,255,.25);background:#07090D;cursor:pointer;transition:width .45s cubic-bezier(.65,0,.25,1),border-color .4s;flex:none}
 .hosb-t img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:skewX(8deg) scale(1.45);filter:brightness(.5) saturate(.8);transition:filter .4s;pointer-events:none}
 .hosb-t:hover img{filter:brightness(.85) saturate(1)}
 .hosb-t.on{width:112px;border-color:#FFB627}
@@ -12071,9 +12071,9 @@ html body .hos-top{will-change:auto}
 .hosb-t.on .hosb-pg{animation:hosbPg var(--hosb-d,7s) linear forwards}
 #inicio.hosb.paused .hosb-t.on .hosb-pg{animation-play-state:paused}
 @keyframes hosbPg{to{width:100%}}
-.hosb-cap{position:absolute;right:425px;bottom:30px;z-index:3;text-align:right;pointer-events:none;transition:opacity .4s,transform .4s}
-.hosb-cap small{display:block;font:700 11px var(--hos-mono);letter-spacing:.24em;color:#FFB627;margin-bottom:4px}
-.hosb-cap b{font:700 24px var(--hos-head);color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.85);white-space:nowrap}
+.hosb-cap{position:absolute;right:425px;bottom:30px;z-index:3;text-align:right;pointer-events:none;transition:opacity .25s,transform .25s}
+.hosb-cap i{display:block;width:36px;height:3px;border-radius:2px;background:#FFB627;margin:0 0 8px auto}
+.hosb-cap b{font:700 22px var(--hos-head);color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.85);white-space:nowrap}
 .hosb-cap.sw{opacity:0;transform:translateY(6px)}
 @media(max-width:1280px){.hosb-cap{display:none}}
 @media(max-width:1120px){.hosb-t{width:34px}.hosb-t.on{width:78px}.hosb-tr{gap:6px}}
@@ -13394,7 +13394,9 @@ window.HOSB_IMGS=[{"k": "festival", "n": "Festival das Lanternas", "p": "50% 22%
 (function(){
   var IM=window.HOSB_IMGS||[];if(!IM.length)return;
   var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var DUR=RM?10000:7000,tries=0;
+  var DUR=RM?8000:5000,tries=0;
+  var FR=["Mais que uma guilda, uma família.", "Juntos em cada travessia.", "Sempre prontos para a próxima batalha.", "Cada status conta para a colmeia.", "Ninguém fica para trás."];
+  function fr(i){return FR[i%FR.length]}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function init(){
     var hero=document.querySelector('#inicio.hos-hero'),txt=hero&&hero.querySelector('.hos-hero-txt');
@@ -13404,7 +13406,7 @@ window.HOSB_IMGS=[{"k": "festival", "n": "Festival das Lanternas", "p": "50% 22%
     var n=IM.length,pad=function(i){return(i<9?'0':'')+(i+1)};
     var sl='<div class="hosb-sl" aria-hidden="true">'+IM.map(function(m,i){return '<div class="hosb-s'+(i?'':' on')+'"><img src="'+m.s+'" alt="" decoding="async" style="object-position:'+esc(m.p)+'"></div>'}).join('')+'</div>';
     var tr='<div class="hosb-tr" role="group" aria-label="Artes do banner">'+IM.map(function(m,i){return '<button type="button" class="hosb-t'+(i?'':' on')+'" data-i="'+i+'" aria-label="Mostrar '+esc(m.n)+'" aria-pressed="'+(i?'false':'true')+'"><img src="'+m.s+'" alt="" decoding="async" style="object-position:'+esc(m.p)+'"><i class="hosb-pg"></i></button>'}).join('')+'</div>';
-    var cap='<div class="hosb-cap" aria-hidden="true"><small>'+pad(0)+' / '+pad(n-1)+'</small><b>'+esc(IM[0].n)+'</b></div>';
+    var cap='<div class="hosb-cap" aria-hidden="true"><i></i><b>'+esc(fr(0))+'</b></div>';
     txt.insertAdjacentHTML('beforebegin',sl+'<div class="hosb-shade" aria-hidden="true"></div>');
     hero.insertAdjacentHTML('beforeend',cap+tr);
     var S=hero.querySelectorAll('.hosb-s'),T=hero.querySelectorAll('.hosb-t'),C=hero.querySelector('.hosb-cap');
@@ -13415,7 +13417,7 @@ window.HOSB_IMGS=[{"k": "festival", "n": "Festival das Lanternas", "p": "50% 22%
       cur=i;
       var im=S[cur].querySelector('img');im.style.animation='none';void im.offsetWidth;im.style.animation='';
       S[cur].classList.add('on');T[cur].classList.add('on');T[cur].setAttribute('aria-pressed','true');
-      C.classList.add('sw');setTimeout(function(){C.querySelector('small').textContent=pad(cur)+' / '+pad(n-1);C.querySelector('b').textContent=IM[cur].n;C.classList.remove('sw')},300);
+      C.classList.add('sw');setTimeout(function(){C.querySelector('b').textContent=fr(cur);C.classList.remove('sw')},250);
       restart();
     }
     function restart(){
