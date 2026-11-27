@@ -12489,6 +12489,8 @@ html body .hos-top{will-change:auto}
   function pct(v){if(!Number.isFinite(v))return '—';var p=Math.abs(v)<=1.5?v*100:v;return nf(p,1)+'%'}
   function isHiveName(s){return ['hive','hivest'].indexOf(String(s||'').trim().toLowerCase())>=0}
   function k(r,a){for(var i=1;i<arguments.length;i++){var x=r&&r[arguments[i]];if(x!==undefined&&x!==null&&x!=='')return x}return ''}
+  var HG={'а':'a','в':'b','е':'e','ё':'e','к':'k','м':'m','н':'h','о':'o','р':'p','с':'c','т':'t','у':'y','х':'x','і':'i','ї':'i','ј':'j','ѕ':'s','ԁ':'d','ԛ':'q','ԝ':'w','һ':'h','α':'a','β':'b','ε':'e','η':'n','ι':'i','κ':'k','ν':'v','ο':'o','ρ':'p','τ':'t','υ':'u','χ':'x','ω':'w','ϲ':'c','ς':'s','ɑ':'a','ɡ':'g','ı':'i','ℓ':'l'};
+  function fold(x){return String(x||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\x00-\x7f]/g,function(c){return HG[c]||''}).replace(/[^a-z0-9]/g,'')}
   function unknownJob(j){return !j||/n[aã]o identificad|desconhecid|unknown|^-$/i.test(String(j))}
   function initials(s){return String(s||'?').replace(/[^A-Za-zÀ-ÿ0-9]/g,'').slice(0,2).toUpperCase()||'?'}
 
@@ -12761,8 +12763,7 @@ html body .hos-top{will-change:auto}
       '<div class="hwb-panel hwb-alerts"><small class="hwb-kick dim">Pontos da guerra</small>'+AL.map(function(a){return '<div class="hwb-al"><i class="'+a[0]+'"></i><div><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></div></div>'}).join('')+'</div>';
     /* --- presença: quem não jogou + menos tempo em campo --- */
     try{
-      var HG={'а':'a','в':'b','е':'e','ё':'e','к':'k','м':'m','н':'h','о':'o','р':'p','с':'c','т':'t','у':'y','х':'x','і':'i','ї':'i','ј':'j','ѕ':'s','ԁ':'d','ԛ':'q','ԝ':'w','һ':'h','α':'a','β':'b','ε':'e','η':'n','ι':'i','κ':'k','ν':'v','ο':'o','ρ':'p','τ':'t','υ':'u','χ':'x','ω':'w','ϲ':'c','ς':'s','ɑ':'a','ɡ':'g','ı':'i','ℓ':'l'};
-      var nk=function(x){return String(x||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\x00-\x7f]/g,function(c){return HG[c]||''}).replace(/[^a-z0-9]/g,'')};
+      var nk=fold;
       var roster=(window.hiveMembers||[]).filter(function(m){return String(m&&m.Personagem||'').trim()});
       var played={};H.forEach(function(r){played[nk(name(r))]=1});
       var absent=roster.filter(function(m){return !played[nk(m.Personagem)]}).sort(function(a,b){return String(a.Personagem).localeCompare(String(b.Personagem),'pt-BR')});
@@ -12827,7 +12828,7 @@ html body .hos-top{will-change:auto}
     var rankOf={};cols.forEach(function(st){var key=st[0],L=pool.filter(function(r){return ok(r[key])}).sort(function(a,b){return n(b[key])-n(a[key])}),m=new Map();L.forEach(function(r,i){m.set(r,i+1)});rankOf[key]=m});
     var sk=R.sort;if(sk!=='Personagem'&&!cols.some(function(c){return c[0]===sk}))sk=cols.length?cols[0][0]:'Personagem';
     var sorted=pool.slice().sort(sk==='Personagem'?function(a,b){return R.dir*String(name(a)).localeCompare(String(name(b)),'pt-BR',{sensitivity:'base'})}:function(a,b){var x=n(a[sk]),y=n(b[sk]);if(!Number.isFinite(x))return 1;if(!Number.isFinite(y))return -1;return R.dir*(x-y)});
-    var norm=function(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')},qn=norm(R.q||'').trim();
+    var norm=fold,qn=fold(R.q||'');
     var rowsAll=sorted.map(function(r,i){return [r,i+1]});
     if(qn)rowsAll=rowsAll.filter(function(x){return norm(name(x[0])).indexOf(qn)>=0});
     var lim=R.per?R.per+(R.shown||0):rowsAll.length,vis=rowsAll.slice(0,lim);
