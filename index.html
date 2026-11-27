@@ -11770,6 +11770,13 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 .hwb-clswrap{position:relative}
 .hwb-clswrap .hwb-pop{width:300px;max-height:420px;overflow:auto}
 .hwb-clswrap .hwb-dd b{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Por campo recolhível (mesmo visual do Boletim/Comparativo) */
+#centralGuerra #hosdBody section#hwbCampos.hwb-col{border-left:4px solid #5FE0C8!important;margin-bottom:26px!important}
+#hwbCampos .hwb-ic{background:rgba(95,224,200,.15);color:#5FE0C8}
+#hwbCampos .hwb-cpills{display:flex}
+#hwbComp.hwb-col{margin-bottom:12px!important}
+#centralGuerra #hosdBody section#hwbComp.hwb-col{margin-bottom:12px!important}
+#centralGuerra #hosdBody .hwb-col.is-closed .hwb-colb,#centralGuerra #hosdBody .hwb-col.is-closed .hwb-campos{display:none!important}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12626,7 +12633,7 @@ html body .hos-top{will-change:auto}
     body.innerHTML=
       '<nav class="hwb-nav" aria-label="Seções da guerra"><a href="#hwbResumo" class="on">Resumo</a><a href="#hwbComp">Classes</a><a href="#hwbCampos">Por campo</a><a href="#hwbRanks">Rankings</a><span class="hwb-sp"></span><button type="button" class="hwb-btn" data-hwb-copy>Copiar boletim p/ Discord</button></nav>'+
       '<section id="hwbResumo" class="hwb-sec hwb-col">'+'<button type="button" class="hwb-colh" data-hwb-tog="bol" aria-expanded="true"><span class="hwb-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16M4 10h16M4 15h10M4 20h7"/></svg></span><h2>Boletim da guerra</h2><small class="hwb-colsub">resumo escrito a partir dos números + alertas</small><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button>'+'<div class="hwb-colb hwb-resumo"></div></section>'+'<section id="hwbComp" class="hwb-sec hwb-col">'+'<button type="button" class="hwb-colh" data-hwb-tog="comp" aria-expanded="false"><span class="hwb-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 4v16M17 4v16M3 8h8M13 16h8"/></svg></span><h2>Comparativo de Classes</h2><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button>'+'<div class="hwb-colb hwb-compbox"></div></section>'+
-      '<section id="hwbCampos" class="hwb-sec"><div class="hwb-sh"><h2>Por campo</h2><small>quem dominou o Principal e o Secundário</small></div><div class="hwb-campos"></div></section>'+
+      '<section id="hwbCampos" class="hwb-sec hwb-col"><button type="button" class="hwb-colh" data-hwb-tog="campo" aria-expanded="false"><span class="hwb-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></span><h2>Por campo</h2><span class="hwb-cpills"></span><span class="hwb-tg"></span><span class="hwb-chev" aria-hidden="true"></span></button><div class="hwb-colb hwb-campos"></div></section>'+
       '<section id="hwbRanks" class="hwb-sec"><div class="hwb-sh"><h2>Rankings por status</h2><small>uma linha por jogador · clique no título da coluna para ordenar · filtre um campo para ver as posições</small></div><div class="hwb-tbar hwb-panel"><div class="hwb-rksearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="hwbQ" placeholder="Procurar jogador…" aria-label="Procurar jogador" autocomplete="off"><button type="button" class="hwb-qx" data-hwb-qx aria-label="Limpar busca" hidden>✕</button></div><div class="hwb-rkctl"></div></div><div class="hwb-tbl hwb-panel"></div></section>'+
       '<section id="hwbLista" class="hwb-sec" hidden><div class="hwb-lista" hidden><section class="hosd-duel" aria-label="Hivest contra adversário" hidden></section><div class="hwb-filtslot"></div><div class="hosd-teams"></div></div></section>';
     var anchor=$('warResultsTitle');
@@ -12644,9 +12651,9 @@ html body .hos-top{will-change:auto}
     document.addEventListener('click',function(e){if(!e.target||!e.target.closest)return;var c1=R.clsOpen&&!e.target.closest('.hwb-clswrap'),c2=R.cols&&!e.target.closest('.hwb-colwrap');if((c1||c2)&&!body.contains(e.target)){if(c1)R.clsOpen=false;if(c2)R.cols=false;draw()}});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&(R.clsOpen||R.cols)){R.clsOpen=false;R.cols=false;draw()}});
     /* seções recolhíveis (lembra a escolha) */
-    var colSet=function(key,open){var b=body.querySelector('[data-hwb-tog="'+key+'"]');if(!b)return;var sec2=b.closest('.hwb-col');sec2.classList.toggle('is-closed',!open);b.setAttribute('aria-expanded',open?'true':'false');b.querySelector('.hwb-tg').textContent=open?'Esconder':(key==='comp'?'Ver tabela':'Ver boletim');try{localStorage.setItem('hwbCol_'+key,open?'1':'0')}catch(e){}};
+    var colSet=function(key,open){var b=body.querySelector('[data-hwb-tog="'+key+'"]');if(!b)return;var sec2=b.closest('.hwb-col');sec2.classList.toggle('is-closed',!open);b.setAttribute('aria-expanded',open?'true':'false');b.querySelector('.hwb-tg').textContent=open?'Esconder':(key==='comp'?'Ver tabela':key==='campo'?'Ver campos':'Ver boletim');try{localStorage.setItem('hwbCol_'+key,open?'1':'0')}catch(e){}};
     var colGet=function(key,def){try{var v=localStorage.getItem('hwbCol_'+key);if(v!==null)return v==='1'}catch(e){}return def};
-    colSet('bol',colGet('bol',true));colSet('comp',colGet('comp',false));
+    colSet('bol',colGet('bol',true));colSet('comp',colGet('comp',false));colSet('campo',colGet('campo',false));
     body.addEventListener('click',function(e){var b=e.target.closest('[data-hwb-tog]');if(!b)return;var k3=b.getAttribute('data-hwb-tog');colSet(k3,b.getAttribute('aria-expanded')!=='true')});
     /* seletor de guerra fixo no topo ao rolar */
     (function(){var bar=top.querySelector('.hosd-bar');if(!bar)return;var ph=document.createElement('div');ph.className='hosd-barph';bar.parentNode.insertBefore(ph,bar);var on=false,raf=0;
@@ -12958,6 +12965,7 @@ html body .hos-top{will-change:auto}
     /* --- campos --- */
     var cmpRow=function(lbl,a,b,fa,fb,low){var wa=low?a<b:a>b,tt=(a+b)||1;return '<div class="hwb-cr"><b class="'+(wa?'us':'')+'">'+fa+'</b><span class="hwb-split"><i style="width:'+(a/tt*100)+'%"></i></span><b class="'+(!wa&&a!==b?'them':'')+'">'+fb+'</b></div><small class="hwb-crl">'+lbl+'</small>'};
     var dest=function(L,key,fmt){var X=L.filter(function(r){return (n(r[key])||0)>0}).sort(function(a,b){return (n(b[key])||0)-(n(a[key])||0)}).slice(0,4);return X.map(function(r){return '<div class="hwb-li">'+hart(r)+'<span class="hwb-nm"><b>'+esc(name(r))+'</b><small>'+esc(k(r,'Job')||'')+'</small></span><b class="hwb-v us">'+fmt(n(r[key]))+'</b></div>'}).join('')||'<p class="hwb-empty">'+(key==='Horn'?'Ninguém segurou o horn neste campo.':'Ninguém neste campo.')+'</p>'};
+    var CSUM=[];
     var fcol=function(title,F,cls){
       if(F.st==='none')return '<section class="hwb-fs '+cls+'"><div class="hwb-fsh"><b>'+title+'</b></div><p class="hwb-empty hwb-panel" style="padding:16px">Sem jogadores registrados neste campo.</p></section>';
       var mh=S2(F.h,'Moedas'),mb=S2(F.b,'Moedas');
@@ -12969,6 +12977,7 @@ html body .hos-top{will-change:auto}
         var p=b?((a-b)/b*100)*(m[4]?-1:1):NaN;
         return '<div class="hwb-kpi"><small>'+m[0]+'</small><b>'+esc(m[3](a))+'</b><div><span>'+esc(them)+' '+esc(m[3](b))+'</span>'+(Number.isFinite(p)&&a!==b?'<i class="'+(w?'up':'down')+'">'+(w?'▲':'▼')+' '+nf(Math.abs(p),0)+'%</i>':'')+'</div></div>'}).join('');
       var badge=wins>loss?'<span class="hwb-badge us">'+esc(us.toUpperCase())+' dominou · '+wins+' de '+M.length+'</span>':loss>wins?'<span class="hwb-badge them">'+esc(them.toUpperCase())+' dominou · '+loss+' de '+M.length+'</span>':'<span class="hwb-badge eq">Equilibrado</span>';
+      CSUM.push({t:title,w:wins,l:loss,n:M.length,hh:F.hh,hb:F.hb});
       var top=function(lbl,key,fmt,col){var X=F.h.filter(function(r){return (n(r[key])||0)>0}).sort(function(a,b){return (n(b[key])||0)-(n(a[key])||0)}).slice(0,4);
         if(!X.length)return '<div class="hwb-panel hwb-tc" style="--c:'+col+'"><small class="hwb-kick" style="color:'+col+'">Destaques · '+lbl+'</small><p class="hwb-empty">Ninguém pontuou neste campo.</p></div>';
         var r=X[0];
@@ -12981,6 +12990,10 @@ html body .hos-top{will-change:auto}
       return '<section class="hwb-fs '+cls+'"><div class="hwb-fsh"><b>'+title+'</b><small class="hwb-mono">'+F.h.length+' '+esc(us)+' × '+F.b.length+' '+esc(them)+'</small>'+badge+'</div>'+
         '<div class="hwb-kpis" style="grid-template-columns:repeat('+M.length+',minmax(0,1fr))">'+kp+'</div><div class="hwb-tcs" style="grid-template-columns:repeat('+cols.length+',minmax(0,1fr))">'+cols.join('')+'</div></section>'};
     body.querySelector('.hwb-campos').innerHTML=fcol('Campo Principal',FP,'p')+fcol('Campo Secundário',FS,'s');
+    try{var cpp=CSUM.map(function(c){var nm=c.t.replace('Campo ','');var who=c.w>c.l?'<b class="hwb-gold">'+esc(us)+' '+c.w+'/'+c.n+'</b>':c.l>c.w?'<b class="hwb-blue">'+esc(them)+' '+c.l+'/'+c.n+'</b>':'<b class="hwb-dim">equilibrado</b>';
+      var hn=hasHorn&&(c.hh||c.hb)?' · horn <b class="'+((c.hh||0)>=(c.hb||0)?'hwb-green':'hwb-red')+'">'+nf(Math.round(c.hh||0))+' s</b> × '+nf(Math.round(c.hb||0))+' s':'';
+      return '<span class="hwb-cp">'+nm+': '+who+hn+'</span>'}).join('');
+      var cb2=body.querySelector('[data-hwb-tog="campo"] .hwb-cpills');if(cb2)cb2.innerHTML=cpp}catch(e){}
     /* --- rankings (tabela) --- */
     var on=function(c,v,attr,label){return '<button type="button" class="hwb-sg'+(c?' on':'')+'" '+attr+'="'+v+'" aria-pressed="'+!!c+'">'+label+'</button>'};
     var jobs=[];H.concat(B).forEach(function(r){var j=String(k(r,'Job')||'');if(!unknownJob(j)&&jobs.indexOf(j)<0)jobs.push(j)});jobs.sort(function(a,b){return a.localeCompare(b,'pt-BR')});
