@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script id="hos-boot">(function(){var c={};function mk(T,n){return function(l,o){var k=n+(l||'')+JSON.stringify(o||{});return c[k]||(c[k]=new T(l,o))}}window.__hosNF=mk(Intl.NumberFormat,'n');window.__hosDF=mk(Intl.DateTimeFormat,'d')})();document.documentElement.classList.add('hos-boot');document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){document.documentElement.classList.remove('hos-boot')},4000)});</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Playfair+Display:ital,wght@1,700&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" media="print" onload="this.media='all'">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Playfair+Display:ital,wght@1,700&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" media="print" onload="this.media='all'">
 <style id="hos-boot-css">html.hos-boot,html.hos-boot body{background:#07090D!important}html.hos-boot body{visibility:hidden!important;opacity:0!important}
 html.hos-boot:before{content:"HIVEST";visibility:visible;position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;font:700 28px/1 "Chakra Petch",Inter,system-ui,sans-serif;letter-spacing:.3em;color:#FFB627;background:#07090D;animation:hosBootPulse 1.2s ease-in-out infinite}
 @keyframes hosBootPulse{50%{opacity:.35}}</style>
@@ -11699,6 +11699,11 @@ html body #hpHub #centralGuerra .war-filters .hosd-seg button i{font-style:norma
 .hwb-pav img{width:100%;height:100%;object-fit:cover;object-position:50% 15%;display:block;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
 @media(max-width:900px){.hwb-pres{grid-template-columns:1fr}.hwb-plists{grid-template-columns:1fr;gap:18px}}
 .hwb-plists>div:first-child{max-height:460px;overflow:auto;padding-right:6px}
+/* ===== tabela de rankings: leitura suave (opção 3 · Roboto Mono 400) ===== */
+#hosdBody .hwb-table td.hwb-num{font:400 13px 'Roboto Mono',ui-monospace,monospace;color:#B8C2CF;letter-spacing:0}
+#hosdBody .hwb-table td.hwb-num.on{color:#FFD27A;font-weight:500}
+#hosdBody .hwb-table td.hwb-c-n,#hosdBody .hwb-table td.hwb-c-f{font-family:Inter,system-ui,sans-serif;color:#7F8B9C;font-weight:500}
+#hosdBody .hwb-table td.hwb-num .hwb-v{font:inherit;color:inherit}
 
 /* ===== Seus atributos avaliados ===== */
 html body section.rankExplain.hosAttr{all:unset;display:block;box-sizing:border-box;margin:16px 0 0!important;padding:20px 22px!important;background:var(--hos-panel)!important;border:1px solid var(--hos-line)!important;border-radius:18px!important;box-shadow:none!important;color:var(--hos-text);font-family:var(--hos-body)}
@@ -12767,12 +12772,21 @@ html body .hos-top{will-change:auto}
     try{
       var nk=fold;
       var roster=(window.hiveMembers||[]).filter(function(m){return String(m&&m.Personagem||'').trim()});
+      /* data de entrada: 1º registro no histórico (se for depois do início do histórico) ou 1ª guerra jogada */
+      var pBR=function(v){var r=/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T,]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/.exec(String(v||''));return r?new Date(+r[3],+r[2]-1,+r[1],+(r[4]||0),+(r[5]||0),+(r[6]||0)).getTime():NaN};
+      var wts=function(w){var a=Date.parse(String(k(w,'started_at')||''));if(Number.isFinite(a))return a;var d=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(k(w,'battle_date','war_date','Data_Guerra','data')||''));return d?new Date(+d[1],+d[2]-1,+d[3],21,0,0).getTime():NaN};
+      var HIST=((window.hosLiveData||{}).history)||[],firstSeen={},histStart=Infinity;
+      HIST.forEach(function(h){var t=pBR(h['Data/Hora']);if(!Number.isFinite(t))return;if(t<histStart)histStart=t;var key=fold(h.Personagem);if(!(key in firstSeen)||t<firstSeen[key])firstSeen[key]=t});
+      var firstWar={};(ctx.players||[]).forEach(function(r){try{if(!isH(r))return}catch(e){return}var w=(ctx.wars||[]).find(function(x){return String(api.warId(x))===String(api.warId(r))});var t=w?wts(w):NaN,key=fold(name(r));if(Number.isFinite(t)&&(!(key in firstWar)||t<firstWar[key]))firstWar[key]=t});
+      var joinOf=function(nm){var key=fold(nm),h=firstSeen[key],w=firstWar[key],j=Infinity;if(Number.isFinite(h)&&h>histStart+864e5)j=h;if(Number.isFinite(w)&&w<j)j=w;return j===Infinity?-Infinity:j};
+      var eligible=function(m,w){var t=wts(w);return !Number.isFinite(t)||joinOf(m.Personagem)<t};
       var minsOf=function(r){var v=n(r.Minutos);return Number.isFinite(v)&&v>0?v:NaN};
       var fieldMax=function(rows){var m={P:0,S:0};rows.forEach(function(r){var v=minsOf(r),c=campoOf(r)==='S'?'S':'P';if(v>m[c])m[c]=v});return m};
-      var scoreOf=function(rows){
-        if(!roster.length||!rows.length)return NaN;
+      var scoreOf=function(rows,w){
+        var rs=roster.filter(function(m){return eligible(m,w)});
+        if(!rs.length||!rows.length)return NaN;
         var pl={};rows.forEach(function(r){pl[nk(name(r))]=1});
-        var pres=roster.filter(function(m){return pl[nk(m.Personagem)]}).length/roster.length;
+        var pres=rs.filter(function(m){return pl[nk(m.Personagem)]}).length/rs.length;
         var fm_=fieldMax(rows),tv=rows.map(function(r){var v=minsOf(r),ref=fm_[campoOf(r)==='S'?'S':'P'];return Number.isFinite(v)&&ref?Math.min(1,v/ref):NaN}).filter(Number.isFinite);
         var tm=tv.length?tv.reduce(function(x,y){return x+y},0)/tv.length:1;
         return Math.round(100*(.7*pres+.3*tm));
@@ -12785,14 +12799,20 @@ html body .hos-top{will-change:auto}
       var hist=ci>=0?allW.slice(ci,ci+4):[war];
       var allP=ctx.players||[];
       var rowsFor=function(w){var id=wid(w);if(id===curId)return H;return allP.filter(function(r){try{return String(api.warId(r))===id&&isH(r)}catch(e){return false}})};
-      var histRows=hist.map(rowsFor).filter(function(rs){return rs.length});
-      var histSets=histRows.map(function(rs){var o={};rs.forEach(function(r){o[nk(name(r))]=1});return o});
-      var histScores=histRows.map(scoreOf);
+      var histW=hist.map(function(w){return {w:w,rs:rowsFor(w)}}).filter(function(x){return x.rs.length});
+      var histSets=histW.map(function(x){var o={};x.rs.forEach(function(r){o[nk(name(r))]=1});return o});
+      var histScores=histW.map(function(x){return scoreOf(x.rs,x.w)});
       /* atual */
       var played={};H.forEach(function(r){played[nk(name(r))]=1});
-      var absent=roster.filter(function(m){return !played[nk(m.Personagem)]}).sort(function(a,b){return String(a.Personagem).localeCompare(String(b.Personagem),'pt-BR')});
-      var why=function(m){var key=nk(m.Personagem),streak=0,miss=0,N=histSets.length;for(var i=0;i<N;i++){if(!histSets[i][key]){miss++;if(streak===i)streak++}}
-        if(N<2)return '1ª falta registrada';if(streak>=2)return 'faltou '+streak+' seguidas';if(miss>1)return 'faltou '+miss+' de '+N;return '1ª falta em '+N+' guerras'};
+      var newbies=roster.filter(function(m){return !played[nk(m.Personagem)]&&!eligible(m,war)});
+      var absent=roster.filter(function(m){return !played[nk(m.Personagem)]&&eligible(m,war)}).sort(function(a,b){return String(a.Personagem).localeCompare(String(b.Personagem),'pt-BR')});
+      var why=function(m){var key=nk(m.Personagem),streak=0,miss=0,N=0,run=true;
+        for(var i=0;i<histW.length;i++){if(!eligible(m,histW[i].w))break;N++;if(!histSets[i][key]){miss++;if(run)streak++}else run=false}
+        var jn=joinOf(m.Personagem),recent=Number.isFinite(jn)&&jn>0&&N<histW.length,dt=recent?new Date(jn):null,ds=dt?String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0'):'';
+        if(N<=1)return recent?'1ª falta · entrou em '+ds:'1ª falta registrada';
+        if(streak>=2)return 'faltou '+streak+' seguidas'+(recent?' desde que entrou':'');
+        if(miss>1)return 'faltou '+miss+' de '+N;
+        return '1ª falta em '+N+' guerras';}
       var FM=fieldMax(H),mins=H.map(function(r){var v=minsOf(r),ref=FM[campoOf(r)==='S'?'S':'P'];return {r:r,m:v,pc:ref?v/ref:NaN}}).filter(function(x){return Number.isFinite(x.m)});
       var low=mins.slice().sort(function(a,b){return a.pc-b.pc||a.m-b.m}).slice(0,4);
       var lowN=mins.filter(function(x){return x.pc<.75}).length;
@@ -12802,17 +12822,18 @@ html body .hos-top{will-change:auto}
       var av=function(job){var a=art(job);return '<span class="hwb-pav" style="background:'+esc(a&&a.color||'#3a4250')+'">'+(a&&a.src?'<img src="'+esc(a.src)+'" alt="" loading="lazy">':'')+'</span>'};
       var sc=histScores[0],scC=!Number.isFinite(sc)?'':sc>=90?'hwb-green':sc>=75?'hwb-gold':'hwb-red';
       var trend=histScores.slice().reverse().map(function(v,i,a){return '<span'+(i===a.length-1?' class="'+scC+'"':'')+'>'+(Number.isFinite(v)?v:'—')+'</span>'}).join(' · ');
-      var playedRoster=roster.length-absent.length;
+      var rosterE=roster.length-newbies.length,playedRoster=rosterE-absent.length;
       var left='<div class="hwb-panel hwb-pscore"><small class="hwb-kick">Nota de presença</small>'+
         '<div class="hwb-pbig"><b class="'+scC+'">'+(Number.isFinite(sc)?sc:'—')+'</b><span>/100</span></div>'+
         '<p class="hwb-psub">Presença (peso 70%) + tempo em campo em relação à duração de cada campo (peso 30%).</p>'+
-        '<div class="hwb-pst"><span>Jogaram</span><b>'+(roster.length?nf(playedRoster)+' de '+nf(roster.length):nf(H.length))+'</b></div>'+
+        '<div class="hwb-pst"><span>Jogaram</span><b>'+(roster.length?nf(playedRoster)+' de '+nf(rosterE):nf(H.length))+'</b></div>'+(newbies.length?'<div class="hwb-pst"><span>Entraram depois desta guerra</span><b>'+nf(newbies.length)+'</b></div>':'')+
         '<div class="hwb-pst"><span>Tempo médio</span><b>'+fm(avgM)+'</b></div>'+
         '<div class="hwb-pst"><span>Duração da partida</span><b>'+fm(full)+'</b></div>'+
         (histScores.length>1?'<div class="hwb-pst"><span>Últimas '+histScores.length+' guerras</span><b class="hwb-ptr">'+trend+'</b></div>':'')+'</div>';
-      var absHtml=!roster.length?'<p class="hwb-pok">Lista de membros ainda não carregada.</p>':absent.length?absent.map(function(m){var w=why(m);return '<div class="hwb-pli">'+av(m.Job)+'<span class="hwb-pnm"><b>'+esc(m.Personagem)+'</b><small>'+esc(m.Job||'—')+'</small></span><em class="'+(/seguidas| de /.test(w)?'hwb-red':'hwb-dim')+'">'+esc(w)+'</em></div>'}).join(''):'<p class="hwb-pok">Todos os '+nf(roster.length)+' membros da planilha jogaram.</p>';
+      var newHtml=newbies.length?'<p class="hwb-psub" style="margin-top:10px">Não contam como falta (entraram depois desta guerra): '+newbies.map(function(m){return esc(m.Personagem)}).join(', ')+'.</p>':'';
+      var absHtml=!roster.length?'<p class="hwb-pok">Lista de membros ainda não carregada.</p>':absent.length?absent.map(function(m){var w=why(m);return '<div class="hwb-pli">'+av(m.Job)+'<span class="hwb-pnm"><b>'+esc(m.Personagem)+'</b><small>'+esc(m.Job||'—')+'</small></span><em class="'+(/seguidas| de /.test(w)?'hwb-red':'hwb-dim')+'">'+esc(w)+'</em></div>'}).join(''):'<p class="hwb-pok">Todos os '+nf(rosterE)+' membros da planilha jogaram.</p>';
       var lowHtml=low.length?low.map(function(x){var bad=x.pc<.75;return '<div class="hwb-pli">'+av(k(x.r,'Job'))+'<span class="hwb-pnm"><b>'+esc(name(x.r))+'</b><small>'+esc(k(x.r,'Job')||'—')+' · '+(campoOf(x.r)==='S'?'Secundário':'Principal')+'</small></span><em class="'+(bad?'hwb-red':'')+'">'+fm(x.m)+' · '+nf(Math.round(x.pc*100))+'%</em></div>'}).join(''):'<p class="hwb-pok">Sem dados de minutos nesta guerra.</p>';
-      var right='<div class="hwb-panel hwb-plists"><div><small class="hwb-kick hwb-red">Faltaram · '+nf(absent.length)+'</small>'+absHtml+'</div>'+
+      var right='<div class="hwb-panel hwb-plists"><div><small class="hwb-kick hwb-red">Faltaram · '+nf(absent.length)+'</small>'+absHtml+newHtml+'</div>'+
         '<div><small class="hwb-kick">Menos tempo · top '+low.length+'</small>'+lowHtml+'<p class="hwb-psub" style="margin-top:8px">% em relação à duração do próprio campo'+(lowN?'. <b class="hwb-red">'+nf(lowN)+'</b> abaixo de 75%.':'. Ninguém abaixo de 75%.')+'</p></div></div>';
       body.querySelector('.hwb-resumo').insertAdjacentHTML('beforeend','<div class="hwb-pres">'+left+right+'</div>');
       var extra=[];
